@@ -1,0 +1,18 @@
+Route,Service_Type,Carrier,Price_USD,Transit_Days,Minimum_Weight_KG
+Malaysia,Economy,DHL Express,180,5-7,1
+Malaysia,Priority,DHL Express,250,3-4,1
+Malaysia,Express,DHL Express,350,1-2,1
+Thailand,Standard,FedEx International,200,4-6,1
+Thailand,Priority,FedEx International,280,2-3,1
+Thailand,Express,UPS Worldwide,320,1-2,1
+Indonesia,Standard,UPS Worldwide,220,5-7,1
+Indonesia,Priority,DHL Express,290,3-4,1
+Indonesia,Express,DHL Express,380,1-2,1
+Vietnam,Standard,DHL Express,190,4-6,1
+Vietnam,Priority,DHL Express,260,2-3,1
+Philippines,Standard,FedEx International,210,5-7,1
+Philippines,Priority,FedEx International,300,3-4,1
+Singapore,Same Day,Local Delivery,50,1,0.5
+Singapore,Next Day,Local Delivery,30,1,0.5
+
+

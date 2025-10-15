@@ -1,0 +1,13 @@
+Customer,Carrier,Contact_Name,Phone,Email,Service_Level
+ABC Manufacturing,DHL Express,John Tan,+65-6123-4567,john.tan@dhl.com.sg,Priority
+XYZ Electronics,FedEx International,Sarah Lee,+65-6234-5678,sarah.lee@fedex.com,Standard
+Global Trading Inc,UPS Worldwide,Michael Wong,+65-6345-6789,michael.wong@ups.com,Express
+Tech Solutions Ltd,DHL Express,John Tan,+65-6123-4567,john.tan@dhl.com.sg,Priority
+Premium Goods Co,FedEx International,Sarah Lee,+65-6234-5678,sarah.lee@fedex.com,Standard
+Innovative Systems,DHL Express,John Tan,+65-6123-4567,john.tan@dhl.com.sg,Economy
+Smart Electronics,UPS Worldwide,Michael Wong,+65-6345-6789,michael.wong@ups.com,Standard
+Global Imports,DHL Express,John Tan,+65-6123-4567,john.tan@dhl.com.sg,Priority
+Tech Distributors,DHL Express,John Tan,+65-6123-4567,john.tan@dhl.com.sg,Express
+Quality Products Ltd,Local Delivery,David Lim,+65-6456-7890,david@localdelivery.sg,Same Day
+
+

@@ -1,0 +1,27 @@
+PO_Number,Customer,Destination,Status,Last_Update,ETA,Current_Location,Carrier,Notes
+SG2410-001,ABC Manufacturing,Malaysia,In Transit,8/10/2024,15/10/2024,Singapore Port,DHL Express,Normal shipment
+SG2410-002,XYZ Electronics,Thailand,Customs Clearance,9/10/2024,18/10/2024,Bangkok Customs,FedEx International,Awaiting documentation
+SG2410-003,Global Trading Inc,Indonesia,Delivered,10/10/2024,10/10/2024,Jakarta Warehouse,UPS Worldwide,Completed successfully
+SG2410-004,Tech Solutions Ltd,Vietnam,,9/10/2024,16/10/2024,Ho Chi Minh Port,DHL Express,On schedule
+SG2410-004,Tech Solutions Ltd,Vietnam,Exception,11/10/2024,TBD,Ho Chi Minh Port,DHL Express,Duplication logged for QA test
+SG2410-005,Premium Goods Co,Philippines,Pending Pickup,07/10/2024,20-10-2024,Singapore Warehouse,FedEx International,Awaiting carrier confirmation
+SG2410-006,Maritime Components,Singapore,Returned,05/10/2024,11/10/2024,Singapore Hub,Local Delivery,Return initiated by customer
+SG2410-007,Luxe Retailers,Brunei,In Transit,10/10/2024,2024/10/19,South China Sea Vessel,Maersk Lines,Sea freight leg in progress
+SG2410-008,Optix Labs,Malaysia,Customs Hold,08/10/2024,26/10/2024,Kuala Lumpur Customs,DHL Express,Requires additional HS code clarification
+SG2410-009,Fusion Logistics,Indonesia,Delivered,09/10/2024,09/10/2024,Jakarta Airport,FedEx International,Delivered to consignee
+SG2410-010,MedSupply Asia,Myanmar,In Transit,06/10/2024,15/10/2024,Yangon Airport,UPS Worldwide,Dry ice replenishment due mid-route
+SG2410-011,Nova Tech,Thailand,Processing,08/10/2024,,Bangkok Hub,UPS Worldwide,ETA missing - escalate to planner
+SG2410-012,Orbital Systems,Vietnam,Delayed,07/10/2024,17/10/2024,Da Nang Port,DHL Express,Typhoon delay - expect 48h slip
+SG2410-013,Pacific Exports,Philippines,Out for Delivery,11/10/2024,13/10/2024,Manila Distribution,Local Delivery,Driver contact: +63 912 555 9921
+SG2410-014,Quantum Devices,Malaysia,In Transit,05/10/2024,14/10/2024,Penang Free Trade Zone,FedEx International,Controller temperature log flagged
+SG2410-015,Zenith Home,Indonesia,Pending Pickup,04/10/2024,21/10/2024,Singapore Warehouse,,Carrier not assigned yet
+SG2410-016,Rapid Retail,Vietnam,In Transit,09/10/2024,18/10/2024,Hai Phong Rail Yard,DB Schenker,Intermodal leg scheduled 12/10
+SG2410-017,Silverline Medical,Malaysia,Exception,10/10/2024,23/10/2024,Port Klang,DHL Express,Customs requesting Form A
+SG2410-018,Urban Furnishings,Thailand,Delivered,08/10/2024,08/10/2024,Bangkok Depot,UPS Worldwide,Delivered 09:32 local time
+SG2410-019,Bright Components,Indonesia,In Transit,11/10/2024,20/10/2024,Batam Free Zone,FedEx International,Split shipment - part 2 due 14/10
+SG2410-020,Velocity Motors,Philippines,Processing,09/10/2024,24/10/2024,Cebu Port,DHL Express,Awaiting vessel departure
+SG2410-021,Helios Energy,Singapore,Delivered,09/10/2024,09/10/2024,Singapore Hub,Local Delivery,Delivered to Dock 5 with POD uploaded
+SG2410-022,Coastal Foods,Malaysia,In Transit,06/10/2024,16/10/2024,Johor Checkpoint,UPS Worldwide,Temperature probe variance recorded
+SG2410-023,Mirai Electronics,Thailand,In Transit,2024-10-09,2024-10-21,Bangkok Rail Ramp,FedEx International,ETA provided in ISO format for parser check
+SG2410-024,BlueWave Imports,Indonesia,Pending Pickup,03/10/2024,,Singapore Warehouse,DHL Express,Awaiting payment release
+SG2410-025,EverGreen Retail,Brunei,In Transit,08/10/2024,18/10/2024,South China Sea Vessel,Maersk Lines,Combine with SG2410-007 on arrival
