@@ -11,7 +11,18 @@ export function resolveArtifactPath(relativePath) {
   if (path.isAbsolute(relativePath)) {
     return relativePath;
   }
-  return path.resolve(PROJECT_ROOT, relativePath);
+  const projectResolved = path.resolve(PROJECT_ROOT, relativePath);
+  if (fs.existsSync(projectResolved)) {
+    return projectResolved;
+  }
+
+  // Many saved artifacts are stored relative to the uploads directory
+  const uploadsResolved = path.resolve(PROJECT_ROOT, 'uploads', relativePath);
+  if (fs.existsSync(uploadsResolved)) {
+    return uploadsResolved;
+  }
+
+  return projectResolved;
 }
 
 export function loadJsonIfExists(targetPath) {
