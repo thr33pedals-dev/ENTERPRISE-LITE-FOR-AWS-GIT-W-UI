@@ -3,9 +3,27 @@ import fs from 'fs';
 import path from 'path';
 import { fileURLToPath } from 'url';
 import { checkGuardrails, sanitizeOutput, getGroundingRules, logBlockedRequest } from './guardrails.js';
+import { resolveArtifactPath, loadJsonIfExists, buildVisionExcerpt, renderVisionContext } from './prompt-utils.js';
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
+
+const THINK_TOOL = {
+  name: 'think',
+  description: 'Use the tool to think about something. It will not obtain new information or change the database, but just append the thought to the log. Use it when complex reasoning or sequential decisions are needed.',
+  input_schema: {
+    type: 'object',
+    properties: {
+      thought: {
+        type: 'string',
+        description: 'Reasoning notes, policy checks, missing information, or plan before responding.'
+      }
+    },
+    required: ['thought']
+  }
+};
+
+const MAX_THINK_ITERATIONS = 3;
 
 /**
  * Create Claude client with MCP (filesystem access)
@@ -22,7 +40,10 @@ export function createClaudeClient() {
     apiKey: apiKey,
   });
 
-  const model = process.env.CLAUDE_MODEL || 'claude-3-5-sonnet-20241022';
+  const model = process.env.CLAUDE_MODEL || 'claude-sonnet-4-20250514';
+  const visionModel = process.env.CLAUDE_VISION_MODEL || process.env.CLAUDE_MODEL || 'claude-sonnet-4-20250514';
+  const visionMaxTokens = parseInt(process.env.CLAUDE_VISION_MAX_TOKENS || process.env.CLAUDE_MAX_TOKENS || '16000', 10);
+  const visionTemperature = parseFloat(process.env.CLAUDE_VISION_TEMPERATURE || process.env.CLAUDE_TEMPERATURE || '0');
 
   /**
    * Chat with Claude about tracking data
@@ -49,28 +70,79 @@ export function createClaudeClient() {
       // Build system prompt with file context
       const systemPrompt = buildSystemPrompt(manifest);
 
-      // Build conversation messages
-      const messages = [
-        ...conversationHistory,
+      // Build conversation messages with current user turn
+      const baseMessages = [
+        ...conversationHistory.map(entry => ({
+          role: entry.role,
+          content: [{ type: 'text', text: entry.content }]
+        })),
         {
           role: 'user',
-          content: userMessage
+          content: [{ type: 'text', text: userMessage }]
         }
       ];
 
       console.log(`🤖 Calling Claude (${model})...`);
 
-      // Call Claude API
-      const response = await anthropic.messages.create({
-        model: model,
-        max_tokens: parseInt(process.env.CLAUDE_MAX_TOKENS) || 4096,
-        temperature: parseFloat(process.env.CLAUDE_TEMPERATURE) || 0.3,
-        system: systemPrompt,
-        messages: messages
-      });
+      let assistantMessage = '';
+      let iteration = 0;
+      const runtimeMessages = [...baseMessages];
 
-      // Extract text response
-      let assistantMessage = response.content[0]?.text || 'No response generated';
+      while (iteration < MAX_THINK_ITERATIONS) {
+        const response = await anthropic.messages.create({
+          model: model,
+          max_tokens: parseInt(process.env.CLAUDE_MAX_TOKENS) || 4096,
+          temperature: parseFloat(process.env.CLAUDE_TEMPERATURE) || 0.3,
+          system: systemPrompt,
+          messages: runtimeMessages,
+          tools: [THINK_TOOL],
+          tool_choice: { type: 'auto' }
+        });
+
+        // Log any think steps for debugging/observability
+        logThinkSteps(response);
+
+        // Capture any assistant text generated in this turn
+        const textSegments = extractTextSegments(response.content);
+        if (textSegments.length > 0) {
+          assistantMessage += (assistantMessage ? '\n\n' : '') + textSegments.join('\n\n');
+        }
+
+        // Record assistant turn in conversation before deciding next step
+        runtimeMessages.push({
+          role: 'assistant',
+          content: response.content
+        });
+
+        // Identify tool invocations (e.g., think)
+        const toolCalls = response.content.filter(part => part.type === 'tool_use');
+
+        if (toolCalls.length === 0) {
+          // Claude finished responding
+          break;
+        }
+
+        // Return tool results so Claude can continue
+        const toolResults = toolCalls.map(toolUse => ({
+          role: 'user',
+          content: [
+            {
+              type: 'tool_result',
+              tool_use_id: toolUse.id,
+              content: toolUse.name === 'think'
+                ? 'Thought logged. Continue.'
+                : 'Tool call acknowledged.'
+            }
+          ]
+        }));
+
+        runtimeMessages.push(...toolResults);
+        iteration++;
+      }
+
+      if (!assistantMessage.trim()) {
+        assistantMessage = 'I’m sorry, I could not generate a response from the current documents.';
+      }
       
       // Sanitize output to prevent data leakage
       assistantMessage = sanitizeOutput(assistantMessage);
@@ -137,6 +209,51 @@ If presenting multiple items, use tables:
     // Add grounding rules to prevent hallucination
     prompt += getGroundingRules();
 
+    prompt += `
+## Using the think tool (Policy & Compliance Focus)
+Before responding, pause and jot notes in the think tool when:
+- A user request might conflict with HR, ethics, or compliance rules.
+- You need to confirm whether company policies allow a specific action.
+- Multiple documents must be cross-checked (e.g., Code of Conduct + Conflict of Interest).
+- A vision summary is available for diagrams/architectures. Review the "Vision Context (summarized)" section and plan which details you'll cite.
+
+In the think step, explicitly cover:
+1. **Applicable Rules** – Which uploaded policy sections seem relevant?
+2. **Information Gaps** – What details do you still need from the user (manager approval, employment status, etc.)?
+3. **Compliance Risks** – Any potential violations, disclosure requirements, or approvals required?
+4. **Plan** – Outline how you’ll answer (e.g., cite policy, recommend escalation, suggest record-keeping).
+5. **Artifacts to Consult** – Note the summarized vision fields (components, connections, risks, QA pairs). If needed details are missing, request a clearer file or the original source.
+
+
+<think_tool_example_1>
+User asks: “Can I run a side business while working here?”
+- Applicable docs: Conflicts of Interest Policy §§2-4, Code of Conduct §1.3.
+- Need to confirm: type of business, overlap with company role, whether disclosure form filed.
+- Risks: breaches of loyalty, use of company time/resources.
+- Plan: reference disclosure requirement, advise notifying HR/compliance, highlight relevant clauses.
+</think_tool_example_1>
+
+<think_tool_example_2>
+User asks: “May I accept a holiday hamper from a vendor?”
+- Applicable docs: Gifts, Entertainment & Hospitality Policy §3, Anti-Bribery Policy §5.
+- Need to confirm: gift value, vendor relationship, prior approvals.
+- Risks: exceeding gift thresholds, perceived inducement.
+- Plan: quote gift-limit table, require written approval, log in gift register, suggest alternative (donate to charity).
+`;
+
+    prompt += `
+## Response Expectations
+- After thinking, **always** deliver a final answer in the following structure:
+  - ### Summary – Direct answer in 1–2 sentences.
+  - ### Policy References – Cite document names and sections/clauses used.
+  - ### Actions / Escalation – Concrete next steps (forms to submit, approvals, contacts).
+  - ### References – Bullet list of every document consulted (filename + section).
+- If the uploaded policies do **not** cover the request, state that clearly, list which files you checked, and advise an appropriate escalation path (e.g., HR, Compliance Officer, external authority).
+- When quoting or paraphrasing, reference the policy title and section number if available.
+- Emphasize compliance, duty of disclosure, and record-keeping where relevant.
+- When diagram, architecture, topology, design, or blueprint files are present, proactively describe key components and architecture even if the user request is vague; use available vision extracts before asking for clarification.
+`;
+
     if (!manifest) {
       prompt += `\nCurrently, no data has been uploaded. Please inform the user to upload their files first.`;
       return prompt;
@@ -151,112 +268,189 @@ If presenting multiple items, use tables:
       prompt += `Knowledge files: ${manifest.fileTypes.knowledge}\n`;
       prompt += `Other files: ${manifest.fileTypes.other}\n\n`;
 
-      // Read only files from current upload (based on manifest)
-      const processedFiles = fs.readdirSync(processedDir);
-      
-      // Get current upload files from manifest
-      const currentFiles = manifest.files.map(f => f.name);
-      
-      // Process structured data (Excel/CSV) - only current upload files
-      const jsonFiles = processedFiles.filter(f => {
-        if (!f.endsWith('.json') || f.endsWith('_meta.json') || f === 'manifest.json') return false;
-        // Check if this file belongs to current upload
-        const baseName = f.replace(/_\d+\.json$/, '');
-        return currentFiles.some(currentFile => currentFile.includes(baseName));
-      });
-      if (jsonFiles.length > 0) {
-        prompt += `\n=== STRUCTURED DATA (Excel/CSV) ===\n`;
-        jsonFiles.forEach(filename => {
-          const data = JSON.parse(fs.readFileSync(path.join(processedDir, filename), 'utf-8'));
-          const originalName = filename.replace(/_\d+\.json$/, '');
-          
-          prompt += `\nFile: ${originalName}\n`;
-          if (Array.isArray(data)) {
-            prompt += `Records: ${data.length}\n`;
-            if (data.length > 0) {
-              prompt += `Columns: ${Object.keys(data[0]).join(', ')}\n`;
-              // Include data (limit for very large files)
-              if (data.length <= 100) {
-                prompt += `\nData:\n${JSON.stringify(data, null, 2)}\n`;
-              } else {
-                prompt += `\nSample (first 10):\n${JSON.stringify(data.slice(0, 10), null, 2)}\n`;
-                prompt += `\n[Full dataset available with ${data.length} records]\n`;
-              }
-            }
+      const formatTriageSummary = (fileEntry) => {
+        if (!fileEntry?.triage) return '';
+        const { route, reason, quality, recommendedTool } = fileEntry.triage;
+        const qualitySummary = quality
+          ? `Score: ${typeof quality.score === 'number' ? quality.score.toFixed(2) : quality.score} | Usable: ${quality.isUsable}`
+          : '';
+        const toolHint = recommendedTool ? ` | Recommended tool: ${recommendedTool}` : '';
+        return `\nTriage -> Route: ${route}${toolHint}\nReason: ${reason}${qualitySummary ? `\n${qualitySummary}` : ''}\n`;
+      };
+
+      const getArtifactPath = (entry, relativeKey, filenameKey) => {
+        const relPath = entry.artifacts?.[relativeKey] ? resolveArtifactPath(entry.artifacts[relativeKey]) : null;
+        if (relPath && fs.existsSync(relPath)) {
+          return relPath;
+        }
+        const filename = entry.artifacts?.[filenameKey];
+        if (filename) {
+          const candidate = path.join(processedDir, filename);
+          if (fs.existsSync(candidate)) {
+            return candidate;
           }
+        }
+        return null;
+      };
+
+      const structuredEntries = manifest.files.filter(file => (file.type || '').toLowerCase() === 'excel');
+      if (structuredEntries.length > 0) {
+        prompt += `\n=== STRUCTURED DATA (Excel/CSV) ===\n`;
+        structuredEntries.forEach(entry => {
+          const dataPath = getArtifactPath(entry, 'relativeJsonPath', 'jsonFilename');
+          prompt += `\nFile: ${entry.name}\n`;
+          prompt += formatTriageSummary(entry);
+
+          if (dataPath) {
+            try {
+              const data = JSON.parse(fs.readFileSync(dataPath, 'utf-8'));
+              if (Array.isArray(data)) {
+                prompt += `Records: ${data.length}\n`;
+                if (data.length > 0) {
+                  prompt += `Columns: ${Object.keys(data[0]).join(', ')}\n`;
+                  if (data.length <= 100) {
+                    prompt += `\nData:\n${JSON.stringify(data, null, 2)}\n`;
+                  } else {
+                    prompt += `\nSample (first 10):\n${JSON.stringify(data.slice(0, 10), null, 2)}\n`;
+                    prompt += `\n[Full dataset available with ${data.length} records]\n`;
+                  }
+                }
+              }
+            } catch (err) {
+              prompt += `⚠️ Unable to load structured data: ${err.message}\n`;
+            }
+          } else {
+            prompt += `⚠️ Structured data file not found in processed artifacts.\n`;
+          }
+
           prompt += `\n---\n`;
         });
       }
 
-      // Process text-based files (PDF, DOCX, TXT) - only current upload files
-      const txtFiles = processedFiles.filter(f => {
-        if (!f.endsWith('.txt')) return false;
-        // Check if this file belongs to current upload
-        const baseName = f.replace(/_\d+\.txt$/, '');
-        return currentFiles.some(currentFile => currentFile.includes(baseName));
-      });
-      if (txtFiles.length > 0) {
+      const summarizeVisionPayload = (payload) => {
+        if (!payload || typeof payload !== 'object') {
+          return null;
+        }
+
+        const docProfile = payload.document_profile || payload.document_metadata || {};
+        const technical = payload.core_content?.technical_diagram;
+        const risks = Array.isArray(payload.risks) ? payload.risks.slice(0, 5) : [];
+        const qaPairs = Array.isArray(payload.qa_pairs) ? payload.qa_pairs.slice(0, 3) : [];
+
+        const summary = {
+          profile: {
+            detected_type: docProfile.detected_type || payload.document_metadata?.detected_type || null,
+            primary_purpose: docProfile.primary_purpose || null,
+            confidence_score: docProfile.confidence_score || null
+          },
+          components: technical?.components?.slice(0, 8)?.map(component => ({
+            name: component.component_name || component.name || null,
+            type: component.component_type || null,
+            criticality: component.criticality || null
+          })) || [],
+          connections: technical?.connections?.slice(0, 6)?.map(connection => ({
+            source: connection.source_component || null,
+            destination: connection.destination_component || null,
+            type: connection.connection_type || null
+          })) || [],
+          risks: risks.map(risk => ({
+            id: risk.risk_id || null,
+            type: risk.risk_type || null,
+            description: risk.description || null,
+            impact: risk.impact || null,
+            mitigation: risk.mitigation || risk.mitigation_recommendations || null
+          })),
+          qa_pairs: qaPairs.map(pair => ({
+            question: pair.question || null,
+            answer: pair.answer || null
+          })),
+          executive_summary: payload.executive_summary || null,
+          detailed_summary: payload.detailed_summary ? `${payload.detailed_summary.substring(0, 800)}${payload.detailed_summary.length > 800 ? '...' : ''}` : null
+        };
+
+        return summary;
+      };
+
+      const knowledgeEntries = manifest.files.filter(file => ['pdf', 'docx', 'txt'].includes((file.type || '').toLowerCase()));
+      if (knowledgeEntries.length > 0) {
         prompt += `\n=== KNOWLEDGE BASE (PDF/DOCX/Text) ===\n`;
-        txtFiles.forEach(filename => {
-          const textContent = fs.readFileSync(path.join(processedDir, filename), 'utf-8');
-          const originalName = filename.replace(/_\d+\.txt$/, '');
-          
-          prompt += `\nFile: ${originalName}\n`;
-          
-          // Check if content is garbled or unreadable (more tolerant)
-          const nonPrintableMatches = textContent.match(/[^\x20-\x7E\s]/g) || [];
-          const nonPrintableRatio = nonPrintableMatches.length / Math.max(textContent.length, 1);
-          const hasUsableWords = /[A-Za-z]{4,}/.test(textContent);
-          const isGarbled = textContent.length < 20 || 
-                           /^[\s\n\r\t]+$/.test(textContent) || 
-                           textContent.includes('\u0000') ||
-                           textContent.includes('\u0001') ||
-                           textContent.includes('\u0002') ||
-                           (!hasUsableWords) ||
-                           // Check for excessive non-printable characters (but allow some)
-                           nonPrintableRatio > 0.8;
-          
-          if (isGarbled) {
-            prompt += `⚠️ WARNING: This file appears to contain garbled or unreadable content.\n`;
-            prompt += `Content preview (first 200 chars): ${textContent.substring(0, 200)}\n`;
-            prompt += `If asked about this file, inform the user that the content is garbled and cannot be read.\n`;
-          } else {
-            // Provide targeted highlights for key policy keywords to guide the model
-            const importantKeywords = [
-              { label: 'sick leave', regex: /.{0,120}sick\s+(leave|days|policy).{0,160}/gi },
-              { label: 'medical leave', regex: /.{0,160}medical\s+leave.{0,160}/gi },
-              { label: 'paid time off', regex: /.{0,160}(paid\s+time\s+off|pto).{0,160}/gi },
-              { label: 'vacation policy', regex: /.{0,160}vacation.{0,160}/gi }
-            ];
+        knowledgeEntries.forEach(entry => {
+          const textPath = getArtifactPath(entry, 'relativeTxtPath', 'txtFilename');
+          const textContent = textPath && fs.existsSync(textPath) ? fs.readFileSync(textPath, 'utf-8') : '';
 
-            const highlights = [];
-            importantKeywords.forEach(({ label, regex }) => {
-              const matches = [];
-              let match;
-              while ((match = regex.exec(textContent)) !== null && matches.length < 3) {
-                matches.push(match[0].replace(/\s+/g, ' ').trim());
+          prompt += `\nFile: ${entry.name}\n`;
+          prompt += formatTriageSummary(entry);
+
+          if (entry.artifacts?.parsedJsonPath) {
+            const parsedJson = loadJsonIfExists(resolveArtifactPath(entry.artifacts.parsedJsonPath));
+            if (parsedJson) {
+              prompt += `Vision JSON available -> ${entry.artifacts.parsedJsonPath}\n`;
+              const excerpt = buildVisionExcerpt(parsedJson);
+              if (excerpt) {
+                prompt += `Vision Extract Summary:\n${excerpt}\n`;
               }
-              if (matches.length > 0) {
-                highlights.push({ label, matches });
+              const summarized = summarizeVisionPayload(parsedJson);
+              if (summarized) {
+                prompt += `Vision Context (summarized):\n${JSON.stringify(summarized, null, 2)}\n`;
               }
-            });
-
-            if (highlights.length > 0) {
-              prompt += `Key excerpts detected:\n`;
-              highlights.forEach(({ label, matches }) => {
-                prompt += `- ${label}: ${matches.join(' ... ')}\n`;
-              });
-              prompt += `\n`;
-            }
-
-            // Limit very long documents
-            if (textContent.length <= 5000) {
-              prompt += `Content:\n${textContent}\n`;
-            } else {
-              prompt += `Content (first 5000 chars):\n${textContent.substring(0, 5000)}...\n`;
-              prompt += `[Document continues, total length: ${textContent.length} characters]\n`;
             }
           }
+
+          if (!textContent) {
+            prompt += `⚠️ Text extraction unavailable for this file.\n`;
+          } else {
+            const nonPrintableMatches = textContent.match(/[^\x20-\x7E\s]/g) || [];
+            const nonPrintableRatio = nonPrintableMatches.length / Math.max(textContent.length, 1);
+            const hasUsableWords = /[A-Za-z]{4,}/.test(textContent);
+            const isGarbled = textContent.length < 20 || 
+                             /^[\s\n\r\t]+$/.test(textContent) || 
+                             textContent.includes('\u0000') ||
+                             textContent.includes('\u0001') ||
+                             textContent.includes('\u0002') ||
+                             (!hasUsableWords) ||
+                             nonPrintableRatio > 0.8;
+
+            if (isGarbled) {
+              prompt += `⚠️ WARNING: This file appears to contain garbled or unreadable content.\n`;
+              prompt += `Content preview (first 200 chars): ${textContent.substring(0, 200)}\n`;
+              prompt += `If asked about this file, inform the user that the content is garbled and cannot be read.\n`;
+            } else {
+              const importantKeywords = [
+                { label: 'sick leave', regex: /.{0,120}sick\s+(leave|days|policy).{0,160}/gi },
+                { label: 'medical leave', regex: /.{0,160}medical\s+leave.{0,160}/gi },
+                { label: 'paid time off', regex: /.{0,160}(paid\s+time\s+off|pto).{0,160}/gi },
+                { label: 'vacation policy', regex: /.{0,160}vacation.{0,160}/gi }
+              ];
+
+              const highlights = [];
+              importantKeywords.forEach(({ label, regex }) => {
+                const matches = [];
+                let match;
+                while ((match = regex.exec(textContent)) !== null && matches.length < 3) {
+                  matches.push(match[0].replace(/\s+/g, ' ').trim());
+                }
+                if (matches.length > 0) {
+                  highlights.push({ label, matches });
+                }
+              });
+
+              if (highlights.length > 0) {
+                prompt += `Key excerpts detected:\n`;
+                highlights.forEach(({ label, matches }) => {
+                  prompt += `- ${label}: ${matches.join(' ... ')}\n`;
+                });
+                prompt += `\n`;
+              }
+
+              if (textContent.length <= 5000) {
+                prompt += `Content:\n${textContent}\n`;
+              } else {
+                prompt += `Content (first 5000 chars):\n${textContent.substring(0, 5000)}...\n`;
+                prompt += `[Document continues, total length: ${textContent.length} characters]\n`;
+              }
+            }
+          }
+
           prompt += `\n---\n`;
         });
       }
@@ -295,6 +489,42 @@ Answer in a friendly, professional tone. Don't mention file formats or JSON - ju
     chat,
     model
   };
+}
+
+function logThinkSteps(response) {
+  if (!response?.content) return;
+
+  let thinkCount = 0;
+
+  response.content.forEach(part => {
+    if (part.type === 'tool_use' && part.name === 'think') {
+      thinkCount++;
+      const thought = part.input?.thought;
+      if (thought) {
+        console.log(`🧠 Think step ${thinkCount}: ${thought}`);
+      }
+    }
+  });
+}
+
+function extractTextSegments(content = []) {
+  return content
+    .filter(part => part.type === 'text' && part.text?.trim())
+    .map(part => part.text.trim());
+}
+
+function extractTextFromResponse(response) {
+  if (!response?.content) {
+    return 'No response generated';
+  }
+
+  const textSegments = extractTextSegments(response.content);
+
+  if (textSegments.length === 0) {
+    return 'No response generated';
+  }
+
+  return textSegments.join('\n\n');
 }
 
 /**
