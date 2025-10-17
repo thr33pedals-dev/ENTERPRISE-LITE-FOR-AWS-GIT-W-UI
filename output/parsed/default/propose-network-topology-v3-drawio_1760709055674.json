@@ -1,0 +1,97 @@
+{
+  "source": "advanced_pdf_parser",
+  "document_metadata": {
+    "detected_type": "pdf_document",
+    "title": "Ayer Rajah CO Core",
+    "pages": 1
+  },
+  "hierarchical_content": {
+    "sections": [
+      {
+        "section_id": "10",
+        "section_title": "G SFP+, Single Mode ZR 80KM",
+        "subsections": [],
+        "items": []
+      },
+      {
+        "section_id": "10",
+        "section_title": "G SFP+, Single Mode ER 40KM StackWise Virtual 25G SFP28, Multimode StackWise Virtual Dual Active Detect 10G SFP+ Singlemode",
+        "subsections": [],
+        "items": []
+      },
+      {
+        "section_id": "10",
+        "section_title": "G SFP+ Multimode",
+        "subsections": [],
+        "items": [
+          {
+            "item_id": "10.1",
+            "text": "C9200 Stack Cable Level 2 Server Room",
+            "sub_items": []
+          },
+          {
+            "item_id": "10.2",
+            "text": "UTP 1G/ Multi-Gigabit",
+            "sub_items": []
+          },
+          {
+            "item_id": "10.3",
+            "text": "Patch Panel",
+            "sub_items": []
+          },
+          {
+            "item_id": "10.4",
+            "text": "EtherChannel EtherChannel EtherChannel EtherChannel EtherChannel EtherChannel EtherChannel",
+            "sub_items": []
+          },
+          {
+            "item_id": "10.5",
+            "text": "C9300X-24Y-A Stack C9300X-NM-8Y C9200-48PXG-A Stack C9200-48PXG-A Stack C9200-48PXG-A Stack C9200-NM-4X C9200-NM-4X C9200-NM-4X x 12 x12 C9200-48PXG-A Stack C9200-48PXG-A Stack C9200-48PXG-A Stack C9200-NM-4X C9200-NM-4X C9200-NM-4X",
+            "sub_items": []
+          },
+          {
+            "item_id": "10.6",
+            "text": "Basement Level Level 1 Entrance Level 3 Colo Room Level 4 Netco Room Level 5 Main Office",
+            "sub_items": []
+          },
+          {
+            "item_id": "10.7",
+            "text": "Endpoint Devices With 10G Multimode Connection",
+            "sub_items": []
+          }
+        ]
+      }
+    ]
+  },
+  "structured_data_tables": {
+    "tables": []
+  },
+  "terms_conditions_clauses": {
+    "clauses": [
+      {
+        "clause_number": "10",
+        "text": "G SFP+, Single Mode ZR 80KM",
+        "sub_clauses": []
+      },
+      {
+        "clause_number": "10",
+        "text": "G SFP+, Single Mode ER 40KM StackWise Virtual 25G SFP28, Multimode StackWise Virtual Dual Active Detect 10G SFP+ Singlemode",
+        "sub_clauses": []
+      },
+      {
+        "clause_number": "10",
+        "text": "G SFP+ Multimode",
+        "sub_clauses": []
+      }
+    ]
+  },
+  "metadata": {
+    "model": "claude-sonnet-4-20250514",
+    "max_tokens": 16000,
+    "temperature": 0,
+    "top_p": 1,
+    "generated_at": "2025-10-17T13:50:55.752Z",
+    "prompt_path": "config/prompts/vision-ultimate.txt",
+    "reason": "table_structure_loss"
+  }
+}

@@ -117,7 +117,7 @@ Get your API key from: https://console.anthropic.com/
 
 ```env
 PORT=3000
-CLAUDE_MODEL=claude-3-5-sonnet-20241022
+CLAUDE_MODEL=claude-sonnet-4-20250514
 MAX_FILE_SIZE=10485760
 MAX_FILES=10
 ```
@@ -134,7 +134,7 @@ You should see:
 🚀 Support AI Server with MCP
 ================================
 📡 Server running on http://localhost:3000
-🤖 Claude Model: claude-3-5-sonnet-20241022
+🤖 Claude Model: claude-sonnet-4-20250514
 📁 Uploads directory: ./uploads/processed
 
 📋 API Endpoints:
@@ -322,7 +322,7 @@ Get system status.
     "uploadTime": "2024-10-09T15:30:00Z",
     "totalRecords": 150,
     "qualityScore": 92,
-    "claudeModel": "claude-3-5-sonnet-20241022"
+    "claudeModel": "claude-sonnet-4-20250514"
   }
 }
 ```
@@ -354,7 +354,7 @@ MAX_FILE_SIZE=10485760    # 10MB
 MAX_FILES=10
 
 # Claude Configuration
-CLAUDE_MODEL=claude-3-5-sonnet-20241022
+CLAUDE_MODEL=claude-sonnet-4-20250514
 CLAUDE_MAX_TOKENS=4096
 ```
 
@@ -555,6 +555,16 @@ Claude API:
 Response: "PO SG-001 is in transit..."
 ```
 
+### 4. Smart Triage Router (New)
+
+Our latest release introduces a **content-aware triage layer** that prepares uploaded files cheaply before involving the agent:
+
+- **Path A – Structured Excel**: Excel/CSV files go through a local parser (`processExcelFile`) to produce clean JSON tables for Claude.
+- **Path B – Simple Text PDFs & Docs**: PDFs/DOCX/TXT first pass through a fast local extractor. If the text looks clean, we keep it local and avoid expensive calls.
+- **Path C – Complex PDFs (Scans/Tables)**: When the quick extract looks garbled, too short, or fails, we automatically flag the file for a vision-capable tool (`process_pdf_with_vlm`) via MCP.
+
+Every processed file now carries triage metadata in the manifest so Claude knows whether the content is reliable or needs vision escalation.
+
 ### 3. MCP Simulation
 
 **True MCP** (Future):
@@ -578,120 +588,6251 @@ When official MCP SDK is ready, we can switch to true tool calling with minimal 
 
 ---
 
-## ❓ FAQ
+## 🎓 How It Works (Deep Dive)
 
-### **Q: Do I need vector database or embeddings?**
-**A:** No! For < 1,000 records per customer, Claude can search JSON directly. Vector DB only needed for 10,000+ records.
+### 1. File Upload Flow
 
-### **Q: What if customer uploads Excel with formulas that haven't calculated?**
-**A:** The quality analyzer detects empty cells and `#N/A` errors, then recommends: "Open Excel, press F9, save, re-upload."
+```
+User drops Excel files
+      ↓
+Multer saves to temp/
+      ↓
+Excel Processor:
+  - XLSX.readFile() with { raw: false }
+  - Extracts calculated VLOOKUP values ✅
+  - Converts to JSON
+  - Saves to uploads/processed/tracking_main.json
+      ↓
+Quality Analyzer:
+  - Scans for missing data
+  - Detects formula errors
+  - Calculates quality score
+      ↓
+Response sent to frontend
+```
 
-### **Q: Can it handle multiple files with different structures?**
-**A:** Yes! The system detects the main tracking file (has PO numbers) and treats others as lookup tables. You can also implement custom merging logic.
+### 2. Chat Flow
 
-### **Q: What if I have 5 Excel files to merge?**
-**A:** Upload all 5. The system saves them separately. Claude reads all files and combines information when answering questions. Or use `mergeFiles()` function to merge into one JSON.
+```
+User asks: "Status of PO SG-001?"
+      ↓
+Frontend sends to /api/chat
+      ↓
+Claude Client:
+  - Reads manifest.json (file metadata)
+  - Loads tracking_main.json
+  - Includes data in system prompt
+      ↓
+Claude API:
+  - Understands question
+  - Searches JSON data in context
+  - Finds PO SG-001
+  - Generates natural language answer
+      ↓
+Response: "PO SG-001 is in transit..."
+```
 
-### **Q: Is this production-ready?**
-**A:** Yes! Includes error handling, validation, quality checks, and proper architecture. Add authentication for multi-tenant use.
+### 4. Smart Triage Router (New)
 
-### **Q: How much does it cost?**
-**A:** 
-- Development: $0 (free Anthropic credits for new accounts)
-- Production: ~$0.10-0.50 per conversation (Claude API)
-- Hosting: $5-20/month (Railway, Heroku, DigitalOcean)
+Our latest release introduces a **content-aware triage layer** that prepares uploaded files cheaply before involving the agent:
 
-### **Q: Can I customize the AI's behavior?**
-**A:** Yes! Edit `buildSystemPrompt()` in `src/claude-client.js` to change tone, add business rules, customize responses.
+- **Path A – Structured Excel**: Excel/CSV files go through a local parser (`processExcelFile`) to produce clean JSON tables for Claude.
+- **Path B – Simple Text PDFs & Docs**: PDFs/DOCX/TXT first pass through a fast local extractor. If the text looks clean, we keep it local and avoid expensive calls.
+- **Path C – Complex PDFs (Scans/Tables)**: When the quick extract looks garbled, too short, or fails, we automatically flag the file for a vision-capable tool (`process_pdf_with_vlm`) via MCP.
 
----
+Every processed file now carries triage metadata in the manifest so Claude knows whether the content is reliable or needs vision escalation.
 
-## 🐛 Troubleshooting
+### 3. MCP Simulation
 
-### "ANTHROPIC_API_KEY is required"
-- Create `.env` file from `env.example.txt`
-- Add your API key: `ANTHROPIC_API_KEY=sk-ant-xxxxx`
+**True MCP** (Future):
+```javascript
+// Claude calls filesystem tool
+const data = mcp.readFile('/uploads/processed/tracking_main.json');
+// Claude searches data
+```
 
-### "File too large"
-- Default limit: 10MB per file
-- Increase in `.env`: `MAX_FILE_SIZE=20971520` (20MB)
+**Current Implementation** (Works Now):
+```javascript
+// We load file and include in prompt
+const data = fs.readFileSync('tracking_main.json');
+const systemPrompt = `Here's the tracking data:\n${JSON.stringify(data)}`;
+// Claude has data in context, can search it
+```
 
-### "No data uploaded yet"
-- Upload Excel files first before chatting
-- Check browser console for upload errors
-- Check server logs for processing errors
+**Same result, different method!**
 
-### "Claude gives wrong information"
-- Check if Excel formulas calculated (no #N/A errors)
-- Review quality report for missing data
-- Verify file uploaded successfully (check `/api/status`)
-
-### "Server won't start"
-- Check Node.js version: `node --version` (need 18+)
-- Delete `node_modules` and run `npm install` again
-- Check if port 3000 is available: `lsof -i :3000` (Mac/Linux)
-
----
-
-## 🤝 Contributing
-
-Contributions welcome! Please:
-
-1. Fork the repository
-2. Create a feature branch
-3. Make your changes
-4. Add tests if applicable
-5. Submit a pull request
-
----
-
-## 📄 License
-
-MIT License - feel free to use in your projects!
-
----
-
-## 🙏 Acknowledgments
-
-- **Anthropic** - Claude AI API
-- **SheetJS** - XLSX library for Excel processing
-- **Express** - Web server framework
-- **Model Context Protocol** - Filesystem access standard
+When official MCP SDK is ready, we can switch to true tool calling with minimal code changes.
 
 ---
 
-## 📞 Support
+## 🎓 How It Works (Deep Dive)
 
-- **Issues:** Open a GitHub issue
-- **Questions:** Check FAQ above
-- **Documentation:** This README!
+### 1. File Upload Flow
+
+```
+User drops Excel files
+      ↓
+Multer saves to temp/
+      ↓
+Excel Processor:
+  - XLSX.readFile() with { raw: false }
+  - Extracts calculated VLOOKUP values ✅
+  - Converts to JSON
+  - Saves to uploads/processed/tracking_main.json
+      ↓
+Quality Analyzer:
+  - Scans for missing data
+  - Detects formula errors
+  - Calculates quality score
+      ↓
+Response sent to frontend
+```
+
+### 2. Chat Flow
+
+```
+User asks: "Status of PO SG-001?"
+      ↓
+Frontend sends to /api/chat
+      ↓
+Claude Client:
+  - Reads manifest.json (file metadata)
+  - Loads tracking_main.json
+  - Includes data in system prompt
+      ↓
+Claude API:
+  - Understands question
+  - Searches JSON data in context
+  - Finds PO SG-001
+  - Generates natural language answer
+      ↓
+Response: "PO SG-001 is in transit..."
+```
+
+### 4. Smart Triage Router (New)
+
+Our latest release introduces a **content-aware triage layer** that prepares uploaded files cheaply before involving the agent:
+
+- **Path A – Structured Excel**: Excel/CSV files go through a local parser (`processExcelFile`) to produce clean JSON tables for Claude.
+- **Path B – Simple Text PDFs & Docs**: PDFs/DOCX/TXT first pass through a fast local extractor. If the text looks clean, we keep it local and avoid expensive calls.
+- **Path C – Complex PDFs (Scans/Tables)**: When the quick extract looks garbled, too short, or fails, we automatically flag the file for a vision-capable tool (`process_pdf_with_vlm`) via MCP.
+
+Every processed file now carries triage metadata in the manifest so Claude knows whether the content is reliable or needs vision escalation.
+
+### 3. MCP Simulation
+
+**True MCP** (Future):
+```javascript
+// Claude calls filesystem tool
+const data = mcp.readFile('/uploads/processed/tracking_main.json');
+// Claude searches data
+```
+
+**Current Implementation** (Works Now):
+```javascript
+// We load file and include in prompt
+const data = fs.readFileSync('tracking_main.json');
+const systemPrompt = `Here's the tracking data:\n${JSON.stringify(data)}`;
+// Claude has data in context, can search it
+```
+
+**Same result, different method!**
+
+When official MCP SDK is ready, we can switch to true tool calling with minimal code changes.
 
 ---
 
-## 🎯 Next Steps
+## 🎓 How It Works (Deep Dive)
 
-**You're ready to go!**
+### 1. File Upload Flow
 
-1. ✅ Install dependencies: `npm install`
-2. ✅ Set up `.env` with API key
-3. ✅ Start server: `npm start`
-4. ✅ Open http://localhost:3000
-5. ✅ Upload your Excel files
-6. ✅ Chat with AI!
+```
+User drops Excel files
+      ↓
+Multer saves to temp/
+      ↓
+Excel Processor:
+  - XLSX.readFile() with { raw: false }
+  - Extracts calculated VLOOKUP values ✅
+  - Converts to JSON
+  - Saves to uploads/processed/tracking_main.json
+      ↓
+Quality Analyzer:
+  - Scans for missing data
+  - Detects formula errors
+  - Calculates quality score
+      ↓
+Response sent to frontend
+```
 
-**For your SME customers:**
-- Demo takes 5 minutes
-- Show them uploading their actual Excel files
-- Let them ask real questions
-- Watch them be amazed! 🚀
+### 2. Chat Flow
 
-**Questions? Issues? Ideas?**
-Open an issue or reach out!
+```
+User asks: "Status of PO SG-001?"
+      ↓
+Frontend sends to /api/chat
+      ↓
+Claude Client:
+  - Reads manifest.json (file metadata)
+  - Loads tracking_main.json
+  - Includes data in system prompt
+      ↓
+Claude API:
+  - Understands question
+  - Searches JSON data in context
+  - Finds PO SG-001
+  - Generates natural language answer
+      ↓
+Response: "PO SG-001 is in transit..."
+```
+
+### 4. Smart Triage Router (New)
+
+Our latest release introduces a **content-aware triage layer** that prepares uploaded files cheaply before involving the agent:
+
+- **Path A – Structured Excel**: Excel/CSV files go through a local parser (`processExcelFile`) to produce clean JSON tables for Claude.
+- **Path B – Simple Text PDFs & Docs**: PDFs/DOCX/TXT first pass through a fast local extractor. If the text looks clean, we keep it local and avoid expensive calls.
+- **Path C – Complex PDFs (Scans/Tables)**: When the quick extract looks garbled, too short, or fails, we automatically flag the file for a vision-capable tool (`process_pdf_with_vlm`) via MCP.
+
+Every processed file now carries triage metadata in the manifest so Claude knows whether the content is reliable or needs vision escalation.
+
+### 3. MCP Simulation
+
+**True MCP** (Future):
+```javascript
+// Claude calls filesystem tool
+const data = mcp.readFile('/uploads/processed/tracking_main.json');
+// Claude searches data
+```
+
+**Current Implementation** (Works Now):
+```javascript
+// We load file and include in prompt
+const data = fs.readFileSync('tracking_main.json');
+const systemPrompt = `Here's the tracking data:\n${JSON.stringify(data)}`;
+// Claude has data in context, can search it
+```
+
+**Same result, different method!**
+
+When official MCP SDK is ready, we can switch to true tool calling with minimal code changes.
 
 ---
 
-**Built with ❤️ for SMEs who want AI without complexity**
+## 🎓 How It Works (Deep Dive)
 
-*Transform your Excel tracking files into an intelligent AI assistant in minutes, not months!*
+### 1. File Upload Flow
 
+```
+User drops Excel files
+      ↓
+Multer saves to temp/
+      ↓
+Excel Processor:
+  - XLSX.readFile() with { raw: false }
+  - Extracts calculated VLOOKUP values ✅
+  - Converts to JSON
+  - Saves to uploads/processed/tracking_main.json
+      ↓
+Quality Analyzer:
+  - Scans for missing data
+  - Detects formula errors
+  - Calculates quality score
+      ↓
+Response sent to frontend
+```
 
+### 2. Chat Flow
+
+```
+User asks: "Status of PO SG-001?"
+      ↓
+Frontend sends to /api/chat
+      ↓
+Claude Client:
+  - Reads manifest.json (file metadata)
+  - Loads tracking_main.json
+  - Includes data in system prompt
+      ↓
+Claude API:
+  - Understands question
+  - Searches JSON data in context
+  - Finds PO SG-001
+  - Generates natural language answer
+      ↓
+Response: "PO SG-001 is in transit..."
+```
+
+### 4. Smart Triage Router (New)
+
+Our latest release introduces a **content-aware triage layer** that prepares uploaded files cheaply before involving the agent:
+
+- **Path A – Structured Excel**: Excel/CSV files go through a local parser (`processExcelFile`) to produce clean JSON tables for Claude.
+- **Path B – Simple Text PDFs & Docs**: PDFs/DOCX/TXT first pass through a fast local extractor. If the text looks clean, we keep it local and avoid expensive calls.
+- **Path C – Complex PDFs (Scans/Tables)**: When the quick extract looks garbled, too short, or fails, we automatically flag the file for a vision-capable tool (`process_pdf_with_vlm`) via MCP.
+
+Every processed file now carries triage metadata in the manifest so Claude knows whether the content is reliable or needs vision escalation.
+
+### 3. MCP Simulation
+
+**True MCP** (Future):
+```javascript
+// Claude calls filesystem tool
+const data = mcp.readFile('/uploads/processed/tracking_main.json');
+// Claude searches data
+```
+
+**Current Implementation** (Works Now):
+```javascript
+// We load file and include in prompt
+const data = fs.readFileSync('tracking_main.json');
+const systemPrompt = `Here's the tracking data:\n${JSON.stringify(data)}`;
+// Claude has data in context, can search it
+```
+
+**Same result, different method!**
+
+When official MCP SDK is ready, we can switch to true tool calling with minimal code changes.
+
+---
+
+## 🎓 How It Works (Deep Dive)
+
+### 1. File Upload Flow
+
+```
+User drops Excel files
+      ↓
+Multer saves to temp/
+      ↓
+Excel Processor:
+  - XLSX.readFile() with { raw: false }
+  - Extracts calculated VLOOKUP values ✅
+  - Converts to JSON
+  - Saves to uploads/processed/tracking_main.json
+      ↓
+Quality Analyzer:
+  - Scans for missing data
+  - Detects formula errors
+  - Calculates quality score
+      ↓
+Response sent to frontend
+```
+
+### 2. Chat Flow
+
+```
+User asks: "Status of PO SG-001?"
+      ↓
+Frontend sends to /api/chat
+      ↓
+Claude Client:
+  - Reads manifest.json (file metadata)
+  - Loads tracking_main.json
+  - Includes data in system prompt
+      ↓
+Claude API:
+  - Understands question
+  - Searches JSON data in context
+  - Finds PO SG-001
+  - Generates natural language answer
+      ↓
+Response: "PO SG-001 is in transit..."
+```
+
+### 4. Smart Triage Router (New)
+
+Our latest release introduces a **content-aware triage layer** that prepares uploaded files cheaply before involving the agent:
+
+- **Path A – Structured Excel**: Excel/CSV files go through a local parser (`processExcelFile`) to produce clean JSON tables for Claude.
+- **Path B – Simple Text PDFs & Docs**: PDFs/DOCX/TXT first pass through a fast local extractor. If the text looks clean, we keep it local and avoid expensive calls.
+- **Path C – Complex PDFs (Scans/Tables)**: When the quick extract looks garbled, too short, or fails, we automatically flag the file for a vision-capable tool (`process_pdf_with_vlm`) via MCP.
+
+Every processed file now carries triage metadata in the manifest so Claude knows whether the content is reliable or needs vision escalation.
+
+### 3. MCP Simulation
+
+**True MCP** (Future):
+```javascript
+// Claude calls filesystem tool
+const data = mcp.readFile('/uploads/processed/tracking_main.json');
+// Claude searches data
+```
+
+**Current Implementation** (Works Now):
+```javascript
+// We load file and include in prompt
+const data = fs.readFileSync('tracking_main.json');
+const systemPrompt = `Here's the tracking data:\n${JSON.stringify(data)}`;
+// Claude has data in context, can search it
+```
+
+**Same result, different method!**
+
+When official MCP SDK is ready, we can switch to true tool calling with minimal code changes.
+
+---
+
+## 🎓 How It Works (Deep Dive)
+
+### 1. File Upload Flow
+
+```
+User drops Excel files
+      ↓
+Multer saves to temp/
+      ↓
+Excel Processor:
+  - XLSX.readFile() with { raw: false }
+  - Extracts calculated VLOOKUP values ✅
+  - Converts to JSON
+  - Saves to uploads/processed/tracking_main.json
+      ↓
+Quality Analyzer:
+  - Scans for missing data
+  - Detects formula errors
+  - Calculates quality score
+      ↓
+Response sent to frontend
+```
+
+### 2. Chat Flow
+
+```
+User asks: "Status of PO SG-001?"
+      ↓
+Frontend sends to /api/chat
+      ↓
+Claude Client:
+  - Reads manifest.json (file metadata)
+  - Loads tracking_main.json
+  - Includes data in system prompt
+      ↓
+Claude API:
+  - Understands question
+  - Searches JSON data in context
+  - Finds PO SG-001
+  - Generates natural language answer
+      ↓
+Response: "PO SG-001 is in transit..."
+```
+
+### 4. Smart Triage Router (New)
+
+Our latest release introduces a **content-aware triage layer** that prepares uploaded files cheaply before involving the agent:
+
+- **Path A – Structured Excel**: Excel/CSV files go through a local parser (`processExcelFile`) to produce clean JSON tables for Claude.
+- **Path B – Simple Text PDFs & Docs**: PDFs/DOCX/TXT first pass through a fast local extractor. If the text looks clean, we keep it local and avoid expensive calls.
+- **Path C – Complex PDFs (Scans/Tables)**: When the quick extract looks garbled, too short, or fails, we automatically flag the file for a vision-capable tool (`process_pdf_with_vlm`) via MCP.
+
+Every processed file now carries triage metadata in the manifest so Claude knows whether the content is reliable or needs vision escalation.
+
+### 3. MCP Simulation
+
+**True MCP** (Future):
+```javascript
+// Claude calls filesystem tool
+const data = mcp.readFile('/uploads/processed/tracking_main.json');
+// Claude searches data
+```
+
+**Current Implementation** (Works Now):
+```javascript
+// We load file and include in prompt
+const data = fs.readFileSync('tracking_main.json');
+const systemPrompt = `Here's the tracking data:\n${JSON.stringify(data)}`;
+// Claude has data in context, can search it
+```
+
+**Same result, different method!**
+
+When official MCP SDK is ready, we can switch to true tool calling with minimal code changes.
+
+---
+
+## 🎓 How It Works (Deep Dive)
+
+### 1. File Upload Flow
+
+```
+User drops Excel files
+      ↓
+Multer saves to temp/
+      ↓
+Excel Processor:
+  - XLSX.readFile() with { raw: false }
+  - Extracts calculated VLOOKUP values ✅
+  - Converts to JSON
+  - Saves to uploads/processed/tracking_main.json
+      ↓
+Quality Analyzer:
+  - Scans for missing data
+  - Detects formula errors
+  - Calculates quality score
+      ↓
+Response sent to frontend
+```
+
+### 2. Chat Flow
+
+```
+User asks: "Status of PO SG-001?"
+      ↓
+Frontend sends to /api/chat
+      ↓
+Claude Client:
+  - Reads manifest.json (file metadata)
+  - Loads tracking_main.json
+  - Includes data in system prompt
+      ↓
+Claude API:
+  - Understands question
+  - Searches JSON data in context
+  - Finds PO SG-001
+  - Generates natural language answer
+      ↓
+Response: "PO SG-001 is in transit..."
+```
+
+### 4. Smart Triage Router (New)
+
+Our latest release introduces a **content-aware triage layer** that prepares uploaded files cheaply before involving the agent:
+
+- **Path A – Structured Excel**: Excel/CSV files go through a local parser (`processExcelFile`) to produce clean JSON tables for Claude.
+- **Path B – Simple Text PDFs & Docs**: PDFs/DOCX/TXT first pass through a fast local extractor. If the text looks clean, we keep it local and avoid expensive calls.
+- **Path C – Complex PDFs (Scans/Tables)**: When the quick extract looks garbled, too short, or fails, we automatically flag the file for a vision-capable tool (`process_pdf_with_vlm`) via MCP.
+
+Every processed file now carries triage metadata in the manifest so Claude knows whether the content is reliable or needs vision escalation.
+
+### 3. MCP Simulation
+
+**True MCP** (Future):
+```javascript
+// Claude calls filesystem tool
+const data = mcp.readFile('/uploads/processed/tracking_main.json');
+// Claude searches data
+```
+
+**Current Implementation** (Works Now):
+```javascript
+// We load file and include in prompt
+const data = fs.readFileSync('tracking_main.json');
+const systemPrompt = `Here's the tracking data:\n${JSON.stringify(data)}`;
+// Claude has data in context, can search it
+```
+
+**Same result, different method!**
+
+When official MCP SDK is ready, we can switch to true tool calling with minimal code changes.
+
+---
+
+## 🎓 How It Works (Deep Dive)
+
+### 1. File Upload Flow
+
+```
+User drops Excel files
+      ↓
+Multer saves to temp/
+      ↓
+Excel Processor:
+  - XLSX.readFile() with { raw: false }
+  - Extracts calculated VLOOKUP values ✅
+  - Converts to JSON
+  - Saves to uploads/processed/tracking_main.json
+      ↓
+Quality Analyzer:
+  - Scans for missing data
+  - Detects formula errors
+  - Calculates quality score
+      ↓
+Response sent to frontend
+```
+
+### 2. Chat Flow
+
+```
+User asks: "Status of PO SG-001?"
+      ↓
+Frontend sends to /api/chat
+      ↓
+Claude Client:
+  - Reads manifest.json (file metadata)
+  - Loads tracking_main.json
+  - Includes data in system prompt
+      ↓
+Claude API:
+  - Understands question
+  - Searches JSON data in context
+  - Finds PO SG-001
+  - Generates natural language answer
+      ↓
+Response: "PO SG-001 is in transit..."
+```
+
+### 4. Smart Triage Router (New)
+
+Our latest release introduces a **content-aware triage layer** that prepares uploaded files cheaply before involving the agent:
+
+- **Path A – Structured Excel**: Excel/CSV files go through a local parser (`processExcelFile`) to produce clean JSON tables for Claude.
+- **Path B – Simple Text PDFs & Docs**: PDFs/DOCX/TXT first pass through a fast local extractor. If the text looks clean, we keep it local and avoid expensive calls.
+- **Path C – Complex PDFs (Scans/Tables)**: When the quick extract looks garbled, too short, or fails, we automatically flag the file for a vision-capable tool (`process_pdf_with_vlm`) via MCP.
+
+Every processed file now carries triage metadata in the manifest so Claude knows whether the content is reliable or needs vision escalation.
+
+### 3. MCP Simulation
+
+**True MCP** (Future):
+```javascript
+// Claude calls filesystem tool
+const data = mcp.readFile('/uploads/processed/tracking_main.json');
+// Claude searches data
+```
+
+**Current Implementation** (Works Now):
+```javascript
+// We load file and include in prompt
+const data = fs.readFileSync('tracking_main.json');
+const systemPrompt = `Here's the tracking data:\n${JSON.stringify(data)}`;
+// Claude has data in context, can search it
+```
+
+**Same result, different method!**
+
+When official MCP SDK is ready, we can switch to true tool calling with minimal code changes.
+
+---
+
+## 🎓 How It Works (Deep Dive)
+
+### 1. File Upload Flow
+
+```
+User drops Excel files
+      ↓
+Multer saves to temp/
+      ↓
+Excel Processor:
+  - XLSX.readFile() with { raw: false }
+  - Extracts calculated VLOOKUP values ✅
+  - Converts to JSON
+  - Saves to uploads/processed/tracking_main.json
+      ↓
+Quality Analyzer:
+  - Scans for missing data
+  - Detects formula errors
+  - Calculates quality score
+      ↓
+Response sent to frontend
+```
+
+### 2. Chat Flow
+
+```
+User asks: "Status of PO SG-001?"
+      ↓
+Frontend sends to /api/chat
+      ↓
+Claude Client:
+  - Reads manifest.json (file metadata)
+  - Loads tracking_main.json
+  - Includes data in system prompt
+      ↓
+Claude API:
+  - Understands question
+  - Searches JSON data in context
+  - Finds PO SG-001
+  - Generates natural language answer
+      ↓
+Response: "PO SG-001 is in transit..."
+```
+
+### 4. Smart Triage Router (New)
+
+Our latest release introduces a **content-aware triage layer** that prepares uploaded files cheaply before involving the agent:
+
+- **Path A – Structured Excel**: Excel/CSV files go through a local parser (`processExcelFile`) to produce clean JSON tables for Claude.
+- **Path B – Simple Text PDFs & Docs**: PDFs/DOCX/TXT first pass through a fast local extractor. If the text looks clean, we keep it local and avoid expensive calls.
+- **Path C – Complex PDFs (Scans/Tables)**: When the quick extract looks garbled, too short, or fails, we automatically flag the file for a vision-capable tool (`process_pdf_with_vlm`) via MCP.
+
+Every processed file now carries triage metadata in the manifest so Claude knows whether the content is reliable or needs vision escalation.
+
+### 3. MCP Simulation
+
+**True MCP** (Future):
+```javascript
+// Claude calls filesystem tool
+const data = mcp.readFile('/uploads/processed/tracking_main.json');
+// Claude searches data
+```
+
+**Current Implementation** (Works Now):
+```javascript
+// We load file and include in prompt
+const data = fs.readFileSync('tracking_main.json');
+const systemPrompt = `Here's the tracking data:\n${JSON.stringify(data)}`;
+// Claude has data in context, can search it
+```
+
+**Same result, different method!**
+
+When official MCP SDK is ready, we can switch to true tool calling with minimal code changes.
+
+---
+
+## 🎓 How It Works (Deep Dive)
+
+### 1. File Upload Flow
+
+```
+User drops Excel files
+      ↓
+Multer saves to temp/
+      ↓
+Excel Processor:
+  - XLSX.readFile() with { raw: false }
+  - Extracts calculated VLOOKUP values ✅
+  - Converts to JSON
+  - Saves to uploads/processed/tracking_main.json
+      ↓
+Quality Analyzer:
+  - Scans for missing data
+  - Detects formula errors
+  - Calculates quality score
+      ↓
+Response sent to frontend
+```
+
+### 2. Chat Flow
+
+```
+User asks: "Status of PO SG-001?"
+      ↓
+Frontend sends to /api/chat
+      ↓
+Claude Client:
+  - Reads manifest.json (file metadata)
+  - Loads tracking_main.json
+  - Includes data in system prompt
+      ↓
+Claude API:
+  - Understands question
+  - Searches JSON data in context
+  - Finds PO SG-001
+  - Generates natural language answer
+      ↓
+Response: "PO SG-001 is in transit..."
+```
+
+### 4. Smart Triage Router (New)
+
+Our latest release introduces a **content-aware triage layer** that prepares uploaded files cheaply before involving the agent:
+
+- **Path A – Structured Excel**: Excel/CSV files go through a local parser (`processExcelFile`) to produce clean JSON tables for Claude.
+- **Path B – Simple Text PDFs & Docs**: PDFs/DOCX/TXT first pass through a fast local extractor. If the text looks clean, we keep it local and avoid expensive calls.
+- **Path C – Complex PDFs (Scans/Tables)**: When the quick extract looks garbled, too short, or fails, we automatically flag the file for a vision-capable tool (`process_pdf_with_vlm`) via MCP.
+
+Every processed file now carries triage metadata in the manifest so Claude knows whether the content is reliable or needs vision escalation.
+
+### 3. MCP Simulation
+
+**True MCP** (Future):
+```javascript
+// Claude calls filesystem tool
+const data = mcp.readFile('/uploads/processed/tracking_main.json');
+// Claude searches data
+```
+
+**Current Implementation** (Works Now):
+```javascript
+// We load file and include in prompt
+const data = fs.readFileSync('tracking_main.json');
+const systemPrompt = `Here's the tracking data:\n${JSON.stringify(data)}`;
+// Claude has data in context, can search it
+```
+
+**Same result, different method!**
+
+When official MCP SDK is ready, we can switch to true tool calling with minimal code changes.
+
+---
+
+## 🎓 How It Works (Deep Dive)
+
+### 1. File Upload Flow
+
+```
+User drops Excel files
+      ↓
+Multer saves to temp/
+      ↓
+Excel Processor:
+  - XLSX.readFile() with { raw: false }
+  - Extracts calculated VLOOKUP values ✅
+  - Converts to JSON
+  - Saves to uploads/processed/tracking_main.json
+      ↓
+Quality Analyzer:
+  - Scans for missing data
+  - Detects formula errors
+  - Calculates quality score
+      ↓
+Response sent to frontend
+```
+
+### 2. Chat Flow
+
+```
+User asks: "Status of PO SG-001?"
+      ↓
+Frontend sends to /api/chat
+      ↓
+Claude Client:
+  - Reads manifest.json (file metadata)
+  - Loads tracking_main.json
+  - Includes data in system prompt
+      ↓
+Claude API:
+  - Understands question
+  - Searches JSON data in context
+  - Finds PO SG-001
+  - Generates natural language answer
+      ↓
+Response: "PO SG-001 is in transit..."
+```
+
+### 4. Smart Triage Router (New)
+
+Our latest release introduces a **content-aware triage layer** that prepares uploaded files cheaply before involving the agent:
+
+- **Path A – Structured Excel**: Excel/CSV files go through a local parser (`processExcelFile`) to produce clean JSON tables for Claude.
+- **Path B – Simple Text PDFs & Docs**: PDFs/DOCX/TXT first pass through a fast local extractor. If the text looks clean, we keep it local and avoid expensive calls.
+- **Path C – Complex PDFs (Scans/Tables)**: When the quick extract looks garbled, too short, or fails, we automatically flag the file for a vision-capable tool (`process_pdf_with_vlm`) via MCP.
+
+Every processed file now carries triage metadata in the manifest so Claude knows whether the content is reliable or needs vision escalation.
+
+### 3. MCP Simulation
+
+**True MCP** (Future):
+```javascript
+// Claude calls filesystem tool
+const data = mcp.readFile('/uploads/processed/tracking_main.json');
+// Claude searches data
+```
+
+**Current Implementation** (Works Now):
+```javascript
+// We load file and include in prompt
+const data = fs.readFileSync('tracking_main.json');
+const systemPrompt = `Here's the tracking data:\n${JSON.stringify(data)}`;
+// Claude has data in context, can search it
+```
+
+**Same result, different method!**
+
+When official MCP SDK is ready, we can switch to true tool calling with minimal code changes.
+
+---
+
+## 🎓 How It Works (Deep Dive)
+
+### 1. File Upload Flow
+
+```
+User drops Excel files
+      ↓
+Multer saves to temp/
+      ↓
+Excel Processor:
+  - XLSX.readFile() with { raw: false }
+  - Extracts calculated VLOOKUP values ✅
+  - Converts to JSON
+  - Saves to uploads/processed/tracking_main.json
+      ↓
+Quality Analyzer:
+  - Scans for missing data
+  - Detects formula errors
+  - Calculates quality score
+      ↓
+Response sent to frontend
+```
+
+### 2. Chat Flow
+
+```
+User asks: "Status of PO SG-001?"
+      ↓
+Frontend sends to /api/chat
+      ↓
+Claude Client:
+  - Reads manifest.json (file metadata)
+  - Loads tracking_main.json
+  - Includes data in system prompt
+      ↓
+Claude API:
+  - Understands question
+  - Searches JSON data in context
+  - Finds PO SG-001
+  - Generates natural language answer
+      ↓
+Response: "PO SG-001 is in transit..."
+```
+
+### 4. Smart Triage Router (New)
+
+Our latest release introduces a **content-aware triage layer** that prepares uploaded files cheaply before involving the agent:
+
+- **Path A – Structured Excel**: Excel/CSV files go through a local parser (`processExcelFile`) to produce clean JSON tables for Claude.
+- **Path B – Simple Text PDFs & Docs**: PDFs/DOCX/TXT first pass through a fast local extractor. If the text looks clean, we keep it local and avoid expensive calls.
+- **Path C – Complex PDFs (Scans/Tables)**: When the quick extract looks garbled, too short, or fails, we automatically flag the file for a vision-capable tool (`process_pdf_with_vlm`) via MCP.
+
+Every processed file now carries triage metadata in the manifest so Claude knows whether the content is reliable or needs vision escalation.
+
+### 3. MCP Simulation
+
+**True MCP** (Future):
+```javascript
+// Claude calls filesystem tool
+const data = mcp.readFile('/uploads/processed/tracking_main.json');
+// Claude searches data
+```
+
+**Current Implementation** (Works Now):
+```javascript
+// We load file and include in prompt
+const data = fs.readFileSync('tracking_main.json');
+const systemPrompt = `Here's the tracking data:\n${JSON.stringify(data)}`;
+// Claude has data in context, can search it
+```
+
+**Same result, different method!**
+
+When official MCP SDK is ready, we can switch to true tool calling with minimal code changes.
+
+---
+
+## 🎓 How It Works (Deep Dive)
+
+### 1. File Upload Flow
+
+```
+User drops Excel files
+      ↓
+Multer saves to temp/
+      ↓
+Excel Processor:
+  - XLSX.readFile() with { raw: false }
+  - Extracts calculated VLOOKUP values ✅
+  - Converts to JSON
+  - Saves to uploads/processed/tracking_main.json
+      ↓
+Quality Analyzer:
+  - Scans for missing data
+  - Detects formula errors
+  - Calculates quality score
+      ↓
+Response sent to frontend
+```
+
+### 2. Chat Flow
+
+```
+User asks: "Status of PO SG-001?"
+      ↓
+Frontend sends to /api/chat
+      ↓
+Claude Client:
+  - Reads manifest.json (file metadata)
+  - Loads tracking_main.json
+  - Includes data in system prompt
+      ↓
+Claude API:
+  - Understands question
+  - Searches JSON data in context
+  - Finds PO SG-001
+  - Generates natural language answer
+      ↓
+Response: "PO SG-001 is in transit..."
+```
+
+### 4. Smart Triage Router (New)
+
+Our latest release introduces a **content-aware triage layer** that prepares uploaded files cheaply before involving the agent:
+
+- **Path A – Structured Excel**: Excel/CSV files go through a local parser (`processExcelFile`) to produce clean JSON tables for Claude.
+- **Path B – Simple Text PDFs & Docs**: PDFs/DOCX/TXT first pass through a fast local extractor. If the text looks clean, we keep it local and avoid expensive calls.
+- **Path C – Complex PDFs (Scans/Tables)**: When the quick extract looks garbled, too short, or fails, we automatically flag the file for a vision-capable tool (`process_pdf_with_vlm`) via MCP.
+
+Every processed file now carries triage metadata in the manifest so Claude knows whether the content is reliable or needs vision escalation.
+
+### 3. MCP Simulation
+
+**True MCP** (Future):
+```javascript
+// Claude calls filesystem tool
+const data = mcp.readFile('/uploads/processed/tracking_main.json');
+// Claude searches data
+```
+
+**Current Implementation** (Works Now):
+```javascript
+// We load file and include in prompt
+const data = fs.readFileSync('tracking_main.json');
+const systemPrompt = `Here's the tracking data:\n${JSON.stringify(data)}`;
+// Claude has data in context, can search it
+```
+
+**Same result, different method!**
+
+When official MCP SDK is ready, we can switch to true tool calling with minimal code changes.
+
+---
+
+## 🎓 How It Works (Deep Dive)
+
+### 1. File Upload Flow
+
+```
+User drops Excel files
+      ↓
+Multer saves to temp/
+      ↓
+Excel Processor:
+  - XLSX.readFile() with { raw: false }
+  - Extracts calculated VLOOKUP values ✅
+  - Converts to JSON
+  - Saves to uploads/processed/tracking_main.json
+      ↓
+Quality Analyzer:
+  - Scans for missing data
+  - Detects formula errors
+  - Calculates quality score
+      ↓
+Response sent to frontend
+```
+
+### 2. Chat Flow
+
+```
+User asks: "Status of PO SG-001?"
+      ↓
+Frontend sends to /api/chat
+      ↓
+Claude Client:
+  - Reads manifest.json (file metadata)
+  - Loads tracking_main.json
+  - Includes data in system prompt
+      ↓
+Claude API:
+  - Understands question
+  - Searches JSON data in context
+  - Finds PO SG-001
+  - Generates natural language answer
+      ↓
+Response: "PO SG-001 is in transit..."
+```
+
+### 4. Smart Triage Router (New)
+
+Our latest release introduces a **content-aware triage layer** that prepares uploaded files cheaply before involving the agent:
+
+- **Path A – Structured Excel**: Excel/CSV files go through a local parser (`processExcelFile`) to produce clean JSON tables for Claude.
+- **Path B – Simple Text PDFs & Docs**: PDFs/DOCX/TXT first pass through a fast local extractor. If the text looks clean, we keep it local and avoid expensive calls.
+- **Path C – Complex PDFs (Scans/Tables)**: When the quick extract looks garbled, too short, or fails, we automatically flag the file for a vision-capable tool (`process_pdf_with_vlm`) via MCP.
+
+Every processed file now carries triage metadata in the manifest so Claude knows whether the content is reliable or needs vision escalation.
+
+### 3. MCP Simulation
+
+**True MCP** (Future):
+```javascript
+// Claude calls filesystem tool
+const data = mcp.readFile('/uploads/processed/tracking_main.json');
+// Claude searches data
+```
+
+**Current Implementation** (Works Now):
+```javascript
+// We load file and include in prompt
+const data = fs.readFileSync('tracking_main.json');
+const systemPrompt = `Here's the tracking data:\n${JSON.stringify(data)}`;
+// Claude has data in context, can search it
+```
+
+**Same result, different method!**
+
+When official MCP SDK is ready, we can switch to true tool calling with minimal code changes.
+
+---
+
+## 🎓 How It Works (Deep Dive)
+
+### 1. File Upload Flow
+
+```
+User drops Excel files
+      ↓
+Multer saves to temp/
+      ↓
+Excel Processor:
+  - XLSX.readFile() with { raw: false }
+  - Extracts calculated VLOOKUP values ✅
+  - Converts to JSON
+  - Saves to uploads/processed/tracking_main.json
+      ↓
+Quality Analyzer:
+  - Scans for missing data
+  - Detects formula errors
+  - Calculates quality score
+      ↓
+Response sent to frontend
+```
+
+### 2. Chat Flow
+
+```
+User asks: "Status of PO SG-001?"
+      ↓
+Frontend sends to /api/chat
+      ↓
+Claude Client:
+  - Reads manifest.json (file metadata)
+  - Loads tracking_main.json
+  - Includes data in system prompt
+      ↓
+Claude API:
+  - Understands question
+  - Searches JSON data in context
+  - Finds PO SG-001
+  - Generates natural language answer
+      ↓
+Response: "PO SG-001 is in transit..."
+```
+
+### 4. Smart Triage Router (New)
+
+Our latest release introduces a **content-aware triage layer** that prepares uploaded files cheaply before involving the agent:
+
+- **Path A – Structured Excel**: Excel/CSV files go through a local parser (`processExcelFile`) to produce clean JSON tables for Claude.
+- **Path B – Simple Text PDFs & Docs**: PDFs/DOCX/TXT first pass through a fast local extractor. If the text looks clean, we keep it local and avoid expensive calls.
+- **Path C – Complex PDFs (Scans/Tables)**: When the quick extract looks garbled, too short, or fails, we automatically flag the file for a vision-capable tool (`process_pdf_with_vlm`) via MCP.
+
+Every processed file now carries triage metadata in the manifest so Claude knows whether the content is reliable or needs vision escalation.
+
+### 3. MCP Simulation
+
+**True MCP** (Future):
+```javascript
+// Claude calls filesystem tool
+const data = mcp.readFile('/uploads/processed/tracking_main.json');
+// Claude searches data
+```
+
+**Current Implementation** (Works Now):
+```javascript
+// We load file and include in prompt
+const data = fs.readFileSync('tracking_main.json');
+const systemPrompt = `Here's the tracking data:\n${JSON.stringify(data)}`;
+// Claude has data in context, can search it
+```
+
+**Same result, different method!**
+
+When official MCP SDK is ready, we can switch to true tool calling with minimal code changes.
+
+---
+
+## 🎓 How It Works (Deep Dive)
+
+### 1. File Upload Flow
+
+```
+User drops Excel files
+      ↓
+Multer saves to temp/
+      ↓
+Excel Processor:
+  - XLSX.readFile() with { raw: false }
+  - Extracts calculated VLOOKUP values ✅
+  - Converts to JSON
+  - Saves to uploads/processed/tracking_main.json
+      ↓
+Quality Analyzer:
+  - Scans for missing data
+  - Detects formula errors
+  - Calculates quality score
+      ↓
+Response sent to frontend
+```
+
+### 2. Chat Flow
+
+```
+User asks: "Status of PO SG-001?"
+      ↓
+Frontend sends to /api/chat
+      ↓
+Claude Client:
+  - Reads manifest.json (file metadata)
+  - Loads tracking_main.json
+  - Includes data in system prompt
+      ↓
+Claude API:
+  - Understands question
+  - Searches JSON data in context
+  - Finds PO SG-001
+  - Generates natural language answer
+      ↓
+Response: "PO SG-001 is in transit..."
+```
+
+### 4. Smart Triage Router (New)
+
+Our latest release introduces a **content-aware triage layer** that prepares uploaded files cheaply before involving the agent:
+
+- **Path A – Structured Excel**: Excel/CSV files go through a local parser (`processExcelFile`) to produce clean JSON tables for Claude.
+- **Path B – Simple Text PDFs & Docs**: PDFs/DOCX/TXT first pass through a fast local extractor. If the text looks clean, we keep it local and avoid expensive calls.
+- **Path C – Complex PDFs (Scans/Tables)**: When the quick extract looks garbled, too short, or fails, we automatically flag the file for a vision-capable tool (`process_pdf_with_vlm`) via MCP.
+
+Every processed file now carries triage metadata in the manifest so Claude knows whether the content is reliable or needs vision escalation.
+
+### 3. MCP Simulation
+
+**True MCP** (Future):
+```javascript
+// Claude calls filesystem tool
+const data = mcp.readFile('/uploads/processed/tracking_main.json');
+// Claude searches data
+```
+
+**Current Implementation** (Works Now):
+```javascript
+// We load file and include in prompt
+const data = fs.readFileSync('tracking_main.json');
+const systemPrompt = `Here's the tracking data:\n${JSON.stringify(data)}`;
+// Claude has data in context, can search it
+```
+
+**Same result, different method!**
+
+When official MCP SDK is ready, we can switch to true tool calling with minimal code changes.
+
+---
+
+## 🎓 How It Works (Deep Dive)
+
+### 1. File Upload Flow
+
+```
+User drops Excel files
+      ↓
+Multer saves to temp/
+      ↓
+Excel Processor:
+  - XLSX.readFile() with { raw: false }
+  - Extracts calculated VLOOKUP values ✅
+  - Converts to JSON
+  - Saves to uploads/processed/tracking_main.json
+      ↓
+Quality Analyzer:
+  - Scans for missing data
+  - Detects formula errors
+  - Calculates quality score
+      ↓
+Response sent to frontend
+```
+
+### 2. Chat Flow
+
+```
+User asks: "Status of PO SG-001?"
+      ↓
+Frontend sends to /api/chat
+      ↓
+Claude Client:
+  - Reads manifest.json (file metadata)
+  - Loads tracking_main.json
+  - Includes data in system prompt
+      ↓
+Claude API:
+  - Understands question
+  - Searches JSON data in context
+  - Finds PO SG-001
+  - Generates natural language answer
+      ↓
+Response: "PO SG-001 is in transit..."
+```
+
+### 4. Smart Triage Router (New)
+
+Our latest release introduces a **content-aware triage layer** that prepares uploaded files cheaply before involving the agent:
+
+- **Path A – Structured Excel**: Excel/CSV files go through a local parser (`processExcelFile`) to produce clean JSON tables for Claude.
+- **Path B – Simple Text PDFs & Docs**: PDFs/DOCX/TXT first pass through a fast local extractor. If the text looks clean, we keep it local and avoid expensive calls.
+- **Path C – Complex PDFs (Scans/Tables)**: When the quick extract looks garbled, too short, or fails, we automatically flag the file for a vision-capable tool (`process_pdf_with_vlm`) via MCP.
+
+Every processed file now carries triage metadata in the manifest so Claude knows whether the content is reliable or needs vision escalation.
+
+### 3. MCP Simulation
+
+**True MCP** (Future):
+```javascript
+// Claude calls filesystem tool
+const data = mcp.readFile('/uploads/processed/tracking_main.json');
+// Claude searches data
+```
+
+**Current Implementation** (Works Now):
+```javascript
+// We load file and include in prompt
+const data = fs.readFileSync('tracking_main.json');
+const systemPrompt = `Here's the tracking data:\n${JSON.stringify(data)}`;
+// Claude has data in context, can search it
+```
+
+**Same result, different method!**
+
+When official MCP SDK is ready, we can switch to true tool calling with minimal code changes.
+
+---
+
+## 🎓 How It Works (Deep Dive)
+
+### 1. File Upload Flow
+
+```
+User drops Excel files
+      ↓
+Multer saves to temp/
+      ↓
+Excel Processor:
+  - XLSX.readFile() with { raw: false }
+  - Extracts calculated VLOOKUP values ✅
+  - Converts to JSON
+  - Saves to uploads/processed/tracking_main.json
+      ↓
+Quality Analyzer:
+  - Scans for missing data
+  - Detects formula errors
+  - Calculates quality score
+      ↓
+Response sent to frontend
+```
+
+### 2. Chat Flow
+
+```
+User asks: "Status of PO SG-001?"
+      ↓
+Frontend sends to /api/chat
+      ↓
+Claude Client:
+  - Reads manifest.json (file metadata)
+  - Loads tracking_main.json
+  - Includes data in system prompt
+      ↓
+Claude API:
+  - Understands question
+  - Searches JSON data in context
+  - Finds PO SG-001
+  - Generates natural language answer
+      ↓
+Response: "PO SG-001 is in transit..."
+```
+
+### 4. Smart Triage Router (New)
+
+Our latest release introduces a **content-aware triage layer** that prepares uploaded files cheaply before involving the agent:
+
+- **Path A – Structured Excel**: Excel/CSV files go through a local parser (`processExcelFile`) to produce clean JSON tables for Claude.
+- **Path B – Simple Text PDFs & Docs**: PDFs/DOCX/TXT first pass through a fast local extractor. If the text looks clean, we keep it local and avoid expensive calls.
+- **Path C – Complex PDFs (Scans/Tables)**: When the quick extract looks garbled, too short, or fails, we automatically flag the file for a vision-capable tool (`process_pdf_with_vlm`) via MCP.
+
+Every processed file now carries triage metadata in the manifest so Claude knows whether the content is reliable or needs vision escalation.
+
+### 3. MCP Simulation
+
+**True MCP** (Future):
+```javascript
+// Claude calls filesystem tool
+const data = mcp.readFile('/uploads/processed/tracking_main.json');
+// Claude searches data
+```
+
+**Current Implementation** (Works Now):
+```javascript
+// We load file and include in prompt
+const data = fs.readFileSync('tracking_main.json');
+const systemPrompt = `Here's the tracking data:\n${JSON.stringify(data)}`;
+// Claude has data in context, can search it
+```
+
+**Same result, different method!**
+
+When official MCP SDK is ready, we can switch to true tool calling with minimal code changes.
+
+---
+
+## 🎓 How It Works (Deep Dive)
+
+### 1. File Upload Flow
+
+```
+User drops Excel files
+      ↓
+Multer saves to temp/
+      ↓
+Excel Processor:
+  - XLSX.readFile() with { raw: false }
+  - Extracts calculated VLOOKUP values ✅
+  - Converts to JSON
+  - Saves to uploads/processed/tracking_main.json
+      ↓
+Quality Analyzer:
+  - Scans for missing data
+  - Detects formula errors
+  - Calculates quality score
+      ↓
+Response sent to frontend
+```
+
+### 2. Chat Flow
+
+```
+User asks: "Status of PO SG-001?"
+      ↓
+Frontend sends to /api/chat
+      ↓
+Claude Client:
+  - Reads manifest.json (file metadata)
+  - Loads tracking_main.json
+  - Includes data in system prompt
+      ↓
+Claude API:
+  - Understands question
+  - Searches JSON data in context
+  - Finds PO SG-001
+  - Generates natural language answer
+      ↓
+Response: "PO SG-001 is in transit..."
+```
+
+### 4. Smart Triage Router (New)
+
+Our latest release introduces a **content-aware triage layer** that prepares uploaded files cheaply before involving the agent:
+
+- **Path A – Structured Excel**: Excel/CSV files go through a local parser (`processExcelFile`) to produce clean JSON tables for Claude.
+- **Path B – Simple Text PDFs & Docs**: PDFs/DOCX/TXT first pass through a fast local extractor. If the text looks clean, we keep it local and avoid expensive calls.
+- **Path C – Complex PDFs (Scans/Tables)**: When the quick extract looks garbled, too short, or fails, we automatically flag the file for a vision-capable tool (`process_pdf_with_vlm`) via MCP.
+
+Every processed file now carries triage metadata in the manifest so Claude knows whether the content is reliable or needs vision escalation.
+
+### 3. MCP Simulation
+
+**True MCP** (Future):
+```javascript
+// Claude calls filesystem tool
+const data = mcp.readFile('/uploads/processed/tracking_main.json');
+// Claude searches data
+```
+
+**Current Implementation** (Works Now):
+```javascript
+// We load file and include in prompt
+const data = fs.readFileSync('tracking_main.json');
+const systemPrompt = `Here's the tracking data:\n${JSON.stringify(data)}`;
+// Claude has data in context, can search it
+```
+
+**Same result, different method!**
+
+When official MCP SDK is ready, we can switch to true tool calling with minimal code changes.
+
+---
+
+## 🎓 How It Works (Deep Dive)
+
+### 1. File Upload Flow
+
+```
+User drops Excel files
+      ↓
+Multer saves to temp/
+      ↓
+Excel Processor:
+  - XLSX.readFile() with { raw: false }
+  - Extracts calculated VLOOKUP values ✅
+  - Converts to JSON
+  - Saves to uploads/processed/tracking_main.json
+      ↓
+Quality Analyzer:
+  - Scans for missing data
+  - Detects formula errors
+  - Calculates quality score
+      ↓
+Response sent to frontend
+```
+
+### 2. Chat Flow
+
+```
+User asks: "Status of PO SG-001?"
+      ↓
+Frontend sends to /api/chat
+      ↓
+Claude Client:
+  - Reads manifest.json (file metadata)
+  - Loads tracking_main.json
+  - Includes data in system prompt
+      ↓
+Claude API:
+  - Understands question
+  - Searches JSON data in context
+  - Finds PO SG-001
+  - Generates natural language answer
+      ↓
+Response: "PO SG-001 is in transit..."
+```
+
+### 4. Smart Triage Router (New)
+
+Our latest release introduces a **content-aware triage layer** that prepares uploaded files cheaply before involving the agent:
+
+- **Path A – Structured Excel**: Excel/CSV files go through a local parser (`processExcelFile`) to produce clean JSON tables for Claude.
+- **Path B – Simple Text PDFs & Docs**: PDFs/DOCX/TXT first pass through a fast local extractor. If the text looks clean, we keep it local and avoid expensive calls.
+- **Path C – Complex PDFs (Scans/Tables)**: When the quick extract looks garbled, too short, or fails, we automatically flag the file for a vision-capable tool (`process_pdf_with_vlm`) via MCP.
+
+Every processed file now carries triage metadata in the manifest so Claude knows whether the content is reliable or needs vision escalation.
+
+### 3. MCP Simulation
+
+**True MCP** (Future):
+```javascript
+// Claude calls filesystem tool
+const data = mcp.readFile('/uploads/processed/tracking_main.json');
+// Claude searches data
+```
+
+**Current Implementation** (Works Now):
+```javascript
+// We load file and include in prompt
+const data = fs.readFileSync('tracking_main.json');
+const systemPrompt = `Here's the tracking data:\n${JSON.stringify(data)}`;
+// Claude has data in context, can search it
+```
+
+**Same result, different method!**
+
+When official MCP SDK is ready, we can switch to true tool calling with minimal code changes.
+
+---
+
+## 🎓 How It Works (Deep Dive)
+
+### 1. File Upload Flow
+
+```
+User drops Excel files
+      ↓
+Multer saves to temp/
+      ↓
+Excel Processor:
+  - XLSX.readFile() with { raw: false }
+  - Extracts calculated VLOOKUP values ✅
+  - Converts to JSON
+  - Saves to uploads/processed/tracking_main.json
+      ↓
+Quality Analyzer:
+  - Scans for missing data
+  - Detects formula errors
+  - Calculates quality score
+      ↓
+Response sent to frontend
+```
+
+### 2. Chat Flow
+
+```
+User asks: "Status of PO SG-001?"
+      ↓
+Frontend sends to /api/chat
+      ↓
+Claude Client:
+  - Reads manifest.json (file metadata)
+  - Loads tracking_main.json
+  - Includes data in system prompt
+      ↓
+Claude API:
+  - Understands question
+  - Searches JSON data in context
+  - Finds PO SG-001
+  - Generates natural language answer
+      ↓
+Response: "PO SG-001 is in transit..."
+```
+
+### 4. Smart Triage Router (New)
+
+Our latest release introduces a **content-aware triage layer** that prepares uploaded files cheaply before involving the agent:
+
+- **Path A – Structured Excel**: Excel/CSV files go through a local parser (`processExcelFile`) to produce clean JSON tables for Claude.
+- **Path B – Simple Text PDFs & Docs**: PDFs/DOCX/TXT first pass through a fast local extractor. If the text looks clean, we keep it local and avoid expensive calls.
+- **Path C – Complex PDFs (Scans/Tables)**: When the quick extract looks garbled, too short, or fails, we automatically flag the file for a vision-capable tool (`process_pdf_with_vlm`) via MCP.
+
+Every processed file now carries triage metadata in the manifest so Claude knows whether the content is reliable or needs vision escalation.
+
+### 3. MCP Simulation
+
+**True MCP** (Future):
+```javascript
+// Claude calls filesystem tool
+const data = mcp.readFile('/uploads/processed/tracking_main.json');
+// Claude searches data
+```
+
+**Current Implementation** (Works Now):
+```javascript
+// We load file and include in prompt
+const data = fs.readFileSync('tracking_main.json');
+const systemPrompt = `Here's the tracking data:\n${JSON.stringify(data)}`;
+// Claude has data in context, can search it
+```
+
+**Same result, different method!**
+
+When official MCP SDK is ready, we can switch to true tool calling with minimal code changes.
+
+---
+
+## 🎓 How It Works (Deep Dive)
+
+### 1. File Upload Flow
+
+```
+User drops Excel files
+      ↓
+Multer saves to temp/
+      ↓
+Excel Processor:
+  - XLSX.readFile() with { raw: false }
+  - Extracts calculated VLOOKUP values ✅
+  - Converts to JSON
+  - Saves to uploads/processed/tracking_main.json
+      ↓
+Quality Analyzer:
+  - Scans for missing data
+  - Detects formula errors
+  - Calculates quality score
+      ↓
+Response sent to frontend
+```
+
+### 2. Chat Flow
+
+```
+User asks: "Status of PO SG-001?"
+      ↓
+Frontend sends to /api/chat
+      ↓
+Claude Client:
+  - Reads manifest.json (file metadata)
+  - Loads tracking_main.json
+  - Includes data in system prompt
+      ↓
+Claude API:
+  - Understands question
+  - Searches JSON data in context
+  - Finds PO SG-001
+  - Generates natural language answer
+      ↓
+Response: "PO SG-001 is in transit..."
+```
+
+### 4. Smart Triage Router (New)
+
+Our latest release introduces a **content-aware triage layer** that prepares uploaded files cheaply before involving the agent:
+
+- **Path A – Structured Excel**: Excel/CSV files go through a local parser (`processExcelFile`) to produce clean JSON tables for Claude.
+- **Path B – Simple Text PDFs & Docs**: PDFs/DOCX/TXT first pass through a fast local extractor. If the text looks clean, we keep it local and avoid expensive calls.
+- **Path C – Complex PDFs (Scans/Tables)**: When the quick extract looks garbled, too short, or fails, we automatically flag the file for a vision-capable tool (`process_pdf_with_vlm`) via MCP.
+
+Every processed file now carries triage metadata in the manifest so Claude knows whether the content is reliable or needs vision escalation.
+
+### 3. MCP Simulation
+
+**True MCP** (Future):
+```javascript
+// Claude calls filesystem tool
+const data = mcp.readFile('/uploads/processed/tracking_main.json');
+// Claude searches data
+```
+
+**Current Implementation** (Works Now):
+```javascript
+// We load file and include in prompt
+const data = fs.readFileSync('tracking_main.json');
+const systemPrompt = `Here's the tracking data:\n${JSON.stringify(data)}`;
+// Claude has data in context, can search it
+```
+
+**Same result, different method!**
+
+When official MCP SDK is ready, we can switch to true tool calling with minimal code changes.
+
+---
+
+## 🎓 How It Works (Deep Dive)
+
+### 1. File Upload Flow
+
+```
+User drops Excel files
+      ↓
+Multer saves to temp/
+      ↓
+Excel Processor:
+  - XLSX.readFile() with { raw: false }
+  - Extracts calculated VLOOKUP values ✅
+  - Converts to JSON
+  - Saves to uploads/processed/tracking_main.json
+      ↓
+Quality Analyzer:
+  - Scans for missing data
+  - Detects formula errors
+  - Calculates quality score
+      ↓
+Response sent to frontend
+```
+
+### 2. Chat Flow
+
+```
+User asks: "Status of PO SG-001?"
+      ↓
+Frontend sends to /api/chat
+      ↓
+Claude Client:
+  - Reads manifest.json (file metadata)
+  - Loads tracking_main.json
+  - Includes data in system prompt
+      ↓
+Claude API:
+  - Understands question
+  - Searches JSON data in context
+  - Finds PO SG-001
+  - Generates natural language answer
+      ↓
+Response: "PO SG-001 is in transit..."
+```
+
+### 4. Smart Triage Router (New)
+
+Our latest release introduces a **content-aware triage layer** that prepares uploaded files cheaply before involving the agent:
+
+- **Path A – Structured Excel**: Excel/CSV files go through a local parser (`processExcelFile`) to produce clean JSON tables for Claude.
+- **Path B – Simple Text PDFs & Docs**: PDFs/DOCX/TXT first pass through a fast local extractor. If the text looks clean, we keep it local and avoid expensive calls.
+- **Path C – Complex PDFs (Scans/Tables)**: When the quick extract looks garbled, too short, or fails, we automatically flag the file for a vision-capable tool (`process_pdf_with_vlm`) via MCP.
+
+Every processed file now carries triage metadata in the manifest so Claude knows whether the content is reliable or needs vision escalation.
+
+### 3. MCP Simulation
+
+**True MCP** (Future):
+```javascript
+// Claude calls filesystem tool
+const data = mcp.readFile('/uploads/processed/tracking_main.json');
+// Claude searches data
+```
+
+**Current Implementation** (Works Now):
+```javascript
+// We load file and include in prompt
+const data = fs.readFileSync('tracking_main.json');
+const systemPrompt = `Here's the tracking data:\n${JSON.stringify(data)}`;
+// Claude has data in context, can search it
+```
+
+**Same result, different method!**
+
+When official MCP SDK is ready, we can switch to true tool calling with minimal code changes.
+
+---
+
+## 🎓 How It Works (Deep Dive)
+
+### 1. File Upload Flow
+
+```
+User drops Excel files
+      ↓
+Multer saves to temp/
+      ↓
+Excel Processor:
+  - XLSX.readFile() with { raw: false }
+  - Extracts calculated VLOOKUP values ✅
+  - Converts to JSON
+  - Saves to uploads/processed/tracking_main.json
+      ↓
+Quality Analyzer:
+  - Scans for missing data
+  - Detects formula errors
+  - Calculates quality score
+      ↓
+Response sent to frontend
+```
+
+### 2. Chat Flow
+
+```
+User asks: "Status of PO SG-001?"
+      ↓
+Frontend sends to /api/chat
+      ↓
+Claude Client:
+  - Reads manifest.json (file metadata)
+  - Loads tracking_main.json
+  - Includes data in system prompt
+      ↓
+Claude API:
+  - Understands question
+  - Searches JSON data in context
+  - Finds PO SG-001
+  - Generates natural language answer
+      ↓
+Response: "PO SG-001 is in transit..."
+```
+
+### 4. Smart Triage Router (New)
+
+Our latest release introduces a **content-aware triage layer** that prepares uploaded files cheaply before involving the agent:
+
+- **Path A – Structured Excel**: Excel/CSV files go through a local parser (`processExcelFile`) to produce clean JSON tables for Claude.
+- **Path B – Simple Text PDFs & Docs**: PDFs/DOCX/TXT first pass through a fast local extractor. If the text looks clean, we keep it local and avoid expensive calls.
+- **Path C – Complex PDFs (Scans/Tables)**: When the quick extract looks garbled, too short, or fails, we automatically flag the file for a vision-capable tool (`process_pdf_with_vlm`) via MCP.
+
+Every processed file now carries triage metadata in the manifest so Claude knows whether the content is reliable or needs vision escalation.
+
+### 3. MCP Simulation
+
+**True MCP** (Future):
+```javascript
+// Claude calls filesystem tool
+const data = mcp.readFile('/uploads/processed/tracking_main.json');
+// Claude searches data
+```
+
+**Current Implementation** (Works Now):
+```javascript
+// We load file and include in prompt
+const data = fs.readFileSync('tracking_main.json');
+const systemPrompt = `Here's the tracking data:\n${JSON.stringify(data)}`;
+// Claude has data in context, can search it
+```
+
+**Same result, different method!**
+
+When official MCP SDK is ready, we can switch to true tool calling with minimal code changes.
+
+---
+
+## 🎓 How It Works (Deep Dive)
+
+### 1. File Upload Flow
+
+```
+User drops Excel files
+      ↓
+Multer saves to temp/
+      ↓
+Excel Processor:
+  - XLSX.readFile() with { raw: false }
+  - Extracts calculated VLOOKUP values ✅
+  - Converts to JSON
+  - Saves to uploads/processed/tracking_main.json
+      ↓
+Quality Analyzer:
+  - Scans for missing data
+  - Detects formula errors
+  - Calculates quality score
+      ↓
+Response sent to frontend
+```
+
+### 2. Chat Flow
+
+```
+User asks: "Status of PO SG-001?"
+      ↓
+Frontend sends to /api/chat
+      ↓
+Claude Client:
+  - Reads manifest.json (file metadata)
+  - Loads tracking_main.json
+  - Includes data in system prompt
+      ↓
+Claude API:
+  - Understands question
+  - Searches JSON data in context
+  - Finds PO SG-001
+  - Generates natural language answer
+      ↓
+Response: "PO SG-001 is in transit..."
+```
+
+### 4. Smart Triage Router (New)
+
+Our latest release introduces a **content-aware triage layer** that prepares uploaded files cheaply before involving the agent:
+
+- **Path A – Structured Excel**: Excel/CSV files go through a local parser (`processExcelFile`) to produce clean JSON tables for Claude.
+- **Path B – Simple Text PDFs & Docs**: PDFs/DOCX/TXT first pass through a fast local extractor. If the text looks clean, we keep it local and avoid expensive calls.
+- **Path C – Complex PDFs (Scans/Tables)**: When the quick extract looks garbled, too short, or fails, we automatically flag the file for a vision-capable tool (`process_pdf_with_vlm`) via MCP.
+
+Every processed file now carries triage metadata in the manifest so Claude knows whether the content is reliable or needs vision escalation.
+
+### 3. MCP Simulation
+
+**True MCP** (Future):
+```javascript
+// Claude calls filesystem tool
+const data = mcp.readFile('/uploads/processed/tracking_main.json');
+// Claude searches data
+```
+
+**Current Implementation** (Works Now):
+```javascript
+// We load file and include in prompt
+const data = fs.readFileSync('tracking_main.json');
+const systemPrompt = `Here's the tracking data:\n${JSON.stringify(data)}`;
+// Claude has data in context, can search it
+```
+
+**Same result, different method!**
+
+When official MCP SDK is ready, we can switch to true tool calling with minimal code changes.
+
+---
+
+## 🎓 How It Works (Deep Dive)
+
+### 1. File Upload Flow
+
+```
+User drops Excel files
+      ↓
+Multer saves to temp/
+      ↓
+Excel Processor:
+  - XLSX.readFile() with { raw: false }
+  - Extracts calculated VLOOKUP values ✅
+  - Converts to JSON
+  - Saves to uploads/processed/tracking_main.json
+      ↓
+Quality Analyzer:
+  - Scans for missing data
+  - Detects formula errors
+  - Calculates quality score
+      ↓
+Response sent to frontend
+```
+
+### 2. Chat Flow
+
+```
+User asks: "Status of PO SG-001?"
+      ↓
+Frontend sends to /api/chat
+      ↓
+Claude Client:
+  - Reads manifest.json (file metadata)
+  - Loads tracking_main.json
+  - Includes data in system prompt
+      ↓
+Claude API:
+  - Understands question
+  - Searches JSON data in context
+  - Finds PO SG-001
+  - Generates natural language answer
+      ↓
+Response: "PO SG-001 is in transit..."
+```
+
+### 4. Smart Triage Router (New)
+
+Our latest release introduces a **content-aware triage layer** that prepares uploaded files cheaply before involving the agent:
+
+- **Path A – Structured Excel**: Excel/CSV files go through a local parser (`processExcelFile`) to produce clean JSON tables for Claude.
+- **Path B – Simple Text PDFs & Docs**: PDFs/DOCX/TXT first pass through a fast local extractor. If the text looks clean, we keep it local and avoid expensive calls.
+- **Path C – Complex PDFs (Scans/Tables)**: When the quick extract looks garbled, too short, or fails, we automatically flag the file for a vision-capable tool (`process_pdf_with_vlm`) via MCP.
+
+Every processed file now carries triage metadata in the manifest so Claude knows whether the content is reliable or needs vision escalation.
+
+### 3. MCP Simulation
+
+**True MCP** (Future):
+```javascript
+// Claude calls filesystem tool
+const data = mcp.readFile('/uploads/processed/tracking_main.json');
+// Claude searches data
+```
+
+**Current Implementation** (Works Now):
+```javascript
+// We load file and include in prompt
+const data = fs.readFileSync('tracking_main.json');
+const systemPrompt = `Here's the tracking data:\n${JSON.stringify(data)}`;
+// Claude has data in context, can search it
+```
+
+**Same result, different method!**
+
+When official MCP SDK is ready, we can switch to true tool calling with minimal code changes.
+
+---
+
+## 🎓 How It Works (Deep Dive)
+
+### 1. File Upload Flow
+
+```
+User drops Excel files
+      ↓
+Multer saves to temp/
+      ↓
+Excel Processor:
+  - XLSX.readFile() with { raw: false }
+  - Extracts calculated VLOOKUP values ✅
+  - Converts to JSON
+  - Saves to uploads/processed/tracking_main.json
+      ↓
+Quality Analyzer:
+  - Scans for missing data
+  - Detects formula errors
+  - Calculates quality score
+      ↓
+Response sent to frontend
+```
+
+### 2. Chat Flow
+
+```
+User asks: "Status of PO SG-001?"
+      ↓
+Frontend sends to /api/chat
+      ↓
+Claude Client:
+  - Reads manifest.json (file metadata)
+  - Loads tracking_main.json
+  - Includes data in system prompt
+      ↓
+Claude API:
+  - Understands question
+  - Searches JSON data in context
+  - Finds PO SG-001
+  - Generates natural language answer
+      ↓
+Response: "PO SG-001 is in transit..."
+```
+
+### 4. Smart Triage Router (New)
+
+Our latest release introduces a **content-aware triage layer** that prepares uploaded files cheaply before involving the agent:
+
+- **Path A – Structured Excel**: Excel/CSV files go through a local parser (`processExcelFile`) to produce clean JSON tables for Claude.
+- **Path B – Simple Text PDFs & Docs**: PDFs/DOCX/TXT first pass through a fast local extractor. If the text looks clean, we keep it local and avoid expensive calls.
+- **Path C – Complex PDFs (Scans/Tables)**: When the quick extract looks garbled, too short, or fails, we automatically flag the file for a vision-capable tool (`process_pdf_with_vlm`) via MCP.
+
+Every processed file now carries triage metadata in the manifest so Claude knows whether the content is reliable or needs vision escalation.
+
+### 3. MCP Simulation
+
+**True MCP** (Future):
+```javascript
+// Claude calls filesystem tool
+const data = mcp.readFile('/uploads/processed/tracking_main.json');
+// Claude searches data
+```
+
+**Current Implementation** (Works Now):
+```javascript
+// We load file and include in prompt
+const data = fs.readFileSync('tracking_main.json');
+const systemPrompt = `Here's the tracking data:\n${JSON.stringify(data)}`;
+// Claude has data in context, can search it
+```
+
+**Same result, different method!**
+
+When official MCP SDK is ready, we can switch to true tool calling with minimal code changes.
+
+---
+
+## 🎓 How It Works (Deep Dive)
+
+### 1. File Upload Flow
+
+```
+User drops Excel files
+      ↓
+Multer saves to temp/
+      ↓
+Excel Processor:
+  - XLSX.readFile() with { raw: false }
+  - Extracts calculated VLOOKUP values ✅
+  - Converts to JSON
+  - Saves to uploads/processed/tracking_main.json
+      ↓
+Quality Analyzer:
+  - Scans for missing data
+  - Detects formula errors
+  - Calculates quality score
+      ↓
+Response sent to frontend
+```
+
+### 2. Chat Flow
+
+```
+User asks: "Status of PO SG-001?"
+      ↓
+Frontend sends to /api/chat
+      ↓
+Claude Client:
+  - Reads manifest.json (file metadata)
+  - Loads tracking_main.json
+  - Includes data in system prompt
+      ↓
+Claude API:
+  - Understands question
+  - Searches JSON data in context
+  - Finds PO SG-001
+  - Generates natural language answer
+      ↓
+Response: "PO SG-001 is in transit..."
+```
+
+### 4. Smart Triage Router (New)
+
+Our latest release introduces a **content-aware triage layer** that prepares uploaded files cheaply before involving the agent:
+
+- **Path A – Structured Excel**: Excel/CSV files go through a local parser (`processExcelFile`) to produce clean JSON tables for Claude.
+- **Path B – Simple Text PDFs & Docs**: PDFs/DOCX/TXT first pass through a fast local extractor. If the text looks clean, we keep it local and avoid expensive calls.
+- **Path C – Complex PDFs (Scans/Tables)**: When the quick extract looks garbled, too short, or fails, we automatically flag the file for a vision-capable tool (`process_pdf_with_vlm`) via MCP.
+
+Every processed file now carries triage metadata in the manifest so Claude knows whether the content is reliable or needs vision escalation.
+
+### 3. MCP Simulation
+
+**True MCP** (Future):
+```javascript
+// Claude calls filesystem tool
+const data = mcp.readFile('/uploads/processed/tracking_main.json');
+// Claude searches data
+```
+
+**Current Implementation** (Works Now):
+```javascript
+// We load file and include in prompt
+const data = fs.readFileSync('tracking_main.json');
+const systemPrompt = `Here's the tracking data:\n${JSON.stringify(data)}`;
+// Claude has data in context, can search it
+```
+
+**Same result, different method!**
+
+When official MCP SDK is ready, we can switch to true tool calling with minimal code changes.
+
+---
+
+## 🎓 How It Works (Deep Dive)
+
+### 1. File Upload Flow
+
+```
+User drops Excel files
+      ↓
+Multer saves to temp/
+      ↓
+Excel Processor:
+  - XLSX.readFile() with { raw: false }
+  - Extracts calculated VLOOKUP values ✅
+  - Converts to JSON
+  - Saves to uploads/processed/tracking_main.json
+      ↓
+Quality Analyzer:
+  - Scans for missing data
+  - Detects formula errors
+  - Calculates quality score
+      ↓
+Response sent to frontend
+```
+
+### 2. Chat Flow
+
+```
+User asks: "Status of PO SG-001?"
+      ↓
+Frontend sends to /api/chat
+      ↓
+Claude Client:
+  - Reads manifest.json (file metadata)
+  - Loads tracking_main.json
+  - Includes data in system prompt
+      ↓
+Claude API:
+  - Understands question
+  - Searches JSON data in context
+  - Finds PO SG-001
+  - Generates natural language answer
+      ↓
+Response: "PO SG-001 is in transit..."
+```
+
+### 4. Smart Triage Router (New)
+
+Our latest release introduces a **content-aware triage layer** that prepares uploaded files cheaply before involving the agent:
+
+- **Path A – Structured Excel**: Excel/CSV files go through a local parser (`processExcelFile`) to produce clean JSON tables for Claude.
+- **Path B – Simple Text PDFs & Docs**: PDFs/DOCX/TXT first pass through a fast local extractor. If the text looks clean, we keep it local and avoid expensive calls.
+- **Path C – Complex PDFs (Scans/Tables)**: When the quick extract looks garbled, too short, or fails, we automatically flag the file for a vision-capable tool (`process_pdf_with_vlm`) via MCP.
+
+Every processed file now carries triage metadata in the manifest so Claude knows whether the content is reliable or needs vision escalation.
+
+### 3. MCP Simulation
+
+**True MCP** (Future):
+```javascript
+// Claude calls filesystem tool
+const data = mcp.readFile('/uploads/processed/tracking_main.json');
+// Claude searches data
+```
+
+**Current Implementation** (Works Now):
+```javascript
+// We load file and include in prompt
+const data = fs.readFileSync('tracking_main.json');
+const systemPrompt = `Here's the tracking data:\n${JSON.stringify(data)}`;
+// Claude has data in context, can search it
+```
+
+**Same result, different method!**
+
+When official MCP SDK is ready, we can switch to true tool calling with minimal code changes.
+
+---
+
+## 🎓 How It Works (Deep Dive)
+
+### 1. File Upload Flow
+
+```
+User drops Excel files
+      ↓
+Multer saves to temp/
+      ↓
+Excel Processor:
+  - XLSX.readFile() with { raw: false }
+  - Extracts calculated VLOOKUP values ✅
+  - Converts to JSON
+  - Saves to uploads/processed/tracking_main.json
+      ↓
+Quality Analyzer:
+  - Scans for missing data
+  - Detects formula errors
+  - Calculates quality score
+      ↓
+Response sent to frontend
+```
+
+### 2. Chat Flow
+
+```
+User asks: "Status of PO SG-001?"
+      ↓
+Frontend sends to /api/chat
+      ↓
+Claude Client:
+  - Reads manifest.json (file metadata)
+  - Loads tracking_main.json
+  - Includes data in system prompt
+      ↓
+Claude API:
+  - Understands question
+  - Searches JSON data in context
+  - Finds PO SG-001
+  - Generates natural language answer
+      ↓
+Response: "PO SG-001 is in transit..."
+```
+
+### 4. Smart Triage Router (New)
+
+Our latest release introduces a **content-aware triage layer** that prepares uploaded files cheaply before involving the agent:
+
+- **Path A – Structured Excel**: Excel/CSV files go through a local parser (`processExcelFile`) to produce clean JSON tables for Claude.
+- **Path B – Simple Text PDFs & Docs**: PDFs/DOCX/TXT first pass through a fast local extractor. If the text looks clean, we keep it local and avoid expensive calls.
+- **Path C – Complex PDFs (Scans/Tables)**: When the quick extract looks garbled, too short, or fails, we automatically flag the file for a vision-capable tool (`process_pdf_with_vlm`) via MCP.
+
+Every processed file now carries triage metadata in the manifest so Claude knows whether the content is reliable or needs vision escalation.
+
+### 3. MCP Simulation
+
+**True MCP** (Future):
+```javascript
+// Claude calls filesystem tool
+const data = mcp.readFile('/uploads/processed/tracking_main.json');
+// Claude searches data
+```
+
+**Current Implementation** (Works Now):
+```javascript
+// We load file and include in prompt
+const data = fs.readFileSync('tracking_main.json');
+const systemPrompt = `Here's the tracking data:\n${JSON.stringify(data)}`;
+// Claude has data in context, can search it
+```
+
+**Same result, different method!**
+
+When official MCP SDK is ready, we can switch to true tool calling with minimal code changes.
+
+---
+
+## 🎓 How It Works (Deep Dive)
+
+### 1. File Upload Flow
+
+```
+User drops Excel files
+      ↓
+Multer saves to temp/
+      ↓
+Excel Processor:
+  - XLSX.readFile() with { raw: false }
+  - Extracts calculated VLOOKUP values ✅
+  - Converts to JSON
+  - Saves to uploads/processed/tracking_main.json
+      ↓
+Quality Analyzer:
+  - Scans for missing data
+  - Detects formula errors
+  - Calculates quality score
+      ↓
+Response sent to frontend
+```
+
+### 2. Chat Flow
+
+```
+User asks: "Status of PO SG-001?"
+      ↓
+Frontend sends to /api/chat
+      ↓
+Claude Client:
+  - Reads manifest.json (file metadata)
+  - Loads tracking_main.json
+  - Includes data in system prompt
+      ↓
+Claude API:
+  - Understands question
+  - Searches JSON data in context
+  - Finds PO SG-001
+  - Generates natural language answer
+      ↓
+Response: "PO SG-001 is in transit..."
+```
+
+### 4. Smart Triage Router (New)
+
+Our latest release introduces a **content-aware triage layer** that prepares uploaded files cheaply before involving the agent:
+
+- **Path A – Structured Excel**: Excel/CSV files go through a local parser (`processExcelFile`) to produce clean JSON tables for Claude.
+- **Path B – Simple Text PDFs & Docs**: PDFs/DOCX/TXT first pass through a fast local extractor. If the text looks clean, we keep it local and avoid expensive calls.
+- **Path C – Complex PDFs (Scans/Tables)**: When the quick extract looks garbled, too short, or fails, we automatically flag the file for a vision-capable tool (`process_pdf_with_vlm`) via MCP.
+
+Every processed file now carries triage metadata in the manifest so Claude knows whether the content is reliable or needs vision escalation.
+
+### 3. MCP Simulation
+
+**True MCP** (Future):
+```javascript
+// Claude calls filesystem tool
+const data = mcp.readFile('/uploads/processed/tracking_main.json');
+// Claude searches data
+```
+
+**Current Implementation** (Works Now):
+```javascript
+// We load file and include in prompt
+const data = fs.readFileSync('tracking_main.json');
+const systemPrompt = `Here's the tracking data:\n${JSON.stringify(data)}`;
+// Claude has data in context, can search it
+```
+
+**Same result, different method!**
+
+When official MCP SDK is ready, we can switch to true tool calling with minimal code changes.
+
+---
+
+## 🎓 How It Works (Deep Dive)
+
+### 1. File Upload Flow
+
+```
+User drops Excel files
+      ↓
+Multer saves to temp/
+      ↓
+Excel Processor:
+  - XLSX.readFile() with { raw: false }
+  - Extracts calculated VLOOKUP values ✅
+  - Converts to JSON
+  - Saves to uploads/processed/tracking_main.json
+      ↓
+Quality Analyzer:
+  - Scans for missing data
+  - Detects formula errors
+  - Calculates quality score
+      ↓
+Response sent to frontend
+```
+
+### 2. Chat Flow
+
+```
+User asks: "Status of PO SG-001?"
+      ↓
+Frontend sends to /api/chat
+      ↓
+Claude Client:
+  - Reads manifest.json (file metadata)
+  - Loads tracking_main.json
+  - Includes data in system prompt
+      ↓
+Claude API:
+  - Understands question
+  - Searches JSON data in context
+  - Finds PO SG-001
+  - Generates natural language answer
+      ↓
+Response: "PO SG-001 is in transit..."
+```
+
+### 4. Smart Triage Router (New)
+
+Our latest release introduces a **content-aware triage layer** that prepares uploaded files cheaply before involving the agent:
+
+- **Path A – Structured Excel**: Excel/CSV files go through a local parser (`processExcelFile`) to produce clean JSON tables for Claude.
+- **Path B – Simple Text PDFs & Docs**: PDFs/DOCX/TXT first pass through a fast local extractor. If the text looks clean, we keep it local and avoid expensive calls.
+- **Path C – Complex PDFs (Scans/Tables)**: When the quick extract looks garbled, too short, or fails, we automatically flag the file for a vision-capable tool (`process_pdf_with_vlm`) via MCP.
+
+Every processed file now carries triage metadata in the manifest so Claude knows whether the content is reliable or needs vision escalation.
+
+### 3. MCP Simulation
+
+**True MCP** (Future):
+```javascript
+// Claude calls filesystem tool
+const data = mcp.readFile('/uploads/processed/tracking_main.json');
+// Claude searches data
+```
+
+**Current Implementation** (Works Now):
+```javascript
+// We load file and include in prompt
+const data = fs.readFileSync('tracking_main.json');
+const systemPrompt = `Here's the tracking data:\n${JSON.stringify(data)}`;
+// Claude has data in context, can search it
+```
+
+**Same result, different method!**
+
+When official MCP SDK is ready, we can switch to true tool calling with minimal code changes.
+
+---
+
+## 🎓 How It Works (Deep Dive)
+
+### 1. File Upload Flow
+
+```
+User drops Excel files
+      ↓
+Multer saves to temp/
+      ↓
+Excel Processor:
+  - XLSX.readFile() with { raw: false }
+  - Extracts calculated VLOOKUP values ✅
+  - Converts to JSON
+  - Saves to uploads/processed/tracking_main.json
+      ↓
+Quality Analyzer:
+  - Scans for missing data
+  - Detects formula errors
+  - Calculates quality score
+      ↓
+Response sent to frontend
+```
+
+### 2. Chat Flow
+
+```
+User asks: "Status of PO SG-001?"
+      ↓
+Frontend sends to /api/chat
+      ↓
+Claude Client:
+  - Reads manifest.json (file metadata)
+  - Loads tracking_main.json
+  - Includes data in system prompt
+      ↓
+Claude API:
+  - Understands question
+  - Searches JSON data in context
+  - Finds PO SG-001
+  - Generates natural language answer
+      ↓
+Response: "PO SG-001 is in transit..."
+```
+
+### 4. Smart Triage Router (New)
+
+Our latest release introduces a **content-aware triage layer** that prepares uploaded files cheaply before involving the agent:
+
+- **Path A – Structured Excel**: Excel/CSV files go through a local parser (`processExcelFile`) to produce clean JSON tables for Claude.
+- **Path B – Simple Text PDFs & Docs**: PDFs/DOCX/TXT first pass through a fast local extractor. If the text looks clean, we keep it local and avoid expensive calls.
+- **Path C – Complex PDFs (Scans/Tables)**: When the quick extract looks garbled, too short, or fails, we automatically flag the file for a vision-capable tool (`process_pdf_with_vlm`) via MCP.
+
+Every processed file now carries triage metadata in the manifest so Claude knows whether the content is reliable or needs vision escalation.
+
+### 3. MCP Simulation
+
+**True MCP** (Future):
+```javascript
+// Claude calls filesystem tool
+const data = mcp.readFile('/uploads/processed/tracking_main.json');
+// Claude searches data
+```
+
+**Current Implementation** (Works Now):
+```javascript
+// We load file and include in prompt
+const data = fs.readFileSync('tracking_main.json');
+const systemPrompt = `Here's the tracking data:\n${JSON.stringify(data)}`;
+// Claude has data in context, can search it
+```
+
+**Same result, different method!**
+
+When official MCP SDK is ready, we can switch to true tool calling with minimal code changes.
+
+---
+
+## 🎓 How It Works (Deep Dive)
+
+### 1. File Upload Flow
+
+```
+User drops Excel files
+      ↓
+Multer saves to temp/
+      ↓
+Excel Processor:
+  - XLSX.readFile() with { raw: false }
+  - Extracts calculated VLOOKUP values ✅
+  - Converts to JSON
+  - Saves to uploads/processed/tracking_main.json
+      ↓
+Quality Analyzer:
+  - Scans for missing data
+  - Detects formula errors
+  - Calculates quality score
+      ↓
+Response sent to frontend
+```
+
+### 2. Chat Flow
+
+```
+User asks: "Status of PO SG-001?"
+      ↓
+Frontend sends to /api/chat
+      ↓
+Claude Client:
+  - Reads manifest.json (file metadata)
+  - Loads tracking_main.json
+  - Includes data in system prompt
+      ↓
+Claude API:
+  - Understands question
+  - Searches JSON data in context
+  - Finds PO SG-001
+  - Generates natural language answer
+      ↓
+Response: "PO SG-001 is in transit..."
+```
+
+### 4. Smart Triage Router (New)
+
+Our latest release introduces a **content-aware triage layer** that prepares uploaded files cheaply before involving the agent:
+
+- **Path A – Structured Excel**: Excel/CSV files go through a local parser (`processExcelFile`) to produce clean JSON tables for Claude.
+- **Path B – Simple Text PDFs & Docs**: PDFs/DOCX/TXT first pass through a fast local extractor. If the text looks clean, we keep it local and avoid expensive calls.
+- **Path C – Complex PDFs (Scans/Tables)**: When the quick extract looks garbled, too short, or fails, we automatically flag the file for a vision-capable tool (`process_pdf_with_vlm`) via MCP.
+
+Every processed file now carries triage metadata in the manifest so Claude knows whether the content is reliable or needs vision escalation.
+
+### 3. MCP Simulation
+
+**True MCP** (Future):
+```javascript
+// Claude calls filesystem tool
+const data = mcp.readFile('/uploads/processed/tracking_main.json');
+// Claude searches data
+```
+
+**Current Implementation** (Works Now):
+```javascript
+// We load file and include in prompt
+const data = fs.readFileSync('tracking_main.json');
+const systemPrompt = `Here's the tracking data:\n${JSON.stringify(data)}`;
+// Claude has data in context, can search it
+```
+
+**Same result, different method!**
+
+When official MCP SDK is ready, we can switch to true tool calling with minimal code changes.
+
+---
+
+## 🎓 How It Works (Deep Dive)
+
+### 1. File Upload Flow
+
+```
+User drops Excel files
+      ↓
+Multer saves to temp/
+      ↓
+Excel Processor:
+  - XLSX.readFile() with { raw: false }
+  - Extracts calculated VLOOKUP values ✅
+  - Converts to JSON
+  - Saves to uploads/processed/tracking_main.json
+      ↓
+Quality Analyzer:
+  - Scans for missing data
+  - Detects formula errors
+  - Calculates quality score
+      ↓
+Response sent to frontend
+```
+
+### 2. Chat Flow
+
+```
+User asks: "Status of PO SG-001?"
+      ↓
+Frontend sends to /api/chat
+      ↓
+Claude Client:
+  - Reads manifest.json (file metadata)
+  - Loads tracking_main.json
+  - Includes data in system prompt
+      ↓
+Claude API:
+  - Understands question
+  - Searches JSON data in context
+  - Finds PO SG-001
+  - Generates natural language answer
+      ↓
+Response: "PO SG-001 is in transit..."
+```
+
+### 4. Smart Triage Router (New)
+
+Our latest release introduces a **content-aware triage layer** that prepares uploaded files cheaply before involving the agent:
+
+- **Path A – Structured Excel**: Excel/CSV files go through a local parser (`processExcelFile`) to produce clean JSON tables for Claude.
+- **Path B – Simple Text PDFs & Docs**: PDFs/DOCX/TXT first pass through a fast local extractor. If the text looks clean, we keep it local and avoid expensive calls.
+- **Path C – Complex PDFs (Scans/Tables)**: When the quick extract looks garbled, too short, or fails, we automatically flag the file for a vision-capable tool (`process_pdf_with_vlm`) via MCP.
+
+Every processed file now carries triage metadata in the manifest so Claude knows whether the content is reliable or needs vision escalation.
+
+### 3. MCP Simulation
+
+**True MCP** (Future):
+```javascript
+// Claude calls filesystem tool
+const data = mcp.readFile('/uploads/processed/tracking_main.json');
+// Claude searches data
+```
+
+**Current Implementation** (Works Now):
+```javascript
+// We load file and include in prompt
+const data = fs.readFileSync('tracking_main.json');
+const systemPrompt = `Here's the tracking data:\n${JSON.stringify(data)}`;
+// Claude has data in context, can search it
+```
+
+**Same result, different method!**
+
+When official MCP SDK is ready, we can switch to true tool calling with minimal code changes.
+
+---
+
+## 🎓 How It Works (Deep Dive)
+
+### 1. File Upload Flow
+
+```
+User drops Excel files
+      ↓
+Multer saves to temp/
+      ↓
+Excel Processor:
+  - XLSX.readFile() with { raw: false }
+  - Extracts calculated VLOOKUP values ✅
+  - Converts to JSON
+  - Saves to uploads/processed/tracking_main.json
+      ↓
+Quality Analyzer:
+  - Scans for missing data
+  - Detects formula errors
+  - Calculates quality score
+      ↓
+Response sent to frontend
+```
+
+### 2. Chat Flow
+
+```
+User asks: "Status of PO SG-001?"
+      ↓
+Frontend sends to /api/chat
+      ↓
+Claude Client:
+  - Reads manifest.json (file metadata)
+  - Loads tracking_main.json
+  - Includes data in system prompt
+      ↓
+Claude API:
+  - Understands question
+  - Searches JSON data in context
+  - Finds PO SG-001
+  - Generates natural language answer
+      ↓
+Response: "PO SG-001 is in transit..."
+```
+
+### 4. Smart Triage Router (New)
+
+Our latest release introduces a **content-aware triage layer** that prepares uploaded files cheaply before involving the agent:
+
+- **Path A – Structured Excel**: Excel/CSV files go through a local parser (`processExcelFile`) to produce clean JSON tables for Claude.
+- **Path B – Simple Text PDFs & Docs**: PDFs/DOCX/TXT first pass through a fast local extractor. If the text looks clean, we keep it local and avoid expensive calls.
+- **Path C – Complex PDFs (Scans/Tables)**: When the quick extract looks garbled, too short, or fails, we automatically flag the file for a vision-capable tool (`process_pdf_with_vlm`) via MCP.
+
+Every processed file now carries triage metadata in the manifest so Claude knows whether the content is reliable or needs vision escalation.
+
+### 3. MCP Simulation
+
+**True MCP** (Future):
+```javascript
+// Claude calls filesystem tool
+const data = mcp.readFile('/uploads/processed/tracking_main.json');
+// Claude searches data
+```
+
+**Current Implementation** (Works Now):
+```javascript
+// We load file and include in prompt
+const data = fs.readFileSync('tracking_main.json');
+const systemPrompt = `Here's the tracking data:\n${JSON.stringify(data)}`;
+// Claude has data in context, can search it
+```
+
+**Same result, different method!**
+
+When official MCP SDK is ready, we can switch to true tool calling with minimal code changes.
+
+---
+
+## 🎓 How It Works (Deep Dive)
+
+### 1. File Upload Flow
+
+```
+User drops Excel files
+      ↓
+Multer saves to temp/
+      ↓
+Excel Processor:
+  - XLSX.readFile() with { raw: false }
+  - Extracts calculated VLOOKUP values ✅
+  - Converts to JSON
+  - Saves to uploads/processed/tracking_main.json
+      ↓
+Quality Analyzer:
+  - Scans for missing data
+  - Detects formula errors
+  - Calculates quality score
+      ↓
+Response sent to frontend
+```
+
+### 2. Chat Flow
+
+```
+User asks: "Status of PO SG-001?"
+      ↓
+Frontend sends to /api/chat
+      ↓
+Claude Client:
+  - Reads manifest.json (file metadata)
+  - Loads tracking_main.json
+  - Includes data in system prompt
+      ↓
+Claude API:
+  - Understands question
+  - Searches JSON data in context
+  - Finds PO SG-001
+  - Generates natural language answer
+      ↓
+Response: "PO SG-001 is in transit..."
+```
+
+### 4. Smart Triage Router (New)
+
+Our latest release introduces a **content-aware triage layer** that prepares uploaded files cheaply before involving the agent:
+
+- **Path A – Structured Excel**: Excel/CSV files go through a local parser (`processExcelFile`) to produce clean JSON tables for Claude.
+- **Path B – Simple Text PDFs & Docs**: PDFs/DOCX/TXT first pass through a fast local extractor. If the text looks clean, we keep it local and avoid expensive calls.
+- **Path C – Complex PDFs (Scans/Tables)**: When the quick extract looks garbled, too short, or fails, we automatically flag the file for a vision-capable tool (`process_pdf_with_vlm`) via MCP.
+
+Every processed file now carries triage metadata in the manifest so Claude knows whether the content is reliable or needs vision escalation.
+
+### 3. MCP Simulation
+
+**True MCP** (Future):
+```javascript
+// Claude calls filesystem tool
+const data = mcp.readFile('/uploads/processed/tracking_main.json');
+// Claude searches data
+```
+
+**Current Implementation** (Works Now):
+```javascript
+// We load file and include in prompt
+const data = fs.readFileSync('tracking_main.json');
+const systemPrompt = `Here's the tracking data:\n${JSON.stringify(data)}`;
+// Claude has data in context, can search it
+```
+
+**Same result, different method!**
+
+When official MCP SDK is ready, we can switch to true tool calling with minimal code changes.
+
+---
+
+## 🎓 How It Works (Deep Dive)
+
+### 1. File Upload Flow
+
+```
+User drops Excel files
+      ↓
+Multer saves to temp/
+      ↓
+Excel Processor:
+  - XLSX.readFile() with { raw: false }
+  - Extracts calculated VLOOKUP values ✅
+  - Converts to JSON
+  - Saves to uploads/processed/tracking_main.json
+      ↓
+Quality Analyzer:
+  - Scans for missing data
+  - Detects formula errors
+  - Calculates quality score
+      ↓
+Response sent to frontend
+```
+
+### 2. Chat Flow
+
+```
+User asks: "Status of PO SG-001?"
+      ↓
+Frontend sends to /api/chat
+      ↓
+Claude Client:
+  - Reads manifest.json (file metadata)
+  - Loads tracking_main.json
+  - Includes data in system prompt
+      ↓
+Claude API:
+  - Understands question
+  - Searches JSON data in context
+  - Finds PO SG-001
+  - Generates natural language answer
+      ↓
+Response: "PO SG-001 is in transit..."
+```
+
+### 4. Smart Triage Router (New)
+
+Our latest release introduces a **content-aware triage layer** that prepares uploaded files cheaply before involving the agent:
+
+- **Path A – Structured Excel**: Excel/CSV files go through a local parser (`processExcelFile`) to produce clean JSON tables for Claude.
+- **Path B – Simple Text PDFs & Docs**: PDFs/DOCX/TXT first pass through a fast local extractor. If the text looks clean, we keep it local and avoid expensive calls.
+- **Path C – Complex PDFs (Scans/Tables)**: When the quick extract looks garbled, too short, or fails, we automatically flag the file for a vision-capable tool (`process_pdf_with_vlm`) via MCP.
+
+Every processed file now carries triage metadata in the manifest so Claude knows whether the content is reliable or needs vision escalation.
+
+### 3. MCP Simulation
+
+**True MCP** (Future):
+```javascript
+// Claude calls filesystem tool
+const data = mcp.readFile('/uploads/processed/tracking_main.json');
+// Claude searches data
+```
+
+**Current Implementation** (Works Now):
+```javascript
+// We load file and include in prompt
+const data = fs.readFileSync('tracking_main.json');
+const systemPrompt = `Here's the tracking data:\n${JSON.stringify(data)}`;
+// Claude has data in context, can search it
+```
+
+**Same result, different method!**
+
+When official MCP SDK is ready, we can switch to true tool calling with minimal code changes.
+
+---
+
+## 🎓 How It Works (Deep Dive)
+
+### 1. File Upload Flow
+
+```
+User drops Excel files
+      ↓
+Multer saves to temp/
+      ↓
+Excel Processor:
+  - XLSX.readFile() with { raw: false }
+  - Extracts calculated VLOOKUP values ✅
+  - Converts to JSON
+  - Saves to uploads/processed/tracking_main.json
+      ↓
+Quality Analyzer:
+  - Scans for missing data
+  - Detects formula errors
+  - Calculates quality score
+      ↓
+Response sent to frontend
+```
+
+### 2. Chat Flow
+
+```
+User asks: "Status of PO SG-001?"
+      ↓
+Frontend sends to /api/chat
+      ↓
+Claude Client:
+  - Reads manifest.json (file metadata)
+  - Loads tracking_main.json
+  - Includes data in system prompt
+      ↓
+Claude API:
+  - Understands question
+  - Searches JSON data in context
+  - Finds PO SG-001
+  - Generates natural language answer
+      ↓
+Response: "PO SG-001 is in transit..."
+```
+
+### 4. Smart Triage Router (New)
+
+Our latest release introduces a **content-aware triage layer** that prepares uploaded files cheaply before involving the agent:
+
+- **Path A – Structured Excel**: Excel/CSV files go through a local parser (`processExcelFile`) to produce clean JSON tables for Claude.
+- **Path B – Simple Text PDFs & Docs**: PDFs/DOCX/TXT first pass through a fast local extractor. If the text looks clean, we keep it local and avoid expensive calls.
+- **Path C – Complex PDFs (Scans/Tables)**: When the quick extract looks garbled, too short, or fails, we automatically flag the file for a vision-capable tool (`process_pdf_with_vlm`) via MCP.
+
+Every processed file now carries triage metadata in the manifest so Claude knows whether the content is reliable or needs vision escalation.
+
+### 3. MCP Simulation
+
+**True MCP** (Future):
+```javascript
+// Claude calls filesystem tool
+const data = mcp.readFile('/uploads/processed/tracking_main.json');
+// Claude searches data
+```
+
+**Current Implementation** (Works Now):
+```javascript
+// We load file and include in prompt
+const data = fs.readFileSync('tracking_main.json');
+const systemPrompt = `Here's the tracking data:\n${JSON.stringify(data)}`;
+// Claude has data in context, can search it
+```
+
+**Same result, different method!**
+
+When official MCP SDK is ready, we can switch to true tool calling with minimal code changes.
+
+---
+
+## 🎓 How It Works (Deep Dive)
+
+### 1. File Upload Flow
+
+```
+User drops Excel files
+      ↓
+Multer saves to temp/
+      ↓
+Excel Processor:
+  - XLSX.readFile() with { raw: false }
+  - Extracts calculated VLOOKUP values ✅
+  - Converts to JSON
+  - Saves to uploads/processed/tracking_main.json
+      ↓
+Quality Analyzer:
+  - Scans for missing data
+  - Detects formula errors
+  - Calculates quality score
+      ↓
+Response sent to frontend
+```
+
+### 2. Chat Flow
+
+```
+User asks: "Status of PO SG-001?"
+      ↓
+Frontend sends to /api/chat
+      ↓
+Claude Client:
+  - Reads manifest.json (file metadata)
+  - Loads tracking_main.json
+  - Includes data in system prompt
+      ↓
+Claude API:
+  - Understands question
+  - Searches JSON data in context
+  - Finds PO SG-001
+  - Generates natural language answer
+      ↓
+Response: "PO SG-001 is in transit..."
+```
+
+### 4. Smart Triage Router (New)
+
+Our latest release introduces a **content-aware triage layer** that prepares uploaded files cheaply before involving the agent:
+
+- **Path A – Structured Excel**: Excel/CSV files go through a local parser (`processExcelFile`) to produce clean JSON tables for Claude.
+- **Path B – Simple Text PDFs & Docs**: PDFs/DOCX/TXT first pass through a fast local extractor. If the text looks clean, we keep it local and avoid expensive calls.
+- **Path C – Complex PDFs (Scans/Tables)**: When the quick extract looks garbled, too short, or fails, we automatically flag the file for a vision-capable tool (`process_pdf_with_vlm`) via MCP.
+
+Every processed file now carries triage metadata in the manifest so Claude knows whether the content is reliable or needs vision escalation.
+
+### 3. MCP Simulation
+
+**True MCP** (Future):
+```javascript
+// Claude calls filesystem tool
+const data = mcp.readFile('/uploads/processed/tracking_main.json');
+// Claude searches data
+```
+
+**Current Implementation** (Works Now):
+```javascript
+// We load file and include in prompt
+const data = fs.readFileSync('tracking_main.json');
+const systemPrompt = `Here's the tracking data:\n${JSON.stringify(data)}`;
+// Claude has data in context, can search it
+```
+
+**Same result, different method!**
+
+When official MCP SDK is ready, we can switch to true tool calling with minimal code changes.
+
+---
+
+## 🎓 How It Works (Deep Dive)
+
+### 1. File Upload Flow
+
+```
+User drops Excel files
+      ↓
+Multer saves to temp/
+      ↓
+Excel Processor:
+  - XLSX.readFile() with { raw: false }
+  - Extracts calculated VLOOKUP values ✅
+  - Converts to JSON
+  - Saves to uploads/processed/tracking_main.json
+      ↓
+Quality Analyzer:
+  - Scans for missing data
+  - Detects formula errors
+  - Calculates quality score
+      ↓
+Response sent to frontend
+```
+
+### 2. Chat Flow
+
+```
+User asks: "Status of PO SG-001?"
+      ↓
+Frontend sends to /api/chat
+      ↓
+Claude Client:
+  - Reads manifest.json (file metadata)
+  - Loads tracking_main.json
+  - Includes data in system prompt
+      ↓
+Claude API:
+  - Understands question
+  - Searches JSON data in context
+  - Finds PO SG-001
+  - Generates natural language answer
+      ↓
+Response: "PO SG-001 is in transit..."
+```
+
+### 4. Smart Triage Router (New)
+
+Our latest release introduces a **content-aware triage layer** that prepares uploaded files cheaply before involving the agent:
+
+- **Path A – Structured Excel**: Excel/CSV files go through a local parser (`processExcelFile`) to produce clean JSON tables for Claude.
+- **Path B – Simple Text PDFs & Docs**: PDFs/DOCX/TXT first pass through a fast local extractor. If the text looks clean, we keep it local and avoid expensive calls.
+- **Path C – Complex PDFs (Scans/Tables)**: When the quick extract looks garbled, too short, or fails, we automatically flag the file for a vision-capable tool (`process_pdf_with_vlm`) via MCP.
+
+Every processed file now carries triage metadata in the manifest so Claude knows whether the content is reliable or needs vision escalation.
+
+### 3. MCP Simulation
+
+**True MCP** (Future):
+```javascript
+// Claude calls filesystem tool
+const data = mcp.readFile('/uploads/processed/tracking_main.json');
+// Claude searches data
+```
+
+**Current Implementation** (Works Now):
+```javascript
+// We load file and include in prompt
+const data = fs.readFileSync('tracking_main.json');
+const systemPrompt = `Here's the tracking data:\n${JSON.stringify(data)}`;
+// Claude has data in context, can search it
+```
+
+**Same result, different method!**
+
+When official MCP SDK is ready, we can switch to true tool calling with minimal code changes.
+
+---
+
+## 🎓 How It Works (Deep Dive)
+
+### 1. File Upload Flow
+
+```
+User drops Excel files
+      ↓
+Multer saves to temp/
+      ↓
+Excel Processor:
+  - XLSX.readFile() with { raw: false }
+  - Extracts calculated VLOOKUP values ✅
+  - Converts to JSON
+  - Saves to uploads/processed/tracking_main.json
+      ↓
+Quality Analyzer:
+  - Scans for missing data
+  - Detects formula errors
+  - Calculates quality score
+      ↓
+Response sent to frontend
+```
+
+### 2. Chat Flow
+
+```
+User asks: "Status of PO SG-001?"
+      ↓
+Frontend sends to /api/chat
+      ↓
+Claude Client:
+  - Reads manifest.json (file metadata)
+  - Loads tracking_main.json
+  - Includes data in system prompt
+      ↓
+Claude API:
+  - Understands question
+  - Searches JSON data in context
+  - Finds PO SG-001
+  - Generates natural language answer
+      ↓
+Response: "PO SG-001 is in transit..."
+```
+
+### 4. Smart Triage Router (New)
+
+Our latest release introduces a **content-aware triage layer** that prepares uploaded files cheaply before involving the agent:
+
+- **Path A – Structured Excel**: Excel/CSV files go through a local parser (`processExcelFile`) to produce clean JSON tables for Claude.
+- **Path B – Simple Text PDFs & Docs**: PDFs/DOCX/TXT first pass through a fast local extractor. If the text looks clean, we keep it local and avoid expensive calls.
+- **Path C – Complex PDFs (Scans/Tables)**: When the quick extract looks garbled, too short, or fails, we automatically flag the file for a vision-capable tool (`process_pdf_with_vlm`) via MCP.
+
+Every processed file now carries triage metadata in the manifest so Claude knows whether the content is reliable or needs vision escalation.
+
+### 3. MCP Simulation
+
+**True MCP** (Future):
+```javascript
+// Claude calls filesystem tool
+const data = mcp.readFile('/uploads/processed/tracking_main.json');
+// Claude searches data
+```
+
+**Current Implementation** (Works Now):
+```javascript
+// We load file and include in prompt
+const data = fs.readFileSync('tracking_main.json');
+const systemPrompt = `Here's the tracking data:\n${JSON.stringify(data)}`;
+// Claude has data in context, can search it
+```
+
+**Same result, different method!**
+
+When official MCP SDK is ready, we can switch to true tool calling with minimal code changes.
+
+---
+
+## 🎓 How It Works (Deep Dive)
+
+### 1. File Upload Flow
+
+```
+User drops Excel files
+      ↓
+Multer saves to temp/
+      ↓
+Excel Processor:
+  - XLSX.readFile() with { raw: false }
+  - Extracts calculated VLOOKUP values ✅
+  - Converts to JSON
+  - Saves to uploads/processed/tracking_main.json
+      ↓
+Quality Analyzer:
+  - Scans for missing data
+  - Detects formula errors
+  - Calculates quality score
+      ↓
+Response sent to frontend
+```
+
+### 2. Chat Flow
+
+```
+User asks: "Status of PO SG-001?"
+      ↓
+Frontend sends to /api/chat
+      ↓
+Claude Client:
+  - Reads manifest.json (file metadata)
+  - Loads tracking_main.json
+  - Includes data in system prompt
+      ↓
+Claude API:
+  - Understands question
+  - Searches JSON data in context
+  - Finds PO SG-001
+  - Generates natural language answer
+      ↓
+Response: "PO SG-001 is in transit..."
+```
+
+### 4. Smart Triage Router (New)
+
+Our latest release introduces a **content-aware triage layer** that prepares uploaded files cheaply before involving the agent:
+
+- **Path A – Structured Excel**: Excel/CSV files go through a local parser (`processExcelFile`) to produce clean JSON tables for Claude.
+- **Path B – Simple Text PDFs & Docs**: PDFs/DOCX/TXT first pass through a fast local extractor. If the text looks clean, we keep it local and avoid expensive calls.
+- **Path C – Complex PDFs (Scans/Tables)**: When the quick extract looks garbled, too short, or fails, we automatically flag the file for a vision-capable tool (`process_pdf_with_vlm`) via MCP.
+
+Every processed file now carries triage metadata in the manifest so Claude knows whether the content is reliable or needs vision escalation.
+
+### 3. MCP Simulation
+
+**True MCP** (Future):
+```javascript
+// Claude calls filesystem tool
+const data = mcp.readFile('/uploads/processed/tracking_main.json');
+// Claude searches data
+```
+
+**Current Implementation** (Works Now):
+```javascript
+// We load file and include in prompt
+const data = fs.readFileSync('tracking_main.json');
+const systemPrompt = `Here's the tracking data:\n${JSON.stringify(data)}`;
+// Claude has data in context, can search it
+```
+
+**Same result, different method!**
+
+When official MCP SDK is ready, we can switch to true tool calling with minimal code changes.
+
+---
+
+## 🎓 How It Works (Deep Dive)
+
+### 1. File Upload Flow
+
+```
+User drops Excel files
+      ↓
+Multer saves to temp/
+      ↓
+Excel Processor:
+  - XLSX.readFile() with { raw: false }
+  - Extracts calculated VLOOKUP values ✅
+  - Converts to JSON
+  - Saves to uploads/processed/tracking_main.json
+      ↓
+Quality Analyzer:
+  - Scans for missing data
+  - Detects formula errors
+  - Calculates quality score
+      ↓
+Response sent to frontend
+```
+
+### 2. Chat Flow
+
+```
+User asks: "Status of PO SG-001?"
+      ↓
+Frontend sends to /api/chat
+      ↓
+Claude Client:
+  - Reads manifest.json (file metadata)
+  - Loads tracking_main.json
+  - Includes data in system prompt
+      ↓
+Claude API:
+  - Understands question
+  - Searches JSON data in context
+  - Finds PO SG-001
+  - Generates natural language answer
+      ↓
+Response: "PO SG-001 is in transit..."
+```
+
+### 4. Smart Triage Router (New)
+
+Our latest release introduces a **content-aware triage layer** that prepares uploaded files cheaply before involving the agent:
+
+- **Path A – Structured Excel**: Excel/CSV files go through a local parser (`processExcelFile`) to produce clean JSON tables for Claude.
+- **Path B – Simple Text PDFs & Docs**: PDFs/DOCX/TXT first pass through a fast local extractor. If the text looks clean, we keep it local and avoid expensive calls.
+- **Path C – Complex PDFs (Scans/Tables)**: When the quick extract looks garbled, too short, or fails, we automatically flag the file for a vision-capable tool (`process_pdf_with_vlm`) via MCP.
+
+Every processed file now carries triage metadata in the manifest so Claude knows whether the content is reliable or needs vision escalation.
+
+### 3. MCP Simulation
+
+**True MCP** (Future):
+```javascript
+// Claude calls filesystem tool
+const data = mcp.readFile('/uploads/processed/tracking_main.json');
+// Claude searches data
+```
+
+**Current Implementation** (Works Now):
+```javascript
+// We load file and include in prompt
+const data = fs.readFileSync('tracking_main.json');
+const systemPrompt = `Here's the tracking data:\n${JSON.stringify(data)}`;
+// Claude has data in context, can search it
+```
+
+**Same result, different method!**
+
+When official MCP SDK is ready, we can switch to true tool calling with minimal code changes.
+
+---
+
+## 🎓 How It Works (Deep Dive)
+
+### 1. File Upload Flow
+
+```
+User drops Excel files
+      ↓
+Multer saves to temp/
+      ↓
+Excel Processor:
+  - XLSX.readFile() with { raw: false }
+  - Extracts calculated VLOOKUP values ✅
+  - Converts to JSON
+  - Saves to uploads/processed/tracking_main.json
+      ↓
+Quality Analyzer:
+  - Scans for missing data
+  - Detects formula errors
+  - Calculates quality score
+      ↓
+Response sent to frontend
+```
+
+### 2. Chat Flow
+
+```
+User asks: "Status of PO SG-001?"
+      ↓
+Frontend sends to /api/chat
+      ↓
+Claude Client:
+  - Reads manifest.json (file metadata)
+  - Loads tracking_main.json
+  - Includes data in system prompt
+      ↓
+Claude API:
+  - Understands question
+  - Searches JSON data in context
+  - Finds PO SG-001
+  - Generates natural language answer
+      ↓
+Response: "PO SG-001 is in transit..."
+```
+
+### 4. Smart Triage Router (New)
+
+Our latest release introduces a **content-aware triage layer** that prepares uploaded files cheaply before involving the agent:
+
+- **Path A – Structured Excel**: Excel/CSV files go through a local parser (`processExcelFile`) to produce clean JSON tables for Claude.
+- **Path B – Simple Text PDFs & Docs**: PDFs/DOCX/TXT first pass through a fast local extractor. If the text looks clean, we keep it local and avoid expensive calls.
+- **Path C – Complex PDFs (Scans/Tables)**: When the quick extract looks garbled, too short, or fails, we automatically flag the file for a vision-capable tool (`process_pdf_with_vlm`) via MCP.
+
+Every processed file now carries triage metadata in the manifest so Claude knows whether the content is reliable or needs vision escalation.
+
+### 3. MCP Simulation
+
+**True MCP** (Future):
+```javascript
+// Claude calls filesystem tool
+const data = mcp.readFile('/uploads/processed/tracking_main.json');
+// Claude searches data
+```
+
+**Current Implementation** (Works Now):
+```javascript
+// We load file and include in prompt
+const data = fs.readFileSync('tracking_main.json');
+const systemPrompt = `Here's the tracking data:\n${JSON.stringify(data)}`;
+// Claude has data in context, can search it
+```
+
+**Same result, different method!**
+
+When official MCP SDK is ready, we can switch to true tool calling with minimal code changes.
+
+---
+
+## 🎓 How It Works (Deep Dive)
+
+### 1. File Upload Flow
+
+```
+User drops Excel files
+      ↓
+Multer saves to temp/
+      ↓
+Excel Processor:
+  - XLSX.readFile() with { raw: false }
+  - Extracts calculated VLOOKUP values ✅
+  - Converts to JSON
+  - Saves to uploads/processed/tracking_main.json
+      ↓
+Quality Analyzer:
+  - Scans for missing data
+  - Detects formula errors
+  - Calculates quality score
+      ↓
+Response sent to frontend
+```
+
+### 2. Chat Flow
+
+```
+User asks: "Status of PO SG-001?"
+      ↓
+Frontend sends to /api/chat
+      ↓
+Claude Client:
+  - Reads manifest.json (file metadata)
+  - Loads tracking_main.json
+  - Includes data in system prompt
+      ↓
+Claude API:
+  - Understands question
+  - Searches JSON data in context
+  - Finds PO SG-001
+  - Generates natural language answer
+      ↓
+Response: "PO SG-001 is in transit..."
+```
+
+### 4. Smart Triage Router (New)
+
+Our latest release introduces a **content-aware triage layer** that prepares uploaded files cheaply before involving the agent:
+
+- **Path A – Structured Excel**: Excel/CSV files go through a local parser (`processExcelFile`) to produce clean JSON tables for Claude.
+- **Path B – Simple Text PDFs & Docs**: PDFs/DOCX/TXT first pass through a fast local extractor. If the text looks clean, we keep it local and avoid expensive calls.
+- **Path C – Complex PDFs (Scans/Tables)**: When the quick extract looks garbled, too short, or fails, we automatically flag the file for a vision-capable tool (`process_pdf_with_vlm`) via MCP.
+
+Every processed file now carries triage metadata in the manifest so Claude knows whether the content is reliable or needs vision escalation.
+
+### 3. MCP Simulation
+
+**True MCP** (Future):
+```javascript
+// Claude calls filesystem tool
+const data = mcp.readFile('/uploads/processed/tracking_main.json');
+// Claude searches data
+```
+
+**Current Implementation** (Works Now):
+```javascript
+// We load file and include in prompt
+const data = fs.readFileSync('tracking_main.json');
+const systemPrompt = `Here's the tracking data:\n${JSON.stringify(data)}`;
+// Claude has data in context, can search it
+```
+
+**Same result, different method!**
+
+When official MCP SDK is ready, we can switch to true tool calling with minimal code changes.
+
+---
+
+## 🎓 How It Works (Deep Dive)
+
+### 1. File Upload Flow
+
+```
+User drops Excel files
+      ↓
+Multer saves to temp/
+      ↓
+Excel Processor:
+  - XLSX.readFile() with { raw: false }
+  - Extracts calculated VLOOKUP values ✅
+  - Converts to JSON
+  - Saves to uploads/processed/tracking_main.json
+      ↓
+Quality Analyzer:
+  - Scans for missing data
+  - Detects formula errors
+  - Calculates quality score
+      ↓
+Response sent to frontend
+```
+
+### 2. Chat Flow
+
+```
+User asks: "Status of PO SG-001?"
+      ↓
+Frontend sends to /api/chat
+      ↓
+Claude Client:
+  - Reads manifest.json (file metadata)
+  - Loads tracking_main.json
+  - Includes data in system prompt
+      ↓
+Claude API:
+  - Understands question
+  - Searches JSON data in context
+  - Finds PO SG-001
+  - Generates natural language answer
+      ↓
+Response: "PO SG-001 is in transit..."
+```
+
+### 4. Smart Triage Router (New)
+
+Our latest release introduces a **content-aware triage layer** that prepares uploaded files cheaply before involving the agent:
+
+- **Path A – Structured Excel**: Excel/CSV files go through a local parser (`processExcelFile`) to produce clean JSON tables for Claude.
+- **Path B – Simple Text PDFs & Docs**: PDFs/DOCX/TXT first pass through a fast local extractor. If the text looks clean, we keep it local and avoid expensive calls.
+- **Path C – Complex PDFs (Scans/Tables)**: When the quick extract looks garbled, too short, or fails, we automatically flag the file for a vision-capable tool (`process_pdf_with_vlm`) via MCP.
+
+Every processed file now carries triage metadata in the manifest so Claude knows whether the content is reliable or needs vision escalation.
+
+### 3. MCP Simulation
+
+**True MCP** (Future):
+```javascript
+// Claude calls filesystem tool
+const data = mcp.readFile('/uploads/processed/tracking_main.json');
+// Claude searches data
+```
+
+**Current Implementation** (Works Now):
+```javascript
+// We load file and include in prompt
+const data = fs.readFileSync('tracking_main.json');
+const systemPrompt = `Here's the tracking data:\n${JSON.stringify(data)}`;
+// Claude has data in context, can search it
+```
+
+**Same result, different method!**
+
+When official MCP SDK is ready, we can switch to true tool calling with minimal code changes.
+
+---
+
+## 🎓 How It Works (Deep Dive)
+
+### 1. File Upload Flow
+
+```
+User drops Excel files
+      ↓
+Multer saves to temp/
+      ↓
+Excel Processor:
+  - XLSX.readFile() with { raw: false }
+  - Extracts calculated VLOOKUP values ✅
+  - Converts to JSON
+  - Saves to uploads/processed/tracking_main.json
+      ↓
+Quality Analyzer:
+  - Scans for missing data
+  - Detects formula errors
+  - Calculates quality score
+      ↓
+Response sent to frontend
+```
+
+### 2. Chat Flow
+
+```
+User asks: "Status of PO SG-001?"
+      ↓
+Frontend sends to /api/chat
+      ↓
+Claude Client:
+  - Reads manifest.json (file metadata)
+  - Loads tracking_main.json
+  - Includes data in system prompt
+      ↓
+Claude API:
+  - Understands question
+  - Searches JSON data in context
+  - Finds PO SG-001
+  - Generates natural language answer
+      ↓
+Response: "PO SG-001 is in transit..."
+```
+
+### 4. Smart Triage Router (New)
+
+Our latest release introduces a **content-aware triage layer** that prepares uploaded files cheaply before involving the agent:
+
+- **Path A – Structured Excel**: Excel/CSV files go through a local parser (`processExcelFile`) to produce clean JSON tables for Claude.
+- **Path B – Simple Text PDFs & Docs**: PDFs/DOCX/TXT first pass through a fast local extractor. If the text looks clean, we keep it local and avoid expensive calls.
+- **Path C – Complex PDFs (Scans/Tables)**: When the quick extract looks garbled, too short, or fails, we automatically flag the file for a vision-capable tool (`process_pdf_with_vlm`) via MCP.
+
+Every processed file now carries triage metadata in the manifest so Claude knows whether the content is reliable or needs vision escalation.
+
+### 3. MCP Simulation
+
+**True MCP** (Future):
+```javascript
+// Claude calls filesystem tool
+const data = mcp.readFile('/uploads/processed/tracking_main.json');
+// Claude searches data
+```
+
+**Current Implementation** (Works Now):
+```javascript
+// We load file and include in prompt
+const data = fs.readFileSync('tracking_main.json');
+const systemPrompt = `Here's the tracking data:\n${JSON.stringify(data)}`;
+// Claude has data in context, can search it
+```
+
+**Same result, different method!**
+
+When official MCP SDK is ready, we can switch to true tool calling with minimal code changes.
+
+---
+
+## 🎓 How It Works (Deep Dive)
+
+### 1. File Upload Flow
+
+```
+User drops Excel files
+      ↓
+Multer saves to temp/
+      ↓
+Excel Processor:
+  - XLSX.readFile() with { raw: false }
+  - Extracts calculated VLOOKUP values ✅
+  - Converts to JSON
+  - Saves to uploads/processed/tracking_main.json
+      ↓
+Quality Analyzer:
+  - Scans for missing data
+  - Detects formula errors
+  - Calculates quality score
+      ↓
+Response sent to frontend
+```
+
+### 2. Chat Flow
+
+```
+User asks: "Status of PO SG-001?"
+      ↓
+Frontend sends to /api/chat
+      ↓
+Claude Client:
+  - Reads manifest.json (file metadata)
+  - Loads tracking_main.json
+  - Includes data in system prompt
+      ↓
+Claude API:
+  - Understands question
+  - Searches JSON data in context
+  - Finds PO SG-001
+  - Generates natural language answer
+      ↓
+Response: "PO SG-001 is in transit..."
+```
+
+### 4. Smart Triage Router (New)
+
+Our latest release introduces a **content-aware triage layer** that prepares uploaded files cheaply before involving the agent:
+
+- **Path A – Structured Excel**: Excel/CSV files go through a local parser (`processExcelFile`) to produce clean JSON tables for Claude.
+- **Path B – Simple Text PDFs & Docs**: PDFs/DOCX/TXT first pass through a fast local extractor. If the text looks clean, we keep it local and avoid expensive calls.
+- **Path C – Complex PDFs (Scans/Tables)**: When the quick extract looks garbled, too short, or fails, we automatically flag the file for a vision-capable tool (`process_pdf_with_vlm`) via MCP.
+
+Every processed file now carries triage metadata in the manifest so Claude knows whether the content is reliable or needs vision escalation.
+
+### 3. MCP Simulation
+
+**True MCP** (Future):
+```javascript
+// Claude calls filesystem tool
+const data = mcp.readFile('/uploads/processed/tracking_main.json');
+// Claude searches data
+```
+
+**Current Implementation** (Works Now):
+```javascript
+// We load file and include in prompt
+const data = fs.readFileSync('tracking_main.json');
+const systemPrompt = `Here's the tracking data:\n${JSON.stringify(data)}`;
+// Claude has data in context, can search it
+```
+
+**Same result, different method!**
+
+When official MCP SDK is ready, we can switch to true tool calling with minimal code changes.
+
+---
+
+## 🎓 How It Works (Deep Dive)
+
+### 1. File Upload Flow
+
+```
+User drops Excel files
+      ↓
+Multer saves to temp/
+      ↓
+Excel Processor:
+  - XLSX.readFile() with { raw: false }
+  - Extracts calculated VLOOKUP values ✅
+  - Converts to JSON
+  - Saves to uploads/processed/tracking_main.json
+      ↓
+Quality Analyzer:
+  - Scans for missing data
+  - Detects formula errors
+  - Calculates quality score
+      ↓
+Response sent to frontend
+```
+
+### 2. Chat Flow
+
+```
+User asks: "Status of PO SG-001?"
+      ↓
+Frontend sends to /api/chat
+      ↓
+Claude Client:
+  - Reads manifest.json (file metadata)
+  - Loads tracking_main.json
+  - Includes data in system prompt
+      ↓
+Claude API:
+  - Understands question
+  - Searches JSON data in context
+  - Finds PO SG-001
+  - Generates natural language answer
+      ↓
+Response: "PO SG-001 is in transit..."
+```
+
+### 4. Smart Triage Router (New)
+
+Our latest release introduces a **content-aware triage layer** that prepares uploaded files cheaply before involving the agent:
+
+- **Path A – Structured Excel**: Excel/CSV files go through a local parser (`processExcelFile`) to produce clean JSON tables for Claude.
+- **Path B – Simple Text PDFs & Docs**: PDFs/DOCX/TXT first pass through a fast local extractor. If the text looks clean, we keep it local and avoid expensive calls.
+- **Path C – Complex PDFs (Scans/Tables)**: When the quick extract looks garbled, too short, or fails, we automatically flag the file for a vision-capable tool (`process_pdf_with_vlm`) via MCP.
+
+Every processed file now carries triage metadata in the manifest so Claude knows whether the content is reliable or needs vision escalation.
+
+### 3. MCP Simulation
+
+**True MCP** (Future):
+```javascript
+// Claude calls filesystem tool
+const data = mcp.readFile('/uploads/processed/tracking_main.json');
+// Claude searches data
+```
+
+**Current Implementation** (Works Now):
+```javascript
+// We load file and include in prompt
+const data = fs.readFileSync('tracking_main.json');
+const systemPrompt = `Here's the tracking data:\n${JSON.stringify(data)}`;
+// Claude has data in context, can search it
+```
+
+**Same result, different method!**
+
+When official MCP SDK is ready, we can switch to true tool calling with minimal code changes.
+
+---
+
+## 🎓 How It Works (Deep Dive)
+
+### 1. File Upload Flow
+
+```
+User drops Excel files
+      ↓
+Multer saves to temp/
+      ↓
+Excel Processor:
+  - XLSX.readFile() with { raw: false }
+  - Extracts calculated VLOOKUP values ✅
+  - Converts to JSON
+  - Saves to uploads/processed/tracking_main.json
+      ↓
+Quality Analyzer:
+  - Scans for missing data
+  - Detects formula errors
+  - Calculates quality score
+      ↓
+Response sent to frontend
+```
+
+### 2. Chat Flow
+
+```
+User asks: "Status of PO SG-001?"
+      ↓
+Frontend sends to /api/chat
+      ↓
+Claude Client:
+  - Reads manifest.json (file metadata)
+  - Loads tracking_main.json
+  - Includes data in system prompt
+      ↓
+Claude API:
+  - Understands question
+  - Searches JSON data in context
+  - Finds PO SG-001
+  - Generates natural language answer
+      ↓
+Response: "PO SG-001 is in transit..."
+```
+
+### 4. Smart Triage Router (New)
+
+Our latest release introduces a **content-aware triage layer** that prepares uploaded files cheaply before involving the agent:
+
+- **Path A – Structured Excel**: Excel/CSV files go through a local parser (`processExcelFile`) to produce clean JSON tables for Claude.
+- **Path B – Simple Text PDFs & Docs**: PDFs/DOCX/TXT first pass through a fast local extractor. If the text looks clean, we keep it local and avoid expensive calls.
+- **Path C – Complex PDFs (Scans/Tables)**: When the quick extract looks garbled, too short, or fails, we automatically flag the file for a vision-capable tool (`process_pdf_with_vlm`) via MCP.
+
+Every processed file now carries triage metadata in the manifest so Claude knows whether the content is reliable or needs vision escalation.
+
+### 3. MCP Simulation
+
+**True MCP** (Future):
+```javascript
+// Claude calls filesystem tool
+const data = mcp.readFile('/uploads/processed/tracking_main.json');
+// Claude searches data
+```
+
+**Current Implementation** (Works Now):
+```javascript
+// We load file and include in prompt
+const data = fs.readFileSync('tracking_main.json');
+const systemPrompt = `Here's the tracking data:\n${JSON.stringify(data)}`;
+// Claude has data in context, can search it
+```
+
+**Same result, different method!**
+
+When official MCP SDK is ready, we can switch to true tool calling with minimal code changes.
+
+---
+
+## 🎓 How It Works (Deep Dive)
+
+### 1. File Upload Flow
+
+```
+User drops Excel files
+      ↓
+Multer saves to temp/
+      ↓
+Excel Processor:
+  - XLSX.readFile() with { raw: false }
+  - Extracts calculated VLOOKUP values ✅
+  - Converts to JSON
+  - Saves to uploads/processed/tracking_main.json
+      ↓
+Quality Analyzer:
+  - Scans for missing data
+  - Detects formula errors
+  - Calculates quality score
+      ↓
+Response sent to frontend
+```
+
+### 2. Chat Flow
+
+```
+User asks: "Status of PO SG-001?"
+      ↓
+Frontend sends to /api/chat
+      ↓
+Claude Client:
+  - Reads manifest.json (file metadata)
+  - Loads tracking_main.json
+  - Includes data in system prompt
+      ↓
+Claude API:
+  - Understands question
+  - Searches JSON data in context
+  - Finds PO SG-001
+  - Generates natural language answer
+      ↓
+Response: "PO SG-001 is in transit..."
+```
+
+### 4. Smart Triage Router (New)
+
+Our latest release introduces a **content-aware triage layer** that prepares uploaded files cheaply before involving the agent:
+
+- **Path A – Structured Excel**: Excel/CSV files go through a local parser (`processExcelFile`) to produce clean JSON tables for Claude.
+- **Path B – Simple Text PDFs & Docs**: PDFs/DOCX/TXT first pass through a fast local extractor. If the text looks clean, we keep it local and avoid expensive calls.
+- **Path C – Complex PDFs (Scans/Tables)**: When the quick extract looks garbled, too short, or fails, we automatically flag the file for a vision-capable tool (`process_pdf_with_vlm`) via MCP.
+
+Every processed file now carries triage metadata in the manifest so Claude knows whether the content is reliable or needs vision escalation.
+
+### 3. MCP Simulation
+
+**True MCP** (Future):
+```javascript
+// Claude calls filesystem tool
+const data = mcp.readFile('/uploads/processed/tracking_main.json');
+// Claude searches data
+```
+
+**Current Implementation** (Works Now):
+```javascript
+// We load file and include in prompt
+const data = fs.readFileSync('tracking_main.json');
+const systemPrompt = `Here's the tracking data:\n${JSON.stringify(data)}`;
+// Claude has data in context, can search it
+```
+
+**Same result, different method!**
+
+When official MCP SDK is ready, we can switch to true tool calling with minimal code changes.
+
+---
+
+## 🎓 How It Works (Deep Dive)
+
+### 1. File Upload Flow
+
+```
+User drops Excel files
+      ↓
+Multer saves to temp/
+      ↓
+Excel Processor:
+  - XLSX.readFile() with { raw: false }
+  - Extracts calculated VLOOKUP values ✅
+  - Converts to JSON
+  - Saves to uploads/processed/tracking_main.json
+      ↓
+Quality Analyzer:
+  - Scans for missing data
+  - Detects formula errors
+  - Calculates quality score
+      ↓
+Response sent to frontend
+```
+
+### 2. Chat Flow
+
+```
+User asks: "Status of PO SG-001?"
+      ↓
+Frontend sends to /api/chat
+      ↓
+Claude Client:
+  - Reads manifest.json (file metadata)
+  - Loads tracking_main.json
+  - Includes data in system prompt
+      ↓
+Claude API:
+  - Understands question
+  - Searches JSON data in context
+  - Finds PO SG-001
+  - Generates natural language answer
+      ↓
+Response: "PO SG-001 is in transit..."
+```
+
+### 4. Smart Triage Router (New)
+
+Our latest release introduces a **content-aware triage layer** that prepares uploaded files cheaply before involving the agent:
+
+- **Path A – Structured Excel**: Excel/CSV files go through a local parser (`processExcelFile`) to produce clean JSON tables for Claude.
+- **Path B – Simple Text PDFs & Docs**: PDFs/DOCX/TXT first pass through a fast local extractor. If the text looks clean, we keep it local and avoid expensive calls.
+- **Path C – Complex PDFs (Scans/Tables)**: When the quick extract looks garbled, too short, or fails, we automatically flag the file for a vision-capable tool (`process_pdf_with_vlm`) via MCP.
+
+Every processed file now carries triage metadata in the manifest so Claude knows whether the content is reliable or needs vision escalation.
+
+### 3. MCP Simulation
+
+**True MCP** (Future):
+```javascript
+// Claude calls filesystem tool
+const data = mcp.readFile('/uploads/processed/tracking_main.json');
+// Claude searches data
+```
+
+**Current Implementation** (Works Now):
+```javascript
+// We load file and include in prompt
+const data = fs.readFileSync('tracking_main.json');
+const systemPrompt = `Here's the tracking data:\n${JSON.stringify(data)}`;
+// Claude has data in context, can search it
+```
+
+**Same result, different method!**
+
+When official MCP SDK is ready, we can switch to true tool calling with minimal code changes.
+
+---
+
+## 🎓 How It Works (Deep Dive)
+
+### 1. File Upload Flow
+
+```
+User drops Excel files
+      ↓
+Multer saves to temp/
+      ↓
+Excel Processor:
+  - XLSX.readFile() with { raw: false }
+  - Extracts calculated VLOOKUP values ✅
+  - Converts to JSON
+  - Saves to uploads/processed/tracking_main.json
+      ↓
+Quality Analyzer:
+  - Scans for missing data
+  - Detects formula errors
+  - Calculates quality score
+      ↓
+Response sent to frontend
+```
+
+### 2. Chat Flow
+
+```
+User asks: "Status of PO SG-001?"
+      ↓
+Frontend sends to /api/chat
+      ↓
+Claude Client:
+  - Reads manifest.json (file metadata)
+  - Loads tracking_main.json
+  - Includes data in system prompt
+      ↓
+Claude API:
+  - Understands question
+  - Searches JSON data in context
+  - Finds PO SG-001
+  - Generates natural language answer
+      ↓
+Response: "PO SG-001 is in transit..."
+```
+
+### 4. Smart Triage Router (New)
+
+Our latest release introduces a **content-aware triage layer** that prepares uploaded files cheaply before involving the agent:
+
+- **Path A – Structured Excel**: Excel/CSV files go through a local parser (`processExcelFile`) to produce clean JSON tables for Claude.
+- **Path B – Simple Text PDFs & Docs**: PDFs/DOCX/TXT first pass through a fast local extractor. If the text looks clean, we keep it local and avoid expensive calls.
+- **Path C – Complex PDFs (Scans/Tables)**: When the quick extract looks garbled, too short, or fails, we automatically flag the file for a vision-capable tool (`process_pdf_with_vlm`) via MCP.
+
+Every processed file now carries triage metadata in the manifest so Claude knows whether the content is reliable or needs vision escalation.
+
+### 3. MCP Simulation
+
+**True MCP** (Future):
+```javascript
+// Claude calls filesystem tool
+const data = mcp.readFile('/uploads/processed/tracking_main.json');
+// Claude searches data
+```
+
+**Current Implementation** (Works Now):
+```javascript
+// We load file and include in prompt
+const data = fs.readFileSync('tracking_main.json');
+const systemPrompt = `Here's the tracking data:\n${JSON.stringify(data)}`;
+// Claude has data in context, can search it
+```
+
+**Same result, different method!**
+
+When official MCP SDK is ready, we can switch to true tool calling with minimal code changes.
+
+---
+
+## 🎓 How It Works (Deep Dive)
+
+### 1. File Upload Flow
+
+```
+User drops Excel files
+      ↓
+Multer saves to temp/
+      ↓
+Excel Processor:
+  - XLSX.readFile() with { raw: false }
+  - Extracts calculated VLOOKUP values ✅
+  - Converts to JSON
+  - Saves to uploads/processed/tracking_main.json
+      ↓
+Quality Analyzer:
+  - Scans for missing data
+  - Detects formula errors
+  - Calculates quality score
+      ↓
+Response sent to frontend
+```
+
+### 2. Chat Flow
+
+```
+User asks: "Status of PO SG-001?"
+      ↓
+Frontend sends to /api/chat
+      ↓
+Claude Client:
+  - Reads manifest.json (file metadata)
+  - Loads tracking_main.json
+  - Includes data in system prompt
+      ↓
+Claude API:
+  - Understands question
+  - Searches JSON data in context
+  - Finds PO SG-001
+  - Generates natural language answer
+      ↓
+Response: "PO SG-001 is in transit..."
+```
+
+### 4. Smart Triage Router (New)
+
+Our latest release introduces a **content-aware triage layer** that prepares uploaded files cheaply before involving the agent:
+
+- **Path A – Structured Excel**: Excel/CSV files go through a local parser (`processExcelFile`) to produce clean JSON tables for Claude.
+- **Path B – Simple Text PDFs & Docs**: PDFs/DOCX/TXT first pass through a fast local extractor. If the text looks clean, we keep it local and avoid expensive calls.
+- **Path C – Complex PDFs (Scans/Tables)**: When the quick extract looks garbled, too short, or fails, we automatically flag the file for a vision-capable tool (`process_pdf_with_vlm`) via MCP.
+
+Every processed file now carries triage metadata in the manifest so Claude knows whether the content is reliable or needs vision escalation.
+
+### 3. MCP Simulation
+
+**True MCP** (Future):
+```javascript
+// Claude calls filesystem tool
+const data = mcp.readFile('/uploads/processed/tracking_main.json');
+// Claude searches data
+```
+
+**Current Implementation** (Works Now):
+```javascript
+// We load file and include in prompt
+const data = fs.readFileSync('tracking_main.json');
+const systemPrompt = `Here's the tracking data:\n${JSON.stringify(data)}`;
+// Claude has data in context, can search it
+```
+
+**Same result, different method!**
+
+When official MCP SDK is ready, we can switch to true tool calling with minimal code changes.
+
+---
+
+## 🎓 How It Works (Deep Dive)
+
+### 1. File Upload Flow
+
+```
+User drops Excel files
+      ↓
+Multer saves to temp/
+      ↓
+Excel Processor:
+  - XLSX.readFile() with { raw: false }
+  - Extracts calculated VLOOKUP values ✅
+  - Converts to JSON
+  - Saves to uploads/processed/tracking_main.json
+      ↓
+Quality Analyzer:
+  - Scans for missing data
+  - Detects formula errors
+  - Calculates quality score
+      ↓
+Response sent to frontend
+```
+
+### 2. Chat Flow
+
+```
+User asks: "Status of PO SG-001?"
+      ↓
+Frontend sends to /api/chat
+      ↓
+Claude Client:
+  - Reads manifest.json (file metadata)
+  - Loads tracking_main.json
+  - Includes data in system prompt
+      ↓
+Claude API:
+  - Understands question
+  - Searches JSON data in context
+  - Finds PO SG-001
+  - Generates natural language answer
+      ↓
+Response: "PO SG-001 is in transit..."
+```
+
+### 4. Smart Triage Router (New)
+
+Our latest release introduces a **content-aware triage layer** that prepares uploaded files cheaply before involving the agent:
+
+- **Path A – Structured Excel**: Excel/CSV files go through a local parser (`processExcelFile`) to produce clean JSON tables for Claude.
+- **Path B – Simple Text PDFs & Docs**: PDFs/DOCX/TXT first pass through a fast local extractor. If the text looks clean, we keep it local and avoid expensive calls.
+- **Path C – Complex PDFs (Scans/Tables)**: When the quick extract looks garbled, too short, or fails, we automatically flag the file for a vision-capable tool (`process_pdf_with_vlm`) via MCP.
+
+Every processed file now carries triage metadata in the manifest so Claude knows whether the content is reliable or needs vision escalation.
+
+### 3. MCP Simulation
+
+**True MCP** (Future):
+```javascript
+// Claude calls filesystem tool
+const data = mcp.readFile('/uploads/processed/tracking_main.json');
+// Claude searches data
+```
+
+**Current Implementation** (Works Now):
+```javascript
+// We load file and include in prompt
+const data = fs.readFileSync('tracking_main.json');
+const systemPrompt = `Here's the tracking data:\n${JSON.stringify(data)}`;
+// Claude has data in context, can search it
+```
+
+**Same result, different method!**
+
+When official MCP SDK is ready, we can switch to true tool calling with minimal code changes.
+
+---
+
+## 🎓 How It Works (Deep Dive)
+
+### 1. File Upload Flow
+
+```
+User drops Excel files
+      ↓
+Multer saves to temp/
+      ↓
+Excel Processor:
+  - XLSX.readFile() with { raw: false }
+  - Extracts calculated VLOOKUP values ✅
+  - Converts to JSON
+  - Saves to uploads/processed/tracking_main.json
+      ↓
+Quality Analyzer:
+  - Scans for missing data
+  - Detects formula errors
+  - Calculates quality score
+      ↓
+Response sent to frontend
+```
+
+### 2. Chat Flow
+
+```
+User asks: "Status of PO SG-001?"
+      ↓
+Frontend sends to /api/chat
+      ↓
+Claude Client:
+  - Reads manifest.json (file metadata)
+  - Loads tracking_main.json
+  - Includes data in system prompt
+      ↓
+Claude API:
+  - Understands question
+  - Searches JSON data in context
+  - Finds PO SG-001
+  - Generates natural language answer
+      ↓
+Response: "PO SG-001 is in transit..."
+```
+
+### 4. Smart Triage Router (New)
+
+Our latest release introduces a **content-aware triage layer** that prepares uploaded files cheaply before involving the agent:
+
+- **Path A – Structured Excel**: Excel/CSV files go through a local parser (`processExcelFile`) to produce clean JSON tables for Claude.
+- **Path B – Simple Text PDFs & Docs**: PDFs/DOCX/TXT first pass through a fast local extractor. If the text looks clean, we keep it local and avoid expensive calls.
+- **Path C – Complex PDFs (Scans/Tables)**: When the quick extract looks garbled, too short, or fails, we automatically flag the file for a vision-capable tool (`process_pdf_with_vlm`) via MCP.
+
+Every processed file now carries triage metadata in the manifest so Claude knows whether the content is reliable or needs vision escalation.
+
+### 3. MCP Simulation
+
+**True MCP** (Future):
+```javascript
+// Claude calls filesystem tool
+const data = mcp.readFile('/uploads/processed/tracking_main.json');
+// Claude searches data
+```
+
+**Current Implementation** (Works Now):
+```javascript
+// We load file and include in prompt
+const data = fs.readFileSync('tracking_main.json');
+const systemPrompt = `Here's the tracking data:\n${JSON.stringify(data)}`;
+// Claude has data in context, can search it
+```
+
+**Same result, different method!**
+
+When official MCP SDK is ready, we can switch to true tool calling with minimal code changes.
+
+---
+
+## 🎓 How It Works (Deep Dive)
+
+### 1. File Upload Flow
+
+```
+User drops Excel files
+      ↓
+Multer saves to temp/
+      ↓
+Excel Processor:
+  - XLSX.readFile() with { raw: false }
+  - Extracts calculated VLOOKUP values ✅
+  - Converts to JSON
+  - Saves to uploads/processed/tracking_main.json
+      ↓
+Quality Analyzer:
+  - Scans for missing data
+  - Detects formula errors
+  - Calculates quality score
+      ↓
+Response sent to frontend
+```
+
+### 2. Chat Flow
+
+```
+User asks: "Status of PO SG-001?"
+      ↓
+Frontend sends to /api/chat
+      ↓
+Claude Client:
+  - Reads manifest.json (file metadata)
+  - Loads tracking_main.json
+  - Includes data in system prompt
+      ↓
+Claude API:
+  - Understands question
+  - Searches JSON data in context
+  - Finds PO SG-001
+  - Generates natural language answer
+      ↓
+Response: "PO SG-001 is in transit..."
+```
+
+### 4. Smart Triage Router (New)
+
+Our latest release introduces a **content-aware triage layer** that prepares uploaded files cheaply before involving the agent:
+
+- **Path A – Structured Excel**: Excel/CSV files go through a local parser (`processExcelFile`) to produce clean JSON tables for Claude.
+- **Path B – Simple Text PDFs & Docs**: PDFs/DOCX/TXT first pass through a fast local extractor. If the text looks clean, we keep it local and avoid expensive calls.
+- **Path C – Complex PDFs (Scans/Tables)**: When the quick extract looks garbled, too short, or fails, we automatically flag the file for a vision-capable tool (`process_pdf_with_vlm`) via MCP.
+
+Every processed file now carries triage metadata in the manifest so Claude knows whether the content is reliable or needs vision escalation.
+
+### 3. MCP Simulation
+
+**True MCP** (Future):
+```javascript
+// Claude calls filesystem tool
+const data = mcp.readFile('/uploads/processed/tracking_main.json');
+// Claude searches data
+```
+
+**Current Implementation** (Works Now):
+```javascript
+// We load file and include in prompt
+const data = fs.readFileSync('tracking_main.json');
+const systemPrompt = `Here's the tracking data:\n${JSON.stringify(data)}`;
+// Claude has data in context, can search it
+```
+
+**Same result, different method!**
+
+When official MCP SDK is ready, we can switch to true tool calling with minimal code changes.
+
+---
+
+## 🎓 How It Works (Deep Dive)
+
+### 1. File Upload Flow
+
+```
+User drops Excel files
+      ↓
+Multer saves to temp/
+      ↓
+Excel Processor:
+  - XLSX.readFile() with { raw: false }
+  - Extracts calculated VLOOKUP values ✅
+  - Converts to JSON
+  - Saves to uploads/processed/tracking_main.json
+      ↓
+Quality Analyzer:
+  - Scans for missing data
+  - Detects formula errors
+  - Calculates quality score
+      ↓
+Response sent to frontend
+```
+
+### 2. Chat Flow
+
+```
+User asks: "Status of PO SG-001?"
+      ↓
+Frontend sends to /api/chat
+      ↓
+Claude Client:
+  - Reads manifest.json (file metadata)
+  - Loads tracking_main.json
+  - Includes data in system prompt
+      ↓
+Claude API:
+  - Understands question
+  - Searches JSON data in context
+  - Finds PO SG-001
+  - Generates natural language answer
+      ↓
+Response: "PO SG-001 is in transit..."
+```
+
+### 4. Smart Triage Router (New)
+
+Our latest release introduces a **content-aware triage layer** that prepares uploaded files cheaply before involving the agent:
+
+- **Path A – Structured Excel**: Excel/CSV files go through a local parser (`processExcelFile`) to produce clean JSON tables for Claude.
+- **Path B – Simple Text PDFs & Docs**: PDFs/DOCX/TXT first pass through a fast local extractor. If the text looks clean, we keep it local and avoid expensive calls.
+- **Path C – Complex PDFs (Scans/Tables)**: When the quick extract looks garbled, too short, or fails, we automatically flag the file for a vision-capable tool (`process_pdf_with_vlm`) via MCP.
+
+Every processed file now carries triage metadata in the manifest so Claude knows whether the content is reliable or needs vision escalation.
+
+### 3. MCP Simulation
+
+**True MCP** (Future):
+```javascript
+// Claude calls filesystem tool
+const data = mcp.readFile('/uploads/processed/tracking_main.json');
+// Claude searches data
+```
+
+**Current Implementation** (Works Now):
+```javascript
+// We load file and include in prompt
+const data = fs.readFileSync('tracking_main.json');
+const systemPrompt = `Here's the tracking data:\n${JSON.stringify(data)}`;
+// Claude has data in context, can search it
+```
+
+**Same result, different method!**
+
+When official MCP SDK is ready, we can switch to true tool calling with minimal code changes.
+
+---
+
+## 🎓 How It Works (Deep Dive)
+
+### 1. File Upload Flow
+
+```
+User drops Excel files
+      ↓
+Multer saves to temp/
+      ↓
+Excel Processor:
+  - XLSX.readFile() with { raw: false }
+  - Extracts calculated VLOOKUP values ✅
+  - Converts to JSON
+  - Saves to uploads/processed/tracking_main.json
+      ↓
+Quality Analyzer:
+  - Scans for missing data
+  - Detects formula errors
+  - Calculates quality score
+      ↓
+Response sent to frontend
+```
+
+### 2. Chat Flow
+
+```
+User asks: "Status of PO SG-001?"
+      ↓
+Frontend sends to /api/chat
+      ↓
+Claude Client:
+  - Reads manifest.json (file metadata)
+  - Loads tracking_main.json
+  - Includes data in system prompt
+      ↓
+Claude API:
+  - Understands question
+  - Searches JSON data in context
+  - Finds PO SG-001
+  - Generates natural language answer
+      ↓
+Response: "PO SG-001 is in transit..."
+```
+
+### 4. Smart Triage Router (New)
+
+Our latest release introduces a **content-aware triage layer** that prepares uploaded files cheaply before involving the agent:
+
+- **Path A – Structured Excel**: Excel/CSV files go through a local parser (`processExcelFile`) to produce clean JSON tables for Claude.
+- **Path B – Simple Text PDFs & Docs**: PDFs/DOCX/TXT first pass through a fast local extractor. If the text looks clean, we keep it local and avoid expensive calls.
+- **Path C – Complex PDFs (Scans/Tables)**: When the quick extract looks garbled, too short, or fails, we automatically flag the file for a vision-capable tool (`process_pdf_with_vlm`) via MCP.
+
+Every processed file now carries triage metadata in the manifest so Claude knows whether the content is reliable or needs vision escalation.
+
+### 3. MCP Simulation
+
+**True MCP** (Future):
+```javascript
+// Claude calls filesystem tool
+const data = mcp.readFile('/uploads/processed/tracking_main.json');
+// Claude searches data
+```
+
+**Current Implementation** (Works Now):
+```javascript
+// We load file and include in prompt
+const data = fs.readFileSync('tracking_main.json');
+const systemPrompt = `Here's the tracking data:\n${JSON.stringify(data)}`;
+// Claude has data in context, can search it
+```
+
+**Same result, different method!**
+
+When official MCP SDK is ready, we can switch to true tool calling with minimal code changes.
+
+---
+
+## 🎓 How It Works (Deep Dive)
+
+### 1. File Upload Flow
+
+```
+User drops Excel files
+      ↓
+Multer saves to temp/
+      ↓
+Excel Processor:
+  - XLSX.readFile() with { raw: false }
+  - Extracts calculated VLOOKUP values ✅
+  - Converts to JSON
+  - Saves to uploads/processed/tracking_main.json
+      ↓
+Quality Analyzer:
+  - Scans for missing data
+  - Detects formula errors
+  - Calculates quality score
+      ↓
+Response sent to frontend
+```
+
+### 2. Chat Flow
+
+```
+User asks: "Status of PO SG-001?"
+      ↓
+Frontend sends to /api/chat
+      ↓
+Claude Client:
+  - Reads manifest.json (file metadata)
+  - Loads tracking_main.json
+  - Includes data in system prompt
+      ↓
+Claude API:
+  - Understands question
+  - Searches JSON data in context
+  - Finds PO SG-001
+  - Generates natural language answer
+      ↓
+Response: "PO SG-001 is in transit..."
+```
+
+### 4. Smart Triage Router (New)
+
+Our latest release introduces a **content-aware triage layer** that prepares uploaded files cheaply before involving the agent:
+
+- **Path A – Structured Excel**: Excel/CSV files go through a local parser (`processExcelFile`) to produce clean JSON tables for Claude.
+- **Path B – Simple Text PDFs & Docs**: PDFs/DOCX/TXT first pass through a fast local extractor. If the text looks clean, we keep it local and avoid expensive calls.
+- **Path C – Complex PDFs (Scans/Tables)**: When the quick extract looks garbled, too short, or fails, we automatically flag the file for a vision-capable tool (`process_pdf_with_vlm`) via MCP.
+
+Every processed file now carries triage metadata in the manifest so Claude knows whether the content is reliable or needs vision escalation.
+
+### 3. MCP Simulation
+
+**True MCP** (Future):
+```javascript
+// Claude calls filesystem tool
+const data = mcp.readFile('/uploads/processed/tracking_main.json');
+// Claude searches data
+```
+
+**Current Implementation** (Works Now):
+```javascript
+// We load file and include in prompt
+const data = fs.readFileSync('tracking_main.json');
+const systemPrompt = `Here's the tracking data:\n${JSON.stringify(data)}`;
+// Claude has data in context, can search it
+```
+
+**Same result, different method!**
+
+When official MCP SDK is ready, we can switch to true tool calling with minimal code changes.
+
+---
+
+## 🎓 How It Works (Deep Dive)
+
+### 1. File Upload Flow
+
+```
+User drops Excel files
+      ↓
+Multer saves to temp/
+      ↓
+Excel Processor:
+  - XLSX.readFile() with { raw: false }
+  - Extracts calculated VLOOKUP values ✅
+  - Converts to JSON
+  - Saves to uploads/processed/tracking_main.json
+      ↓
+Quality Analyzer:
+  - Scans for missing data
+  - Detects formula errors
+  - Calculates quality score
+      ↓
+Response sent to frontend
+```
+
+### 2. Chat Flow
+
+```
+User asks: "Status of PO SG-001?"
+      ↓
+Frontend sends to /api/chat
+      ↓
+Claude Client:
+  - Reads manifest.json (file metadata)
+  - Loads tracking_main.json
+  - Includes data in system prompt
+      ↓
+Claude API:
+  - Understands question
+  - Searches JSON data in context
+  - Finds PO SG-001
+  - Generates natural language answer
+      ↓
+Response: "PO SG-001 is in transit..."
+```
+
+### 4. Smart Triage Router (New)
+
+Our latest release introduces a **content-aware triage layer** that prepares uploaded files cheaply before involving the agent:
+
+- **Path A – Structured Excel**: Excel/CSV files go through a local parser (`processExcelFile`) to produce clean JSON tables for Claude.
+- **Path B – Simple Text PDFs & Docs**: PDFs/DOCX/TXT first pass through a fast local extractor. If the text looks clean, we keep it local and avoid expensive calls.
+- **Path C – Complex PDFs (Scans/Tables)**: When the quick extract looks garbled, too short, or fails, we automatically flag the file for a vision-capable tool (`process_pdf_with_vlm`) via MCP.
+
+Every processed file now carries triage metadata in the manifest so Claude knows whether the content is reliable or needs vision escalation.
+
+### 3. MCP Simulation
+
+**True MCP** (Future):
+```javascript
+// Claude calls filesystem tool
+const data = mcp.readFile('/uploads/processed/tracking_main.json');
+// Claude searches data
+```
+
+**Current Implementation** (Works Now):
+```javascript
+// We load file and include in prompt
+const data = fs.readFileSync('tracking_main.json');
+const systemPrompt = `Here's the tracking data:\n${JSON.stringify(data)}`;
+// Claude has data in context, can search it
+```
+
+**Same result, different method!**
+
+When official MCP SDK is ready, we can switch to true tool calling with minimal code changes.
+
+---
+
+## 🎓 How It Works (Deep Dive)
+
+### 1. File Upload Flow
+
+```
+User drops Excel files
+      ↓
+Multer saves to temp/
+      ↓
+Excel Processor:
+  - XLSX.readFile() with { raw: false }
+  - Extracts calculated VLOOKUP values ✅
+  - Converts to JSON
+  - Saves to uploads/processed/tracking_main.json
+      ↓
+Quality Analyzer:
+  - Scans for missing data
+  - Detects formula errors
+  - Calculates quality score
+      ↓
+Response sent to frontend
+```
+
+### 2. Chat Flow
+
+```
+User asks: "Status of PO SG-001?"
+      ↓
+Frontend sends to /api/chat
+      ↓
+Claude Client:
+  - Reads manifest.json (file metadata)
+  - Loads tracking_main.json
+  - Includes data in system prompt
+      ↓
+Claude API:
+  - Understands question
+  - Searches JSON data in context
+  - Finds PO SG-001
+  - Generates natural language answer
+      ↓
+Response: "PO SG-001 is in transit..."
+```
+
+### 4. Smart Triage Router (New)
+
+Our latest release introduces a **content-aware triage layer** that prepares uploaded files cheaply before involving the agent:
+
+- **Path A – Structured Excel**: Excel/CSV files go through a local parser (`processExcelFile`) to produce clean JSON tables for Claude.
+- **Path B – Simple Text PDFs & Docs**: PDFs/DOCX/TXT first pass through a fast local extractor. If the text looks clean, we keep it local and avoid expensive calls.
+- **Path C – Complex PDFs (Scans/Tables)**: When the quick extract looks garbled, too short, or fails, we automatically flag the file for a vision-capable tool (`process_pdf_with_vlm`) via MCP.
+
+Every processed file now carries triage metadata in the manifest so Claude knows whether the content is reliable or needs vision escalation.
+
+### 3. MCP Simulation
+
+**True MCP** (Future):
+```javascript
+// Claude calls filesystem tool
+const data = mcp.readFile('/uploads/processed/tracking_main.json');
+// Claude searches data
+```
+
+**Current Implementation** (Works Now):
+```javascript
+// We load file and include in prompt
+const data = fs.readFileSync('tracking_main.json');
+const systemPrompt = `Here's the tracking data:\n${JSON.stringify(data)}`;
+// Claude has data in context, can search it
+```
+
+**Same result, different method!**
+
+When official MCP SDK is ready, we can switch to true tool calling with minimal code changes.
+
+---
+
+## 🎓 How It Works (Deep Dive)
+
+### 1. File Upload Flow
+
+```
+User drops Excel files
+      ↓
+Multer saves to temp/
+      ↓
+Excel Processor:
+  - XLSX.readFile() with { raw: false }
+  - Extracts calculated VLOOKUP values ✅
+  - Converts to JSON
+  - Saves to uploads/processed/tracking_main.json
+      ↓
+Quality Analyzer:
+  - Scans for missing data
+  - Detects formula errors
+  - Calculates quality score
+      ↓
+Response sent to frontend
+```
+
+### 2. Chat Flow
+
+```
+User asks: "Status of PO SG-001?"
+      ↓
+Frontend sends to /api/chat
+      ↓
+Claude Client:
+  - Reads manifest.json (file metadata)
+  - Loads tracking_main.json
+  - Includes data in system prompt
+      ↓
+Claude API:
+  - Understands question
+  - Searches JSON data in context
+  - Finds PO SG-001
+  - Generates natural language answer
+      ↓
+Response: "PO SG-001 is in transit..."
+```
+
+### 4. Smart Triage Router (New)
+
+Our latest release introduces a **content-aware triage layer** that prepares uploaded files cheaply before involving the agent:
+
+- **Path A – Structured Excel**: Excel/CSV files go through a local parser (`processExcelFile`) to produce clean JSON tables for Claude.
+- **Path B – Simple Text PDFs & Docs**: PDFs/DOCX/TXT first pass through a fast local extractor. If the text looks clean, we keep it local and avoid expensive calls.
+- **Path C – Complex PDFs (Scans/Tables)**: When the quick extract looks garbled, too short, or fails, we automatically flag the file for a vision-capable tool (`process_pdf_with_vlm`) via MCP.
+
+Every processed file now carries triage metadata in the manifest so Claude knows whether the content is reliable or needs vision escalation.
+
+### 3. MCP Simulation
+
+**True MCP** (Future):
+```javascript
+// Claude calls filesystem tool
+const data = mcp.readFile('/uploads/processed/tracking_main.json');
+// Claude searches data
+```
+
+**Current Implementation** (Works Now):
+```javascript
+// We load file and include in prompt
+const data = fs.readFileSync('tracking_main.json');
+const systemPrompt = `Here's the tracking data:\n${JSON.stringify(data)}`;
+// Claude has data in context, can search it
+```
+
+**Same result, different method!**
+
+When official MCP SDK is ready, we can switch to true tool calling with minimal code changes.
+
+---
+
+## 🎓 How It Works (Deep Dive)
+
+### 1. File Upload Flow
+
+```
+User drops Excel files
+      ↓
+Multer saves to temp/
+      ↓
+Excel Processor:
+  - XLSX.readFile() with { raw: false }
+  - Extracts calculated VLOOKUP values ✅
+  - Converts to JSON
+  - Saves to uploads/processed/tracking_main.json
+      ↓
+Quality Analyzer:
+  - Scans for missing data
+  - Detects formula errors
+  - Calculates quality score
+      ↓
+Response sent to frontend
+```
+
+### 2. Chat Flow
+
+```
+User asks: "Status of PO SG-001?"
+      ↓
+Frontend sends to /api/chat
+      ↓
+Claude Client:
+  - Reads manifest.json (file metadata)
+  - Loads tracking_main.json
+  - Includes data in system prompt
+      ↓
+Claude API:
+  - Understands question
+  - Searches JSON data in context
+  - Finds PO SG-001
+  - Generates natural language answer
+      ↓
+Response: "PO SG-001 is in transit..."
+```
+
+### 4. Smart Triage Router (New)
+
+Our latest release introduces a **content-aware triage layer** that prepares uploaded files cheaply before involving the agent:
+
+- **Path A – Structured Excel**: Excel/CSV files go through a local parser (`processExcelFile`) to produce clean JSON tables for Claude.
+- **Path B – Simple Text PDFs & Docs**: PDFs/DOCX/TXT first pass through a fast local extractor. If the text looks clean, we keep it local and avoid expensive calls.
+- **Path C – Complex PDFs (Scans/Tables)**: When the quick extract looks garbled, too short, or fails, we automatically flag the file for a vision-capable tool (`process_pdf_with_vlm`) via MCP.
+
+Every processed file now carries triage metadata in the manifest so Claude knows whether the content is reliable or needs vision escalation.
+
+### 3. MCP Simulation
+
+**True MCP** (Future):
+```javascript
+// Claude calls filesystem tool
+const data = mcp.readFile('/uploads/processed/tracking_main.json');
+// Claude searches data
+```
+
+**Current Implementation** (Works Now):
+```javascript
+// We load file and include in prompt
+const data = fs.readFileSync('tracking_main.json');
+const systemPrompt = `Here's the tracking data:\n${JSON.stringify(data)}`;
+// Claude has data in context, can search it
+```
+
+**Same result, different method!**
+
+When official MCP SDK is ready, we can switch to true tool calling with minimal code changes.
+
+---
+
+## 🎓 How It Works (Deep Dive)
+
+### 1. File Upload Flow
+
+```
+User drops Excel files
+      ↓
+Multer saves to temp/
+      ↓
+Excel Processor:
+  - XLSX.readFile() with { raw: false }
+  - Extracts calculated VLOOKUP values ✅
+  - Converts to JSON
+  - Saves to uploads/processed/tracking_main.json
+      ↓
+Quality Analyzer:
+  - Scans for missing data
+  - Detects formula errors
+  - Calculates quality score
+      ↓
+Response sent to frontend
+```
+
+### 2. Chat Flow
+
+```
+User asks: "Status of PO SG-001?"
+      ↓
+Frontend sends to /api/chat
+      ↓
+Claude Client:
+  - Reads manifest.json (file metadata)
+  - Loads tracking_main.json
+  - Includes data in system prompt
+      ↓
+Claude API:
+  - Understands question
+  - Searches JSON data in context
+  - Finds PO SG-001
+  - Generates natural language answer
+      ↓
+Response: "PO SG-001 is in transit..."
+```
+
+### 4. Smart Triage Router (New)
+
+Our latest release introduces a **content-aware triage layer** that prepares uploaded files cheaply before involving the agent:
+
+- **Path A – Structured Excel**: Excel/CSV files go through a local parser (`processExcelFile`) to produce clean JSON tables for Claude.
+- **Path B – Simple Text PDFs & Docs**: PDFs/DOCX/TXT first pass through a fast local extractor. If the text looks clean, we keep it local and avoid expensive calls.
+- **Path C – Complex PDFs (Scans/Tables)**: When the quick extract looks garbled, too short, or fails, we automatically flag the file for a vision-capable tool (`process_pdf_with_vlm`) via MCP.
+
+Every processed file now carries triage metadata in the manifest so Claude knows whether the content is reliable or needs vision escalation.
+
+### 3. MCP Simulation
+
+**True MCP** (Future):
+```javascript
+// Claude calls filesystem tool
+const data = mcp.readFile('/uploads/processed/tracking_main.json');
+// Claude searches data
+```
+
+**Current Implementation** (Works Now):
+```javascript
+// We load file and include in prompt
+const data = fs.readFileSync('tracking_main.json');
+const systemPrompt = `Here's the tracking data:\n${JSON.stringify(data)}`;
+// Claude has data in context, can search it
+```
+
+**Same result, different method!**
+
+When official MCP SDK is ready, we can switch to true tool calling with minimal code changes.
+
+---
+
+## 🎓 How It Works (Deep Dive)
+
+### 1. File Upload Flow
+
+```
+User drops Excel files
+      ↓
+Multer saves to temp/
+      ↓
+Excel Processor:
+  - XLSX.readFile() with { raw: false }
+  - Extracts calculated VLOOKUP values ✅
+  - Converts to JSON
+  - Saves to uploads/processed/tracking_main.json
+      ↓
+Quality Analyzer:
+  - Scans for missing data
+  - Detects formula errors
+  - Calculates quality score
+      ↓
+Response sent to frontend
+```
+
+### 2. Chat Flow
+
+```
+User asks: "Status of PO SG-001?"
+      ↓
+Frontend sends to /api/chat
+      ↓
+Claude Client:
+  - Reads manifest.json (file metadata)
+  - Loads tracking_main.json
+  - Includes data in system prompt
+      ↓
+Claude API:
+  - Understands question
+  - Searches JSON data in context
+  - Finds PO SG-001
+  - Generates natural language answer
+      ↓
+Response: "PO SG-001 is in transit..."
+```
+
+### 4. Smart Triage Router (New)
+
+Our latest release introduces a **content-aware triage layer** that prepares uploaded files cheaply before involving the agent:
+
+- **Path A – Structured Excel**: Excel/CSV files go through a local parser (`processExcelFile`) to produce clean JSON tables for Claude.
+- **Path B – Simple Text PDFs & Docs**: PDFs/DOCX/TXT first pass through a fast local extractor. If the text looks clean, we keep it local and avoid expensive calls.
+- **Path C – Complex PDFs (Scans/Tables)**: When the quick extract looks garbled, too short, or fails, we automatically flag the file for a vision-capable tool (`process_pdf_with_vlm`) via MCP.
+
+Every processed file now carries triage metadata in the manifest so Claude knows whether the content is reliable or needs vision escalation.
+
+### 3. MCP Simulation
+
+**True MCP** (Future):
+```javascript
+// Claude calls filesystem tool
+const data = mcp.readFile('/uploads/processed/tracking_main.json');
+// Claude searches data
+```
+
+**Current Implementation** (Works Now):
+```javascript
+// We load file and include in prompt
+const data = fs.readFileSync('tracking_main.json');
+const systemPrompt = `Here's the tracking data:\n${JSON.stringify(data)}`;
+// Claude has data in context, can search it
+```
+
+**Same result, different method!**
+
+When official MCP SDK is ready, we can switch to true tool calling with minimal code changes.
+
+---
+
+## 🎓 How It Works (Deep Dive)
+
+### 1. File Upload Flow
+
+```
+User drops Excel files
+      ↓
+Multer saves to temp/
+      ↓
+Excel Processor:
+  - XLSX.readFile() with { raw: false }
+  - Extracts calculated VLOOKUP values ✅
+  - Converts to JSON
+  - Saves to uploads/processed/tracking_main.json
+      ↓
+Quality Analyzer:
+  - Scans for missing data
+  - Detects formula errors
+  - Calculates quality score
+      ↓
+Response sent to frontend
+```
+
+### 2. Chat Flow
+
+```
+User asks: "Status of PO SG-001?"
+      ↓
+Frontend sends to /api/chat
+      ↓
+Claude Client:
+  - Reads manifest.json (file metadata)
+  - Loads tracking_main.json
+  - Includes data in system prompt
+      ↓
+Claude API:
+  - Understands question
+  - Searches JSON data in context
+  - Finds PO SG-001
+  - Generates natural language answer
+      ↓
+Response: "PO SG-001 is in transit..."
+```
+
+### 4. Smart Triage Router (New)
+
+Our latest release introduces a **content-aware triage layer** that prepares uploaded files cheaply before involving the agent:
+
+- **Path A – Structured Excel**: Excel/CSV files go through a local parser (`processExcelFile`) to produce clean JSON tables for Claude.
+- **Path B – Simple Text PDFs & Docs**: PDFs/DOCX/TXT first pass through a fast local extractor. If the text looks clean, we keep it local and avoid expensive calls.
+- **Path C – Complex PDFs (Scans/Tables)**: When the quick extract looks garbled, too short, or fails, we automatically flag the file for a vision-capable tool (`process_pdf_with_vlm`) via MCP.
+
+Every processed file now carries triage metadata in the manifest so Claude knows whether the content is reliable or needs vision escalation.
+
+### 3. MCP Simulation
+
+**True MCP** (Future):
+```javascript
+// Claude calls filesystem tool
+const data = mcp.readFile('/uploads/processed/tracking_main.json');
+// Claude searches data
+```
+
+**Current Implementation** (Works Now):
+```javascript
+// We load file and include in prompt
+const data = fs.readFileSync('tracking_main.json');
+const systemPrompt = `Here's the tracking data:\n${JSON.stringify(data)}`;
+// Claude has data in context, can search it
+```
+
+**Same result, different method!**
+
+When official MCP SDK is ready, we can switch to true tool calling with minimal code changes.
+
+---
+
+## 🎓 How It Works (Deep Dive)
+
+### 1. File Upload Flow
+
+```
+User drops Excel files
+      ↓
+Multer saves to temp/
+      ↓
+Excel Processor:
+  - XLSX.readFile() with { raw: false }
+  - Extracts calculated VLOOKUP values ✅
+  - Converts to JSON
+  - Saves to uploads/processed/tracking_main.json
+      ↓
+Quality Analyzer:
+  - Scans for missing data
+  - Detects formula errors
+  - Calculates quality score
+      ↓
+Response sent to frontend
+```
+
+### 2. Chat Flow
+
+```
+User asks: "Status of PO SG-001?"
+      ↓
+Frontend sends to /api/chat
+      ↓
+Claude Client:
+  - Reads manifest.json (file metadata)
+  - Loads tracking_main.json
+  - Includes data in system prompt
+      ↓
+Claude API:
+  - Understands question
+  - Searches JSON data in context
+  - Finds PO SG-001
+  - Generates natural language answer
+      ↓
+Response: "PO SG-001 is in transit..."
+```
+
+### 4. Smart Triage Router (New)
+
+Our latest release introduces a **content-aware triage layer** that prepares uploaded files cheaply before involving the agent:
+
+- **Path A – Structured Excel**: Excel/CSV files go through a local parser (`processExcelFile`) to produce clean JSON tables for Claude.
+- **Path B – Simple Text PDFs & Docs**: PDFs/DOCX/TXT first pass through a fast local extractor. If the text looks clean, we keep it local and avoid expensive calls.
+- **Path C – Complex PDFs (Scans/Tables)**: When the quick extract looks garbled, too short, or fails, we automatically flag the file for a vision-capable tool (`process_pdf_with_vlm`) via MCP.
+
+Every processed file now carries triage metadata in the manifest so Claude knows whether the content is reliable or needs vision escalation.
+
+### 3. MCP Simulation
+
+**True MCP** (Future):
+```javascript
+// Claude calls filesystem tool
+const data = mcp.readFile('/uploads/processed/tracking_main.json');
+// Claude searches data
+```
+
+**Current Implementation** (Works Now):
+```javascript
+// We load file and include in prompt
+const data = fs.readFileSync('tracking_main.json');
+const systemPrompt = `Here's the tracking data:\n${JSON.stringify(data)}`;
+// Claude has data in context, can search it
+```
+
+**Same result, different method!**
+
+When official MCP SDK is ready, we can switch to true tool calling with minimal code changes.
+
+---
+
+## 🎓 How It Works (Deep Dive)
+
+### 1. File Upload Flow
+
+```
+User drops Excel files
+      ↓
+Multer saves to temp/
+      ↓
+Excel Processor:
+  - XLSX.readFile() with { raw: false }
+  - Extracts calculated VLOOKUP values ✅
+  - Converts to JSON
+  - Saves to uploads/processed/tracking_main.json
+      ↓
+Quality Analyzer:
+  - Scans for missing data
+  - Detects formula errors
+  - Calculates quality score
+      ↓
+Response sent to frontend
+```
+
+### 2. Chat Flow
+
+```
+User asks: "Status of PO SG-001?"
+      ↓
+Frontend sends to /api/chat
+      ↓
+Claude Client:
+  - Reads manifest.json (file metadata)
+  - Loads tracking_main.json
+  - Includes data in system prompt
+      ↓
+Claude API:
+  - Understands question
+  - Searches JSON data in context
+  - Finds PO SG-001
+  - Generates natural language answer
+      ↓
+Response: "PO SG-001 is in transit..."
+```
+
+### 4. Smart Triage Router (New)
+
+Our latest release introduces a **content-aware triage layer** that prepares uploaded files cheaply before involving the agent:
+
+- **Path A – Structured Excel**: Excel/CSV files go through a local parser (`processExcelFile`) to produce clean JSON tables for Claude.
+- **Path B – Simple Text PDFs & Docs**: PDFs/DOCX/TXT first pass through a fast local extractor. If the text looks clean, we keep it local and avoid expensive calls.
+- **Path C – Complex PDFs (Scans/Tables)**: When the quick extract looks garbled, too short, or fails, we automatically flag the file for a vision-capable tool (`process_pdf_with_vlm`) via MCP.
+
+Every processed file now carries triage metadata in the manifest so Claude knows whether the content is reliable or needs vision escalation.
+
+### 3. MCP Simulation
+
+**True MCP** (Future):
+```javascript
+// Claude calls filesystem tool
+const data = mcp.readFile('/uploads/processed/tracking_main.json');
+// Claude searches data
+```
+
+**Current Implementation** (Works Now):
+```javascript
+// We load file and include in prompt
+const data = fs.readFileSync('tracking_main.json');
+const systemPrompt = `Here's the tracking data:\n${JSON.stringify(data)}`;
+// Claude has data in context, can search it
+```
+
+**Same result, different method!**
+
+When official MCP SDK is ready, we can switch to true tool calling with minimal code changes.
+
+---
+
+## 🎓 How It Works (Deep Dive)
+
+### 1. File Upload Flow
+
+```
+User drops Excel files
+      ↓
+Multer saves to temp/
+      ↓
+Excel Processor:
+  - XLSX.readFile() with { raw: false }
+  - Extracts calculated VLOOKUP values ✅
+  - Converts to JSON
+  - Saves to uploads/processed/tracking_main.json
+      ↓
+Quality Analyzer:
+  - Scans for missing data
+  - Detects formula errors
+  - Calculates quality score
+      ↓
+Response sent to frontend
+```
+
+### 2. Chat Flow
+
+```
+User asks: "Status of PO SG-001?"
+      ↓
+Frontend sends to /api/chat
+      ↓
+Claude Client:
+  - Reads manifest.json (file metadata)
+  - Loads tracking_main.json
+  - Includes data in system prompt
+      ↓
+Claude API:
+  - Understands question
+  - Searches JSON data in context
+  - Finds PO SG-001
+  - Generates natural language answer
+      ↓
+Response: "PO SG-001 is in transit..."
+```
+
+### 4. Smart Triage Router (New)
+
+Our latest release introduces a **content-aware triage layer** that prepares uploaded files cheaply before involving the agent:
+
+- **Path A – Structured Excel**: Excel/CSV files go through a local parser (`processExcelFile`) to produce clean JSON tables for Claude.
+- **Path B – Simple Text PDFs & Docs**: PDFs/DOCX/TXT first pass through a fast local extractor. If the text looks clean, we keep it local and avoid expensive calls.
+- **Path C – Complex PDFs (Scans/Tables)**: When the quick extract looks garbled, too short, or fails, we automatically flag the file for a vision-capable tool (`process_pdf_with_vlm`) via MCP.
+
+Every processed file now carries triage metadata in the manifest so Claude knows whether the content is reliable or needs vision escalation.
+
+### 3. MCP Simulation
+
+**True MCP** (Future):
+```javascript
+// Claude calls filesystem tool
+const data = mcp.readFile('/uploads/processed/tracking_main.json');
+// Claude searches data
+```
+
+**Current Implementation** (Works Now):
+```javascript
+// We load file and include in prompt
+const data = fs.readFileSync('tracking_main.json');
+const systemPrompt = `Here's the tracking data:\n${JSON.stringify(data)}`;
+// Claude has data in context, can search it
+```
+
+**Same result, different method!**
+
+When official MCP SDK is ready, we can switch to true tool calling with minimal code changes.
+
+---
+
+## 🎓 How It Works (Deep Dive)
+
+### 1. File Upload Flow
+
+```
+User drops Excel files
+      ↓
+Multer saves to temp/
+      ↓
+Excel Processor:
+  - XLSX.readFile() with { raw: false }
+  - Extracts calculated VLOOKUP values ✅
+  - Converts to JSON
+  - Saves to uploads/processed/tracking_main.json
+      ↓
+Quality Analyzer:
+  - Scans for missing data
+  - Detects formula errors
+  - Calculates quality score
+      ↓
+Response sent to frontend
+```
+
+### 2. Chat Flow
+
+```
+User asks: "Status of PO SG-001?"
+      ↓
+Frontend sends to /api/chat
+      ↓
+Claude Client:
+  - Reads manifest.json (file metadata)
+  - Loads tracking_main.json
+  - Includes data in system prompt
+      ↓
+Claude API:
+  - Understands question
+  - Searches JSON data in context
+  - Finds PO SG-001
+  - Generates natural language answer
+      ↓
+Response: "PO SG-001 is in transit..."
+```
+
+### 4. Smart Triage Router (New)
+
+Our latest release introduces a **content-aware triage layer** that prepares uploaded files cheaply before involving the agent:
+
+- **Path A – Structured Excel**: Excel/CSV files go through a local parser (`processExcelFile`) to produce clean JSON tables for Claude.
+- **Path B – Simple Text PDFs & Docs**: PDFs/DOCX/TXT first pass through a fast local extractor. If the text looks clean, we keep it local and avoid expensive calls.
+- **Path C – Complex PDFs (Scans/Tables)**: When the quick extract looks garbled, too short, or fails, we automatically flag the file for a vision-capable tool (`process_pdf_with_vlm`) via MCP.
+
+Every processed file now carries triage metadata in the manifest so Claude knows whether the content is reliable or needs vision escalation.
+
+### 3. MCP Simulation
+
+**True MCP** (Future):
+```javascript
+// Claude calls filesystem tool
+const data = mcp.readFile('/uploads/processed/tracking_main.json');
+// Claude searches data
+```
+
+**Current Implementation** (Works Now):
+```javascript
+// We load file and include in prompt
+const data = fs.readFileSync('tracking_main.json');
+const systemPrompt = `Here's the tracking data:\n${JSON.stringify(data)}`;
+// Claude has data in context, can search it
+```
+
+**Same result, different method!**
+
+When official MCP SDK is ready, we can switch to true tool calling with minimal code changes.
+
+---
+
+## 🎓 How It Works (Deep Dive)
+
+### 1. File Upload Flow
+
+```
+User drops Excel files
+      ↓
+Multer saves to temp/
+      ↓
+Excel Processor:
+  - XLSX.readFile() with { raw: false }
+  - Extracts calculated VLOOKUP values ✅
+  - Converts to JSON
+  - Saves to uploads/processed/tracking_main.json
+      ↓
+Quality Analyzer:
+  - Scans for missing data
+  - Detects formula errors
+  - Calculates quality score
+      ↓
+Response sent to frontend
+```
+
+### 2. Chat Flow
+
+```
+User asks: "Status of PO SG-001?"
+      ↓
+Frontend sends to /api/chat
+      ↓
+Claude Client:
+  - Reads manifest.json (file metadata)
+  - Loads tracking_main.json
+  - Includes data in system prompt
+      ↓
+Claude API:
+  - Understands question
+  - Searches JSON data in context
+  - Finds PO SG-001
+  - Generates natural language answer
+      ↓
+Response: "PO SG-001 is in transit..."
+```
+
+### 4. Smart Triage Router (New)
+
+Our latest release introduces a **content-aware triage layer** that prepares uploaded files cheaply before involving the agent:
+
+- **Path A – Structured Excel**: Excel/CSV files go through a local parser (`processExcelFile`) to produce clean JSON tables for Claude.
+- **Path B – Simple Text PDFs & Docs**: PDFs/DOCX/TXT first pass through a fast local extractor. If the text looks clean, we keep it local and avoid expensive calls.
+- **Path C – Complex PDFs (Scans/Tables)**: When the quick extract looks garbled, too short, or fails, we automatically flag the file for a vision-capable tool (`process_pdf_with_vlm`) via MCP.
+
+Every processed file now carries triage metadata in the manifest so Claude knows whether the content is reliable or needs vision escalation.
+
+### 3. MCP Simulation
+
+**True MCP** (Future):
+```javascript
+// Claude calls filesystem tool
+const data = mcp.readFile('/uploads/processed/tracking_main.json');
+// Claude searches data
+```
+
+**Current Implementation** (Works Now):
+```javascript
+// We load file and include in prompt
+const data = fs.readFileSync('tracking_main.json');
+const systemPrompt = `Here's the tracking data:\n${JSON.stringify(data)}`;
+// Claude has data in context, can search it
+```
+
+**Same result, different method!**
+
+When official MCP SDK is ready, we can switch to true tool calling with minimal code changes.
+
+---
+
+## 🎓 How It Works (Deep Dive)
+
+### 1. File Upload Flow
+
+```
+User drops Excel files
+      ↓
+Multer saves to temp/
+      ↓
+Excel Processor:
+  - XLSX.readFile() with { raw: false }
+  - Extracts calculated VLOOKUP values ✅
+  - Converts to JSON
+  - Saves to uploads/processed/tracking_main.json
+      ↓
+Quality Analyzer:
+  - Scans for missing data
+  - Detects formula errors
+  - Calculates quality score
+      ↓
+Response sent to frontend
+```
+
+### 2. Chat Flow
+
+```
+User asks: "Status of PO SG-001?"
+      ↓
+Frontend sends to /api/chat
+      ↓
+Claude Client:
+  - Reads manifest.json (file metadata)
+  - Loads tracking_main.json
+  - Includes data in system prompt
+      ↓
+Claude API:
+  - Understands question
+  - Searches JSON data in context
+  - Finds PO SG-001
+  - Generates natural language answer
+      ↓
+Response: "PO SG-001 is in transit..."
+```
+
+### 4. Smart Triage Router (New)
+
+Our latest release introduces a **content-aware triage layer** that prepares uploaded files cheaply before involving the agent:
+
+- **Path A – Structured Excel**: Excel/CSV files go through a local parser (`processExcelFile`) to produce clean JSON tables for Claude.
+- **Path B – Simple Text PDFs & Docs**: PDFs/DOCX/TXT first pass through a fast local extractor. If the text looks clean, we keep it local and avoid expensive calls.
+- **Path C – Complex PDFs (Scans/Tables)**: When the quick extract looks garbled, too short, or fails, we automatically flag the file for a vision-capable tool (`process_pdf_with_vlm`) via MCP.
+
+Every processed file now carries triage metadata in the manifest so Claude knows whether the content is reliable or needs vision escalation.
+
+### 3. MCP Simulation
+
+**True MCP** (Future):
+```javascript
+// Claude calls filesystem tool
+const data = mcp.readFile('/uploads/processed/tracking_main.json');
+// Claude searches data
+```
+
+**Current Implementation** (Works Now):
+```javascript
+// We load file and include in prompt
+const data = fs.readFileSync('tracking_main.json');
+const systemPrompt = `Here's the tracking data:\n${JSON.stringify(data)}`;
+// Claude has data in context, can search it
+```
+
+**Same result, different method!**
+
+When official MCP SDK is ready, we can switch to true tool calling with minimal code changes.
+
+---
+
+## 🎓 How It Works (Deep Dive)
+
+### 1. File Upload Flow
+
+```
+User drops Excel files
+      ↓
+Multer saves to temp/
+      ↓
+Excel Processor:
+  - XLSX.readFile() with { raw: false }
+  - Extracts calculated VLOOKUP values ✅
+  - Converts to JSON
+  - Saves to uploads/processed/tracking_main.json
+      ↓
+Quality Analyzer:
+  - Scans for missing data
+  - Detects formula errors
+  - Calculates quality score
+      ↓
+Response sent to frontend
+```
+
+### 2. Chat Flow
+
+```
+User asks: "Status of PO SG-001?"
+      ↓
+Frontend sends to /api/chat
+      ↓
+Claude Client:
+  - Reads manifest.json (file metadata)
+  - Loads tracking_main.json
+  - Includes data in system prompt
+      ↓
+Claude API:
+  - Understands question
+  - Searches JSON data in context
+  - Finds PO SG-001
+  - Generates natural language answer
+      ↓
+Response: "PO SG-001 is in transit..."
+```
+
+### 4. Smart Triage Router (New)
+
+Our latest release introduces a **content-aware triage layer** that prepares uploaded files cheaply before involving the agent:
+
+- **Path A – Structured Excel**: Excel/CSV files go through a local parser (`processExcelFile`) to produce clean JSON tables for Claude.
+- **Path B – Simple Text PDFs & Docs**: PDFs/DOCX/TXT first pass through a fast local extractor. If the text looks clean, we keep it local and avoid expensive calls.
+- **Path C – Complex PDFs (Scans/Tables)**: When the quick extract looks garbled, too short, or fails, we automatically flag the file for a vision-capable tool (`process_pdf_with_vlm`) via MCP.
+
+Every processed file now carries triage metadata in the manifest so Claude knows whether the content is reliable or needs vision escalation.
+
+### 3. MCP Simulation
+
+**True MCP** (Future):
+```javascript
+// Claude calls filesystem tool
+const data = mcp.readFile('/uploads/processed/tracking_main.json');
+// Claude searches data
+```
+
+**Current Implementation** (Works Now):
+```javascript
+// We load file and include in prompt
+const data = fs.readFileSync('tracking_main.json');
+const systemPrompt = `Here's the tracking data:\n${JSON.stringify(data)}`;
+// Claude has data in context, can search it
+```
+
+**Same result, different method!**
+
+When official MCP SDK is ready, we can switch to true tool calling with minimal code changes.
+
+---
+
+## 🎓 How It Works (Deep Dive)
+
+### 1. File Upload Flow
+
+```
+User drops Excel files
+      ↓
+Multer saves to temp/
+      ↓
+Excel Processor:
+  - XLSX.readFile() with { raw: false }
+  - Extracts calculated VLOOKUP values ✅
+  - Converts to JSON
+  - Saves to uploads/processed/tracking_main.json
+      ↓
+Quality Analyzer:
+  - Scans for missing data
+  - Detects formula errors
+  - Calculates quality score
+      ↓
+Response sent to frontend
+```
+
+### 2. Chat Flow
+
+```
+User asks: "Status of PO SG-001?"
+      ↓
+Frontend sends to /api/chat
+      ↓
+Claude Client:
+  - Reads manifest.json (file metadata)
+  - Loads tracking_main.json
+  - Includes data in system prompt
+      ↓
+Claude API:
+  - Understands question
+  - Searches JSON data in context
+  - Finds PO SG-001
+  - Generates natural language answer
+      ↓
+Response: "PO SG-001 is in transit..."
+```
+
+### 4. Smart Triage Router (New)
+
+Our latest release introduces a **content-aware triage layer** that prepares uploaded files cheaply before involving the agent:
+
+- **Path A – Structured Excel**: Excel/CSV files go through a local parser (`processExcelFile`) to produce clean JSON tables for Claude.
+- **Path B – Simple Text PDFs & Docs**: PDFs/DOCX/TXT first pass through a fast local extractor. If the text looks clean, we keep it local and avoid expensive calls.
+- **Path C – Complex PDFs (Scans/Tables)**: When the quick extract looks garbled, too short, or fails, we automatically flag the file for a vision-capable tool (`process_pdf_with_vlm`) via MCP.
+
+Every processed file now carries triage metadata in the manifest so Claude knows whether the content is reliable or needs vision escalation.
+
+### 3. MCP Simulation
+
+**True MCP** (Future):
+```javascript
+// Claude calls filesystem tool
+const data = mcp.readFile('/uploads/processed/tracking_main.json');
+// Claude searches data
+```
+
+**Current Implementation** (Works Now):
+```javascript
+// We load file and include in prompt
+const data = fs.readFileSync('tracking_main.json');
+const systemPrompt = `Here's the tracking data:\n${JSON.stringify(data)}`;
+// Claude has data in context, can search it
+```
+
+**Same result, different method!**
+
+When official MCP SDK is ready, we can switch to true tool calling with minimal code changes.
+
+---
+
+## 🎓 How It Works (Deep Dive)
+
+### 1. File Upload Flow
+
+```
+User drops Excel files
+      ↓
+Multer saves to temp/
+      ↓
+Excel Processor:
+  - XLSX.readFile() with { raw: false }
+  - Extracts calculated VLOOKUP values ✅
+  - Converts to JSON
+  - Saves to uploads/processed/tracking_main.json
+      ↓
+Quality Analyzer:
+  - Scans for missing data
+  - Detects formula errors
+  - Calculates quality score
+      ↓
+Response sent to frontend
+```
+
+### 2. Chat Flow
+
+```
+User asks: "Status of PO SG-001?"
+      ↓
+Frontend sends to /api/chat
+      ↓
+Claude Client:
+  - Reads manifest.json (file metadata)
+  - Loads tracking_main.json
+  - Includes data in system prompt
+      ↓
+Claude API:
+  - Understands question
+  - Searches JSON data in context
+  - Finds PO SG-001
+  - Generates natural language answer
+      ↓
+Response: "PO SG-001 is in transit..."
+```
+
+### 4. Smart Triage Router (New)
+
+Our latest release introduces a **content-aware triage layer** that prepares uploaded files cheaply before involving the agent:
+
+- **Path A – Structured Excel**: Excel/CSV files go through a local parser (`processExcelFile`) to produce clean JSON tables for Claude.
+- **Path B – Simple Text PDFs & Docs**: PDFs/DOCX/TXT first pass through a fast local extractor. If the text looks clean, we keep it local and avoid expensive calls.
+- **Path C – Complex PDFs (Scans/Tables)**: When the quick extract looks garbled, too short, or fails, we automatically flag the file for a vision-capable tool (`process_pdf_with_vlm`) via MCP.
+
+Every processed file now carries triage metadata in the manifest so Claude knows whether the content is reliable or needs vision escalation.
+
+### 3. MCP Simulation
+
+**True MCP** (Future):
+```javascript
+// Claude calls filesystem tool
+const data = mcp.readFile('/uploads/processed/tracking_main.json');
+// Claude searches data
+```
+
+**Current Implementation** (Works Now):
+```javascript
+// We load file and include in prompt
+const data = fs.readFileSync('tracking_main.json');
+const systemPrompt = `Here's the tracking data:\n${JSON.stringify(data)}`;
+// Claude has data in context, can search it
+```
+
+**Same result, different method!**
+
+When official MCP SDK is ready, we can switch to true tool calling with minimal code changes.
+
+---
+
+## 🎓 How It Works (Deep Dive)
+
+### 1. File Upload Flow
+
+```
+User drops Excel files
+      ↓
+Multer saves to temp/
+      ↓
+Excel Processor:
+  - XLSX.readFile() with { raw: false }
+  - Extracts calculated VLOOKUP values ✅
+  - Converts to JSON
+  - Saves to uploads/processed/tracking_main.json
+      ↓
+Quality Analyzer:
+  - Scans for missing data
+  - Detects formula errors
+  - Calculates quality score
+      ↓
+Response sent to frontend
+```
+
+### 2. Chat Flow
+
+```
+User asks: "Status of PO SG-001?"
+      ↓
+Frontend sends to /api/chat
+      ↓
+Claude Client:
+  - Reads manifest.json (file metadata)
+  - Loads tracking_main.json
+  - Includes data in system prompt
+      ↓
+Claude API:
+  - Understands question
+  - Searches JSON data in context
+  - Finds PO SG-001
+  - Generates natural language answer
+      ↓
+Response: "PO SG-001 is in transit..."
+```
+
+### 4. Smart Triage Router (New)
+
+Our latest release introduces a **content-aware triage layer** that prepares uploaded files cheaply before involving the agent:
+
+- **Path A – Structured Excel**: Excel/CSV files go through a local parser (`processExcelFile`) to produce clean JSON tables for Claude.
+- **Path B – Simple Text PDFs & Docs**: PDFs/DOCX/TXT first pass through a fast local extractor. If the text looks clean, we keep it local and avoid expensive calls.
+- **Path C – Complex PDFs (Scans/Tables)**: When the quick extract looks garbled, too short, or fails, we automatically flag the file for a vision-capable tool (`process_pdf_with_vlm`) via MCP.
+
+Every processed file now carries triage metadata in the manifest so Claude knows whether the content is reliable or needs vision escalation.
+
+### 3. MCP Simulation
+
+**True MCP** (Future):
+```javascript
+// Claude calls filesystem tool
+const data = mcp.readFile('/uploads/processed/tracking_main.json');
+// Claude searches data
+```
+
+**Current Implementation** (Works Now):
+```javascript
+// We load file and include in prompt
+const data = fs.readFileSync('tracking_main.json');
+const systemPrompt = `Here's the tracking data:\n${JSON.stringify(data)}`;
+// Claude has data in context, can search it
+```
+
+**Same result, different method!**
+
+When official MCP SDK is ready, we can switch to true tool calling with minimal code changes.
+
+---
+
+## 🎓 How It Works (Deep Dive)
+
+### 1. File Upload Flow
+
+```
+User drops Excel files
+      ↓
+Multer saves to temp/
+      ↓
+Excel Processor:
+  - XLSX.readFile() with { raw: false }
+  - Extracts calculated VLOOKUP values ✅
+  - Converts to JSON
+  - Saves to uploads/processed/tracking_main.json
+      ↓
+Quality Analyzer:
+  - Scans for missing data
+  - Detects formula errors
+  - Calculates quality score
+      ↓
+Response sent to frontend
+```
+
+### 2. Chat Flow
+
+```
+User asks: "Status of PO SG-001?"
+      ↓
+Frontend sends to /api/chat
+      ↓
+Claude Client:
+  - Reads manifest.json (file metadata)
+  - Loads tracking_main.json
+  - Includes data in system prompt
+      ↓
+Claude API:
+  - Understands question
+  - Searches JSON data in context
+  - Finds PO SG-001
+  - Generates natural language answer
+      ↓
+Response: "PO SG-001 is in transit..."
+```
+
+### 4. Smart Triage Router (New)
+
+Our latest release introduces a **content-aware triage layer** that prepares uploaded files cheaply before involving the agent:
+
+- **Path A – Structured Excel**: Excel/CSV files go through a local parser (`processExcelFile`) to produce clean JSON tables for Claude.
+- **Path B – Simple Text PDFs & Docs**: PDFs/DOCX/TXT first pass through a fast local extractor. If the text looks clean, we keep it local and avoid expensive calls.
+- **Path C – Complex PDFs (Scans/Tables)**: When the quick extract looks garbled, too short, or fails, we automatically flag the file for a vision-capable tool (`process_pdf_with_vlm`) via MCP.
+
+Every processed file now carries triage metadata in the manifest so Claude knows whether the content is reliable or needs vision escalation.
+
+### 3. MCP Simulation
+
+**True MCP** (Future):
+```javascript
+// Claude calls filesystem tool
+const data = mcp.readFile('/uploads/processed/tracking_main.json');
+// Claude searches data
+```
+
+**Current Implementation** (Works Now):
+```javascript
+// We load file and include in prompt
+const data = fs.readFileSync('tracking_main.json');
+const systemPrompt = `Here's the tracking data:\n${JSON.stringify(data)}`;
+// Claude has data in context, can search it
+```
+
+**Same result, different method!**
+
+When official MCP SDK is ready, we can switch to true tool calling with minimal code changes.
+
+---
+
+## 🎓 How It Works (Deep Dive)
+
+### 1. File Upload Flow
+
+```
+User drops Excel files
+      ↓
+Multer saves to temp/
+      ↓
+Excel Processor:
+  - XLSX.readFile() with { raw: false }
+  - Extracts calculated VLOOKUP values ✅
+  - Converts to JSON
+  - Saves to uploads/processed/tracking_main.json
+      ↓
+Quality Analyzer:
+  - Scans for missing data
+  - Detects formula errors
+  - Calculates quality score
+      ↓
+Response sent to frontend
+```
+
+### 2. Chat Flow
+
+```
+User asks: "Status of PO SG-001?"
+      ↓
+Frontend sends to /api/chat
+      ↓
+Claude Client:
+  - Reads manifest.json (file metadata)
+  - Loads tracking_main.json
+  - Includes data in system prompt
+      ↓
+Claude API:
+  - Understands question
+  - Searches JSON data in context
+  - Finds PO SG-001
+  - Generates natural language answer
+      ↓
+Response: "PO SG-001 is in transit..."
+```
+
+### 4. Smart Triage Router (New)
+
+Our latest release introduces a **content-aware triage layer** that prepares uploaded files cheaply before involving the agent:
+
+- **Path A – Structured Excel**: Excel/CSV files go through a local parser (`processExcelFile`) to produce clean JSON tables for Claude.
+- **Path B – Simple Text PDFs & Docs**: PDFs/DOCX/TXT first pass through a fast local extractor. If the text looks clean, we keep it local and avoid expensive calls.
+- **Path C – Complex PDFs (Scans/Tables)**: When the quick extract looks garbled, too short, or fails, we automatically flag the file for a vision-capable tool (`process_pdf_with_vlm`) via MCP.
+
+Every processed file now carries triage metadata in the manifest so Claude knows whether the content is reliable or needs vision escalation.
+
+### 3. MCP Simulation
+
+**True MCP** (Future):
+```javascript
+// Claude calls filesystem tool
+const data = mcp.readFile('/uploads/processed/tracking_main.json');
+// Claude searches data
+```
+
+**Current Implementation** (Works Now):
+```javascript
+// We load file and include in prompt
+const data = fs.readFileSync('tracking_main.json');
+const systemPrompt = `Here's the tracking data:\n${JSON.stringify(data)}`;
+// Claude has data in context, can search it
+```
+
+**Same result, different method!**
+
+When official MCP SDK is ready, we can switch to true tool calling with minimal code changes.
+
+---
+
+## 🎓 How It Works (Deep Dive)
+
+### 1. File Upload Flow
+
+```
+User drops Excel files
+      ↓
+Multer saves to temp/
+      ↓
+Excel Processor:
+  - XLSX.readFile() with { raw: false }
+  - Extracts calculated VLOOKUP values ✅
+  - Converts to JSON
+  - Saves to uploads/processed/tracking_main.json
+      ↓
+Quality Analyzer:
+  - Scans for missing data
+  - Detects formula errors
+  - Calculates quality score
+      ↓
+Response sent to frontend
+```
+
+### 2. Chat Flow
+
+```
+User asks: "Status of PO SG-001?"
+      ↓
+Frontend sends to /api/chat
+      ↓
+Claude Client:
+  - Reads manifest.json (file metadata)
+  - Loads tracking_main.json
+  - Includes data in system prompt
+      ↓
+Claude API:
+  - Understands question
+  - Searches JSON data in context
+  - Finds PO SG-001
+  - Generates natural language answer
+      ↓
+Response: "PO SG-001 is in transit..."
+```
+
+### 4. Smart Triage Router (New)
+
+Our latest release introduces a **content-aware triage layer** that prepares uploaded files cheaply before involving the agent:
+
+- **Path A – Structured Excel**: Excel/CSV files go through a local parser (`processExcelFile`) to produce clean JSON tables for Claude.
+- **Path B – Simple Text PDFs & Docs**: PDFs/DOCX/TXT first pass through a fast local extractor. If the text looks clean, we keep it local and avoid expensive calls.
+- **Path C – Complex PDFs (Scans/Tables)**: When the quick extract looks garbled, too short, or fails, we automatically flag the file for a vision-capable tool (`process_pdf_with_vlm`) via MCP.
+
+Every processed file now carries triage metadata in the manifest so Claude knows whether the content is reliable or needs vision escalation.
+
+### 3. MCP Simulation
+
+**True MCP** (Future):
+```javascript
+// Claude calls filesystem tool
+const data = mcp.readFile('/uploads/processed/tracking_main.json');
+// Claude searches data
+```
+
+**Current Implementation** (Works Now):
+```javascript
+// We load file and include in prompt
+const data = fs.readFileSync('tracking_main.json');
+const systemPrompt = `Here's the tracking data:\n${JSON.stringify(data)}`;
+// Claude has data in context, can search it
+```
+
+**Same result, different method!**
+
+When official MCP SDK is ready, we can switch to true tool calling with minimal code changes.
+
+---
+
+## 🎓 How It Works (Deep Dive)
+
+### 1. File Upload Flow
+
+```
+User drops Excel files
+      ↓
+Multer saves to temp/
+      ↓
+Excel Processor:
+  - X

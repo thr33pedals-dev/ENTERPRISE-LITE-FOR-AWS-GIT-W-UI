@@ -27,7 +27,7 @@ UPLOADS_DIR=./uploads
 PROCESSED_DIR=./uploads/processed
 
 # Claude Model Configuration
-CLAUDE_MODEL=claude-3-5-sonnet-20241022
+CLAUDE_MODEL=claude-sonnet-4-20250514
 CLAUDE_MAX_TOKENS=4096
 CLAUDE_TEMPERATURE=0.3
 ```
@@ -81,7 +81,7 @@ npm start
 npm start
 # Should show:
 # ✅ Server running on port 3000
-# ✅ Claude Model: claude-3-5-sonnet-20241022
+# ✅ Claude Model: claude-sonnet-4-20250514
 # ✅ API endpoints listed
 ```
 

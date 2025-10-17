@@ -5,7 +5,7 @@ import path from 'path';
 import fs from 'fs';
 import { fileURLToPath } from 'url';
 import dotenv from 'dotenv';
-import { processFiles, categorizeFiles, saveProcessedFiles, validateFile } from './src/file-processor.js';
+import { processFiles, categorizeFiles, saveProcessedFiles, validateFile, sanitizeTenantId } from './src/file-processor.js';
 import { createClaudeClient } from './src/claude-client.js';
 import { analyzeDataQuality } from './src/quality-analyzer.js';
 
@@ -26,12 +26,116 @@ app.use(express.static('public'));
 const UPLOADS_DIR = path.join(__dirname, 'uploads');
 const PROCESSED_DIR = path.join(__dirname, 'uploads', 'processed');
 const TEMP_DIR = path.join(__dirname, 'uploads', 'temp');
+const MANIFESTS_DIR = path.join(PROCESSED_DIR, 'manifests');
 
-[UPLOADS_DIR, PROCESSED_DIR, TEMP_DIR].forEach(dir => {
+[UPLOADS_DIR, PROCESSED_DIR, TEMP_DIR, MANIFESTS_DIR].forEach(dir => {
   if (!fs.existsSync(dir)) {
     fs.mkdirSync(dir, { recursive: true });
   }
 });
+
+function getTenantId(req) {
+  const headerTenant = req.headers['x-tenant-id'] || req.headers['x-tenant'];
+  const queryTenant = req.query?.tenantId || req.query?.tenant;
+  const candidate = headerTenant || queryTenant || 'default';
+  const sanitized = sanitizeTenantId(candidate);
+  return sanitized || 'default';
+}
+
+function getManifestPaths(tenantId) {
+  const safeTenant = tenantId || 'default';
+  const manifestFilename = `${safeTenant}.json`;
+  const primaryPath = path.join(MANIFESTS_DIR, manifestFilename);
+  const legacyPath = path.join(PROCESSED_DIR, 'manifest.json');
+  return { safeTenant, primaryPath, legacyPath };
+}
+
+function loadTenantManifest(tenantId) {
+  const { safeTenant, primaryPath, legacyPath } = getManifestPaths(tenantId);
+  const candidates = safeTenant === 'default'
+    ? [legacyPath, primaryPath]
+    : [primaryPath];
+
+  for (const candidate of candidates) {
+    if (!candidate || !fs.existsSync(candidate)) continue;
+    try {
+      const manifest = JSON.parse(fs.readFileSync(candidate, 'utf-8'));
+      return { manifest, path: candidate };
+    } catch (err) {
+      console.warn(`⚠️ Unable to parse manifest at ${candidate}:`, err.message);
+    }
+  }
+
+  return null;
+}
+
+function saveTenantManifest(tenantId, manifest) {
+  const { safeTenant, primaryPath, legacyPath } = getManifestPaths(tenantId);
+  fs.writeFileSync(primaryPath, JSON.stringify({ ...manifest, tenantId: safeTenant }, null, 2));
+
+  if (safeTenant === 'default' && legacyPath !== primaryPath && fs.existsSync(legacyPath)) {
+    try {
+      fs.unlinkSync(legacyPath);
+    } catch (err) {
+      console.warn('⚠️ Unable to remove legacy manifest:', err.message);
+    }
+  }
+
+  return primaryPath;
+}
+
+function deleteTenantManifest(tenantId) {
+  const { safeTenant, primaryPath, legacyPath } = getManifestPaths(tenantId);
+  [primaryPath, legacyPath].forEach(candidate => {
+    if (!candidate || !fs.existsSync(candidate)) return;
+    try {
+      fs.unlinkSync(candidate);
+    } catch (err) {
+      console.warn(`⚠️ Unable to delete manifest at ${candidate}:`, err.message);
+    }
+  });
+}
+
+function getArtifactFilenames(entry) {
+  if (!entry?.artifacts) return [];
+  const filenames = [];
+  const { jsonFilename, txtFilename, metaFilename } = entry.artifacts;
+  if (jsonFilename) filenames.push(jsonFilename);
+  if (txtFilename) filenames.push(txtFilename);
+  if (metaFilename) filenames.push(metaFilename);
+  return filenames;
+}
+
+function deleteProcessedFile(filename) {
+  if (!filename) return false;
+  const fullPath = path.join(PROCESSED_DIR, filename);
+  if (!fs.existsSync(fullPath)) return false;
+  const stats = fs.lstatSync(fullPath);
+  if (!stats.isFile()) return false;
+  fs.unlinkSync(fullPath);
+  return true;
+}
+
+function recalculateManifestStats(manifest) {
+  const fileTypes = manifest.files.reduce((acc, file) => {
+    const category = file.category || 'other';
+    acc[category] = (acc[category] || 0) + 1;
+    return acc;
+  }, { tracking: 0, knowledge: 0, other: 0 });
+
+  manifest.totalFiles = manifest.files.length;
+  manifest.fileTypes = {
+    tracking: fileTypes.tracking || 0,
+    knowledge: fileTypes.knowledge || 0,
+    other: fileTypes.other || 0
+  };
+
+  if (manifest.mainFile && !manifest.files.some(f => f.name === manifest.mainFile.filename)) {
+    manifest.mainFile = null;
+  }
+
+  return manifest;
+}
 
 // Configure multer for file uploads
 const storage = multer.diskStorage({
@@ -80,6 +184,11 @@ const claudeClient = createClaudeClient();
  */
 app.post('/api/upload', upload.array('files', 10), async (req, res) => {
   try {
+    const tenantId = getTenantId(req);
+    const tenantManifest = loadTenantManifest(tenantId);
+    const manifestPath = tenantManifest?.path;
+    const existingManifest = tenantManifest?.manifest || null;
+
     if (!req.files || req.files.length === 0) {
       return res.status(400).json({ 
         success: false, 
@@ -90,7 +199,7 @@ app.post('/api/upload', upload.array('files', 10), async (req, res) => {
     console.log(`📁 Processing ${req.files.length} file(s)...`);
 
     // Process all files (Excel, PDF, DOCX, TXT, CSV)
-    const processedFiles = await processFiles(req.files);
+    const processedFiles = await processFiles(req.files, { tenantId });
 
     if (!processedFiles || processedFiles.length === 0) {
       return res.status(400).json({
@@ -103,7 +212,10 @@ app.post('/api/upload', upload.array('files', 10), async (req, res) => {
     const categories = categorizeFiles(processedFiles);
 
     // Save processed files to filesystem (for MCP access)
-    const savedFiles = saveProcessedFiles(processedFiles, PROCESSED_DIR);
+    const savedFiles = saveProcessedFiles(processedFiles, PROCESSED_DIR, {
+      tenantId,
+      processedRoot: UPLOADS_DIR
+    });
 
     // Analyze data quality (if tracking files exist)
     let qualityReport = null;
@@ -115,30 +227,34 @@ app.post('/api/upload', upload.array('files', 10), async (req, res) => {
     }
 
     // Load existing manifest or create new one
-    const manifestPath = path.join(PROCESSED_DIR, 'manifest.json');
-    let existingManifest = null;
-    
-    if (fs.existsSync(manifestPath)) {
-      try {
-        existingManifest = JSON.parse(fs.readFileSync(manifestPath, 'utf-8'));
-      } catch (err) {
-        console.log('⚠️ Could not load existing manifest, creating new one');
-      }
-    }
-
-    // Create or update manifest for Claude (deduplicate by filename)
     const categoryByName = new Map();
     categories.tracking.forEach(f => categoryByName.set(f.originalName, 'tracking'));
     categories.knowledge.forEach(f => categoryByName.set(f.originalName, 'knowledge'));
     categories.other.forEach(f => categoryByName.set(f.originalName, 'other'));
 
     const timestamp = new Date().toISOString();
-    const newFiles = processedFiles.map(f => ({
+    const newFiles = processedFiles.map((f, idx) => ({
       name: f.originalName,
       type: f.fileType,
       metadata: f.metadata,
       category: categoryByName.get(f.originalName) || 'other',
-      uploadedAt: timestamp
+      uploadedAt: timestamp,
+      triage: f.triage || null,
+      artifacts: {
+        storageKey: savedFiles[idx]?.storageKey || null,
+        jsonFilename: savedFiles[idx]?.jsonFilename || null,
+        txtFilename: savedFiles[idx]?.txtFilename || null,
+        metaFilename: savedFiles[idx]?.metaFilename || null,
+        relativeJsonPath: savedFiles[idx]?.relativeJsonPath || null,
+        relativeTxtPath: savedFiles[idx]?.relativeTxtPath || null,
+        relativeMetaPath: savedFiles[idx]?.relativeMetaPath || null,
+        parsedJsonPath: savedFiles[idx]?.artifacts?.parsedJsonPath || f?.artifacts?.parsedJsonPath || null,
+        rawResponsePath: savedFiles[idx]?.artifacts?.rawResponsePath || f?.artifacts?.rawResponsePath || null,
+        visionModel: savedFiles[idx]?.artifacts?.model || f?.artifacts?.model || null,
+        visionGeneratedAt: savedFiles[idx]?.artifacts?.generatedAt || f?.artifacts?.generatedAt || null,
+        promptPath: savedFiles[idx]?.artifacts?.promptPath || f?.artifacts?.promptPath || null,
+        source: savedFiles[idx]?.artifacts?.source || f?.artifacts?.source || null
+      }
     }));
 
     const newFileNames = new Set(newFiles.map(f => f.name));
@@ -198,10 +314,11 @@ app.post('/api/upload', upload.array('files', 10), async (req, res) => {
       },
       files: combinedFiles,
       mainFile: manifestMainFile,
-      qualityReport: qualityReport || existingManifest?.qualityReport
+      qualityReport: qualityReport || existingManifest?.qualityReport,
+      tenantId
     };
 
-    fs.writeFileSync(manifestPath, JSON.stringify(manifest, null, 2));
+    const savePath = saveTenantManifest(tenantId, manifest);
 
     // Clean up temp files
     req.files.forEach(file => {
@@ -227,10 +344,12 @@ app.post('/api/upload', upload.array('files', 10), async (req, res) => {
         knowledge: categories.knowledge.length,
         other: categories.other.length
       },
-      files: processedFiles.map(f => ({
+      files: processedFiles.map((f, idx) => ({
         name: f.originalName,
         type: f.fileType,
-        size: f.fileSize
+        size: f.fileSize,
+        triageRoute: f.triage?.route || null,
+        artifacts: newFiles[idx]?.artifacts || null
       })),
       mainFile: mainFile ? {
         name: mainFile.originalName,
@@ -238,7 +357,10 @@ app.post('/api/upload', upload.array('files', 10), async (req, res) => {
         rows: mainFile.data?.length || 0
       } : null,
       qualityReport: qualityReport,
-      manifest: manifest
+      manifest: {
+        ...manifest,
+        manifestPath: path.relative(UPLOADS_DIR, savePath)
+      }
     });
 
   } catch (error) {
@@ -269,6 +391,7 @@ app.post('/api/upload', upload.array('files', 10), async (req, res) => {
 app.post('/api/chat', async (req, res) => {
   try {
     const { message, conversationHistory = [] } = req.body;
+    const tenantId = getTenantId(req);
 
     if (!message) {
       return res.status(400).json({ 
@@ -278,15 +401,15 @@ app.post('/api/chat', async (req, res) => {
     }
 
     // Check if tracking data exists
-    const manifestPath = path.join(PROCESSED_DIR, 'manifest.json');
-    if (!fs.existsSync(manifestPath)) {
+    const tenantManifest = loadTenantManifest(tenantId);
+    if (!tenantManifest?.manifest) {
       return res.status(400).json({
         success: false,
         error: 'No tracking data uploaded. Please upload Excel files first.'
       });
     }
 
-    const manifest = JSON.parse(fs.readFileSync(manifestPath, 'utf-8'));
+    const manifest = tenantManifest.manifest;
 
     console.log(`💬 Customer question: ${message}`);
 
@@ -316,16 +439,17 @@ app.post('/api/chat', async (req, res) => {
  */
 app.get('/api/quality-report', (req, res) => {
   try {
-    const manifestPath = path.join(PROCESSED_DIR, 'manifest.json');
-    
-    if (!fs.existsSync(manifestPath)) {
+    const tenantId = getTenantId(req);
+    const tenantManifest = loadTenantManifest(tenantId);
+
+    if (!tenantManifest?.manifest) {
       return res.status(404).json({
         success: false,
         error: 'No data uploaded yet'
       });
     }
 
-    const manifest = JSON.parse(fs.readFileSync(manifestPath, 'utf-8'));
+    const manifest = tenantManifest.manifest;
     
     res.json({
       success: true,
@@ -348,17 +472,11 @@ app.get('/api/quality-report', (req, res) => {
  * GET /api/status
  */
 app.get('/api/status', (req, res) => {
-  const manifestPath = path.join(PROCESSED_DIR, 'manifest.json');
-  const hasData = fs.existsSync(manifestPath);
-  
-  let manifest = null;
-  if (hasData) {
-    try {
-      manifest = JSON.parse(fs.readFileSync(manifestPath, 'utf-8'));
-    } catch (err) {
-      // Ignore
-    }
-  }
+  const tenantId = getTenantId(req);
+  const tenantManifest = loadTenantManifest(tenantId);
+  const manifest = tenantManifest?.manifest || null;
+  const manifestPath = tenantManifest?.path || null;
+  const hasData = Boolean(manifest);
 
   res.json({
     success: true,
@@ -370,7 +488,9 @@ app.get('/api/status', (req, res) => {
       qualityScore: manifest?.qualityReport?.qualityScore || null,
       totalFiles: manifest?.files?.length || 0,
       fileTypes: manifest?.fileTypes || { tracking: 0, knowledge: 0, other: 0 },
-      claudeModel: process.env.CLAUDE_MODEL || 'claude-3-5-sonnet-20241022'
+      claudeModel: process.env.CLAUDE_MODEL || 'claude-sonnet-4-20250514',
+      tenantId,
+      manifestPath: manifestPath ? path.relative(UPLOADS_DIR, manifestPath) : null
     },
     manifest: manifest
   });
@@ -383,6 +503,7 @@ app.get('/api/status', (req, res) => {
 app.delete('/api/delete-file', (req, res) => {
   try {
     const { fileName } = req.body;
+    const tenantId = getTenantId(req);
     
     if (!fileName) {
       return res.status(400).json({
@@ -391,41 +512,46 @@ app.delete('/api/delete-file', (req, res) => {
       });
     }
 
-    // Find and delete files related to this filename (more precise matching)
-    const files = fs.readdirSync(PROCESSED_DIR);
+    const tenantManifest = loadTenantManifest(tenantId);
+    const manifest = tenantManifest?.manifest;
+
+    if (!manifest) {
+      return res.status(404).json({
+        success: false,
+        error: 'No data uploaded for current tenant'
+      });
+    }
+
+    const filesToDelete = manifest.files.filter(f => f.name === fileName);
     let deletedCount = 0;
-    
-    files.forEach(file => {
-      // More precise matching - only delete files that start with the exact filename
-      const baseFileName = fileName.replace(/\.[^/.]+$/, '');
-      if (file.startsWith(baseFileName) && !file.includes('manifest.json')) {
-        fs.unlinkSync(path.join(PROCESSED_DIR, file));
-        deletedCount++;
-      }
+    const deletedArtifacts = [];
+
+    filesToDelete.forEach(entry => {
+      const filenames = getArtifactFilenames(entry);
+      filenames.forEach(filename => {
+        if (deleteProcessedFile(filename)) {
+          deletedCount++;
+          deletedArtifacts.push(filename);
+        }
+      });
     });
 
     // Update manifest if it exists
-    const manifestPath = path.join(PROCESSED_DIR, 'manifest.json');
-    if (fs.existsSync(manifestPath)) {
-      const manifest = JSON.parse(fs.readFileSync(manifestPath, 'utf-8'));
-      manifest.files = manifest.files.filter(f => f.name !== fileName);
-      manifest.totalFiles = manifest.files.length;
-      
-      if (manifest.files.length === 0) {
-        // No files left, delete manifest
-        fs.unlinkSync(manifestPath);
-      } else {
-        // Update manifest
-        fs.writeFileSync(manifestPath, JSON.stringify(manifest, null, 2));
-      }
+    manifest.files = manifest.files.filter(f => f.name !== fileName);
+    recalculateManifestStats(manifest);
+
+    if (manifest.files.length === 0) {
+      deleteTenantManifest(tenantId);
+    } else {
+      saveTenantManifest(tenantId, manifest);
     }
 
-    console.log(`🗑️ Deleted ${deletedCount} files related to ${fileName}`);
+    console.log(`🗑️ Deleted ${deletedCount} processed artifacts for ${fileName} (tenant=${tenantId})`);
 
     res.json({
       success: true,
       message: `File ${fileName} deleted successfully`,
-      deletedCount: deletedCount
+      deletedArtifacts
     });
 
   } catch (error) {
@@ -443,16 +569,28 @@ app.delete('/api/delete-file', (req, res) => {
  */
 app.delete('/api/clear', (req, res) => {
   try {
-    const files = fs.readdirSync(PROCESSED_DIR);
-    files.forEach(file => {
-      fs.unlinkSync(path.join(PROCESSED_DIR, file));
+    const tenantId = getTenantId(req);
+    let deletedCount = 0;
+
+    const tenantManifest = loadTenantManifest(tenantId);
+    const manifest = tenantManifest?.manifest;
+
+    const manifestArtifacts = manifest?.files?.flatMap(entry => getArtifactFilenames(entry)) || [];
+
+    manifestArtifacts.forEach(filename => {
+      if (deleteProcessedFile(filename)) {
+        deletedCount++;
+      }
     });
 
-    console.log('🗑️ All data cleared');
+    deleteTenantManifest(tenantId);
+
+    console.log(`🗑️ Cleared ${deletedCount} processed artifacts for tenant ${tenantId}`);
 
     res.json({
       success: true,
-      message: 'All data cleared successfully'
+      message: `All data cleared for tenant ${tenantId}`,
+      deletedCount
     });
 
   } catch (error) {
@@ -495,7 +633,7 @@ app.listen(PORT, () => {
   console.log('🚀 Support AI Server with MCP');
   console.log('================================');
   console.log(`📡 Server running on http://localhost:${PORT}`);
-  console.log(`🤖 Claude Model: ${process.env.CLAUDE_MODEL || 'claude-3-5-sonnet-20241022'}`);
+  console.log(`🤖 Claude Model: ${process.env.CLAUDE_MODEL || 'claude-sonnet-4-20250514'}`);
   console.log(`📁 Uploads directory: ${PROCESSED_DIR}`);
   console.log('');
   console.log('📋 API Endpoints:');

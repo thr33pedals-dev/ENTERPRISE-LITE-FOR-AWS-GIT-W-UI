@@ -1,0 +1,1890 @@
+{
+  "source": "advanced_pdf_parser",
+  "document_metadata": {
+    "detected_type": "pdf_document",
+    "title": "E-POLICY",
+    "pages": 24
+  },
+  "hierarchical_content": {
+    "sections": [
+      {
+        "section_id": "2.0",
+        "section_title": "Scope ................................ ................................ ................................ ................................ .......... 3",
+        "subsections": [],
+        "items": []
+      },
+      {
+        "section_id": "3.0",
+        "section_title": "Definitions / abbreviation ................................ ................................ ................................ ............. 3",
+        "subsections": [],
+        "items": []
+      },
+      {
+        "section_id": "4.0",
+        "section_title": "Policy ................................ ................................ ................................ ................................ .......... 6",
+        "subsections": [],
+        "items": []
+      },
+      {
+        "section_id": "4.1",
+        "section_title": "Acceptable Use ................................ ................................ ................................ ....................... 6",
+        "subsections": [
+          {
+            "section_id": "4.1.1",
+            "section_title": "Prohibited Use ................................ ................................ ................................ .................. 6",
+            "subsections": [],
+            "items": []
+          },
+          {
+            "section_id": "4.1.2",
+            "section_title": "Unauthorised Access / Di sruption of Services ................................ ................................ ... 6",
+            "subsections": [],
+            "items": []
+          },
+          {
+            "section_id": "4.1.3",
+            "section_title": "Unauthorised Hardware, Software and Tools ................................ ................................ ... 6",
+            "subsections": [],
+            "items": []
+          },
+          {
+            "section_id": "4.1.4",
+            "section_title": "Copyrights ................................ ................................ ................................ ........................ 7",
+            "subsections": [],
+            "items": []
+          },
+          {
+            "section_id": "4.1.5",
+            "section_title": "Communication of Trade Secrets ................................ ................................ ...................... 7",
+            "subsections": [],
+            "items": []
+          },
+          {
+            "section_id": "4.1.6",
+            "section_title": "Use of Social Media Network ................................ ................................ ............................ 7",
+            "subsections": [],
+            "items": []
+          },
+          {
+            "section_id": "4.1.7",
+            "section_title": "Monitoring ................................ ................................ ................................ ......................... 8",
+            "subsections": [],
+            "items": []
+          },
+          {
+            "section_id": "4.1.8",
+            "section_title": "Data Roaming ................................ ................................ ................................ ................... 8",
+            "subsections": [],
+            "items": []
+          }
+        ],
+        "items": []
+      },
+      {
+        "section_id": "4.2",
+        "section_title": "Enterprise Communications ................................ ................................ ................................ ..... 8",
+        "subsections": [
+          {
+            "section_id": "4.2.1",
+            "section_title": "Acceptable Enterprise Communications Use ................................ ................................ .... 8",
+            "subsections": [],
+            "items": []
+          },
+          {
+            "section_id": "4.2.2",
+            "section_title": "Offensive Content ................................ ................................ ................................ ............. 9",
+            "subsections": [],
+            "items": []
+          },
+          {
+            "section_id": "4.2.3",
+            "section_title": "Classified Content ................................ ................................ ................................ ............ 9",
+            "subsections": [],
+            "items": []
+          },
+          {
+            "section_id": "4.2.4",
+            "section_title": "Access to Other’s Enterprise Communications Accounts ................................ ................ 10",
+            "subsections": [],
+            "items": []
+          }
+        ],
+        "items": []
+      },
+      {
+        "section_id": "4.3",
+        "section_title": "Clear Desk and Clear Screen ................................ ................................ ................................ 10",
+        "subsections": [
+          {
+            "section_id": "4.3.1",
+            "section_title": "Clear Desk ................................ ................................ ................................ ...................... 10",
+            "subsections": [],
+            "items": []
+          },
+          {
+            "section_id": "4.3.2",
+            "section_title": "Clear Screen ................................ ................................ ................................ .................. 10",
+            "subsections": [],
+            "items": []
+          }
+        ],
+        "items": []
+      },
+      {
+        "section_id": "4.4",
+        "section_title": "Password Management ................................ ................................ ................................ ......... 11",
+        "subsections": [
+          {
+            "section_id": "4.4.1",
+            "section_title": "Acceptable Management of Password ................................ ................................ ............ 11",
+            "subsections": [],
+            "items": []
+          },
+          {
+            "section_id": "4.4.2",
+            "section_title": "Passwords Do Not Imply Privacy ................................ ................................ .................... 11",
+            "subsections": [],
+            "items": []
+          },
+          {
+            "section_id": "4.4.3",
+            "section_title": "Creation and Maintenance of Passwords ................................ ................................ ............. 11",
+            "subsections": [],
+            "items": []
+          }
+        ],
+        "items": []
+      },
+      {
+        "section_id": "4.5",
+        "section_title": "Malicious Code Protection ................................ ................................ ................................ ..... 12",
+        "subsections": [
+          {
+            "section_id": "4.5.1",
+            "section_title": "Anti - Virus Software ................................ ................................ ................................ ......... 12",
+            "subsections": [],
+            "items": []
+          },
+          {
+            "section_id": "4.5.2",
+            "section_title": "Licenses ................................ ................................ ................................ ......................... 12",
+            "subsections": [],
+            "items": []
+          },
+          {
+            "section_id": "4.5.3",
+            "section_title": "Virus Definitions / Updates ................................ ................................ .............................. 12",
+            "subsections": [],
+            "items": []
+          },
+          {
+            "section_id": "4.5.4",
+            "section_title": "Monitoring Of Anti - Virus Protection State ................................ ................................ ........ 13",
+            "subsections": [],
+            "items": []
+          }
+        ],
+        "items": []
+      },
+      {
+        "section_id": "4.5",
+        "section_title": ".5 Accessing the Internet ................................ ................................ ................................ .... 13",
+        "subsections": [
+          {
+            "section_id": "4.5.6",
+            "section_title": "Operating System ................................ ................................ ................................ ........... 13",
+            "subsections": [],
+            "items": []
+          },
+          {
+            "section_id": "4.5.6",
+            "section_title": "Public facing websites and applications ................................ ................................ .......... 13",
+            "subsections": [],
+            "items": []
+          }
+        ],
+        "items": []
+      },
+      {
+        "section_id": "1",
+        "section_title": "| P a g e",
+        "subsections": [
+          {
+            "section_id": "4.6",
+            "section_title": "Compliance ................................ ................................ ................................ ........................... 13",
+            "subsections": [
+              {
+                "section_id": "4.6.1",
+                "section_title": "Identification of Applicable L egislation ................................ ................................ ............ 1 3",
+                "subsections": [],
+                "items": []
+              },
+              {
+                "section_id": "4.6.2",
+                "section_title": "Intellectual Property ................................ ................................ ................................ ........ 13",
+                "subsections": [],
+                "items": []
+              },
+              {
+                "section_id": "4.6.3",
+                "section_title": "Safeguarding of Organisational Records ................................ ................................ ........ 14",
+                "subsections": [],
+                "items": []
+              },
+              {
+                "section_id": "4.6.4",
+                "section_title": "Prevention of Misuse of Asset ................................ ................................ ........................ 15",
+                "subsections": [],
+                "items": []
+              },
+              {
+                "section_id": "4.6.5",
+                "section_title": "System Administrators Rights ................................ ................................ ......................... 15",
+                "subsections": [],
+                "items": []
+              },
+              {
+                "section_id": "4.6.5",
+                "section_title": "Data Sharing ................................ ................................ ................................ .................. 15",
+                "subsections": [],
+                "items": []
+              }
+            ],
+            "items": []
+          },
+          {
+            "section_id": "4.7",
+            "section_title": "Mobile device security & Control ................................ ................................ ............................ 16",
+            "subsections": [
+              {
+                "section_id": "4.7.1",
+                "section_title": "Security Requirement ................................ ................................ ................................ ..... 16",
+                "subsections": [],
+                "items": []
+              },
+              {
+                "section_id": "4.7.2",
+                "section_title": "Resignation Or Termination of Employment ................................ ................................ ... 16",
+                "subsections": [],
+                "items": []
+              }
+            ],
+            "items": []
+          },
+          {
+            "section_id": "5.0",
+            "section_title": "Responsibility ................................ ................................ ................................ ............................ 16",
+            "subsections": [],
+            "items": []
+          },
+          {
+            "section_id": "6.0",
+            "section_title": "Non - Compliance ................................ ................................ ................................ ....................... 17",
+            "subsections": [],
+            "items": []
+          },
+          {
+            "section_id": "7.0",
+            "section_title": "Frequency of Review ................................ ................................ ................................ ................. 17",
+            "subsections": [],
+            "items": []
+          }
+        ],
+        "items": [
+          {
+            "item_id": "1.1",
+            "text": "--- Page Break ---",
+            "sub_items": []
+          }
+        ]
+      },
+      {
+        "section_id": "2",
+        "section_title": "| P a g e",
+        "subsections": [
+          {
+            "section_id": "1.0",
+            "section_title": "OBJECTIVE While Information Assets will be provided to enable Users to satisfactorily complete their duties, the purpose of this policy is to establish a guideline for the provisioning of the Information Asset by the Sunway Group and the associated respons ibilities of the Users when accessing these Information Assets",
+            "subsections": [],
+            "items": []
+          },
+          {
+            "section_id": "2.0",
+            "section_title": "SCOPE This Policy applies to the Sunway Group and to all users of information assets owned by the Sunway Group, including users of the Sunway Group, vendors, business partners, contract personn el and functional units regardless of geographic location.",
+            "subsections": [],
+            "items": [
+              {
+                "item_id": "2.0.1",
+                "text": "This Policy covers all Information Systems (IS) environments operated by or on behalf of the Sunway Group. IS environments including the total environment and all documentation, physical and logica l controls, personnel, hardware (e.g. servers, desktop and network devices), software, and information.",
+                "sub_items": []
+              },
+              {
+                "item_id": "2.0.2",
+                "text": "You are required to read, understand and comply with this Policy and other related policies, standards, and procedures. If any clarification regarding the contents of this document is required, the following should be consulted as applicable: Systems Administrator, Security Administrator, or Group Human Resources.",
+                "sub_items": []
+              },
+              {
+                "item_id": "2.0.3",
+                "text": "All usage of Information Assets areas subject to monitoring and full access by Sunway Top Management",
+                "sub_items": []
+              }
+            ]
+          },
+          {
+            "section_id": "3.0",
+            "section_title": "DEFINITIONS / ABBREV IATION Term Definition Compliance State of conformance with the mandatory controls indicated in this policy, indicated with the word “must”. Chain email Chain emails are those that, in the body or subject of the message, ask the recipient to forward the email on to multiple people. Many chain letter emails are hoaxes and are often considered to be a security and privacy risk Copyright Legal protection giving the author or owner rights over the copying, use and co mmercial exploitation of the materials, for example through software licenses. Copyright is a form of intellectual property. Cryptography, The mathematical science behind ‘secret writing’ involving the use of cryptographic, ‘crypto’ mathematical algorith ms to transform readable plaintext into unreadable cypher - text and vice versa. Enterprise Forms of communication enabled by Information Technology, enhanced for communications use in an enterprise environment. E.g. email, instant messaging (Microsoft",
+            "subsections": [],
+            "items": []
+          }
+        ],
+        "items": [
+          {
+            "item_id": "2.1",
+            "text": "--- Page Break ---",
+            "sub_items": []
+          },
+          {
+            "item_id": "2.2",
+            "text": "THE SUNWAY GROUP",
+            "sub_items": []
+          }
+        ]
+      },
+      {
+        "section_id": "3",
+        "section_title": "| P a g e",
+        "subsections": [],
+        "items": [
+          {
+            "item_id": "3.1",
+            "text": "--- Page Break ---",
+            "sub_items": []
+          },
+          {
+            "item_id": "3.2",
+            "text": "Team s), message board/ social media - style collaboration tools / blogging (Microsoft Yammer), virtual meetings, video conferencing, etc. Information asset Includes both structured and unstructured data, (e.g. data, database, proprietary knowledge, ideas, plans , communications, documents, messages, experience, insight, etc.). Basically, valuable information content that requires protection against information security risks. May belong to the Sunway Group, or to a third party but placed under the care of the Sun way Group (e.g. personal data). Information Any system, service, infrastructure, or physical location that houses Processing Facility information assets, owned or leased by the Sunway Group A collection of intangible legal righ ts that allow the owner of intellectual Intellectual Property property to determine how the intellectual property is used , for example (IP) through software licensing/copyright, patent, trademark or contract law. License Permission granted by the owner of IP (such as software) for someone to copy and/or use them subject to certain conditions. Mass mailing Emails sent to a large group of people/ staffs (e.g. all Users, or to complete list of Users within department) Malicious code or malicious software are pro grams that are covertly inserted Malware into a system with the intent of damaging or destroying Sunway Group network infrastructure and services. This includes all Sunway Group network infrastructure elements and support systems, including servers, compu ters, and networking devices that facilitate Network or regulate the transmission of data. This also includes external connections to other organisations or subsidiaries. A program that appears legitimate, but performs illicit activities when it is run. It may be used to steal data (e.g. password information), create a system Trojan vulnerability, or simply destroy programs or data on the computer. Trojans are similar to viruses, except that it does not replicate itself. Unlawful Material Any material which is fraudulent, harassing, embarrassing, sexually explicit, profane, obscene, intimidating, defamatory or otherwise unlawful or inappropriate. Users Any users (be it employees, contractors, vendors, agents, advisors, consultants or other third party personnel ), both domestic and overseas, who has been authorised by the Sunway Group to access any information processing facility or information asset belonging to the Sunway Group Self - replicating code that creates copies of itself and distributes/ infects Virus those copies to other files, programs or computers. Computer viruses could merely slow down a system, or could corrupt data. Mobile Device A portable computing device such as a smartphone or tablet computer The low - level software that su pports a computer's basic functions, such as Operating system scheduling tasks and controlling peripherals. A string of characters used as a password, especially to gain access to a Passcode computer or smartphone.",
+            "sub_items": []
+          }
+        ]
+      },
+      {
+        "section_id": "4",
+        "section_title": "| P a g e",
+        "subsections": [],
+        "items": [
+          {
+            "item_id": "4.1",
+            "text": "--- Page Break ---",
+            "sub_items": []
+          },
+          {
+            "item_id": "4.2",
+            "text": "An interrupt signal generated by a program or device that has waited a certain length of time for some input but has not received it. Many programs Passcode Timeout perform time - outs so that the program does not sit idle waiting for input that may never come. A password that is difficul t to detect by both humans and computer programs, effectively protecting data from unauthorised access. A strong password consists of at least six characters (and the more characters, the stronger the password) that are a combination of letters, numbers an d Password Complexity symbols (@, #, $, %, etc.) if allowed. Passwords are typically case - sensitive, so a strong password contains letters in both uppercase and lowercase. Strong passwords also do not contain words that can be found in a dictionary or parts of the user's own name. The process of converting information or data into a code, especially to Encryption prevent unauthorised access. Authentication The process or action of verifying the identity of a user or process. Anti - Virus (of software) designed to detect and d estroy computer viruses Firewall To protect (a network or system) from unauthorised access with a firewall. Virtual Private A virtual private network (VPN) is a technology that creates a safe and Network encrypted connection over a less secure network, s uch as the internet. To modify (a smartphone or other electronic device) to remove restrictions Jail Broken imposed by the manufacturer or operator, e.g. to allow the installation of unauthorised software. Gaining access to the lowest level (root level) of the Android operating system, which is prohibited on stock devices. Rooting gives the user Rooted administrator rights to alter the OS, tweak the hardware and unlock the phone from its carrier. An e - meeting is a meeting between at least two people who can see each other but are not in the same place. An e - meeting is a web - based meeting or e - Meeting conference format that allows people to see and hear each other. Participants talk in real time and may even make presentations with visual aids such a s charts and graphs Stands for Hypertext Transfer Protocol Secure (HTTPS) and is a variant of HTTPS standard web transfer protocols (HTTP) which adds a layer of security to data in transit. Stand for Secure Sockets Layer and is a secure protocol that protects SSL information sent over the internet. Artificial Intelligence (AI) refers to the capability of a machine or computer system to perform tasks that typically require human intelligence. These AI tasks include learning from experience, understanding language, recognizing patterns, solving problems, and making decisions. ChatGPT is a type of artificial intelligence (AI) developed by OpenAI. It is designed to understand and generate human - like text based on the input it ChatGPT receives. Essentially, ChatGPT can hold conversations, answer questions, provide information, and assist with various text - based tasks by predicting the most appropriate responses using its extensive training data.",
+            "sub_items": []
+          }
+        ]
+      },
+      {
+        "section_id": "5",
+        "section_title": "| P a g e",
+        "subsections": [
+          {
+            "section_id": "4.0",
+            "section_title": "POLICY",
+            "subsections": [],
+            "items": []
+          },
+          {
+            "section_id": "4.1",
+            "section_title": "Acceptable Use A guideline for the acce ptable use of Sunway Group information assets, information processing facilities and network infrastructure in order to minimise the risk of:",
+            "subsections": [
+              {
+                "section_id": "4.1.1",
+                "section_title": "PROHIBITED USE Sunway Group information system and processing facilities must not be used for the creation or distribution of any disruptive or offensive messages.",
+                "subsections": [],
+                "items": [
+                  {
+                    "item_id": "4.1.1.1",
+                    "text": "Users must not post / upload information / material that could cause damage or disruption of Sunway Group operations. Users must not use the system to access material that is:",
+                    "sub_items": []
+                  },
+                  {
+                    "item_id": "4.1.1.2",
+                    "text": "• Profane or obscene, • Advocates illegal acts, • A dvocates violence, or • Advocates discrimination towards other people.",
+                    "sub_items": []
+                  }
+                ]
+              },
+              {
+                "section_id": "4.1.2",
+                "section_title": "UNAUTHORISED A CCESS / DISRUPTION O F SERVICES Users must not attempt to gain unauthorised access to information system and processing facilities or go beyond their authorised access. This includes attempting to log in through another person's account or access another person's files. Users must not make deliberate attempts to disrupt Sunway Group systems or destroy data by spreading computer viruses, scanning the network or by any oth er means.",
+                "subsections": [],
+                "items": [
+                  {
+                    "item_id": "4.1.2.1",
+                    "text": "Users must not set up any unauthorised internet services (such as email, proxy, web servers etc.) within the Sunway Group without prior approval. All such services must have proper justification and must be endorsed by management before being im plemented. The respective management reserves the right to reject the request, if the requested change could potentially endanger the security posture of Sunway Group network infrastructure and systems.",
+                    "sub_items": []
+                  },
+                  {
+                    "item_id": "4.1.2.2",
+                    "text": "Any tapping on the network by the means of using netw ork probes, network monitoring tools or software is strictly restricted. All such activities must have proper justification and must be approved by the respective management.",
+                    "sub_items": []
+                  }
+                ]
+              },
+              {
+                "section_id": "4.1.3",
+                "section_title": "UNAUTHORISED H ARDWARE, SOFTWARE AN D TOOLS The use of any software or tools generating huge traffic on the network is strictly prohibited. Use of any form of hacking and vulnerability assessment tools (be it hardware or software) is strictly prohibited, except for Compliance Reviews and Assessment or Audit purposes.",
+                "subsections": [],
+                "items": []
+              }
+            ],
+            "items": [
+              {
+                "item_id": "4.1.1",
+                "text": "• Inadvertently accessing unsuitable materials; • Unauthorised equipment being connected to the system; • Potential dis ruption of Sunway Group operations; • Information disclosure; and • Users performing unauthorised activities.",
+                "sub_items": []
+              }
+            ]
+          }
+        ],
+        "items": [
+          {
+            "item_id": "5.1",
+            "text": "--- Page Break ---",
+            "sub_items": []
+          }
+        ]
+      },
+      {
+        "section_id": "6",
+        "section_title": "| P a g e",
+        "subsections": [
+          {
+            "section_id": "4.1.4",
+            "section_title": "COPYRIGHTS Users must respect the rights of copyright owners. Copyright infringement occurs when a work that is protected by copyright is inappropriately reproduced. Where a work contains conditions regarding its use, these must b e followed.",
+            "subsections": [],
+            "items": [
+              {
+                "item_id": "4.1.4.1",
+                "text": "All proprietary information, including but not limited to trade secrets, copyrighted materials, and confidential business information, must be protected when using third - party AI systems e.g . ChatGPT. Users shall ensure that no proprietary info rmation is inadvertently or intentionally disclosed to third - party AI systems without proper authorization and safeguards.",
+                "sub_items": []
+              },
+              {
+                "item_id": "4.1.4.2",
+                "text": "When using third - party AI systems, Users shall comply with all applicable copyright laws and regulations. Users are prohibited from u sing third - party AI systems to generate, reproduce, or distribute content that infringes on the copyrights of others.",
+                "sub_items": []
+              },
+              {
+                "item_id": "4.1.4.3",
+                "text": "User shall exercise caution when sharing data with third - party AI systems to prevent the unauthorized disclosure of sensitive or proprieta ry information. All data shared with third - party AI systems must be anonymized and de - identified to the extent possible to protect Sunway Group's intellectual property and privacy rights.",
+                "sub_items": []
+              }
+            ]
+          },
+          {
+            "section_id": "4.1.5",
+            "section_title": "COMMUNICATION OF TRADE SECRETS Users shall not send, transmit or otherwise disseminate any propriety data, trade secrets or other confidential information about Sunway Group of Companies. Any unauthorised dissemination of this information may, in additional to disciplinary action to be taken by the managemen t, leading to criminal or civil legal action being taken against that individual Users.",
+            "subsections": [],
+            "items": []
+          },
+          {
+            "section_id": "4.1.6",
+            "section_title": "USE OF SOCIAL MEDIA NETWORK Any Users accessing and using social media network shall not:",
+            "subsections": [],
+            "items": [
+              {
+                "item_id": "4.1.6.1",
+                "text": "• Post or display any Unlawful Material; • Post or display materials that may promote discrimination on the basis of race, gender, national origin, sexual orientation, religion, disability or any unlawful material which may breach or violate any provisions of the laws; • Post or display any photos or multimedia files depicting th e premises, products or services of the Sunway Group unless such photos or multimedia files have been approved for public dissemination; and • Write any comments that in any way disparaged the Sunway Group of Companies.",
+                "sub_items": []
+              },
+              {
+                "item_id": "4.1.6.2",
+                "text": "Users are reminded that the law of def amation, sedition and other laws that protects the reputation and privacy are applicable to postings on social media network and Users are urged to exercise due care when using social media network.",
+                "sub_items": []
+              }
+            ]
+          }
+        ],
+        "items": [
+          {
+            "item_id": "6.1",
+            "text": "--- Page Break ---",
+            "sub_items": []
+          },
+          {
+            "item_id": "6.2",
+            "text": "Users shall no t use any software, tools and platform not authorised by Group IT for enterprise communication. Refer below for communication mediums approved by Group IT:",
+            "sub_items": []
+          },
+          {
+            "item_id": "6.3",
+            "text": "• Email: Microsoft Outlook • Communication and collaboration: Microsoft Teams • File sharing and storage: Microsoft OneDrive",
+            "sub_items": []
+          }
+        ]
+      },
+      {
+        "section_id": "7",
+        "section_title": "| P a g e",
+        "subsections": [
+          {
+            "section_id": "4.1.7",
+            "section_title": "MONITORING All communications and stored informatio n sent, received, created or contained within Sunway Group systems are the property of the Sunway Group and must not be considered as private. Such communication and information may be accessed and monitored by personnel authorised by the Sunway Group in a ccordance with the company policies or governing laws and regulation.",
+            "subsections": [],
+            "items": []
+          },
+          {
+            "section_id": "4.1.8",
+            "section_title": "DATA ROAMING For users traveling overseas for business purposes with subscription to the corporate telecommunications plan, please turn off your home country data roaming plan an d select Company telecommunications provider data roaming partner to avoid unnecessary phone charges or use secure Wi - Fi.",
+            "subsections": [],
+            "items": []
+          },
+          {
+            "section_id": "4.2",
+            "section_title": "Enterprise Communications A guideline for the acceptable use of Sunway Group enterprise communication systems. This E - Policy is no t in any way intended to impede the communications of users.",
+            "subsections": [
+              {
+                "section_id": "4.2.1",
+                "section_title": "ACCEPTABLE ENT ERPRISE COMMUNICATIO NS USE Enterprise communications may only be used for official correspondence between users and to external parties. Sunway Group’s enterprise communicatio ns services are organisational resources provided for business purposes. Any personal use must be of a very minimum level, and:",
+                "subsections": [],
+                "items": [
+                  {
+                    "item_id": "4.2.1.1",
+                    "text": "• Must not interfere with business functions • Must not be associated with any for - profit outside business activity • Must not have n egative impact on the reputation of the Sunway Group. • Mass mailing is prohibited unless authorised",
+                    "sub_items": []
+                  },
+                  {
+                    "item_id": "4.2.1.2",
+                    "text": "Any organisation - related communications not limited to email, e - meeting and file sharing shall be strictly communicated through the user’s account as well as software, tools and platform provided by Sunway Group. Below are the communication mediums approved by Group IT:",
+                    "sub_items": []
+                  },
+                  {
+                    "item_id": "4.2.1.3",
+                    "text": "• Email: Microsoft Outlook • Communication and collaboration: Microsoft Teams • File sharing and storage: Microsoft OneDrive • Questionnaire an d Survey: Microsoft Forms",
+                    "sub_items": []
+                  },
+                  {
+                    "item_id": "4.2.1.4",
+                    "text": "Users could refer to the guidelines provided by Group IT on the best practice of using these mediums which can be found in HR Portal:",
+                    "sub_items": []
+                  },
+                  {
+                    "item_id": "4.2.1.5",
+                    "text": "• Guideline for Microsoft Teams - GIT/Security Guideline/COMP&GOV/D1 • Guideline for Microsoft OneDr ive - GIT/Security Guideline/COMP&GOV/D2 • Guideline for Microsoft Forms – GIT/Security Guideline/COMP&GOV/D2",
+                    "sub_items": []
+                  },
+                  {
+                    "item_id": "4.2.1.6",
+                    "text": "Users shall not send company related information through their personal communications account. These include, but are not limited to: Gmail, Yahoo, Hotmail, Facebook, Twitter, Skype, etc.",
+                    "sub_items": []
+                  }
+                ]
+              }
+            ],
+            "items": []
+          }
+        ],
+        "items": [
+          {
+            "item_id": "7.1",
+            "text": "--- Page Break ---",
+            "sub_items": []
+          }
+        ]
+      },
+      {
+        "section_id": "8",
+        "section_title": "| P a g e",
+        "subsections": [
+          {
+            "section_id": "4.2.2",
+            "section_title": "OFFENSIVE CONT ENT Sunway Group enterprise communications services must not be used for the creation or distribution of any di sruptive or offensive messages, which includes:",
+            "subsections": [],
+            "items": [
+              {
+                "item_id": "4.2.2.1",
+                "text": "a) Offensive comments on: • Racial remarks • Sexual Orientation • Gender • Religion • Disability b) Political statements c) Pornography d) Abusive Language/Vulgarity",
+                "sub_items": []
+              },
+              {
+                "item_id": "4.2.2.2",
+                "text": "Users who receive such messages should report the matter to the immediate superior at once, with the information of the Sender as well as the Timestamp of the message for investigation of misconduct.",
+                "sub_items": []
+              }
+            ]
+          },
+          {
+            "section_id": "4.2.3",
+            "section_title": "CLASSIFIED CON TENT Users of Sunway Group are strictly prohibited from sending any confidential or sensitive ma rked information with regards to the company to any external parties, via the enterprise communications services of the Company. These include, but not limited to the following:",
+            "subsections": [],
+            "items": [
+              {
+                "item_id": "4.2.3.1",
+                "text": "• Business proposals/ plans; • HR personal information; and • Personal records.",
+                "sub_items": []
+              },
+              {
+                "item_id": "4.2.3.2",
+                "text": "In a ny circumstance, if the sending of classified content is required, users must use some form of security control to ensure that the communication and content is delivered to the desired recipient in a secure manner. Security controls include, but not limite d to the following:",
+                "sub_items": []
+              },
+              {
+                "item_id": "4.2.3.3",
+                "text": "• Encryption • Password Protection • Mark Subject with Confidential",
+                "sub_items": []
+              }
+            ]
+          }
+        ],
+        "items": [
+          {
+            "item_id": "8.1",
+            "text": "--- Page Break ---",
+            "sub_items": []
+          },
+          {
+            "item_id": "8.2",
+            "text": "Users shall not auto forward any corporate email communication to another email account other than Sunway Group corporate email domain. Doing so is strictly prohibited and it is going against clause 4.1.5 Communicat ion of Trade Secrets. All email communication must be made using Sunway Group corporate email domain.",
+            "sub_items": []
+          },
+          {
+            "item_id": "8.3",
+            "text": "Users are encouraged to do regular housekeeping by archiving and deleting emails that are no longer required. Huge files should be compressed before they are sent out. Document links should be used instead of file attachment for file or database which is required to be sent to many recipients.",
+            "sub_items": []
+          },
+          {
+            "item_id": "8.4",
+            "text": "Users are responsible to ensure that collecting of personal information must be adhering to Malaysia’s PDPA act a nd regulation. Point of references can be found in the PDPA Compliance Manual or by engaging the respective BU PDP Officers.",
+            "sub_items": []
+          }
+        ]
+      },
+      {
+        "section_id": "9",
+        "section_title": "| P a g e",
+        "subsections": [
+          {
+            "section_id": "4.2.4",
+            "section_title": "ACCESS TO OTHE R’S ENTERPRISE COMMU NICATIONS ACCOUNTS User may access another user’s enterprise communications account, subject to the following conditions:",
+            "subsections": [],
+            "items": [
+              {
+                "item_id": "4.2.4.1",
+                "text": "a) Owner of the account voluntarily grants access to his or her account to another User due to work - related reasons. In this scenario, the owner of the account can grant access directly to another User. b) In the event that Users need to access another User’s account for work - related purposes, but the owner of the account is not able to give authorisation due to various reasons, a formal requisition for approval with justification will need to be raised by the following personnel: i. Immediate Superior – Requestor ii. Supported by – Head of Department iii. Recommended by – Head of Company/PCM",
+                "sub_items": []
+              },
+              {
+                "item_id": "4.2.4.2",
+                "text": "c) The requisition for approval will need to be approved by the following parties: i. Head of Group Human Resources (GHR), and ii. Chief Information Officer (CIO) of Sunway Group.",
+                "sub_items": []
+              },
+              {
+                "item_id": "4.2.4.3",
+                "text": "d) In the event that the Purpose of accessing a User’s account is for an investigation, the same process as per subsections 4.2.4(b) and (c) apply.",
+                "sub_items": []
+              },
+              {
+                "item_id": "4.2.4.4",
+                "text": "Upon obtaining all the relevant approvals from the respective parties as indicated in subsections 4.2.4(a), (b) and (c) above, the Us ers will be granted access to the account, or backup copies of the contents of the account, for a maximum of seven (7) days only. Any request for access beyond 7 - days duration must be accompanied with legitimate justifications for approval.",
+                "sub_items": []
+              }
+            ]
+          },
+          {
+            "section_id": "4.3",
+            "section_title": "Clear Desk and Clear Screen This is a set of guidelines which reduce the risk of a security breach, fraud or information theft caused by documents, information and/or data being left unattended in the premises of the Sunway Group. It a pplies to all information that i s owned, created, collected, managed, stored and disseminated (both internally and externally) by the Sunway Group, in physical and electronic formats.",
+            "subsections": [
+              {
+                "section_id": "4.3.1",
+                "section_title": "CLEAR DESK Where practically possible, paper and computer media should be stored in suitable locke d safes, cabinets or other forms of security furniture when not in use, especially outside working hours.",
+                "subsections": [],
+                "items": [
+                  {
+                    "item_id": "4.3.1.1",
+                    "text": "Where lockable safes, filing cabinets, drawers, cupboards etc. are not available, office / room doors must be locked if left unattended. At the end of each session in the meeting room, all sensitive information should be removed from the room and stored in a locked area. Confidential, sensitive or classified information, when printed, should be cleared from printers immediately.",
+                    "sub_items": []
+                  }
+                ]
+              },
+              {
+                "section_id": "4.3.2",
+                "section_title": "CLEAR SCREEN Compu ter terminals should not be left logged on when unattended and should be password protected. The Windows Security Lock should be set to activate when there is",
+                "subsections": [],
+                "items": []
+              }
+            ],
+            "items": []
+          }
+        ],
+        "items": [
+          {
+            "item_id": "9.1",
+            "text": "--- Page Break ---",
+            "sub_items": []
+          }
+        ]
+      },
+      {
+        "section_id": "10",
+        "section_title": "| P a g e",
+        "subsections": [
+          {
+            "section_id": "4.4",
+            "section_title": "Password Management",
+            "subsections": [
+              {
+                "section_id": "4.4.1",
+                "section_title": "ACCEPTABLE MAN AGEMENT OF PASSWORD Formal password management procedure must be defined by Business Units to ensure the use of strong personal passwords outlining at minimum, the following requirements:",
+                "subsections": [],
+                "items": [
+                  {
+                    "item_id": "4.4.1.1",
+                    "text": "a) Password handling Passwords must be kept strictly confidential and must not be shared with anyone. Passwords should never be written down or stored online.",
+                    "sub_items": []
+                  },
+                  {
+                    "item_id": "4.4.1.2",
+                    "text": "b) Password cha nge The users must change passwords to prevent their ID from being compromised. This is usually done during a periodic system - prompted password change, the 1st log - on attempt, or upon suspicion of any access leaks.",
+                    "sub_items": []
+                  },
+                  {
+                    "item_id": "4.4.1.3",
+                    "text": "c) Password validity Passwords for critical business applications (such as JDE, IFCA, etc.) must be changed periodically.",
+                    "sub_items": []
+                  },
+                  {
+                    "item_id": "4.4.1.4",
+                    "text": "d) User account lock out policy Preventive measures must be enforced to ensure that multiple attempts to use incorrect user’s passwords will cause the account to be locked. This i s to prevent unauthorised users from accessing it.",
+                    "sub_items": []
+                  },
+                  {
+                    "item_id": "4.4.1.5",
+                    "text": "e) Password uniqueness policy User’s account with special privileges (such as system administrator accounts) should have a password that is unique, compared to all other accounts held by that user.",
+                    "sub_items": []
+                  },
+                  {
+                    "item_id": "4.4.1.6",
+                    "text": "f) Revealing of Passwords Password must not be revealed in any way, verbally or non - verbally.",
+                    "sub_items": []
+                  }
+                ]
+              },
+              {
+                "section_id": "4.4.2",
+                "section_title": "PASSWORDS DO N OT IMPLY PRIVACY The granting of passwords to gain access to the Information Asset or to encode any particular file or message does not imply th at the User has an expectation of privacy in the material he/she created, received or stored on the Information Asset. The Management must have the right to access those materials at any time when the need arises.",
+                "subsections": [],
+                "items": []
+              },
+              {
+                "section_id": "4.4.3",
+                "section_title": "CREATION AND M AINTENANCE OF PASSWO RD S Required Creation & Maintenance of Passwords:",
+                "subsections": [],
+                "items": [
+                  {
+                    "item_id": "4.4.3.1",
+                    "text": "a) Passwords should consist of a minimum of 8 characters;",
+                    "sub_items": []
+                  }
+                ]
+              }
+            ],
+            "items": []
+          }
+        ],
+        "items": [
+          {
+            "item_id": "10.1",
+            "text": "--- Page Break ---",
+            "sub_items": []
+          },
+          {
+            "item_id": "10.2",
+            "text": "no activity for a short pre - determined period of time. The Windows Security Lock should be passwo rd protected for reactivation. Users should log off or lock their machines when they leave their cubicle.",
+            "sub_items": []
+          }
+        ]
+      },
+      {
+        "section_id": "11",
+        "section_title": "| P a g e",
+        "subsections": [
+          {
+            "section_id": "4.5",
+            "section_title": "Malicious Code Protection The Sunway Group network infrastructure is susceptible to information security threats. One of the major threats is the intro duction of malicious codes into the Sunway Group network infrastructure. Malicious codes include computer virus, worms, trojans, ransomware, and other malware.",
+            "subsections": [
+              {
+                "section_id": "4.5.1",
+                "section_title": "ANTI - VIR US SOFTWARE The ITSSC Infrastructure Department and respective IT Heads of other Business Units must be responsible to ensure that all network infrastructure connected to Sunway Group’s system are installed with an approved antivirus software by Group IT.",
+                "subsections": [],
+                "items": [
+                  {
+                    "item_id": "4.5.1.1",
+                    "text": "In addition, all areas within Sunway Group must ensure that the following exists:",
+                    "sub_items": []
+                  },
+                  {
+                    "item_id": "4.5.1.2",
+                    "text": "a) Formal policy prohibiting the use of unauthorised software on production systems; b) Indicate protective measures to protect against risks associated with obtaining files and so ftware from any network medium; and c) The anti - virus software must be scheduled to run at regular intervals.",
+                    "sub_items": []
+                  }
+                ]
+              },
+              {
+                "section_id": "4.5.2",
+                "section_title": "LICENSES The ITSSC Infrastructure Department and respective IT Heads of other Business Units shall be responsible to ensure that adequate numbers of licenses are available for all operating systems and software connected to Sunway Group’s system.",
+                "subsections": [],
+                "items": []
+              },
+              {
+                "section_id": "4.5.3",
+                "section_title": "VIRUS DEFINITI ONS / UPDATES The ITSSC Infrastructure Department and respective IT Heads of other Business Units must be responsible to ensure that all the anti - virus software are updated with the latest",
+                "subsections": [],
+                "items": []
+              }
+            ],
+            "items": [
+              {
+                "item_id": "4.5.1",
+                "text": "Considering the criticality of Sunway Group network infrastructure and services, comprehensive p rotection needs to be implemented to protect the Sunway Group network infrastructure from the malicious codes. This document demonstrates the dedication and commitment of the Management in protecting the Sunway Group network infrastructure from malicious c odes.",
+                "sub_items": []
+              },
+              {
+                "item_id": "4.5.2",
+                "text": "The objectives are as follow:",
+                "sub_items": []
+              },
+              {
+                "item_id": "4.5.3",
+                "text": "a) To establish malicious code prevention measures, which must be met by all PC’s connected to the Sunway Group. b) To ensure effective virus detection and prevention in the Sunway Group network infrastructure.",
+                "sub_items": []
+              }
+            ]
+          }
+        ],
+        "items": [
+          {
+            "item_id": "11.1",
+            "text": "--- Page Break ---",
+            "sub_items": []
+          },
+          {
+            "item_id": "11.2",
+            "text": "b) Passwords should consist at least 2 or more types of characters from the following groups: i. Lower Case Letter, e.g. y, o, g etc. or Upper Case Letter, e.g. B, I, W etc.; ii. Numeric, e.g. 1, 5, 9 etc.; iii. Special characters, e.g. @, !, $ etc. c) Passwords should be changed no longer than every 90 calendar days. d) Passwords used should not be the same for the last 5 previously used passwords.",
+            "sub_items": []
+          },
+          {
+            "item_id": "11.3",
+            "text": "Samples of password: $unw4yGr0up, $uP3rM@n, P0w3r@nG3r, U1tr@M@n.",
+            "sub_items": []
+          }
+        ]
+      },
+      {
+        "section_id": "12",
+        "section_title": "| P a g e",
+        "subsections": [
+          {
+            "section_id": "4.5.4",
+            "section_title": "MONITORING OF ANTI - VIRUS PROTECTIO N STATE The ITSSC Infrastructure Department a nd respective IT Heads of other Business Units must be responsible to perform on - going monitoring to ensure that deployed anti - virus software (including definitions, patterns, engines, etc.) are up to date in accordance to anti - virus product vendor support . A formal process must be defined outlining the process to be followed in case the anti - virus protection is outdated.",
+            "subsections": [],
+            "items": []
+          },
+          {
+            "section_id": "4.5.5",
+            "section_title": "ACCESSING THE INTERNET When using information assets provided by the Sunway Group, users must only access the Internet through the Internet firewall installed on the Information Asset to ensure security and to avoid the spread of viruses. Accessing the Internet directly by modem (be it broadband, 3G or otherwise) is strictly prohibited.",
+            "subsections": [],
+            "items": [
+              {
+                "item_id": "4.5.5.1",
+                "text": "Use of the Internet must be guided with common s ense and good judgment. The User’s access to the Internet will be revoked in the event Users are found to have abused the use of the Internet or violated any of the rules in this E - Policy. Users may also be subject to disciplinary action, including possibl e termination upon the occurrence of such an event.",
+                "sub_items": []
+              }
+            ]
+          },
+          {
+            "section_id": "4.5.6",
+            "section_title": "OPERATING SYST EM The ITSSC Infrastructure Department and respective IT Heads of other Business Units shall be responsible to ensure that all operating system connected to Sunway Group’s system are c onstantly updated to the latest supported version and contain the latest security patches. With justifiable reasons, those operating system not updated with the latest supported version shall be mitigated with treat protection solution.",
+            "subsections": [],
+            "items": []
+          },
+          {
+            "section_id": "4.5.6",
+            "section_title": "PUBLIC FACING WEBSITES AND APPLIC ATIONS Public facing websites and applications to the internet are required to follow these security controls:",
+            "subsections": [],
+            "items": [
+              {
+                "item_id": "4.5.6.1",
+                "text": "a) Only HTTPS connections are allowed. b) Use only supported versions of TLS secure protocols. c) Reputable SSL certificate of authori ty. d) For detail controls, refer to Group Cybersecurity Policy.",
+                "sub_items": []
+              }
+            ]
+          },
+          {
+            "section_id": "4.6",
+            "section_title": "Compliance",
+            "subsections": [
+              {
+                "section_id": "4.6.1",
+                "section_title": "IDENTIFICATION OF APPLICABLE LEGIS LATION The design, operations, management and use of Sunway Group assets must comply with all applicable legal, regulatory or contractual security requirements. The specific controls and individual responsibilities to meet these requirements must be similarly defined and documented.",
+                "subsections": [],
+                "items": []
+              },
+              {
+                "section_id": "4.6.2",
+                "section_title": "INTELLECTUAL P ROPERTY The Sunway Group will recognise and respect intellectual property asso ciated with its information asset. All Users must comply with:",
+                "subsections": [],
+                "items": []
+              }
+            ],
+            "items": []
+          }
+        ],
+        "items": [
+          {
+            "item_id": "12.1",
+            "text": "--- Page Break ---",
+            "sub_items": []
+          },
+          {
+            "item_id": "12.2",
+            "text": "virus definitions and scan engines, based on the recommendations of the Anti - virus Product Vendor.",
+            "sub_items": []
+          }
+        ]
+      },
+      {
+        "section_id": "13",
+        "section_title": "| P a g e",
+        "subsections": [
+          {
+            "section_id": "4.6.3",
+            "section_title": "SAFEGUARDING O F ORGANISATIONAL REC ORDS Sunway Group organisational records relating to information security must be protected and stored in accordance with: -",
+            "subsections": [],
+            "items": [
+              {
+                "item_id": "4.6.3.1",
+                "text": "a) Sunway Group policies on the maintenance of such records; b) All applicable laws and regulations in Malaysia;",
+                "sub_items": []
+              },
+              {
+                "item_id": "4.6.3.2",
+                "text": "The records must be categorised into record types, each with details of retention periods and type of storage media. Any related cryptographic keys (if applicable) associated with encrypted archives or digital signatures, must be kept securely and made available to authorised personnel only when needed.",
+                "sub_items": []
+              },
+              {
+                "item_id": "4.6.3.3",
+                "text": "The records must be protected based on the relevance and importance of the records, and must be stored in a manner appropriate to the media on which they are recorded.",
+                "sub_items": []
+              }
+            ]
+          }
+        ],
+        "items": [
+          {
+            "item_id": "13.1",
+            "text": "--- Page Break ---",
+            "sub_items": []
+          },
+          {
+            "item_id": "13.2",
+            "text": "a) Copyright restrictions associated with proprietary material, software, and designs acquired and owned by Sunway Group b) Licensing requirements limiting the usage of products, software, designs a nd other material acquired by Sunway Group.",
+            "sub_items": []
+          },
+          {
+            "item_id": "13.3",
+            "text": "The Sunway Group must ensure compliance with product copyright restrictions and licensing requirements.",
+            "sub_items": []
+          },
+          {
+            "item_id": "13.4",
+            "text": "All Users are responsible to ensure only authorised software is used in the Sunway Group. Proprietary softw are products are usually supplied under a license agreement that limits the use of the products to specific machines and may limit copying to the creation of back - up copies only. The following controls must be applied:",
+            "sub_items": []
+          },
+          {
+            "item_id": "13.5",
+            "text": "a) Publish a software copyright complia nce policy which defines the legal use of software and hardware products; b) Software acquisition must comply with approved procurement processes and procedures; c) Appropriate asset registers must be maintained to track software, so that usage does not exceed t he allowable copies and installations; d) Proof and evidence of ownership of licenses, master disks, manuals, etc. must be maintained; e) Controls must be implemented to ensure that any maximum limit of Users permitted is not exceeded; and f) Regular checks must be performed to ensure that only authorised and licensed software are installed.",
+            "sub_items": []
+          },
+          {
+            "item_id": "13.6",
+            "text": "Controls must be implemented to ensure that software are disposed or transferred to other parties appropriately and asset inventory are updated accordingly.",
+            "sub_items": []
+          },
+          {
+            "item_id": "13.7",
+            "text": "Any content generate d using third - party AI systems that includes Sunway Group - owned information must be treated as Sunway Group property and adhere to existing policies on intellectual property. Users shall ensure that the use of third - party AI systems does not result in the unauthorized use or distribution of Sunway Group - owned copyrighted materials.",
+            "sub_items": []
+          }
+        ]
+      },
+      {
+        "section_id": "14",
+        "section_title": "| P a g e",
+        "subsections": [
+          {
+            "section_id": "4.6.4",
+            "section_title": "PREVENTION OF MISUSE OF ASSET Sunway Group assets are provided for business use only.",
+            "subsections": [],
+            "items": [
+              {
+                "item_id": "4.6.4.1",
+                "text": "Any use of Sunway Group assets for non - business or unauthorised purposes must be regarded as imp roper use of Sunway Group assets. If such activity is identified, the respective IT Head of the Business Unit must be notified, in order for the appropriate disciplinary action to be carried out, in accordance with Sunway Group’s Code of Ethics. If the act ivities identified were caused by an external party, they may be referred to Group Human Resources for further investigation, in accordance with Sunway Group Policies and Procedures.",
+                "sub_items": []
+              }
+            ]
+          },
+          {
+            "section_id": "4.6.5",
+            "section_title": "SYSTEM ADMINI STRATORS RIGHTS Sunway Group’s appointed Systems Admi nistrators does not have the rights to access and view the files and databases meant for other users through the use of Administrator Password unless with prior written authorisation and approval from the respective IT Heads of other Business Units.",
+            "subsections": [],
+            "items": []
+          },
+          {
+            "section_id": "4.6.5",
+            "section_title": "DATA SHARING I ntra - Group Data Sharing P olicy found within Sunway Group’s PDPA Compliance M anual intends to provide guidance on the sharing of Personal Data within and across Sunway Business Units and third part y which only take place if the Data Users ens ure an adequate level of protection of Personal Data it processes and that such processing is in compliance with the Act.",
+            "subsections": [],
+            "items": [
+              {
+                "item_id": "4.6.5.1",
+                "text": "This Policy shall apply to all incidents of Data Sharing and shall set forth the policies and guidelines applicable to Personal Data s hared within Sunway Group to ensure the effective and secure storage of Personal Data and compliance with Sunway Group’s obligations under the Act in processing the Personal Data.",
+                "sub_items": []
+              },
+              {
+                "item_id": "4.6.5.2",
+                "text": "Where Data Sharing within Sunway Group is necessary and is in accordance wi th Intra - Group Data Sharing Policy, Data Sharing should be strictly limited to only authorised employees on a “need - to - know” basis only and access to such Personal Data should be reviewed periodically.",
+                "sub_items": []
+              },
+              {
+                "item_id": "4.6.5.3",
+                "text": "Each Data User shall ensure that all Personal Data is not disclosed to third parties unless such disclosure is permitted and in accordance with Sunway Group Personal Data Disclosure Policy. Each Data User shall maintain a register of disclosures to third parties, which shall also include disclosures of Person al Data made within Sunway Group.",
+                "sub_items": []
+              },
+              {
+                "item_id": "4.6.5.4",
+                "text": "For more information, please refer to Sunway Group’s PDPA Compliance Manual.",
+                "sub_items": []
+              }
+            ]
+          }
+        ],
+        "items": [
+          {
+            "item_id": "14.1",
+            "text": "--- Page Break ---",
+            "sub_items": []
+          },
+          {
+            "item_id": "14.2",
+            "text": "Sunway Group organisational records relating to information security include, but are not limited to, system logs, audit logs, configuration setting records, change control logs, and user acc ess authorisation documentation in electronic or hard - copy format.",
+            "sub_items": []
+          }
+        ]
+      },
+      {
+        "section_id": "15",
+        "section_title": "| P a g e",
+        "subsections": [
+          {
+            "section_id": "4.7",
+            "section_title": "Mobile device security & Control To ensure governance over the defined practices, responsibilities and procedures for the usage of enterpris e and/or personal mobile devices that Sunway Group authorised to access to its information asset.",
+            "subsections": [],
+            "items": []
+          },
+          {
+            "section_id": "4.7",
+            "section_title": ". 1 SECURITY REQUIREME NT i. Users must accept that, when accessing information asset using mobile devices, security features is being enforced on mobile devices. The security features implemented may include (but not limited to), passcode, passcode timeout, passcode complexity and encryption. ii. All mobile devices must be secured and require authentication to unlock. iii. All mobile devices must be configured auto matically to lock immediately after a predefined period of inactivity. iv. Sunway Group reserves the right to install, configure or remove secure communication application(s) such as (but not limited to) Anti - Virus (AV), firewall and Virtual Private Network (VPN) on the user’s mobile devices as long as users are accessing Sunway Group information. v. Users must take the responsibility to prevent others from gaining access to their mobile devices. Users must bear the responsibility for every action taken when accessing Sunway Group information via mobile devices. vi. Users must not provide mobile access details to any other individuals. vii. Use of mobile devices that have been subjected to any methods of changing and/or bypassing the built - in security features and controls (i.e. ‘Jail Broken’, ‘Rooted’, etc.) are strictly prohibited. viii. Sunway Group retains the right to remove access rights, mobile applications and information asset in user’s mobile device if misused according to the security requirement.",
+            "subsections": [],
+            "items": []
+          },
+          {
+            "section_id": "4.7",
+            "section_title": ". 2 RESIGNATION OR TER MINATION OF EMPLOYME NT i. Sunway Group information asset in user’s mobile devices remains the property of Sunway Group even when the user leaves the company. ii. Sunway Group reserves the right to remove Sunway Group mobile applications a nd information asset in user’s mobile devices in the event of resignation or termination. iii. Former users are not authorised to restore any data or applications that originate from their past relationship with Sunway Group.",
+            "subsections": [],
+            "items": []
+          }
+        ],
+        "items": [
+          {
+            "item_id": "15.1",
+            "text": "--- Page Break ---",
+            "sub_items": []
+          }
+        ]
+      },
+      {
+        "section_id": "5",
+        "section_title": ".0 RESPONSIBILITY Management is r esponsible for the necessary actions in the event of policy violation. Group Human Resources is responsible to administer the E - Policy for the Sunway Group.",
+        "subsections": [],
+        "items": [
+          {
+            "item_id": "5.1",
+            "text": "It is the responsibility of each Users to ensure that any use of outside computers and networks, such as the Internet, do not compromise the security of the Information Asset. These duties include taking all reasonable precautions to prevent intruders from accessing the Sunway Group network and to prevent the introduction and spread of virus es.",
+            "sub_items": []
+          },
+          {
+            "item_id": "5.2",
+            "text": "All Users must respect the confidentiality of electronic communications belonging to other individuals. Save for cases where explicit authorisation has been granted by the respective IT Heads of other Business Units and the owner, users must not access files, computer or other networks, alter or copy files belonging to any other Users.",
+            "sub_items": []
+          }
+        ]
+      },
+      {
+        "section_id": "16",
+        "section_title": "| P a g e",
+        "subsections": [],
+        "items": [
+          {
+            "item_id": "16.1",
+            "text": "--- Page Break ---",
+            "sub_items": []
+          },
+          {
+            "item_id": "16.2",
+            "text": "Any Users who violates the E - Policy will be personally responsible and/or shall keep Sunway Group fully indemnified from any such actions.",
+            "sub_items": []
+          }
+        ]
+      },
+      {
+        "section_id": "6",
+        "section_title": ".0 NON - COMPLIANCE Suspected or known violations of the E - Policy must be confidentially reported to the management of the department in which the violation occurs. Any users found to have violated this E - Policy may be subjected to disciplinary action, up to and including termination of employment.",
+        "subsections": [
+          {
+            "section_id": "7.0",
+            "section_title": "FREQUENCY OF REV IEW This E - Policy may be amended or revised from time to time as the need arises without having to provide any reasons. Users will be informed through the Sunway Group Intranet about all amendments and revisions.",
+            "subsections": [],
+            "items": []
+          }
+        ],
+        "items": []
+      },
+      {
+        "section_id": "17",
+        "section_title": "| P a g e",
+        "subsections": [],
+        "items": [
+          {
+            "item_id": "17.1",
+            "text": "--- Page Break ---",
+            "sub_items": []
+          },
+          {
+            "item_id": "17.2",
+            "text": "Date Item Amended PIC 7 April 2011 New IT SSC (Kevin Khoo) Group HR (Harithah Mohd Harith) Group Legal (Cindy Goh) 20 July 2015 3. Definitions Group IT (Ivan Chew Changed Computer Resources to Information Assets Boon Yik) Changed Authorised User to Users IT SSC (David Low Swee Nyen) Added new definitions / abbreviation Group HR (Tang Choong i. Compliance Shyuan) ii. Chain email iii. Copyright iv. Cryptography, cryptographic, ‘crypto’ v. Enterprise communications vi. Information processing facility vii. Intellectual property viii. License ix. Mass mailing x. Malware xi. Network xii. Trojan xiii. Virus",
+            "sub_items": []
+          },
+          {
+            "item_id": "17.3",
+            "text": "New clauses added 4.1 Acceptable Use 4.3 Clear Desk And Clear Screen 4.6 Compliance",
+            "sub_items": []
+          },
+          {
+            "item_id": "17.4",
+            "text": "Enhanced clauses 4.2 Electronic Mail (E - Mail) to Enterprise Communications 4.4 Password Management 4.5 Malicious Code Protection 5.0 Frequency of Review 6.0 Responsibility",
+            "sub_items": []
+          }
+        ]
+      },
+      {
+        "section_id": "21",
+        "section_title": "/07/2017 Existing clause edited ITSSC (Eddie Hau & 4.2.3 CLASSIFIED CONTENT Michael Louis Singh) 4.4.3 CREATION AND MAINTENANCE OF Group IT (Ivan Chew PASSWORDS Boon Yik) 4.5 MALICIOUS CODE PROTECTION 04/10/2018 Added additional clause: GIT (Michael Louis Singh) 4.7 Mobile Device Security & Control and its sub category",
+        "subsections": [],
+        "items": []
+      },
+      {
+        "section_id": "18",
+        "section_title": "| P a g e",
+        "subsections": [],
+        "items": [
+          {
+            "item_id": "18.1",
+            "text": "--- Page Break ---",
+            "sub_items": []
+          },
+          {
+            "item_id": "18.2",
+            "text": "Added and amended the following: • definitions based on clause 4.7 such as I. Mobile Device II. Operating system III. Passcode IV. Passcode Timeout V. Password Complexity VI. Encryption VII. Authentication VIII. Anti - Virus IX. Firewall X. Virtual Private Network XI. Jail Broken XII. Rooted • Replaced ‘employees’ and ‘user’ to ‘users’ • Replaced ‘the company’ with ‘Sunway Group’",
+            "sub_items": []
+          }
+        ]
+      },
+      {
+        "section_id": "08",
+        "section_title": "/04/2020 Added and amended the following: GIT (Michael Louis Singh) • Changing words like recognize and organization to recognise and organisation • Forms of communication enabled by Information Technology, enhanced for use in an enterprise environment. E.g. email, instant messaging (Microsoft Teams), me ssage board/ social media - style collaboration tools / blogging (Microsoft Yammer), virtual meetings, video conferencing, etc. • An e - meeting is a meeting between at least two people who can see each other but are not in the same place. An e - meeting is a web - based meeting or conference format that allows people to see and hear each other. Participants talk in real time and may even make presentations with visual aids such as charts and graphs • 4.1.3 UNAUTHORISED HARDWARE, SOFTWARE AND TOOLS o Users shall not use any software, tools and platform not authorised by Group IT for enterprise communication. Refer below for communication mediums approved by Group IT: ▪ Email: Microsoft Outlook ▪ Communication and collaboration: Microsoft Teams ▪ File sharing and storage: Micros oft OneDrive • 4.2.1 ACCEPTABLE ENTERPRISE COMMUNICATIONS USE o Any organisation - related communications not limited to email, e - meeting and file sharing shall be strictly communicated through the user’s account as well as software, tools and platform provided by Sunway Group. Below",
+        "subsections": [],
+        "items": []
+      },
+      {
+        "section_id": "19",
+        "section_title": "| P a g e",
+        "subsections": [],
+        "items": [
+          {
+            "item_id": "19.1",
+            "text": "--- Page Break ---",
+            "sub_items": []
+          },
+          {
+            "item_id": "19.2",
+            "text": "are the communication mediums approved by Group IT: ▪ Email: Microsoft Outlook ▪ Communication and collaboration: Microsoft Teams ▪ File storage: Microsoft OneDrive o Users could refer to the guidelines provided by Group IT on the best pract ice of using these mediums which can be found in HR Portal: ▪ Guideline for Microsoft Teams - GIT/Security Guideline/COMP&GOV/D1 ▪ Guideline for Microsoft OneDrive - GIT/Security Guideline/COMP&GOV/D2 • 4.5.6 OPERATING SYSTEM o The ITSSC Infrastructure Department and respective IT Heads of other Business Units shall be responsible to ensure that all operating system connected to Sunway Group’s system are constantly updated to the latest supported version and contain the latest security patches. o With justifiable rea sons, those operating system not updated with the latest supported version shall be mitigated with treat protection solution. 09/08/2021 Added and amended the following: GIT (Michael L ouis Singh) • 3.0 DEFINITIONS / ABBREVIATION o HTTPS - Stands for Hypertext Transfer Protocol Secure (HTTPS) and is a variant of standard web transfer protocols (HTTP) which adds a layer of security to data in transit o SSL - Stand for Secure Sockets Layer and is a secure protocol that protects information sent over the in ternet. • 4.2.1 ACCEPTABLE ENTERPRISE COMMUNICATIONS USE o Questionnaire and Survey: Microsoft Forms o Guideline for Microsoft Forms – GIT/Security Guideline/COMP&GOV/D2 o Users are responsible to ensure that collecting of personal information must be adhering to Malaysia’s PDPA act and regulation. Point of references can be found in the PDPA Compliance Manual or by engaging the respective BU PDP Officers. • 4.5.6 PUBLIC FACING WEBSITES AND APPLICATIONS o Public facing websites and applications to the internet are required to follow these security controls: a) Only HTTPS connections are",
+            "sub_items": []
+          }
+        ]
+      },
+      {
+        "section_id": "20",
+        "section_title": "| P a g e",
+        "subsections": [],
+        "items": [
+          {
+            "item_id": "20.1",
+            "text": "--- Page Break ---",
+            "sub_items": []
+          },
+          {
+            "item_id": "20.2",
+            "text": "allowed. b) Use only supported versions of TLS secure protocols. c) Reputable SSL certificate of authority. 31/03/2022 Added and amended the following: GIT (Michael Louis Singh) • 2. SCOPE o 2.4 Replaced management with Sunway Top Management • 4.6.5 Data Sharing o Intra - Group Data Sharing Policy found within Sunway Group’s PDPA Compliance Manual intends to provide guidance on the sharing of Personal Data within and across Sunway Business Units and third party which only take place if the Data Users ensure an adequate level of protection of Personal Data it processes and that such processing is in compliance with the Act. o This Polic y shall apply to all incidents of Data Sharing and shall set forth the policies and guidelines applicable to Personal Data shared within Sunway Group to ensure the effective and secure storage of Personal Data and compliance with Sunway Group’s obligations under the Act in processing the Personal Data. o Where Data Sharing within Sunway Group is necessary and is in accordance with Intra - Group Data Sharing Policy, Data Sharing should be strictly limited to only authorised employees on a “need - to - know” basis o nly and access to such Personal Data should be reviewed periodically. o Each Data User shall ensure that all Personal Data is not disclosed to third parties unless such disclosure is permitted and in accordance with Sunway Group Personal Data Disclosure Poli cy. Each Data User shall maintain a register of disclosures to third parties, which shall also include disclosures of Personal Data made within Sunway Group. o For more information, please refer to Sunway Group’s PDPA Compliance Manual. • Moved section Review as the last section 05/08/2024 Removed and amended the following: Group Cybersecurity (Michael Louis Singh)",
+            "sub_items": []
+          }
+        ]
+      },
+      {
+        "section_id": "21",
+        "section_title": "| P a g e",
+        "subsections": [],
+        "items": [
+          {
+            "item_id": "21.1",
+            "text": "--- Page Break ---",
+            "sub_items": []
+          },
+          {
+            "item_id": "21.2",
+            "text": "• 3.0 DEFINITIONS / ABBREVIATION o AI - Artificial Intelligence (AI) refers to the capability of a machine or computer system to perform tasks that typically require human intelligence. These tasks include learning from experience, understanding language, recognizing patterns, solving problems, and making decisions. o ChatGPT - ChatGPT is a type of artificial intelligence (AI) developed by OpenAI. It is designed to understand and generate human - like text based on the input it receives. Essentially, ChatGPT can hold conversations, answer questions, provide information, and assist with various text - based tasks by predicting the most appropriate responses using its e xtensive training data. • 4.1.4 COPYRIGHTS o All proprietary information, including but not limited to trade secrets, copyrighted materials, and confidential business information, must be protected when using third - party AI systems e.g. ChatGPT. Users shall en sure that no proprietary information is inadvertently or intentionally disclosed to third - party AI systems without proper authorization and safeguards. o When using third - party AI systems, Users shall comply with all applicable copyright laws and regulations . Users are prohibited from using third - party AI systems to generate, reproduce, or distribute content that infringes on the copyrights of others. o User shall exercise caution when sharing data with third - party AI systems to prevent the unauthorized disclos ure of sensitive or proprietary information. All data shared with third - party AI systems must be anonymized and de - identified to the extent possible to protect Sunway Group's intellectual property and privacy rights. • 4.6.2 INTELLECTUAL PROPERTY o Any content generated using third - party AI systems that includes Sunway Group - owned information must be treated as Sunway Group property and adhere to existing policies on intellectual property. Users shall ensure that the use of third - party AI systems does not resul t in the unauthorized use or distribution of Sunway Group - owned copyrighted materials.",
+            "sub_items": []
+          }
+        ]
+      },
+      {
+        "section_id": "22",
+        "section_title": "| P a g e",
+        "subsections": [],
+        "items": [
+          {
+            "item_id": "22.1",
+            "text": "--- Page Break ---",
+            "sub_items": []
+          },
+          {
+            "item_id": "22.2",
+            "text": "• 4.7 Mobile device security & Control o 4.7.1 APPROVAL REQUIREMENT ▪ Users who need to access Sunway Group information asset through mobile devices, will require the approval based upon the following: • Sunway Group users – Head of Department/PCM • Non - users – Business Unit Head. ▪ Users are advised to have the latest Operating System and patches within the capability of their mobile devices. ▪ The access to Sunway Group information asset will be granted only upon user’s acceptance of this policy. o 4.7.3 CHANGE OF MOBILE DEVICE ▪ In the event users change, or no longer use the mobile device, users must inform IT Administrator immediately in order for the Sunway Group mobile applications and information asset in mobile devices to be wiped. ▪ Sunway Group mobile applications and information a sset in the mobile devices that are no longer in use must be wiped before granting access to the new mobile device. The purpose of performing wipe for mobile devices that are no longer in use is to protect Sunway Group information asset from the risks of b eing compromised.",
+            "sub_items": []
+          }
+        ]
+      },
+      {
+        "section_id": "23",
+        "section_title": "| P a g e",
+        "subsections": [],
+        "items": []
+      }
+    ]
+  },
+  "structured_data_tables": {
+    "tables": []
+  },
+  "terms_conditions_clauses": {
+    "clauses": [
+      {
+        "clause_number": "2.0",
+        "text": "Scope ................................ ................................ ................................ ................................ .......... 3",
+        "sub_clauses": []
+      },
+      {
+        "clause_number": "3.0",
+        "text": "Definitions / abbreviation ................................ ................................ ................................ ............. 3",
+        "sub_clauses": []
+      },
+      {
+        "clause_number": "4.0",
+        "text": "Policy ................................ ................................ ................................ ................................ .......... 6",
+        "sub_clauses": []
+      },
+      {
+        "clause_number": "4.1",
+        "text": "Acceptable Use ................................ ................................ ................................ ....................... 6",
+        "sub_clauses": []
+      },
+      {
+        "clause_number": "4.1.1",
+        "text": "Prohibited Use ................................ ................................ ................................ .................. 6",
+        "sub_clauses": []
+      },
+      {
+        "clause_number": "4.1.2",
+        "text": "Unauthorised Access / Di sruption of Services ................................ ................................ ... 6",
+        "sub_clauses": []
+      },
+      {
+        "clause_number": "4.1.3",
+        "text": "Unauthorised Hardware, Software and Tools ................................ ................................ ... 6",
+        "sub_clauses": []
+      },
+      {
+        "clause_number": "4.1.4",
+        "text": "Copyrights ................................ ................................ ................................ ........................ 7",
+        "sub_clauses": []
+      },
+      {
+        "clause_number": "4.1.5",
+        "text": "Communication of Trade Secrets ................................ ................................ ...................... 7",
+        "sub_clauses": []
+      },
+      {
+        "clause_number": "4.1.6",
+        "text": "Use of Social Media Network ................................ ................................ ............................ 7",
+        "sub_clauses": []
+      },
+      {
+        "clause_number": "4.1.7",
+        "text": "Monitoring ................................ ................................ ................................ ......................... 8",
+        "sub_clauses": []
+      },
+      {
+        "clause_number": "4.1.8",
+        "text": "Data Roaming ................................ ................................ ................................ ................... 8",
+        "sub_clauses": []
+      },
+      {
+        "clause_number": "4.2",
+        "text": "Enterprise Communications ................................ ................................ ................................ ..... 8",
+        "sub_clauses": []
+      },
+      {
+        "clause_number": "4.2.1",
+        "text": "Acceptable Enterprise Communications Use ................................ ................................ .... 8",
+        "sub_clauses": []
+      },
+      {
+        "clause_number": "4.2.2",
+        "text": "Offensive Content ................................ ................................ ................................ ............. 9",
+        "sub_clauses": []
+      },
+      {
+        "clause_number": "4.2.3",
+        "text": "Classified Content ................................ ................................ ................................ ............ 9",
+        "sub_clauses": []
+      },
+      {
+        "clause_number": "4.2.4",
+        "text": "Access to Other’s Enterprise Communications Accounts ................................ ................ 10",
+        "sub_clauses": []
+      },
+      {
+        "clause_number": "4.3",
+        "text": "Clear Desk and Clear Screen ................................ ................................ ................................ 10",
+        "sub_clauses": []
+      },
+      {
+        "clause_number": "4.3.1",
+        "text": "Clear Desk ................................ ................................ ................................ ...................... 10",
+        "sub_clauses": []
+      },
+      {
+        "clause_number": "4.3.2",
+        "text": "Clear Screen ................................ ................................ ................................ .................. 10",
+        "sub_clauses": []
+      },
+      {
+        "clause_number": "4.4",
+        "text": "Password Management ................................ ................................ ................................ ......... 11",
+        "sub_clauses": []
+      },
+      {
+        "clause_number": "4.4.1",
+        "text": "Acceptable Management of Password ................................ ................................ ............ 11",
+        "sub_clauses": []
+      },
+      {
+        "clause_number": "4.4.2",
+        "text": "Passwords Do Not Imply Privacy ................................ ................................ .................... 11",
+        "sub_clauses": []
+      },
+      {
+        "clause_number": "4.4.3",
+        "text": "Creation and Maintenance of Passwords ................................ ................................ ............. 11",
+        "sub_clauses": []
+      },
+      {
+        "clause_number": "4.5",
+        "text": "Malicious Code Protection ................................ ................................ ................................ ..... 12",
+        "sub_clauses": []
+      },
+      {
+        "clause_number": "4.5.1",
+        "text": "Anti - Virus Software ................................ ................................ ................................ ......... 12",
+        "sub_clauses": []
+      },
+      {
+        "clause_number": "4.5.2",
+        "text": "Licenses ................................ ................................ ................................ ......................... 12",
+        "sub_clauses": []
+      },
+      {
+        "clause_number": "4.5.3",
+        "text": "Virus Definitions / Updates ................................ ................................ .............................. 12",
+        "sub_clauses": []
+      },
+      {
+        "clause_number": "4.5.4",
+        "text": "Monitoring Of Anti - Virus Protection State ................................ ................................ ........ 13",
+        "sub_clauses": []
+      },
+      {
+        "clause_number": "4.5",
+        "text": ".5 Accessing the Internet ................................ ................................ ................................ .... 13",
+        "sub_clauses": []
+      },
+      {
+        "clause_number": "4.5.6",
+        "text": "Operating System ................................ ................................ ................................ ........... 13",
+        "sub_clauses": []
+      },
+      {
+        "clause_number": "4.5.6",
+        "text": "Public facing websites and applications ................................ ................................ .......... 13",
+        "sub_clauses": []
+      },
+      {
+        "clause_number": "1",
+        "text": "| P a g e",
+        "sub_clauses": []
+      },
+      {
+        "clause_number": "4.6",
+        "text": "Compliance ................................ ................................ ................................ ........................... 13",
+        "sub_clauses": []
+      },
+      {
+        "clause_number": "4.6.1",
+        "text": "Identification of Applicable L egislation ................................ ................................ ............ 1 3",
+        "sub_clauses": []
+      },
+      {
+        "clause_number": "4.6.2",
+        "text": "Intellectual Property ................................ ................................ ................................ ........ 13",
+        "sub_clauses": []
+      },
+      {
+        "clause_number": "4.6.3",
+        "text": "Safeguarding of Organisational Records ................................ ................................ ........ 14",
+        "sub_clauses": []
+      },
+      {
+        "clause_number": "4.6.4",
+        "text": "Prevention of Misuse of Asset ................................ ................................ ........................ 15",
+        "sub_clauses": []
+      },
+      {
+        "clause_number": "4.6.5",
+        "text": "System Administrators Rights ................................ ................................ ......................... 15",
+        "sub_clauses": []
+      },
+      {
+        "clause_number": "4.6.5",
+        "text": "Data Sharing ................................ ................................ ................................ .................. 15",
+        "sub_clauses": []
+      },
+      {
+        "clause_number": "4.7",
+        "text": "Mobile device security & Control ................................ ................................ ............................ 16",
+        "sub_clauses": []
+      },
+      {
+        "clause_number": "4.7.1",
+        "text": "Security Requirement ................................ ................................ ................................ ..... 16",
+        "sub_clauses": []
+      },
+      {
+        "clause_number": "4.7.2",
+        "text": "Resignation Or Termination of Employment ................................ ................................ ... 16",
+        "sub_clauses": []
+      },
+      {
+        "clause_number": "5.0",
+        "text": "Responsibility ................................ ................................ ................................ ............................ 16",
+        "sub_clauses": []
+      },
+      {
+        "clause_number": "6.0",
+        "text": "Non - Compliance ................................ ................................ ................................ ....................... 17",
+        "sub_clauses": []
+      },
+      {
+        "clause_number": "7.0",
+        "text": "Frequency of Review ................................ ................................ ................................ ................. 17",
+        "sub_clauses": []
+      },
+      {
+        "clause_number": "2",
+        "text": "| P a g e",
+        "sub_clauses": []
+      },
+      {
+        "clause_number": "1.0",
+        "text": "OBJECTIVE While Information Assets will be provided to enable Users to satisfactorily complete their duties, the purpose of this policy is to establish a guideline for the provisioning of the Information Asset by the Sunway Group and the associated respons ibilities of the Users when accessing these Information Assets",
+        "sub_clauses": []
+      },
+      {
+        "clause_number": "2.0",
+        "text": "SCOPE This Policy applies to the Sunway Group and to all users of information assets owned by the Sunway Group, including users of the Sunway Group, vendors, business partners, contract personn el and functional units regardless of geographic location.",
+        "sub_clauses": []
+      },
+      {
+        "clause_number": "3.0",
+        "text": "DEFINITIONS / ABBREV IATION Term Definition Compliance State of conformance with the mandatory controls indicated in this policy, indicated with the word “must”. Chain email Chain emails are those that, in the body or subject of the message, ask the recipient to forward the email on to multiple people. Many chain letter emails are hoaxes and are often considered to be a security and privacy risk Copyright Legal protection giving the author or owner rights over the copying, use and co mmercial exploitation of the materials, for example through software licenses. Copyright is a form of intellectual property. Cryptography, The mathematical science behind ‘secret writing’ involving the use of cryptographic, ‘crypto’ mathematical algorith ms to transform readable plaintext into unreadable cypher - text and vice versa. Enterprise Forms of communication enabled by Information Technology, enhanced for communications use in an enterprise environment. E.g. email, instant messaging (Microsoft",
+        "sub_clauses": []
+      },
+      {
+        "clause_number": "3",
+        "text": "| P a g e",
+        "sub_clauses": []
+      },
+      {
+        "clause_number": "4",
+        "text": "| P a g e",
+        "sub_clauses": []
+      },
+      {
+        "clause_number": "5",
+        "text": "| P a g e",
+        "sub_clauses": []
+      },
+      {
+        "clause_number": "4.0",
+        "text": "POLICY",
+        "sub_clauses": []
+      },
+      {
+        "clause_number": "4.1",
+        "text": "Acceptable Use A guideline for the acce ptable use of Sunway Group information assets, information processing facilities and network infrastructure in order to minimise the risk of:",
+        "sub_clauses": []
+      },
+      {
+        "clause_number": "4.1.1",
+        "text": "PROHIBITED USE Sunway Group information system and processing facilities must not be used for the creation or distribution of any disruptive or offensive messages.",
+        "sub_clauses": []
+      },
+      {
+        "clause_number": "4.1.2",
+        "text": "UNAUTHORISED A CCESS / DISRUPTION O F SERVICES Users must not attempt to gain unauthorised access to information system and processing facilities or go beyond their authorised access. This includes attempting to log in through another person's account or access another person's files. Users must not make deliberate attempts to disrupt Sunway Group systems or destroy data by spreading computer viruses, scanning the network or by any oth er means.",
+        "sub_clauses": []
+      },
+      {
+        "clause_number": "4.1.3",
+        "text": "UNAUTHORISED H ARDWARE, SOFTWARE AN D TOOLS The use of any software or tools generating huge traffic on the network is strictly prohibited. Use of any form of hacking and vulnerability assessment tools (be it hardware or software) is strictly prohibited, except for Compliance Reviews and Assessment or Audit purposes.",
+        "sub_clauses": []
+      },
+      {
+        "clause_number": "6",
+        "text": "| P a g e",
+        "sub_clauses": []
+      },
+      {
+        "clause_number": "4.1.4",
+        "text": "COPYRIGHTS Users must respect the rights of copyright owners. Copyright infringement occurs when a work that is protected by copyright is inappropriately reproduced. Where a work contains conditions regarding its use, these must b e followed.",
+        "sub_clauses": []
+      },
+      {
+        "clause_number": "4.1.5",
+        "text": "COMMUNICATION OF TRADE SECRETS Users shall not send, transmit or otherwise disseminate any propriety data, trade secrets or other confidential information about Sunway Group of Companies. Any unauthorised dissemination of this information may, in additional to disciplinary action to be taken by the managemen t, leading to criminal or civil legal action being taken against that individual Users.",
+        "sub_clauses": []
+      },
+      {
+        "clause_number": "4.1.6",
+        "text": "USE OF SOCIAL MEDIA NETWORK Any Users accessing and using social media network shall not:",
+        "sub_clauses": []
+      },
+      {
+        "clause_number": "7",
+        "text": "| P a g e",
+        "sub_clauses": []
+      },
+      {
+        "clause_number": "4.1.7",
+        "text": "MONITORING All communications and stored informatio n sent, received, created or contained within Sunway Group systems are the property of the Sunway Group and must not be considered as private. Such communication and information may be accessed and monitored by personnel authorised by the Sunway Group in a ccordance with the company policies or governing laws and regulation.",
+        "sub_clauses": []
+      },
+      {
+        "clause_number": "4.1.8",
+        "text": "DATA ROAMING For users traveling overseas for business purposes with subscription to the corporate telecommunications plan, please turn off your home country data roaming plan an d select Company telecommunications provider data roaming partner to avoid unnecessary phone charges or use secure Wi - Fi.",
+        "sub_clauses": []
+      },
+      {
+        "clause_number": "4.2",
+        "text": "Enterprise Communications A guideline for the acceptable use of Sunway Group enterprise communication systems. This E - Policy is no t in any way intended to impede the communications of users.",
+        "sub_clauses": []
+      },
+      {
+        "clause_number": "4.2.1",
+        "text": "ACCEPTABLE ENT ERPRISE COMMUNICATIO NS USE Enterprise communications may only be used for official correspondence between users and to external parties. Sunway Group’s enterprise communicatio ns services are organisational resources provided for business purposes. Any personal use must be of a very minimum level, and:",
+        "sub_clauses": []
+      },
+      {
+        "clause_number": "8",
+        "text": "| P a g e",
+        "sub_clauses": []
+      },
+      {
+        "clause_number": "4.2.2",
+        "text": "OFFENSIVE CONT ENT Sunway Group enterprise communications services must not be used for the creation or distribution of any di sruptive or offensive messages, which includes:",
+        "sub_clauses": []
+      },
+      {
+        "clause_number": "4.2.3",
+        "text": "CLASSIFIED CON TENT Users of Sunway Group are strictly prohibited from sending any confidential or sensitive ma rked information with regards to the company to any external parties, via the enterprise communications services of the Company. These include, but not limited to the following:",
+        "sub_clauses": []
+      },
+      {
+        "clause_number": "9",
+        "text": "| P a g e",
+        "sub_clauses": []
+      },
+      {
+        "clause_number": "4.2.4",
+        "text": "ACCESS TO OTHE R’S ENTERPRISE COMMU NICATIONS ACCOUNTS User may access another user’s enterprise communications account, subject to the following conditions:",
+        "sub_clauses": []
+      },
+      {
+        "clause_number": "4.3",
+        "text": "Clear Desk and Clear Screen This is a set of guidelines which reduce the risk of a security breach, fraud or information theft caused by documents, information and/or data being left unattended in the premises of the Sunway Group. It a pplies to all information that i s owned, created, collected, managed, stored and disseminated (both internally and externally) by the Sunway Group, in physical and electronic formats.",
+        "sub_clauses": []
+      },
+      {
+        "clause_number": "4.3.1",
+        "text": "CLEAR DESK Where practically possible, paper and computer media should be stored in suitable locke d safes, cabinets or other forms of security furniture when not in use, especially outside working hours.",
+        "sub_clauses": []
+      },
+      {
+        "clause_number": "4.3.2",
+        "text": "CLEAR SCREEN Compu ter terminals should not be left logged on when unattended and should be password protected. The Windows Security Lock should be set to activate when there is",
+        "sub_clauses": []
+      },
+      {
+        "clause_number": "10",
+        "text": "| P a g e",
+        "sub_clauses": []
+      },
+      {
+        "clause_number": "4.4",
+        "text": "Password Management",
+        "sub_clauses": []
+      },
+      {
+        "clause_number": "4.4.1",
+        "text": "ACCEPTABLE MAN AGEMENT OF PASSWORD Formal password management procedure must be defined by Business Units to ensure the use of strong personal passwords outlining at minimum, the following requirements:",
+        "sub_clauses": []
+      },
+      {
+        "clause_number": "4.4.2",
+        "text": "PASSWORDS DO N OT IMPLY PRIVACY The granting of passwords to gain access to the Information Asset or to encode any particular file or message does not imply th at the User has an expectation of privacy in the material he/she created, received or stored on the Information Asset. The Management must have the right to access those materials at any time when the need arises.",
+        "sub_clauses": []
+      },
+      {
+        "clause_number": "4.4.3",
+        "text": "CREATION AND M AINTENANCE OF PASSWO RD S Required Creation & Maintenance of Passwords:",
+        "sub_clauses": []
+      },
+      {
+        "clause_number": "11",
+        "text": "| P a g e",
+        "sub_clauses": []
+      },
+      {
+        "clause_number": "4.5",
+        "text": "Malicious Code Protection The Sunway Group network infrastructure is susceptible to information security threats. One of the major threats is the intro duction of malicious codes into the Sunway Group network infrastructure. Malicious codes include computer virus, worms, trojans, ransomware, and other malware.",
+        "sub_clauses": []
+      },
+      {
+        "clause_number": "4.5.1",
+        "text": "ANTI - VIR US SOFTWARE The ITSSC Infrastructure Department and respective IT Heads of other Business Units must be responsible to ensure that all network infrastructure connected to Sunway Group’s system are installed with an approved antivirus software by Group IT.",
+        "sub_clauses": []
+      },
+      {
+        "clause_number": "4.5.2",
+        "text": "LICENSES The ITSSC Infrastructure Department and respective IT Heads of other Business Units shall be responsible to ensure that adequate numbers of licenses are available for all operating systems and software connected to Sunway Group’s system.",
+        "sub_clauses": []
+      },
+      {
+        "clause_number": "4.5.3",
+        "text": "VIRUS DEFINITI ONS / UPDATES The ITSSC Infrastructure Department and respective IT Heads of other Business Units must be responsible to ensure that all the anti - virus software are updated with the latest",
+        "sub_clauses": []
+      },
+      {
+        "clause_number": "12",
+        "text": "| P a g e",
+        "sub_clauses": []
+      },
+      {
+        "clause_number": "4.5.4",
+        "text": "MONITORING OF ANTI - VIRUS PROTECTIO N STATE The ITSSC Infrastructure Department a nd respective IT Heads of other Business Units must be responsible to perform on - going monitoring to ensure that deployed anti - virus software (including definitions, patterns, engines, etc.) are up to date in accordance to anti - virus product vendor support . A formal process must be defined outlining the process to be followed in case the anti - virus protection is outdated.",
+        "sub_clauses": []
+      },
+      {
+        "clause_number": "4.5.5",
+        "text": "ACCESSING THE INTERNET When using information assets provided by the Sunway Group, users must only access the Internet through the Internet firewall installed on the Information Asset to ensure security and to avoid the spread of viruses. Accessing the Internet directly by modem (be it broadband, 3G or otherwise) is strictly prohibited.",
+        "sub_clauses": []
+      },
+      {
+        "clause_number": "4.5.6",
+        "text": "OPERATING SYST EM The ITSSC Infrastructure Department and respective IT Heads of other Business Units shall be responsible to ensure that all operating system connected to Sunway Group’s system are c onstantly updated to the latest supported version and contain the latest security patches. With justifiable reasons, those operating system not updated with the latest supported version shall be mitigated with treat protection solution.",
+        "sub_clauses": []
+      },
+      {
+        "clause_number": "4.5.6",
+        "text": "PUBLIC FACING WEBSITES AND APPLIC ATIONS Public facing websites and applications to the internet are required to follow these security controls:",
+        "sub_clauses": []
+      },
+      {
+        "clause_number": "4.6",
+        "text": "Compliance",
+        "sub_clauses": []
+      },
+      {
+        "clause_number": "4.6.1",
+        "text": "IDENTIFICATION OF APPLICABLE LEGIS LATION The design, operations, management and use of Sunway Group assets must comply with all applicable legal, regulatory or contractual security requirements. The specific controls and individual responsibilities to meet these requirements must be similarly defined and documented.",
+        "sub_clauses": []
+      },
+      {
+        "clause_number": "4.6.2",
+        "text": "INTELLECTUAL P ROPERTY The Sunway Group will recognise and respect intellectual property asso ciated with its information asset. All Users must comply with:",
+        "sub_clauses": []
+      },
+      {
+        "clause_number": "13",
+        "text": "| P a g e",
+        "sub_clauses": []
+      },
+      {
+        "clause_number": "4.6.3",
+        "text": "SAFEGUARDING O F ORGANISATIONAL REC ORDS Sunway Group organisational records relating to information security must be protected and stored in accordance with: -",
+        "sub_clauses": []
+      },
+      {
+        "clause_number": "14",
+        "text": "| P a g e",
+        "sub_clauses": []
+      },
+      {
+        "clause_number": "4.6.4",
+        "text": "PREVENTION OF MISUSE OF ASSET Sunway Group assets are provided for business use only.",
+        "sub_clauses": []
+      },
+      {
+        "clause_number": "4.6.5",
+        "text": "SYSTEM ADMINI STRATORS RIGHTS Sunway Group’s appointed Systems Admi nistrators does not have the rights to access and view the files and databases meant for other users through the use of Administrator Password unless with prior written authorisation and approval from the respective IT Heads of other Business Units.",
+        "sub_clauses": []
+      },
+      {
+        "clause_number": "4.6.5",
+        "text": "DATA SHARING I ntra - Group Data Sharing P olicy found within Sunway Group’s PDPA Compliance M anual intends to provide guidance on the sharing of Personal Data within and across Sunway Business Units and third part y which only take place if the Data Users ens ure an adequate level of protection of Personal Data it processes and that such processing is in compliance with the Act.",
+        "sub_clauses": []
+      },
+      {
+        "clause_number": "15",
+        "text": "| P a g e",
+        "sub_clauses": []
+      },
+      {
+        "clause_number": "4.7",
+        "text": "Mobile device security & Control To ensure governance over the defined practices, responsibilities and procedures for the usage of enterpris e and/or personal mobile devices that Sunway Group authorised to access to its information asset.",
+        "sub_clauses": []
+      },
+      {
+        "clause_number": "4.7",
+        "text": ". 1 SECURITY REQUIREME NT i. Users must accept that, when accessing information asset using mobile devices, security features is being enforced on mobile devices. The security features implemented may include (but not limited to), passcode, passcode timeout, passcode complexity and encryption. ii. All mobile devices must be secured and require authentication to unlock. iii. All mobile devices must be configured auto matically to lock immediately after a predefined period of inactivity. iv. Sunway Group reserves the right to install, configure or remove secure communication application(s) such as (but not limited to) Anti - Virus (AV), firewall and Virtual Private Network (VPN) on the user’s mobile devices as long as users are accessing Sunway Group information. v. Users must take the responsibility to prevent others from gaining access to their mobile devices. Users must bear the responsibility for every action taken when accessing Sunway Group information via mobile devices. vi. Users must not provide mobile access details to any other individuals. vii. Use of mobile devices that have been subjected to any methods of changing and/or bypassing the built - in security features and controls (i.e. ‘Jail Broken’, ‘Rooted’, etc.) are strictly prohibited. viii. Sunway Group retains the right to remove access rights, mobile applications and information asset in user’s mobile device if misused according to the security requirement.",
+        "sub_clauses": []
+      },
+      {
+        "clause_number": "4.7",
+        "text": ". 2 RESIGNATION OR TER MINATION OF EMPLOYME NT i. Sunway Group information asset in user’s mobile devices remains the property of Sunway Group even when the user leaves the company. ii. Sunway Group reserves the right to remove Sunway Group mobile applications a nd information asset in user’s mobile devices in the event of resignation or termination. iii. Former users are not authorised to restore any data or applications that originate from their past relationship with Sunway Group.",
+        "sub_clauses": []
+      },
+      {
+        "clause_number": "5",
+        "text": ".0 RESPONSIBILITY Management is r esponsible for the necessary actions in the event of policy violation. Group Human Resources is responsible to administer the E - Policy for the Sunway Group.",
+        "sub_clauses": []
+      },
+      {
+        "clause_number": "16",
+        "text": "| P a g e",
+        "sub_clauses": []
+      },
+      {
+        "clause_number": "6",
+        "text": ".0 NON - COMPLIANCE Suspected or known violations of the E - Policy must be confidentially reported to the management of the department in which the violation occurs. Any users found to have violated this E - Policy may be subjected to disciplinary action, up to and including termination of employment.",
+        "sub_clauses": []
+      },
+      {
+        "clause_number": "7.0",
+        "text": "FREQUENCY OF REV IEW This E - Policy may be amended or revised from time to time as the need arises without having to provide any reasons. Users will be informed through the Sunway Group Intranet about all amendments and revisions.",
+        "sub_clauses": []
+      },
+      {
+        "clause_number": "17",
+        "text": "| P a g e",
+        "sub_clauses": []
+      },
+      {
+        "clause_number": "21",
+        "text": "/07/2017 Existing clause edited ITSSC (Eddie Hau & 4.2.3 CLASSIFIED CONTENT Michael Louis Singh) 4.4.3 CREATION AND MAINTENANCE OF Group IT (Ivan Chew PASSWORDS Boon Yik) 4.5 MALICIOUS CODE PROTECTION 04/10/2018 Added additional clause: GIT (Michael Louis Singh) 4.7 Mobile Device Security & Control and its sub category",
+        "sub_clauses": []
+      },
+      {
+        "clause_number": "18",
+        "text": "| P a g e",
+        "sub_clauses": []
+      },
+      {
+        "clause_number": "08",
+        "text": "/04/2020 Added and amended the following: GIT (Michael Louis Singh) • Changing words like recognize and organization to recognise and organisation • Forms of communication enabled by Information Technology, enhanced for use in an enterprise environment. E.g. email, instant messaging (Microsoft Teams), me ssage board/ social media - style collaboration tools / blogging (Microsoft Yammer), virtual meetings, video conferencing, etc. • An e - meeting is a meeting between at least two people who can see each other but are not in the same place. An e - meeting is a web - based meeting or conference format that allows people to see and hear each other. Participants talk in real time and may even make presentations with visual aids such as charts and graphs • 4.1.3 UNAUTHORISED HARDWARE, SOFTWARE AND TOOLS o Users shall not use any software, tools and platform not authorised by Group IT for enterprise communication. Refer below for communication mediums approved by Group IT: ▪ Email: Microsoft Outlook ▪ Communication and collaboration: Microsoft Teams ▪ File sharing and storage: Micros oft OneDrive • 4.2.1 ACCEPTABLE ENTERPRISE COMMUNICATIONS USE o Any organisation - related communications not limited to email, e - meeting and file sharing shall be strictly communicated through the user’s account as well as software, tools and platform provided by Sunway Group. Below",
+        "sub_clauses": []
+      },
+      {
+        "clause_number": "19",
+        "text": "| P a g e",
+        "sub_clauses": []
+      },
+      {
+        "clause_number": "20",
+        "text": "| P a g e",
+        "sub_clauses": []
+      },
+      {
+        "clause_number": "21",
+        "text": "| P a g e",
+        "sub_clauses": []
+      },
+      {
+        "clause_number": "22",
+        "text": "| P a g e",
+        "sub_clauses": []
+      },
+      {
+        "clause_number": "23",
+        "text": "| P a g e",
+        "sub_clauses": []
+      }
+    ]
+  },
+  "metadata": {
+    "model": "claude-sonnet-4-20250514",
+    "max_tokens": 16000,
+    "temperature": 0,
+    "top_p": 1,
+    "generated_at": "2025-10-17T15:21:08.541Z",
+    "prompt_path": "config/prompts/vision-ultimate.txt",
+    "reason": "table_structure_loss"
+  }
+}

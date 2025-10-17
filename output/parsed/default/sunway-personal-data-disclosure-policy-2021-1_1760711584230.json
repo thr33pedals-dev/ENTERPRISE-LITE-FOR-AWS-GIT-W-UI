@@ -1,0 +1,943 @@
+{
+  "source": "advanced_pdf_parser",
+  "document_metadata": {
+    "detected_type": "pdf_document",
+    "title": "SUNWAY GROUP OF COMPANIES",
+    "pages": 17
+  },
+  "hierarchical_content": {
+    "sections": [
+      {
+        "section_id": "1",
+        "section_title": ". Introduction",
+        "subsections": [
+          {
+            "section_id": "1.1",
+            "section_title": "The employees of the Sunway Group of Companies (“ Sunway ”) are required to refer to this policy when disclosing personal data of customers/tenants/vendors or any other individuals internally or to third parties, to ensure compliance with the Malaysian Personal Data Protection Act 2010 (“ PDPA ”).",
+            "subsections": [],
+            "items": []
+          }
+        ],
+        "items": []
+      },
+      {
+        "section_id": "2",
+        "section_title": ". Personal Data & Sensitive Personal Data",
+        "subsections": [
+          {
+            "section_id": "2.1",
+            "section_title": "Personal data means any information of individuals, for example name, IC/passport number, date of birth, contact details and bank details.",
+            "subsections": [],
+            "items": []
+          },
+          {
+            "section_id": "2.2",
+            "section_title": "Under the PDPA, Sunway is required to exercise extra caution when disclosing sensitive personal data. Sensitive personal data means any information relating to physical or mental health or condition of an individual, his political opinions, his religious beliefs or other beliefs of a similar nature, commission of crime (alleged or otherwise).",
+            "subsections": [],
+            "items": []
+          },
+          {
+            "section_id": "2.3",
+            "section_title": "The access to sensitive personal data within Sunway should be strictly limited to the relevant employees and access should be reviewed periodically; and",
+            "subsections": [],
+            "items": []
+          },
+          {
+            "section_id": "2.3",
+            "section_title": "There should be no transfer or disclosure of sensitive personal data to third parties save where explicit consent is obtained.",
+            "subsections": [],
+            "items": []
+          }
+        ],
+        "items": []
+      },
+      {
+        "section_id": "3",
+        "section_title": ". Disclosure within Sunway",
+        "subsections": [
+          {
+            "section_id": "3.1",
+            "section_title": "Any disclosure within Sunway should be on a “need to know” basis according to the job scope of the employees and functions of the units/departments.",
+            "subsections": [],
+            "items": []
+          },
+          {
+            "section_id": "3.2",
+            "section_title": "The purposes of disclosure need to be taken into account and only information necessary to achieve the objectives should be shared with the relevant employees. Personal data should not be shared where the purposes of disclosure can be achieved without sharing the data or anonymising it.",
+            "subsections": [],
+            "items": [
+              {
+                "item_id": "3.2.1",
+                "text": "Example 1 :",
+                "sub_items": []
+              },
+              {
+                "item_id": "3.2.2",
+                "text": "The payroll division has access to the name and basic details of the employees including his bank details to process his salary. However, the payroll division should not have access to other unnecessary information such as the employees’ health condition or their academic records.",
+                "sub_items": []
+              },
+              {
+                "item_id": "3.2.3",
+                "text": "--- Page Break ---",
+                "sub_items": []
+              }
+            ]
+          }
+        ],
+        "items": []
+      },
+      {
+        "section_id": "4",
+        "section_title": ". Disclosure to Third Parties",
+        "subsections": [],
+        "items": [
+          {
+            "item_id": "4.1",
+            "text": "The employees of Sunway should not disclose the personal data of any individual to any third party save where steps 1 to 4 stated in paragraphs 4.2 to 4.5 below are followed OR where there is an exceptional situation (refer to Section 5 below).",
+            "sub_items": []
+          },
+          {
+            "item_id": "4.2",
+            "text": "(a) Step 1 Authorisation",
+            "sub_items": []
+          },
+          {
+            "item_id": "4.3",
+            "text": "You should only disclose the personal data if you have the appropriate authorisation, where any of the followings applies:",
+            "sub_items": []
+          },
+          {
+            "item_id": "4.4",
+            "text": "(i) The individual has given consent for such disclosure. The consent needs to be in writing and submitted to the relevant department for records. Consent sent via email can be an acceptable form where it is sent from the individual’s official email address (Sunway employees’ email address) or an email address previously notified to Sunway; or (ii) The purpose of disclosure is the purpose the personal data was to be disclosed at the time of its collection or directly related to that purpose and the third party falls within one of the classes of third parties stated in the written notice issued pursuant to section 7 of the PDPA; or (iii) The individual is under the age of 18 and disclosure is made to his parents/guardians.",
+            "sub_items": []
+          },
+          {
+            "item_id": "4.5",
+            "text": "(b) Step 2 Information to be shared",
+            "sub_items": []
+          },
+          {
+            "item_id": "4.6",
+            "text": "You should only disclose information which is necessary to achieve the purposes of disclosure and does not exceed the scope of authorisation.",
+            "sub_items": []
+          },
+          {
+            "item_id": "4.7",
+            "text": "(c) Step 3 Mode of disclosure",
+            "sub_items": []
+          },
+          {
+            "item_id": "4.8",
+            "text": "(i) Correspondences in writing",
+            "sub_items": []
+          },
+          {
+            "item_id": "4.9",
+            "text": "The request by the third party and disclosure by Sunway should be in writing only. The authorisation to disclose (for example, consent is obtained/the purpose of disclosure) should be clearly stated in the cover email/letter to third parties.",
+            "sub_items": []
+          },
+          {
+            "item_id": "4.10",
+            "text": "(ii) Recipient",
+            "sub_items": []
+          },
+          {
+            "item_id": "4.11",
+            "text": "The personal data should only be disclosed to the right person. You should ensure that:",
+            "sub_items": []
+          },
+          {
+            "item_id": "4.12",
+            "text": "- the personal data is sent to the address/email address as provided in the individual’s consent letter; and - for disclosure to other organisations/companies, the personal data is sent to authorised personnel in the recipient company/organisation.",
+            "sub_items": []
+          },
+          {
+            "item_id": "4.13",
+            "text": "Error! Unknown document property name.",
+            "sub_items": []
+          },
+          {
+            "item_id": "4.14",
+            "text": "--- Page Break ---",
+            "sub_items": []
+          },
+          {
+            "item_id": "4.15",
+            "text": "(iii) Secured transmission",
+            "sub_items": []
+          },
+          {
+            "item_id": "4.16",
+            "text": "You should ensure that the personal data is transmitted to the third party securely:",
+            "sub_items": []
+          },
+          {
+            "item_id": "4.17",
+            "text": "- Certified true copy of print/hard copy/photocopy of original document to be sent by courier/hand or to be made available for collection and in a sealed envelope (stamped confidential). Recipient confirmation is required; and - Electronic file to be sent in a way to prevent interception/modification (e.g. PDF) with the subject title marked confidential. Electronic file to be password protected where possible. Acknowledgement of receipt is required.",
+            "sub_items": []
+          },
+          {
+            "item_id": "4.18",
+            "text": "(d) Step 4 Records",
+            "sub_items": []
+          },
+          {
+            "item_id": "4.19",
+            "text": "You should record the disclosure of personal data, including the following information:",
+            "sub_items": []
+          },
+          {
+            "item_id": "4.20",
+            "text": "(i) the type of personal data shared; (ii) the authorisation/purpose of disclosure; (iii) the recipient of the personal data; and (iv) the date of disclosure.",
+            "sub_items": []
+          },
+          {
+            "item_id": "4.21",
+            "text": "Table 1 below provides guidance on type of authorisation required and information to be shared for third parties which SUNWAY may deal with regularly. Step 3 and 4 need to be strictly followed for all types of disclosure.",
+            "sub_items": []
+          },
+          {
+            "item_id": "4.22",
+            "text": "Please consult your Business Unit PDPA Officer if:",
+            "sub_items": []
+          },
+          {
+            "item_id": "4.23",
+            "text": "- the third party you are dealing with is not stated in the table below; - the type of information required is excessive/ beyond the scope of authorisation/not for the purpose of disclosure; and/or - you have any doubt on this step 1 to 4 stated above.",
+            "sub_items": []
+          },
+          {
+            "item_id": "4.24",
+            "text": "Table 1",
+            "sub_items": []
+          },
+          {
+            "item_id": "4.25",
+            "text": "No Third party Authorisation Information to be shared",
+            "sub_items": []
+          }
+        ]
+      },
+      {
+        "section_id": "1",
+        "section_title": ". Family members, parents, The individual has given Depending on the guardians (of any individual who is written consent for disclosure. scope of 18 or above) authorisation as stated in the consent letter.",
+        "subsections": [],
+        "items": [
+          {
+            "item_id": "1.1",
+            "text": "Error! Unknown document property name.",
+            "sub_items": []
+          },
+          {
+            "item_id": "1.2",
+            "text": "--- Page Break ---",
+            "sub_items": []
+          },
+          {
+            "item_id": "1.3",
+            "text": "No Third party Authorisation Information to be shared",
+            "sub_items": []
+          }
+        ]
+      },
+      {
+        "section_id": "2",
+        "section_title": ". Parents/guardians (of any No authorisation is required, In accordance with individual who is under the age of request can be made via Data the Data Access 18) Access Request Form and Request Policy. Policy via the Group Human Resources Portal.",
+        "subsections": [],
+        "items": []
+      },
+      {
+        "section_id": "3",
+        "section_title": ". Banks The individual has given Depending on the written consent for disclosure. scope of authorisation as stated in the consent letter.",
+        "subsections": [],
+        "items": []
+      },
+      {
+        "section_id": "4",
+        "section_title": ". Disclosure to media for marketing The individual has given Depending on the and other purposes written consent for disclosure. scope of authorisation as stated in the consent letter.",
+        "subsections": [],
+        "items": []
+      },
+      {
+        "section_id": "5",
+        "section_title": ". Malaysian immigration department The individual has given Depending on the and other Embassies (or private written consent for disclosure. scope of companies representing authorisation as Malaysian immigration department stated in the consent or embassies) letter.",
+        "subsections": [],
+        "items": []
+      },
+      {
+        "section_id": "6",
+        "section_title": ". Potential employers (release of The individual has given Strictly in accordance health screening results) written consent for disclosure. with the scope of authorisation as stated in the consent letter.",
+        "subsections": [],
+        "items": []
+      },
+      {
+        "section_id": "7",
+        "section_title": ". External counterparts/institutions The individual has given Strictly in accordance written consent for disclosure. with the scope of  Third party private hospitals or authorisation as government hospitals where stated in the consent patients are transferred letter.",
+        "subsections": [],
+        "items": [
+          {
+            "item_id": "7.1",
+            "text": "Error! Unknown document property name.",
+            "sub_items": []
+          },
+          {
+            "item_id": "7.2",
+            "text": "--- Page Break ---",
+            "sub_items": []
+          },
+          {
+            "item_id": "7.3",
+            "text": "No Third party Authorisation Information to be shared",
+            "sub_items": []
+          }
+        ]
+      },
+      {
+        "section_id": "8",
+        "section_title": ". Accreditation bodies (Malaysian Purpose of the disclosure is Not excessive and Society for Quality in Health) only to assist the hospital in only to the extent acquiring accreditation. required to achieve the purpose of disclosure e.g. making available information only as is necessary for MSQH audit.",
+        "subsections": [],
+        "items": []
+      },
+      {
+        "section_id": "9",
+        "section_title": ". Regulatory authority Sunway is required by law or Not excessive and by the court order to disclose only to the extent  Ministry of Health personal data required by law or by the court order e.g.  Law enforcement agencies infection control and such as police HIV reporting obligations .  EPF",
+        "subsections": [],
+        "items": [
+          {
+            "item_id": "9.1",
+            "text": " SOCSO",
+            "sub_items": []
+          },
+          {
+            "item_id": "9.2",
+            "text": " Income tax",
+            "sub_items": []
+          },
+          {
+            "item_id": "9.3",
+            "text": " Any other statutory bodies",
+            "sub_items": []
+          }
+        ]
+      },
+      {
+        "section_id": "10",
+        "section_title": ". Third party service providers* Purpose of disclosure is for Not excessive and the third party service only to the extent  Auditors providers to carry out the required to achieve services. the purpose of  Company secretary disclosure e.g. only customer email  Mailing companies address provided to email blast service  Printing companies provider, only required financial  Insurers information made available to auditors,  Telecommunications etc. companies",
+        "subsections": [],
+        "items": [
+          {
+            "item_id": "10.1",
+            "text": " Event Organisers",
+            "sub_items": []
+          },
+          {
+            "item_id": "10.2",
+            "text": "Error! Unknown document property name.",
+            "sub_items": []
+          },
+          {
+            "item_id": "10.3",
+            "text": "--- Page Break ---",
+            "sub_items": []
+          },
+          {
+            "item_id": "10.4",
+            "text": "No Third party Authorisation Information to be shared",
+            "sub_items": []
+          },
+          {
+            "item_id": "10.5",
+            "text": " Travel agencies",
+            "sub_items": []
+          },
+          {
+            "item_id": "10.6",
+            "text": " Suppliers",
+            "sub_items": []
+          },
+          {
+            "item_id": "10.7",
+            "text": " Recruitment agents",
+            "sub_items": []
+          },
+          {
+            "item_id": "10.8",
+            "text": " Consultants",
+            "sub_items": []
+          },
+          {
+            "item_id": "10.9",
+            "text": "*To ensure that third party service providers have given warranty and indemnity to SUNWAY to comply with the PDPA prior to the disclosure.",
+            "sub_items": []
+          }
+        ]
+      },
+      {
+        "section_id": "11",
+        "section_title": "Statutory bodies / business Purpose of disclosure is for Not excessive and partners current / potential business only to the extent partnering, licensing, required to achieve tendering and/or relevant the purpose of contractual obligation disclosure e.g. application/renewal of PKK license",
+        "subsections": [],
+        "items": []
+      },
+      {
+        "section_id": "5",
+        "section_title": ". Exceptional Circumstances",
+        "subsections": [],
+        "items": [
+          {
+            "item_id": "5.1",
+            "text": "In the event of emergency, the staff of Sunway may disclose the personal data without complying with Section 3 & 4 above, provided ALWAYS that such disclosure has obtained the approval of the your Business Unit PDPA Officer or where the approval of the Business Unit PDPA Officer cannot be reasonably obtained, the approval of the Head of Department.",
+            "sub_items": []
+          },
+          {
+            "item_id": "5.2",
+            "text": "(a) Disclosure under emergency circumstances includes: (i) Disclosure necessary for the purpose of preventing or detecting a crime, or for the purpose of investigations; (ii) Disclosure necessary where there is a serious and imminent risk to the welfare of the individual; and (iii) Disclosure required or authorised by or under any law or by the order of court.",
+            "sub_items": []
+          },
+          {
+            "item_id": "5.3",
+            "text": "Error! Unknown document property name.",
+            "sub_items": []
+          },
+          {
+            "item_id": "5.4",
+            "text": "--- Page Break ---",
+            "sub_items": []
+          }
+        ]
+      },
+      {
+        "section_id": "6",
+        "section_title": ". Further Information",
+        "subsections": [],
+        "items": [
+          {
+            "item_id": "6.1",
+            "text": "Please contact Group Human Resources Personal Data Protection (PDP) Officer on Level 14 for further information.",
+            "sub_items": []
+          },
+          {
+            "item_id": "6.2",
+            "text": "Error! Unknown document property name.",
+            "sub_items": []
+          },
+          {
+            "item_id": "6.3",
+            "text": "--- Page Break ---",
+            "sub_items": []
+          },
+          {
+            "item_id": "6.4",
+            "text": "TABLE OF CONTENTS Contents Page 1. Introduction ........................................................................................................... 0 2. Personal Data Retention and Destruction ............................................................... 0 3. Further Information ................................................................................................ 1 Schedule 1: Personal Data Retention Schedule .................................................................. 2",
+            "sub_items": []
+          },
+          {
+            "item_id": "6.5",
+            "text": "i",
+            "sub_items": []
+          },
+          {
+            "item_id": "6.6",
+            "text": "--- Page Break ---",
+            "sub_items": []
+          }
+        ]
+      },
+      {
+        "section_id": "1",
+        "section_title": ". Introduction",
+        "subsections": [
+          {
+            "section_id": "1.1",
+            "section_title": "Sunway Group of Companies (“ Sunway ”) processes and retains certain personal data in the course of its commercial transactions, including personal data of its students, customers, donors and employees.",
+            "subsections": [],
+            "items": []
+          },
+          {
+            "section_id": "1.2",
+            "section_title": "This document intends to provide guidance to the staff of Sunway in relation to the retention and destruction of personal data.",
+            "subsections": [],
+            "items": []
+          }
+        ],
+        "items": []
+      },
+      {
+        "section_id": "2",
+        "section_title": ". Personal Data Retention and Destruction",
+        "subsections": [
+          {
+            "section_id": "2.1",
+            "section_title": "Under the Personal Data Protection Act 2010, the personal data processed for any purpose should not be kept longer than is necessary for the fulfilment of that purpose. Sunway should therefore take all reasonable steps to ensure that all personal data processed by Sunway is destroyed or permanently deleted if it is no longer required for the purpose for which it was to be processed.",
+            "subsections": [],
+            "items": []
+          },
+          {
+            "section_id": "2.2",
+            "section_title": "Sunway reconciles the obligation stated in paragraph 2.1 with other statutory obligations or industry practices for the purposes of ensuring consistency throughout SUNWAY’s retention procedure. For example:",
+            "subsections": [],
+            "items": [
+              {
+                "item_id": "2.2.1",
+                "text": "the personal data may no longer be needed for a particular purpose but it may still be retained to fulfil obligations under the Income Tax Act 1967 or Employment Act 1955;",
+                "sub_items": []
+              },
+              {
+                "item_id": "2.2.2",
+                "text": "an action founded on contract expires after six (6) years from the date on which the cause of action accrued under the Limitation Act 1953 (“ Limitation Act ”). It is advisable for the personal data processed pursuant to contracts / agreements (between Sunway and employees / customers / suppliers / vendors / tenants) to be retained for a minimum period of 6 years as the information may be used as evidence in the event of civil action.",
+                "sub_items": []
+              }
+            ]
+          }
+        ],
+        "items": []
+      },
+      {
+        "section_id": "3",
+        "section_title": ". Personal Data Retention",
+        "subsections": [
+          {
+            "section_id": "3.1",
+            "section_title": "The personal data retention schedule attached as Schedule 1 (“ Retention Schedule ”) serves as guidance for Sunway staff in relation to the minimum retention period for different types of personal data.",
+            "subsections": [],
+            "items": []
+          },
+          {
+            "section_id": "3.2",
+            "section_title": "The Personal Data Protection Officer should exercise his / her discretion to change the retention period where appropriate. For example, where there is an on-going / pending litigation / investigation or where there is a reasonable justification (as required by laws or external institutions).",
+            "subsections": [],
+            "items": []
+          },
+          {
+            "section_id": "3.3",
+            "section_title": "The retention period is the number of years that a record should be retained in the relevant department / unit prior to destruction or deletion. Sunway may be required to keep certain personal data (such as basic records of previous employees) permanently for future references",
+            "subsections": [],
+            "items": []
+          }
+        ],
+        "items": []
+      },
+      {
+        "section_id": "4",
+        "section_title": ". Personal Data Destruction",
+        "subsections": [
+          {
+            "section_id": "4.1",
+            "section_title": "The disposal of personal data in all format (including written documentation, electronic personal data, photographic data and any other medium used to store the personal data) should be carried out in a safe and secured manner after the minimum retention period, as follows:",
+            "subsections": [],
+            "items": [
+              {
+                "item_id": "4.1.1",
+                "text": "--- Page Break ---",
+                "sub_items": []
+              },
+              {
+                "item_id": "4.1.2",
+                "text": "Media Disposal methods",
+                "sub_items": []
+              },
+              {
+                "item_id": "4.1.3",
+                "text": "Papers / Files Shred",
+                "sub_items": []
+              },
+              {
+                "item_id": "4.1.4",
+                "text": "Laptop / USB / Delete and ensure that all the personal data is removed permanently Computer / Shared using appropriate software. Drive and other electronic platform",
+                "sub_items": []
+              },
+              {
+                "item_id": "4.1.5",
+                "text": "CDs/tapes Crush or cutting into pieces.",
+                "sub_items": []
+              }
+            ]
+          }
+        ],
+        "items": []
+      },
+      {
+        "section_id": "5",
+        "section_title": "Further Information",
+        "subsections": [
+          {
+            "section_id": "5.1",
+            "section_title": "Please contact Group Human Resources Personal Data Protection (PDP) Officer on Level 14 for further information.",
+            "subsections": [],
+            "items": [
+              {
+                "item_id": "5.1.1",
+                "text": "--- Page Break ---",
+                "sub_items": []
+              },
+              {
+                "item_id": "5.1.2",
+                "text": "Schedule 1: Personal Data Retention Schedule",
+                "sub_items": []
+              },
+              {
+                "item_id": "5.1.3",
+                "text": "Type of Example Retention Period Reason Personal Data",
+                "sub_items": []
+              },
+              {
+                "item_id": "5.1.4",
+                "text": "Customers",
+                "sub_items": []
+              }
+            ]
+          }
+        ],
+        "items": []
+      },
+      {
+        "section_id": "1",
+        "section_title": ". Marketing  Survey forms Retain for the period For marketing  Enquiry forms when the customers’ correspondences.  Marketing database are actively contacted The customers’ for marketing personal data purposes. should be removed from marketing database immediately if requested by the customers or no longer used by Sunway for this purpose.",
+        "subsections": [],
+        "items": []
+      },
+      {
+        "section_id": "2",
+        "section_title": ". Providing  Registration forms Retain for 7 years after Limitation Act, services  Application forms the provision of potential litigation. services ceases.",
+        "subsections": [],
+        "items": []
+      },
+      {
+        "section_id": "3",
+        "section_title": ". Finance  Customer bills Retain for at least 7 Limitation Act,  Invoices years after the potential litigation. provision of services Tax & Audit ceases or from the end purposes. of the year of tax assessment (whichever is longer).",
+        "subsections": [],
+        "items": []
+      },
+      {
+        "section_id": "4",
+        "section_title": ". Security  Access, visitors Retain for 7 years after Limitation Act, information, sign in book the date of records. potential litigation.  CCTV  Incident reports",
+        "subsections": [],
+        "items": [
+          {
+            "item_id": "4.1",
+            "text": "Suppliers, vendors, tenants",
+            "sub_items": []
+          }
+        ]
+      },
+      {
+        "section_id": "1",
+        "section_title": ". Suppliers  Agreements/ contracts Retain for 7 years after Limitation Act,  Relevant database Vendors the expiration/ potential litigation termination of contract. Tenants",
+        "subsections": [],
+        "items": []
+      },
+      {
+        "section_id": "2",
+        "section_title": ". Finance  Invoices Retain for at least 7 Limitation Act,  Purchase orders years after the potential litigation. expiration/ termination Tax & Audit of contract or from the purposes end of the year of tax",
+        "subsections": [],
+        "items": [
+          {
+            "item_id": "2.1",
+            "text": "--- Page Break ---",
+            "sub_items": []
+          },
+          {
+            "item_id": "2.2",
+            "text": "Type of Example Retention Period Reason Personal Data assessment (whichever is longer).",
+            "sub_items": []
+          },
+          {
+            "item_id": "2.3",
+            "text": "Human Resources",
+            "sub_items": []
+          }
+        ]
+      },
+      {
+        "section_id": "1",
+        "section_title": ". Recruitment  Application for Retain for 1 year for Limitation Act, employment unsuccessful potential litigation.  References applicants.  Supporting documents Retain for 7 years after and qualifications termination of  Offer letter / rejection employment for letter successful applicants.",
+        "subsections": [],
+        "items": []
+      },
+      {
+        "section_id": "2",
+        "section_title": ". Administration  Employees’ personal Retain for 7 years after Limitation Act, during the term data and family termination of potential litigation. of employment members’ personal data employment.  Leave authorisation form  Staff performance ratings  Salary  Employee benefits  Training and development 3. Misconduct Complaints against an Retain for 7 years after Limitation Act, employee, investigations, termination of potential litigation. hearing process, employment or such correspondences, longer period as interviews. required.",
+        "subsections": [],
+        "items": []
+      },
+      {
+        "section_id": "4",
+        "section_title": ". Records after Core files containing a Retain permanently. To provide the term of summary of staff’s basic references to the employment information, position, salary, employees. duration of employment 5 Payroll  EA forms Retain for at least 7 Limitation Act, document  Contribution forms years after the potential litigation.  Salary master termination of Tax & Audit employment or from purposes the end of the year of tax assessment (whichever is longer).",
+        "subsections": [],
+        "items": [
+          {
+            "item_id": "4.1",
+            "text": "--- Page Break ---",
+            "sub_items": []
+          },
+          {
+            "item_id": "4.2",
+            "text": "--- Page Break ---",
+            "sub_items": []
+          },
+          {
+            "item_id": "4.3",
+            "text": "History Log (Last Page)",
+            "sub_items": []
+          },
+          {
+            "item_id": "4.4",
+            "text": "Date Details of Reviews PIC",
+            "sub_items": []
+          }
+        ]
+      }
+    ]
+  },
+  "structured_data_tables": {
+    "tables": []
+  },
+  "terms_conditions_clauses": {
+    "clauses": [
+      {
+        "clause_number": "1",
+        "text": ". Introduction",
+        "sub_clauses": []
+      },
+      {
+        "clause_number": "1.1",
+        "text": "The employees of the Sunway Group of Companies (“ Sunway ”) are required to refer to this policy when disclosing personal data of customers/tenants/vendors or any other individuals internally or to third parties, to ensure compliance with the Malaysian Personal Data Protection Act 2010 (“ PDPA ”).",
+        "sub_clauses": []
+      },
+      {
+        "clause_number": "2",
+        "text": ". Personal Data & Sensitive Personal Data",
+        "sub_clauses": []
+      },
+      {
+        "clause_number": "2.1",
+        "text": "Personal data means any information of individuals, for example name, IC/passport number, date of birth, contact details and bank details.",
+        "sub_clauses": []
+      },
+      {
+        "clause_number": "2.2",
+        "text": "Under the PDPA, Sunway is required to exercise extra caution when disclosing sensitive personal data. Sensitive personal data means any information relating to physical or mental health or condition of an individual, his political opinions, his religious beliefs or other beliefs of a similar nature, commission of crime (alleged or otherwise).",
+        "sub_clauses": []
+      },
+      {
+        "clause_number": "2.3",
+        "text": "The access to sensitive personal data within Sunway should be strictly limited to the relevant employees and access should be reviewed periodically; and",
+        "sub_clauses": []
+      },
+      {
+        "clause_number": "2.3",
+        "text": "There should be no transfer or disclosure of sensitive personal data to third parties save where explicit consent is obtained.",
+        "sub_clauses": []
+      },
+      {
+        "clause_number": "3",
+        "text": ". Disclosure within Sunway",
+        "sub_clauses": []
+      },
+      {
+        "clause_number": "3.1",
+        "text": "Any disclosure within Sunway should be on a “need to know” basis according to the job scope of the employees and functions of the units/departments.",
+        "sub_clauses": []
+      },
+      {
+        "clause_number": "3.2",
+        "text": "The purposes of disclosure need to be taken into account and only information necessary to achieve the objectives should be shared with the relevant employees. Personal data should not be shared where the purposes of disclosure can be achieved without sharing the data or anonymising it.",
+        "sub_clauses": []
+      },
+      {
+        "clause_number": "4",
+        "text": ". Disclosure to Third Parties",
+        "sub_clauses": []
+      },
+      {
+        "clause_number": "1",
+        "text": ". Family members, parents, The individual has given Depending on the guardians (of any individual who is written consent for disclosure. scope of 18 or above) authorisation as stated in the consent letter.",
+        "sub_clauses": []
+      },
+      {
+        "clause_number": "2",
+        "text": ". Parents/guardians (of any No authorisation is required, In accordance with individual who is under the age of request can be made via Data the Data Access 18) Access Request Form and Request Policy. Policy via the Group Human Resources Portal.",
+        "sub_clauses": []
+      },
+      {
+        "clause_number": "3",
+        "text": ". Banks The individual has given Depending on the written consent for disclosure. scope of authorisation as stated in the consent letter.",
+        "sub_clauses": []
+      },
+      {
+        "clause_number": "4",
+        "text": ". Disclosure to media for marketing The individual has given Depending on the and other purposes written consent for disclosure. scope of authorisation as stated in the consent letter.",
+        "sub_clauses": []
+      },
+      {
+        "clause_number": "5",
+        "text": ". Malaysian immigration department The individual has given Depending on the and other Embassies (or private written consent for disclosure. scope of companies representing authorisation as Malaysian immigration department stated in the consent or embassies) letter.",
+        "sub_clauses": []
+      },
+      {
+        "clause_number": "6",
+        "text": ". Potential employers (release of The individual has given Strictly in accordance health screening results) written consent for disclosure. with the scope of authorisation as stated in the consent letter.",
+        "sub_clauses": []
+      },
+      {
+        "clause_number": "7",
+        "text": ". External counterparts/institutions The individual has given Strictly in accordance written consent for disclosure. with the scope of  Third party private hospitals or authorisation as government hospitals where stated in the consent patients are transferred letter.",
+        "sub_clauses": []
+      },
+      {
+        "clause_number": "8",
+        "text": ". Accreditation bodies (Malaysian Purpose of the disclosure is Not excessive and Society for Quality in Health) only to assist the hospital in only to the extent acquiring accreditation. required to achieve the purpose of disclosure e.g. making available information only as is necessary for MSQH audit.",
+        "sub_clauses": []
+      },
+      {
+        "clause_number": "9",
+        "text": ". Regulatory authority Sunway is required by law or Not excessive and by the court order to disclose only to the extent  Ministry of Health personal data required by law or by the court order e.g.  Law enforcement agencies infection control and such as police HIV reporting obligations .  EPF",
+        "sub_clauses": []
+      },
+      {
+        "clause_number": "10",
+        "text": ". Third party service providers* Purpose of disclosure is for Not excessive and the third party service only to the extent  Auditors providers to carry out the required to achieve services. the purpose of  Company secretary disclosure e.g. only customer email  Mailing companies address provided to email blast service  Printing companies provider, only required financial  Insurers information made available to auditors,  Telecommunications etc. companies",
+        "sub_clauses": []
+      },
+      {
+        "clause_number": "11",
+        "text": "Statutory bodies / business Purpose of disclosure is for Not excessive and partners current / potential business only to the extent partnering, licensing, required to achieve tendering and/or relevant the purpose of contractual obligation disclosure e.g. application/renewal of PKK license",
+        "sub_clauses": []
+      },
+      {
+        "clause_number": "5",
+        "text": ". Exceptional Circumstances",
+        "sub_clauses": []
+      },
+      {
+        "clause_number": "6",
+        "text": ". Further Information",
+        "sub_clauses": []
+      },
+      {
+        "clause_number": "1",
+        "text": ". Introduction",
+        "sub_clauses": []
+      },
+      {
+        "clause_number": "1.1",
+        "text": "Sunway Group of Companies (“ Sunway ”) processes and retains certain personal data in the course of its commercial transactions, including personal data of its students, customers, donors and employees.",
+        "sub_clauses": []
+      },
+      {
+        "clause_number": "1.2",
+        "text": "This document intends to provide guidance to the staff of Sunway in relation to the retention and destruction of personal data.",
+        "sub_clauses": []
+      },
+      {
+        "clause_number": "2",
+        "text": ". Personal Data Retention and Destruction",
+        "sub_clauses": []
+      },
+      {
+        "clause_number": "2.1",
+        "text": "Under the Personal Data Protection Act 2010, the personal data processed for any purpose should not be kept longer than is necessary for the fulfilment of that purpose. Sunway should therefore take all reasonable steps to ensure that all personal data processed by Sunway is destroyed or permanently deleted if it is no longer required for the purpose for which it was to be processed.",
+        "sub_clauses": []
+      },
+      {
+        "clause_number": "2.2",
+        "text": "Sunway reconciles the obligation stated in paragraph 2.1 with other statutory obligations or industry practices for the purposes of ensuring consistency throughout SUNWAY’s retention procedure. For example:",
+        "sub_clauses": []
+      },
+      {
+        "clause_number": "3",
+        "text": ". Personal Data Retention",
+        "sub_clauses": []
+      },
+      {
+        "clause_number": "3.1",
+        "text": "The personal data retention schedule attached as Schedule 1 (“ Retention Schedule ”) serves as guidance for Sunway staff in relation to the minimum retention period for different types of personal data.",
+        "sub_clauses": []
+      },
+      {
+        "clause_number": "3.2",
+        "text": "The Personal Data Protection Officer should exercise his / her discretion to change the retention period where appropriate. For example, where there is an on-going / pending litigation / investigation or where there is a reasonable justification (as required by laws or external institutions).",
+        "sub_clauses": []
+      },
+      {
+        "clause_number": "3.3",
+        "text": "The retention period is the number of years that a record should be retained in the relevant department / unit prior to destruction or deletion. Sunway may be required to keep certain personal data (such as basic records of previous employees) permanently for future references",
+        "sub_clauses": []
+      },
+      {
+        "clause_number": "4",
+        "text": ". Personal Data Destruction",
+        "sub_clauses": []
+      },
+      {
+        "clause_number": "4.1",
+        "text": "The disposal of personal data in all format (including written documentation, electronic personal data, photographic data and any other medium used to store the personal data) should be carried out in a safe and secured manner after the minimum retention period, as follows:",
+        "sub_clauses": []
+      },
+      {
+        "clause_number": "5",
+        "text": "Further Information",
+        "sub_clauses": []
+      },
+      {
+        "clause_number": "5.1",
+        "text": "Please contact Group Human Resources Personal Data Protection (PDP) Officer on Level 14 for further information.",
+        "sub_clauses": []
+      },
+      {
+        "clause_number": "1",
+        "text": ". Marketing  Survey forms Retain for the period For marketing  Enquiry forms when the customers’ correspondences.  Marketing database are actively contacted The customers’ for marketing personal data purposes. should be removed from marketing database immediately if requested by the customers or no longer used by Sunway for this purpose.",
+        "sub_clauses": []
+      },
+      {
+        "clause_number": "2",
+        "text": ". Providing  Registration forms Retain for 7 years after Limitation Act, services  Application forms the provision of potential litigation. services ceases.",
+        "sub_clauses": []
+      },
+      {
+        "clause_number": "3",
+        "text": ". Finance  Customer bills Retain for at least 7 Limitation Act,  Invoices years after the potential litigation. provision of services Tax & Audit ceases or from the end purposes. of the year of tax assessment (whichever is longer).",
+        "sub_clauses": []
+      },
+      {
+        "clause_number": "4",
+        "text": ". Security  Access, visitors Retain for 7 years after Limitation Act, information, sign in book the date of records. potential litigation.  CCTV  Incident reports",
+        "sub_clauses": []
+      },
+      {
+        "clause_number": "1",
+        "text": ". Suppliers  Agreements/ contracts Retain for 7 years after Limitation Act,  Relevant database Vendors the expiration/ potential litigation termination of contract. Tenants",
+        "sub_clauses": []
+      },
+      {
+        "clause_number": "2",
+        "text": ". Finance  Invoices Retain for at least 7 Limitation Act,  Purchase orders years after the potential litigation. expiration/ termination Tax & Audit of contract or from the purposes end of the year of tax",
+        "sub_clauses": []
+      },
+      {
+        "clause_number": "1",
+        "text": ". Recruitment  Application for Retain for 1 year for Limitation Act, employment unsuccessful potential litigation.  References applicants.  Supporting documents Retain for 7 years after and qualifications termination of  Offer letter / rejection employment for letter successful applicants.",
+        "sub_clauses": []
+      },
+      {
+        "clause_number": "2",
+        "text": ". Administration  Employees’ personal Retain for 7 years after Limitation Act, during the term data and family termination of potential litigation. of employment members’ personal data employment.  Leave authorisation form  Staff performance ratings  Salary  Employee benefits  Training and development 3. Misconduct Complaints against an Retain for 7 years after Limitation Act, employee, investigations, termination of potential litigation. hearing process, employment or such correspondences, longer period as interviews. required.",
+        "sub_clauses": []
+      },
+      {
+        "clause_number": "4",
+        "text": ". Records after Core files containing a Retain permanently. To provide the term of summary of staff’s basic references to the employment information, position, salary, employees. duration of employment 5 Payroll  EA forms Retain for at least 7 Limitation Act, document  Contribution forms years after the potential litigation.  Salary master termination of Tax & Audit employment or from purposes the end of the year of tax assessment (whichever is longer).",
+        "sub_clauses": []
+      }
+    ]
+  },
+  "vision_raw": null,
+  "metadata": {
+    "model": "claude-sonnet-4-20250514",
+    "max_tokens": 16000,
+    "temperature": 0,
+    "top_p": 1,
+    "generated_at": "2025-10-17T14:33:05.301Z",
+    "prompt_path": "config/prompts/vision-ultimate.txt",
+    "reason": "table_structure_loss"
+  }
+}

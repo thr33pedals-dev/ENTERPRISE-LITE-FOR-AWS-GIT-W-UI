@@ -1,0 +1,1261 @@
+{
+  "source": "advanced_pdf_parser",
+  "document_metadata": {
+    "detected_type": "pdf_document",
+    "title": "SUNWAY BERHAD",
+    "pages": 11
+  },
+  "hierarchical_content": {
+    "sections": [
+      {
+        "section_id": "1",
+        "section_title": ". OBJECTIVE ................................ ................................ ................................ ........ 3",
+        "subsections": [],
+        "items": []
+      },
+      {
+        "section_id": "2",
+        "section_title": ". SCOPE ................................ ................................ ................................ ............... 3",
+        "subsections": [],
+        "items": []
+      },
+      {
+        "section_id": "3",
+        "section_title": ". SUNWAY VISI ON & MISSION ................................ ................................ ........... 3",
+        "subsections": [],
+        "items": []
+      },
+      {
+        "section_id": "4",
+        "section_title": ". SUNWAY CORE VALUES ................................ ................................ ................. 3",
+        "subsections": [],
+        "items": []
+      },
+      {
+        "section_id": "5",
+        "section_title": ". SUSTAINABLE DEVELOPMENT ................................ ................................ ...... 4",
+        "subsections": [],
+        "items": []
+      },
+      {
+        "section_id": "6",
+        "section_title": ". ACT WITH INTEGRITY & ETHICS ................................ ................................ ..... 4",
+        "subsections": [],
+        "items": []
+      },
+      {
+        "section_id": "7",
+        "section_title": ". WORKING WITH ONE ANOTHER ................................ ................................ ..... 6",
+        "subsections": [],
+        "items": []
+      },
+      {
+        "section_id": "8",
+        "section_title": ". ENSURE COMPLIANCE OF LAWS & GOVERNANCE ................................ .... 8",
+        "subsections": [],
+        "items": []
+      },
+      {
+        "section_id": "9",
+        "section_title": ". NON - COMPLIANCE ................................ ................................ ......................... 11",
+        "subsections": [],
+        "items": []
+      },
+      {
+        "section_id": "10",
+        "section_title": ". WHISTLEBLOWING ................................ ................................ ......................... 11",
+        "subsections": [],
+        "items": []
+      },
+      {
+        "section_id": "2",
+        "section_title": "Section 2",
+        "subsections": [],
+        "items": [
+          {
+            "item_id": "2.1",
+            "text": "--- Page Break ---",
+            "sub_items": []
+          },
+          {
+            "item_id": "2.2",
+            "text": "Sunway Berhad CCBE Policy",
+            "sub_items": []
+          }
+        ]
+      },
+      {
+        "section_id": "1",
+        "section_title": ". OBJECTIVE",
+        "subsections": [],
+        "items": [
+          {
+            "item_id": "1.1",
+            "text": "The objective of the Code of Conduct and Business Ethics (the “Code”) is to provide guidance on the behaviours expected of each and every employee, including Directors of the Sunway Berhad Group. In Sunway, we align our actions and behaviours with the Group’s Core Values.",
+            "sub_items": []
+          }
+        ]
+      },
+      {
+        "section_id": "2",
+        "section_title": ". SCOP E",
+        "subsections": [],
+        "items": [
+          {
+            "item_id": "2.1",
+            "text": "The Code is applicable to all employees, including Directors of Sunway Berhad Group (the “Group”). The Code applies to all businesses and countries in which the Group operates.",
+            "sub_items": []
+          }
+        ]
+      },
+      {
+        "section_id": "3",
+        "section_title": ". SUNWAY VISION & MISSION",
+        "subsections": [
+          {
+            "section_id": "3.1",
+            "section_title": ". Vision",
+            "subsections": [],
+            "items": [
+              {
+                "item_id": "3.1.1",
+                "text": "a) To be Asia’s model corporation in sustainabl e development, innovating to enrich lives for a better tomorrow",
+                "sub_items": []
+              }
+            ]
+          },
+          {
+            "section_id": "3.2",
+            "section_title": ". Mission",
+            "subsections": [],
+            "items": [
+              {
+                "item_id": "3.2.1",
+                "text": "a) Empowering our people to deliver enhanced value to all stakeholders",
+                "sub_items": []
+              },
+              {
+                "item_id": "3.2.2",
+                "text": "b) Embracing sustainability in our business processes and decisions",
+                "sub_items": []
+              },
+              {
+                "item_id": "3.2.3",
+                "text": "c) Attracting and nurturing a talented and progressive workforce for the digital era",
+                "sub_items": []
+              }
+            ]
+          }
+        ],
+        "items": []
+      },
+      {
+        "section_id": "4",
+        "section_title": ". SUNWAY CORE VALUES",
+        "subsections": [
+          {
+            "section_id": "4.1",
+            "section_title": ". Integrity (We believe in doing the right thing at all times)",
+            "subsections": [],
+            "items": [
+              {
+                "item_id": "4.1.1",
+                "text": "a) We conduct ourselves in an honest and trustworthy manner",
+                "sub_items": []
+              },
+              {
+                "item_id": "4.1.2",
+                "text": "b) We act professionall y, ethically and honourably",
+                "sub_items": []
+              },
+              {
+                "item_id": "4.1.3",
+                "text": "c) We ensure our actions are consistent with our words",
+                "sub_items": []
+              }
+            ]
+          },
+          {
+            "section_id": "4.2",
+            "section_title": ". Humility (We believe in being humble, polite and respectful)",
+            "subsections": [],
+            "items": [
+              {
+                "item_id": "4.2.1",
+                "text": "a) We never stop learning",
+                "sub_items": []
+              },
+              {
+                "item_id": "4.2.2",
+                "text": "b) We care for and respect people and the environment",
+                "sub_items": []
+              },
+              {
+                "item_id": "4.2.3",
+                "text": "c) We seek first to understand, then to be u nderstood",
+                "sub_items": []
+              }
+            ]
+          },
+          {
+            "section_id": "4.3",
+            "section_title": ". Excellence (We take pride in all that we do)",
+            "subsections": [],
+            "items": []
+          }
+        ],
+        "items": [
+          {
+            "item_id": "4.1",
+            "text": "As a diversified group, our purpose, vision and mission are synonymous throughout the Group to deliver our best and to do business with a heart. To ensure a greater focus on win - win relationships with our c ustomers and stakeholders, we have built a foundation based on three core values: Integrity, Humility and Excellence.",
+            "sub_items": []
+          }
+        ]
+      },
+      {
+        "section_id": "3",
+        "section_title": "Section 3",
+        "subsections": [],
+        "items": [
+          {
+            "item_id": "3.1",
+            "text": "--- Page Break ---",
+            "sub_items": []
+          },
+          {
+            "item_id": "3.2",
+            "text": "Sunway Berhad CCBE Policy",
+            "sub_items": []
+          },
+          {
+            "item_id": "3.3",
+            "text": "a) We strive to deliver high quality products and services",
+            "sub_items": []
+          },
+          {
+            "item_id": "3.4",
+            "text": "b) We continuously innovate and improve for greater progress",
+            "sub_items": []
+          },
+          {
+            "item_id": "3.5",
+            "text": "c) We seek to inspire others to excel",
+            "sub_items": []
+          }
+        ]
+      },
+      {
+        "section_id": "5",
+        "section_title": ". S USTAINABLE D EVELOPMENT",
+        "subsections": [],
+        "items": [
+          {
+            "item_id": "5.1",
+            "text": "The Sunway Group, is doing our part towards building a sustainable future for all in this world that we call home. For more than four decades, we have worked to develop the skills, strength, knowledge and technology for us to achieve this goal. Our stakeholders – including cus tomers, staff, shareholders and business partners – are all deeply involved and committed towards this agenda. We constantly strive to incorporate sustainability into our business practices, processes and operations.",
+            "sub_items": []
+          }
+        ]
+      },
+      {
+        "section_id": "6",
+        "section_title": ". ACT WITH INTEGRITY & ETHICS",
+        "subsections": [
+          {
+            "section_id": "6.1",
+            "section_title": ". Anti - Briber y & Corruption",
+            "subsections": [],
+            "items": [
+              {
+                "item_id": "6.1.1",
+                "text": "We have adopted a ZERO TOLERANCE policy against all forms of bribery and corruption. We are committed to conduct our business in accordance with the Malaysian Anti - Corruption Commission (MACC) Act 2009 and the MACC (Amendment) Act 2018 and a ny other applicable laws. (Reference: Anti - Bribery & Corruption Policy)",
+                "sub_items": []
+              }
+            ]
+          },
+          {
+            "section_id": "6.2",
+            "section_title": ". Giving & Accepting of Gifts, Entertainment and Hospitality",
+            "subsections": [],
+            "items": [
+              {
+                "item_id": "6.2.1",
+                "text": "We have adopted a “No Gift” Policy whereby, you are prohibited from, directly or indirectly, receiving or providing gifts, en tertainment and hospitality except in certain situations, subject to approval as mentioned in this policy. It is your responsibility to inform any third parties involved in business dealings with Sunway of the “No Gift” Policy and to request all parties to understand, respect and adhere to the policy. (Reference: Gift, Entertainment & Hospitality Policy)",
+                "sub_items": []
+              }
+            ]
+          },
+          {
+            "section_id": "6.3",
+            "section_title": ". Donations and Sponsorship",
+            "subsections": [],
+            "items": [
+              {
+                "item_id": "6.3.1",
+                "text": "We always seek avenues in which we can contribute to the community through donations, sponsorships and corporate responsibility programmes. Therefore, it is your responsibility to understand that payments for donations, sponsorships and corporate responsibility programmes are made in full compliance with the Donation, Sponsorship and Corporate Responsibility Policy, Anti - Bribery a nd Corruption Policy, the Anti - Money Laundering Policy, and any applicable laws and regulations. All requests which must reflect our Core Values and align to our business activities, must be channeled to the Group Brand Marketing and Communications departm ent for approval.",
+                "sub_items": []
+              }
+            ]
+          },
+          {
+            "section_id": "6.4",
+            "section_title": ". Abuse of Power",
+            "subsections": [],
+            "items": [
+              {
+                "item_id": "6.4.1",
+                "text": "a) The abuse of power or authority is the improper use of a position of influence, power or authority by an employee towards others. You are not to use your position to influence others, current and/or potential partners or c ustomers of the Company for your personal interest/gain or for the interest/gain of others under your authority.",
+                "sub_items": []
+              }
+            ]
+          }
+        ],
+        "items": []
+      },
+      {
+        "section_id": "4",
+        "section_title": "Section 4",
+        "subsections": [
+          {
+            "section_id": "6.5",
+            "section_title": ". Anti - Money Laundering",
+            "subsections": [],
+            "items": [
+              {
+                "item_id": "6.5.1",
+                "text": "We prohibit all practices related to money laundering, including dealing in the proceeds of criminal activities and terrorism financing. As a rule, reasonable degree of due diligence must be carried out in order to understand the business and background of any prospective customer, vendor, third party or business partner that intends to do business with the Group to determine the origin and destination of money or asse ts involved. Any suspected activities relating to money laundering or terrorism financing should be reported immediately to Bank Negara Malaysia and relevant authorities in accordance with the Group’s Anti - Money Laundering Policy. (Reference: Anti - Money La undering Policy)",
+                "sub_items": []
+              }
+            ]
+          },
+          {
+            "section_id": "6.6",
+            "section_title": ". Insider Trading",
+            "subsections": [],
+            "items": [
+              {
+                "item_id": "6.6.1",
+                "text": "As a public listed company, we are required to comply with various laws and regulations to make timely, full and fair public disclosure of information that may materially affect the market for its stock. You are not to bu y or sell, nor to recommend or suggest anyone else to your family members, friends, acquittances, business associates or anyone else to buy or sell the securities of any company in the Sunway Bhd Group, Sunway Construction Group Bhd and Sunway REIT either directly or indirectly when you are aware of insider information relating to the aforesaid three Sunway listed Group for personal benefit. Insider information here refers to material non - public information relating to the securities of Sunway Bhd, Sunway C onstruction Group Bhd and Sunway REIT, for personal benefit. A violation of this policy can result in civil and criminal penalties. (Reference: Insider Trading Policy)",
+                "sub_items": []
+              }
+            ]
+          },
+          {
+            "section_id": "6.7",
+            "section_title": ". Fraud",
+            "subsections": [],
+            "items": [
+              {
+                "item_id": "6.7.1",
+                "text": "You must not engage in any form of fraudulent acts or dishonest conducts involving property or assets, or on the financial reporting and accounting of Sunway or third party. This may not only entail penalties but may also result in criminal charges.",
+                "sub_items": []
+              }
+            ]
+          },
+          {
+            "section_id": "6.8",
+            "section_title": ". Dealing with Competitors",
+            "subsections": [],
+            "items": [
+              {
+                "item_id": "6.8.1",
+                "text": "We are committed to compete ethically in the marketplace. You are required to comply with competition and anti - competition laws in the countries in which the Group operates. Whenever there is a need to collect, share and use information about our competito rs, it must be done in a legal and ethical manner. (Reference: Competition Law Compliance Framework)",
+                "sub_items": []
+              }
+            ]
+          },
+          {
+            "section_id": "6.9",
+            "section_title": ". Avoid Conflict of Interest",
+            "subsections": [],
+            "items": [
+              {
+                "item_id": "6.9.1",
+                "text": "a) Conflict of interest is a situation where you have a private or personal interest sufficient to influence or appear to influen ce the objective exercise of your official duties as an employee or a professional. You must avoid such conflicts and situations",
+                "sub_items": []
+              }
+            ]
+          }
+        ],
+        "items": [
+          {
+            "item_id": "4.1",
+            "text": "--- Page Break ---",
+            "sub_items": []
+          },
+          {
+            "item_id": "4.2",
+            "text": "Sunway Berhad CCBE Policy",
+            "sub_items": []
+          },
+          {
+            "item_id": "4.3",
+            "text": "b) Abuse of power or authority can also happen when you abuse your influence, power or authority to negatively influence the career or employment conditions (including, but not limited to, appointment, assignment, contract renewal, performance evaluation or promotion) of other individuals within and outside the Company. It may also consist of conduct that creates a hostile or abusive work environmen t, which includes, but is not limited to, the use of intimidation, threats, blackmail or coercion.",
+            "sub_items": []
+          },
+          {
+            "item_id": "4.4",
+            "text": "c) Being an employee of Sunway, you shall only use your position, power or authority in accordance to the laws of the Country and the Company’s regulations, po licies and procedures for the sole advantage and benefit of Sunway.",
+            "sub_items": []
+          }
+        ]
+      },
+      {
+        "section_id": "5",
+        "section_title": "Section 5",
+        "subsections": [
+          {
+            "section_id": "6.10",
+            "section_title": ". Group’s Property & Benefits",
+            "subsections": [],
+            "items": [
+              {
+                "item_id": "6.10.1",
+                "text": "The Group’s property forms an integral part of the business infrastructure and any loss, damage, misuse and waste thereof is a serious misco nduct. You are not to use Group’s assets and benefits for your personal use or to the benefit of anyone else who are not allowed or authorised by the company.",
+                "sub_items": []
+              }
+            ]
+          }
+        ],
+        "items": [
+          {
+            "item_id": "5.1",
+            "text": "--- Page Break ---",
+            "sub_items": []
+          },
+          {
+            "item_id": "5.2",
+            "text": "Sunway Berhad CCBE Policy",
+            "sub_items": []
+          },
+          {
+            "item_id": "5.3",
+            "text": "that may be perceived as creating a conflict of interest that may influence your judgment in the discharge of your duties and r esponsibilities. You must not use your position, working hours, Group resources and assets, relationships or any knowledge that is gained directly or indirectly in the course of your duties or employment for private or personal advantage either directly or indirectly.",
+            "sub_items": []
+          },
+          {
+            "item_id": "5.4",
+            "text": "b) It is your direct responsibility to declare any situation of conflict in the areas such as financial benefit, personal relationship and personal benefit / involvement, through the company’s annual exercise of Conflict of Interest Declaration and to report within two weeks of any change in the status.",
+            "sub_items": []
+          },
+          {
+            "item_id": "5.5",
+            "text": "c) As a full time employee, you must obtain prior approval from the company if you wish to engage in any outside employment to ensure it will not interfere or compete with your regular work and/or g ive rise to an actual or perceived conflict of interest or the use of Company’s asset. This includes holding a second job, providing services, conducting a business and/or active involvement in other organisations.",
+            "sub_items": []
+          },
+          {
+            "item_id": "5.6",
+            "text": "d) The onus of declaring any actual or per ceived conflict of interest shall be on you. You should self - disclose and any non - declaration will be deemed as a major misconduct and may warrant immediate dismissal. If you are not clear whether the situation is a conflict of interest, you must check wit h your BUHR for clarification. (Reference: Conflict of Interest Declaration Policy)",
+            "sub_items": []
+          }
+        ]
+      },
+      {
+        "section_id": "7",
+        "section_title": ". WORKING WITH ONE ANOTHER",
+        "subsections": [
+          {
+            "section_id": "7.1",
+            "section_title": ". Human Rights",
+            "subsections": [],
+            "items": [
+              {
+                "item_id": "7.1.1",
+                "text": "a) At Sunway, we respect and supports the Universal Declaratio n of Human Rights and the United Nations Guiding Principles on Business and Human Rights and the rights of all employees and as well as our business associates. We use these frameworks to guide the development and implementation of this policy.",
+                "sub_items": []
+              },
+              {
+                "item_id": "7.1.2",
+                "text": "b) As a respon sible global corporate citizen, we shall endeavour to meet standards and practices that are consistent with internationally recognised principles, subject to the laws and regulations of the countries and territories in which we operate. We do not tolerate unethical labour practices such as child labour, forced or compulsory labour, restriction of freedom of movement.",
+                "sub_items": []
+              },
+              {
+                "item_id": "7.1.3",
+                "text": "c) We respect the rights of our employees, stakeholders and communities through our commitments which include, but are not limited to: (Reference : Human Rights Policy )",
+                "sub_items": []
+              },
+              {
+                "item_id": "7.1.4",
+                "text": "i Providing Equal Opportunities ii Respecting Freedom of Association iii Eradicating any form of Harassment or Abuses iv Enhancing Safety and Health v Forced /Compulsory Labour",
+                "sub_items": []
+              }
+            ]
+          }
+        ],
+        "items": []
+      },
+      {
+        "section_id": "6",
+        "section_title": "Section 6",
+        "subsections": [
+          {
+            "section_id": "7.3",
+            "section_title": ". Harassment & Violence",
+            "subsections": [],
+            "items": [
+              {
+                "item_id": "7.3.1",
+                "text": "We aim to provide a safe and conducive working environment. Any harassment at the workplace, including sexual har assment, is prohibited and will not be tolerated or condoned by the Company. The Company will investigate all complaints of any harassment in confidence and proceed with the appropriate disciplinary action based on available evidence. Disciplinary action w ill not only be confined to the harasser but will also include the complainant if any such complaint is found to have been falsely made. (Reference: Anti - Sexual Harassment Policy)",
+                "sub_items": []
+              }
+            ]
+          },
+          {
+            "section_id": "7.4",
+            "section_title": ". Equal Opportunities and Non - Discrimination",
+            "subsections": [],
+            "items": [
+              {
+                "item_id": "7.4.1",
+                "text": "We are committed in encouraging equal opportunities and non - discrimination at the workplace. We aim to create a culture that respects and values each other’s differences, promotes equality and diversity, and encourage individuals to grow and develop in ord er to realise their full potential. We nurture a workplace environment that values and utilises the contribution of employees with diverse ideas, backgrounds, experiences, and perspectives for the growth and prosperity of the Sunway Group, our customers an d the communities we serve. We promote dignity & respect for all and do not tolerate direct or indirect discrimination, victimisation, intimidation, bullying or harassment in the workplace. (Reference: Diversity and Inclusion Policy)",
+                "sub_items": []
+              }
+            ]
+          },
+          {
+            "section_id": "7.5",
+            "section_title": ". Substance Misuse & Cri minal Activities",
+            "subsections": [],
+            "items": [
+              {
+                "item_id": "7.5.1",
+                "text": "The misuse of substances, such as alcohol or drugs, can impair performance at work and can be a threat to health, safety and the environment. Hence, it is the Group’s policy that the unauthorised consumption, possession, distribution, purc hase or sale of any such substances within its premises or while conducting its businesses or being under the influence of any such substances while working is prohibited. In this respect, you must diligently heed and comply with the policies and procedure s on substance misuse issued by Sunway as amended and updated from time - to - time. (Reference: Alcohol & Drug Abuse Policy)",
+                "sub_items": []
+              }
+            ]
+          },
+          {
+            "section_id": "7.6",
+            "section_title": ". Social Media",
+            "subsections": [],
+            "items": [
+              {
+                "item_id": "7.6.1",
+                "text": "You have the responsibility to protect the Group’s brand reputation and image. When using your private social media accounts, you must indicate that your posts reflect only your personal opinions and do not negatively affect the Group’s brand perception. You must also safeguard confidential and proprietary business information and not disclose internal information to pe ople outside of the Group.",
+                "sub_items": []
+              }
+            ]
+          },
+          {
+            "section_id": "7.7",
+            "section_title": ". Engaging in Political Activity",
+            "subsections": [],
+            "items": []
+          }
+        ],
+        "items": [
+          {
+            "item_id": "6.1",
+            "text": "--- Page Break ---",
+            "sub_items": []
+          },
+          {
+            "item_id": "6.2",
+            "text": "Sunway Berhad CCBE Policy",
+            "sub_items": []
+          },
+          {
+            "item_id": "6.3",
+            "text": "vi Protecting the Rights of Children 7.2. Health & Safety",
+            "sub_items": []
+          },
+          {
+            "item_id": "6.4",
+            "text": "We strive to provide a safe, secure and conducive workplace environment. You must diligently observe and comply with all Occupational Health, Safety and Environment laws and regulations of any country that you are working in and the Group’s OHSE requirements, policies and pro cedures. Safety and health is everyone’s responsibility. (Reference: Occupational Health, Safety and Environment Policy)",
+            "sub_items": []
+          }
+        ]
+      },
+      {
+        "section_id": "7",
+        "section_title": "Section 7",
+        "subsections": [
+          {
+            "section_id": "7.8",
+            "section_title": ". Managers’ Responsibility",
+            "subsections": [],
+            "items": [
+              {
+                "item_id": "7.8.1",
+                "text": "If you hold a managerial position, you are responsible for the enforcement of and compliance with this Code including necessary distribution to ensure employees’ knowledge and compliance to this Code. You are to ensure t hat the employees you supervise understand and practice the Code in their day - to - day activities. You have the responsibility to ensure that employees feel safe and comfortable to provide any feedback related to job and performance.",
+                "sub_items": []
+              }
+            ]
+          },
+          {
+            "section_id": "7.9",
+            "section_title": ". Dress Code and Uniform",
+            "subsections": [],
+            "items": [
+              {
+                "item_id": "7.9.1",
+                "text": "A s a proud Sunwayian, you represent the image of Sunway. You are required to be properly attired as prescribed in the Dress Code Policy or as per BU’s dress code requirement at all times during working hours whilst in the office premises. The policy is also aimed at creating a professional image for Sunway Group through its staff. Therefore, it is imperative you must exercise self - discipline and conformity to the policy. (Reference: Dress Code Policy )",
+                "sub_items": []
+              }
+            ]
+          }
+        ],
+        "items": [
+          {
+            "item_id": "7.1",
+            "text": "--- Page Break ---",
+            "sub_items": []
+          },
+          {
+            "item_id": "7.2",
+            "text": "Sunway Berhad CCBE Policy",
+            "sub_items": []
+          },
+          {
+            "item_id": "7.3",
+            "text": "Your participation in political activity shall not be carried out during Company working hours, utilising Company resources or brand, and should be entirely on your own accord, volition, time and resources.",
+            "sub_items": []
+          }
+        ]
+      },
+      {
+        "section_id": "8",
+        "section_title": ". ENSURE COMPLIANCE OF LAWS & GOVERNANCE",
+        "subsections": [
+          {
+            "section_id": "8.1",
+            "section_title": ". Accuracy of Financial Information / Financial Integrity",
+            "subsections": [],
+            "items": [
+              {
+                "item_id": "8.1.1",
+                "text": "a) You are responsible for ensuring that all the financial statements of the Group must be prepared timely, accurately and conform to generally accepted accou nting principles, and applicable accounting standards and to all applicable laws and regulations. You are responsible for ensuring that Sunway books and records accurately, fairly and reasonably reflects the substance of transactions. You must comply with company accounting policies and internal control requirements on matters in finance. Purposely misrepresenting information or activities on company documents and reports may be considered falsification of documentation, which is a serious offence.",
+                "sub_items": []
+              },
+              {
+                "item_id": "8.1.2",
+                "text": "b) Sunway r eserves the right to report any act of misrepresentation suspected of being criminal in nature to the police or other relevant authorities.",
+                "sub_items": []
+              },
+              {
+                "item_id": "8.1.3",
+                "text": "c) Falsification of financial or any other records or misrepresentation of information may constitute fraud and can r esult in civil and criminal liabilities for Directors, Employees and the Group. You are obliged to report false entries or omissions, and to highlight questionable or improper accounting in the books and records of the Group to the relevant parties.",
+                "sub_items": []
+              }
+            ]
+          },
+          {
+            "section_id": "8.2",
+            "section_title": ". Confid ential Information",
+            "subsections": [],
+            "items": [
+              {
+                "item_id": "8.2.1",
+                "text": "a) You must exercise caution and due care to safeguard any information of confidential and sensitive nature relating to the Group, which is acquired in the course of your",
+                "sub_items": []
+              }
+            ]
+          }
+        ],
+        "items": [
+          {
+            "item_id": "8.1",
+            "text": "We will comply w ith all applicable laws, rules and regulations of the authorities and exchanges in jurisdictions and countries where the Group operates. You are responsible for taking appropriate actions to understand and comply with the laws, rules and regulations that a re applicable to your positions and/or work.",
+            "sub_items": []
+          }
+        ]
+      },
+      {
+        "section_id": "8",
+        "section_title": "Section 8",
+        "subsections": [
+          {
+            "section_id": "8.3",
+            "section_title": ". Internal Controls & Record Management",
+            "subsections": [],
+            "items": [
+              {
+                "item_id": "8.3.1",
+                "text": "The Group’s documents and records are strictly for business purposes and requirements, and in compliance with legal, tax, accounting and regulatory laws. You must control and maintain such records so that they are accu rate, up - to - date, eligible, readily identifiable and retrievable. You must also ensure that all records are handled according to the appropriate level of confidentiality, in accordance with any applicable policies and procedures and in conformity with all applicable laws and regulations.",
+                "sub_items": []
+              }
+            ]
+          },
+          {
+            "section_id": "8.4",
+            "section_title": ". Information Technology",
+            "subsections": [],
+            "items": [
+              {
+                "item_id": "8.4.1",
+                "text": "a) Strict Prohibition",
+                "sub_items": []
+              },
+              {
+                "item_id": "8.4.2",
+                "text": "You are strictly prohibited from accessing, distributing, or storing inappropriate or unlawful materials on the company’s computer resources. Other prohibited activities include u sage or wastage of computer resources for non - work related activities, misuse of software, and communication of trade secrets. (Reference: Sunway E - Policy) b) Information and Assets",
+                "sub_items": []
+              },
+              {
+                "item_id": "8.4.3",
+                "text": "The Group values and protects all proprietary and confidential information, and is committed to protecting its assets and resources. You are expected to exercise reasonable care to safeguard the Group’s assets to avoid any loss, damage, misuse or theft. In addition, you must safeguard proprietary, confidential information, plus personally identifiable information at all times to prevent harm to the Group, our shareholders, and individuals or other third parties that have trusted us with their information. Any access to proprietary, confidential information, plus personally identi fiable information via personal devices are highly discouraged. However, due to unavoidable circumstances, those required to access via personal devices will require HOD approval and security review by IT SSC Administrators. ( Reference: Sunway E - Policy)",
+                "sub_items": []
+              },
+              {
+                "item_id": "8.4.4",
+                "text": "c) Intellectual Property",
+                "sub_items": []
+              },
+              {
+                "item_id": "8.4.5",
+                "text": "We encourage you to be proactive and innovative in discharging your normal duties and responsibilities. Any intellectual properties including but not limited to copyrights, patents, trade secrets, and other intellectual property ri ghts associated with any concepts, works of authorship, discoveries, inventions, techniques, processes, writings, creations, programs, product improvements, plans, designs, products,",
+                "sub_items": []
+              }
+            ]
+          }
+        ],
+        "items": [
+          {
+            "item_id": "8.1",
+            "text": "--- Page Break ---",
+            "sub_items": []
+          },
+          {
+            "item_id": "8.2",
+            "text": "Sunway Berhad CCBE Policy",
+            "sub_items": []
+          },
+          {
+            "item_id": "8.3",
+            "text": "employment, and are strictly prohibited to disclose to any party, unl ess the disclosure is duly authorised or legally mandated.",
+            "sub_items": []
+          },
+          {
+            "item_id": "8.4",
+            "text": "b) In the event you know of material information affecting the Group which has not yet been publicly released, the material information must be held in the strictest confidence by you until it is pu blicly released. It is equally important that propriety or confidential information is only disclosed to other employees on a need - to - know basis.",
+            "sub_items": []
+          },
+          {
+            "item_id": "8.5",
+            "text": "c) You have an obligation to continue to preserve the proprietary and confidential information even after your ap pointment/ employment has ceased, unless disclosure is required by any order of any court of competent jurisdiction or any competent judicial, governmental, or regulatory authority. A violation of this policy can result in civil and criminal penalties.",
+            "sub_items": []
+          }
+        ]
+      },
+      {
+        "section_id": "9",
+        "section_title": "Section 9",
+        "subsections": [
+          {
+            "section_id": "8.6",
+            "section_title": ". Personal Data Protection",
+            "subsections": [],
+            "items": [
+              {
+                "item_id": "8.6.1",
+                "text": "We respect and are committed to the protection of your personal data and your privacy. We ensure proper and adequate protection of personal data within our control, in compliance with the Personal Data Protection Act 2010. If you have access to personal data, you are expected to read and be familiar with Sunway Group’s Personal Data Protection Compliance Manual, which is designed to assist you in handling personal data a nd sensitive personal data in the manner that is in compliance with the Act. The Compliance Manual is also pertinent as a guide as to the do’s and the don’ts in relation in the handling, retention and destruction of personal data and sensitive personal dat a. ( Reference: Personal Data Compliance Manual)",
+                "sub_items": []
+              }
+            ]
+          },
+          {
+            "section_id": "8.7",
+            "section_title": ". Laws & Regulations",
+            "subsections": [],
+            "items": [
+              {
+                "item_id": "8.7.1",
+                "text": "You shall comply with all Federal and State laws, regulations, and ordinances that are applicable to your work and responsibilities. If you are found to have been in violation of any appl icable Federal and State laws, regulations and ordinances, such violation may be the basis for disciplinary action, including termination of employment.",
+                "sub_items": []
+              }
+            ]
+          },
+          {
+            "section_id": "8.8",
+            "section_title": ". Annual Staff Declaration",
+            "subsections": [],
+            "items": [
+              {
+                "item_id": "8.8.1",
+                "text": "You are required to read, understand and to declare in writing annually, by the first quarter of each year, that you will abide to the following mandatory policies:",
+                "sub_items": []
+              },
+              {
+                "item_id": "8.8.2",
+                "text": "a) Anti - Bribery and Corruption Policy;",
+                "sub_items": []
+              },
+              {
+                "item_id": "8.8.3",
+                "text": "b) Code of Conduct and Business Ethics Policy;",
+                "sub_items": []
+              },
+              {
+                "item_id": "8.8.4",
+                "text": "c) Conflict of Interest Declaration Policy;",
+                "sub_items": []
+              },
+              {
+                "item_id": "8.8.5",
+                "text": "d) E - Policy;",
+                "sub_items": []
+              },
+              {
+                "item_id": "8.8.6",
+                "text": "e) Personal Data Protection Compliance Manual;",
+                "sub_items": []
+              },
+              {
+                "item_id": "8.8.7",
+                "text": "f) Human Rights Policy; and",
+                "sub_items": []
+              },
+              {
+                "item_id": "8.8.8",
+                "text": "g) Any other mandatory policies decided by the Company from time to time.",
+                "sub_items": []
+              }
+            ]
+          }
+        ],
+        "items": [
+          {
+            "item_id": "9.1",
+            "text": "--- Page Break ---",
+            "sub_items": []
+          },
+          {
+            "item_id": "9.2",
+            "text": "Sunway Berhad CCBE Policy",
+            "sub_items": []
+          },
+          {
+            "item_id": "9.3",
+            "text": "manuals, documents, materials, ideas, computer programs, results of techn ological researches, trademarks, registered designs and confidential information that were created and / or developed by you in the course of your employment and / or by using the Company’s resources, shall become the sole and exclusive property of the Gro up. You should not, without prior written consent of the Company, reproduce, adapt, modify, use or disclose intellectual properties or inventions or any information relating thereto to any person whomsoever except to the Company’s duly authorised parties a s instructed or notified by the Company. (Reference: Sunway E - Policy) 8.5. Representing Sunway Externally",
+            "sub_items": []
+          },
+          {
+            "item_id": "9.4",
+            "text": "You must obtain prior approval from respective BU Heads or Functional Heads before you accept external invitations to give speeches, presentations or de scribe your job nature in the Company.",
+            "sub_items": []
+          }
+        ]
+      },
+      {
+        "section_id": "10",
+        "section_title": "Section 10",
+        "subsections": [],
+        "items": [
+          {
+            "item_id": "10.1",
+            "text": "--- Page Break ---",
+            "sub_items": []
+          },
+          {
+            "item_id": "10.2",
+            "text": "Sunway Berhad CCBE Policy",
+            "sub_items": []
+          }
+        ]
+      },
+      {
+        "section_id": "9",
+        "section_title": ". NON - COMPLIANCE",
+        "subsections": [],
+        "items": [
+          {
+            "item_id": "9.1",
+            "text": "Non - compliance to this policy will be taken very seriously and may result in disciplinary action, including termination as well as civil or criminal proceedings. You may seek advice from BU Leadership Team and BUHR when you are unsure of an appropriate or ethical course of action under this policy.",
+            "sub_items": []
+          }
+        ]
+      },
+      {
+        "section_id": "10",
+        "section_title": ". WHISTLEBLOWING",
+        "subsections": [],
+        "items": [
+          {
+            "item_id": "10.1",
+            "text": "If you encounter actual or potential violations of this policy, you are required to report your concerns immediately to your BU Leadership Team or reach out directly to the Head of Group Internal Audit via our Whistleblowing platform as follows: ( Reference: Whistleblowing Policies and Procedu res)",
+            "sub_items": []
+          },
+          {
+            "item_id": "10.2",
+            "text": "Email to: whistleblowing@sunway.com.my Direct line: +603 5639 8025",
+            "sub_items": []
+          },
+          {
+            "item_id": "10.3",
+            "text": "Fax to: +603 5639 8027",
+            "sub_items": []
+          },
+          {
+            "item_id": "10.4",
+            "text": "Write to:",
+            "sub_items": []
+          },
+          {
+            "item_id": "10.5",
+            "text": "Head of Internal Audit Department Level 4, Menara Sunway Jalan Lagoon Timur, Bandar Sunway 46150 Petaling Jaya Selangor Darul Ehsan, Malaysia.",
+            "sub_items": []
+          },
+          {
+            "item_id": "10.6",
+            "text": "Hi story Log (Last Page)",
+            "sub_items": []
+          },
+          {
+            "item_id": "10.7",
+            "text": "Date Details of Reviews PIC",
+            "sub_items": []
+          }
+        ]
+      },
+      {
+        "section_id": "20",
+        "section_title": "July 2015 New GHR and BUHR & Group Legal",
+        "subsections": [],
+        "items": []
+      },
+      {
+        "section_id": "20",
+        "section_title": "Nov 2020 Reviewed the whole Policy GHR",
+        "subsections": [],
+        "items": [
+          {
+            "item_id": "20.1",
+            "text": "December 2022 Reviewed the whole Policy GHR & GIAD",
+            "sub_items": []
+          }
+        ]
+      },
+      {
+        "section_id": "11",
+        "section_title": "Section 11",
+        "subsections": [],
+        "items": []
+      }
+    ]
+  },
+  "structured_data_tables": {
+    "tables": []
+  },
+  "terms_conditions_clauses": {
+    "clauses": [
+      {
+        "clause_number": "1",
+        "text": ". OBJECTIVE ................................ ................................ ................................ ........ 3",
+        "sub_clauses": []
+      },
+      {
+        "clause_number": "2",
+        "text": ". SCOPE ................................ ................................ ................................ ............... 3",
+        "sub_clauses": []
+      },
+      {
+        "clause_number": "3",
+        "text": ". SUNWAY VISI ON & MISSION ................................ ................................ ........... 3",
+        "sub_clauses": []
+      },
+      {
+        "clause_number": "4",
+        "text": ". SUNWAY CORE VALUES ................................ ................................ ................. 3",
+        "sub_clauses": []
+      },
+      {
+        "clause_number": "5",
+        "text": ". SUSTAINABLE DEVELOPMENT ................................ ................................ ...... 4",
+        "sub_clauses": []
+      },
+      {
+        "clause_number": "6",
+        "text": ". ACT WITH INTEGRITY & ETHICS ................................ ................................ ..... 4",
+        "sub_clauses": []
+      },
+      {
+        "clause_number": "7",
+        "text": ". WORKING WITH ONE ANOTHER ................................ ................................ ..... 6",
+        "sub_clauses": []
+      },
+      {
+        "clause_number": "8",
+        "text": ". ENSURE COMPLIANCE OF LAWS & GOVERNANCE ................................ .... 8",
+        "sub_clauses": []
+      },
+      {
+        "clause_number": "9",
+        "text": ". NON - COMPLIANCE ................................ ................................ ......................... 11",
+        "sub_clauses": []
+      },
+      {
+        "clause_number": "10",
+        "text": ". WHISTLEBLOWING ................................ ................................ ......................... 11",
+        "sub_clauses": []
+      },
+      {
+        "clause_number": "2",
+        "text": "",
+        "sub_clauses": []
+      },
+      {
+        "clause_number": "1",
+        "text": ". OBJECTIVE",
+        "sub_clauses": []
+      },
+      {
+        "clause_number": "2",
+        "text": ". SCOP E",
+        "sub_clauses": []
+      },
+      {
+        "clause_number": "3",
+        "text": ". SUNWAY VISION & MISSION",
+        "sub_clauses": []
+      },
+      {
+        "clause_number": "3.1",
+        "text": ". Vision",
+        "sub_clauses": []
+      },
+      {
+        "clause_number": "3.2",
+        "text": ". Mission",
+        "sub_clauses": []
+      },
+      {
+        "clause_number": "4",
+        "text": ". SUNWAY CORE VALUES",
+        "sub_clauses": []
+      },
+      {
+        "clause_number": "4.1",
+        "text": ". Integrity (We believe in doing the right thing at all times)",
+        "sub_clauses": []
+      },
+      {
+        "clause_number": "4.2",
+        "text": ". Humility (We believe in being humble, polite and respectful)",
+        "sub_clauses": []
+      },
+      {
+        "clause_number": "4.3",
+        "text": ". Excellence (We take pride in all that we do)",
+        "sub_clauses": []
+      },
+      {
+        "clause_number": "3",
+        "text": "",
+        "sub_clauses": []
+      },
+      {
+        "clause_number": "5",
+        "text": ". S USTAINABLE D EVELOPMENT",
+        "sub_clauses": []
+      },
+      {
+        "clause_number": "6",
+        "text": ". ACT WITH INTEGRITY & ETHICS",
+        "sub_clauses": []
+      },
+      {
+        "clause_number": "6.1",
+        "text": ". Anti - Briber y & Corruption",
+        "sub_clauses": []
+      },
+      {
+        "clause_number": "6.2",
+        "text": ". Giving & Accepting of Gifts, Entertainment and Hospitality",
+        "sub_clauses": []
+      },
+      {
+        "clause_number": "6.3",
+        "text": ". Donations and Sponsorship",
+        "sub_clauses": []
+      },
+      {
+        "clause_number": "6.4",
+        "text": ". Abuse of Power",
+        "sub_clauses": []
+      },
+      {
+        "clause_number": "4",
+        "text": "",
+        "sub_clauses": []
+      },
+      {
+        "clause_number": "6.5",
+        "text": ". Anti - Money Laundering",
+        "sub_clauses": []
+      },
+      {
+        "clause_number": "6.6",
+        "text": ". Insider Trading",
+        "sub_clauses": []
+      },
+      {
+        "clause_number": "6.7",
+        "text": ". Fraud",
+        "sub_clauses": []
+      },
+      {
+        "clause_number": "6.8",
+        "text": ". Dealing with Competitors",
+        "sub_clauses": []
+      },
+      {
+        "clause_number": "6.9",
+        "text": ". Avoid Conflict of Interest",
+        "sub_clauses": []
+      },
+      {
+        "clause_number": "5",
+        "text": "",
+        "sub_clauses": []
+      },
+      {
+        "clause_number": "6.10",
+        "text": ". Group’s Property & Benefits",
+        "sub_clauses": []
+      },
+      {
+        "clause_number": "7",
+        "text": ". WORKING WITH ONE ANOTHER",
+        "sub_clauses": []
+      },
+      {
+        "clause_number": "7.1",
+        "text": ". Human Rights",
+        "sub_clauses": []
+      },
+      {
+        "clause_number": "6",
+        "text": "",
+        "sub_clauses": []
+      },
+      {
+        "clause_number": "7.3",
+        "text": ". Harassment & Violence",
+        "sub_clauses": []
+      },
+      {
+        "clause_number": "7.4",
+        "text": ". Equal Opportunities and Non - Discrimination",
+        "sub_clauses": []
+      },
+      {
+        "clause_number": "7.5",
+        "text": ". Substance Misuse & Cri minal Activities",
+        "sub_clauses": []
+      },
+      {
+        "clause_number": "7.6",
+        "text": ". Social Media",
+        "sub_clauses": []
+      },
+      {
+        "clause_number": "7.7",
+        "text": ". Engaging in Political Activity",
+        "sub_clauses": []
+      },
+      {
+        "clause_number": "7",
+        "text": "",
+        "sub_clauses": []
+      },
+      {
+        "clause_number": "7.8",
+        "text": ". Managers’ Responsibility",
+        "sub_clauses": []
+      },
+      {
+        "clause_number": "7.9",
+        "text": ". Dress Code and Uniform",
+        "sub_clauses": []
+      },
+      {
+        "clause_number": "8",
+        "text": ". ENSURE COMPLIANCE OF LAWS & GOVERNANCE",
+        "sub_clauses": []
+      },
+      {
+        "clause_number": "8.1",
+        "text": ". Accuracy of Financial Information / Financial Integrity",
+        "sub_clauses": []
+      },
+      {
+        "clause_number": "8.2",
+        "text": ". Confid ential Information",
+        "sub_clauses": []
+      },
+      {
+        "clause_number": "8",
+        "text": "",
+        "sub_clauses": []
+      },
+      {
+        "clause_number": "8.3",
+        "text": ". Internal Controls & Record Management",
+        "sub_clauses": []
+      },
+      {
+        "clause_number": "8.4",
+        "text": ". Information Technology",
+        "sub_clauses": []
+      },
+      {
+        "clause_number": "9",
+        "text": "",
+        "sub_clauses": []
+      },
+      {
+        "clause_number": "8.6",
+        "text": ". Personal Data Protection",
+        "sub_clauses": []
+      },
+      {
+        "clause_number": "8.7",
+        "text": ". Laws & Regulations",
+        "sub_clauses": []
+      },
+      {
+        "clause_number": "8.8",
+        "text": ". Annual Staff Declaration",
+        "sub_clauses": []
+      },
+      {
+        "clause_number": "10",
+        "text": "",
+        "sub_clauses": []
+      },
+      {
+        "clause_number": "9",
+        "text": ". NON - COMPLIANCE",
+        "sub_clauses": []
+      },
+      {
+        "clause_number": "10",
+        "text": ". WHISTLEBLOWING",
+        "sub_clauses": []
+      },
+      {
+        "clause_number": "20",
+        "text": "July 2015 New GHR and BUHR & Group Legal",
+        "sub_clauses": []
+      },
+      {
+        "clause_number": "20",
+        "text": "Nov 2020 Reviewed the whole Policy GHR",
+        "sub_clauses": []
+      },
+      {
+        "clause_number": "11",
+        "text": "",
+        "sub_clauses": []
+      }
+    ]
+  },
+  "metadata": {
+    "model": "claude-sonnet-4-20250514",
+    "max_tokens": 16000,
+    "temperature": 0,
+    "top_p": 1,
+    "generated_at": "2025-10-17T06:14:44.501Z",
+    "prompt_path": "config/prompts/vision-ultimate.txt",
+    "reason": "table_structure_loss"
+  }
+}

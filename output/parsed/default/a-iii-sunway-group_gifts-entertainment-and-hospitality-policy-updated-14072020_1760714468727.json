@@ -1,0 +1,1561 @@
+{
+  "source": "advanced_pdf_parser",
+  "document_metadata": {
+    "detected_type": "pdf_document",
+    "title": "GIFTS, ENTERTAINMENT AND",
+    "pages": 12
+  },
+  "hierarchical_content": {
+    "sections": [
+      {
+        "section_id": "1",
+        "section_title": ". INTRODUCTION AND PURPOSE ................................ ................................ .............................. 2",
+        "subsections": [],
+        "items": []
+      },
+      {
+        "section_id": "2",
+        "section_title": ". SCOPE ................................ ................................ ................................ ................................ ....... 2",
+        "subsections": [],
+        "items": []
+      },
+      {
+        "section_id": "3",
+        "section_title": ". DEFINITION ................................ ................................ ................................ ................................ 2",
+        "subsections": [],
+        "items": []
+      },
+      {
+        "section_id": "4",
+        "section_title": ". GENERAL RULES ON GIFT, ENTERTAINMENT AND HOSPITALITY ................................ ..... 3",
+        "subsections": [],
+        "items": []
+      },
+      {
+        "section_id": "5",
+        "section_title": ". EXCEPTIONAL(LIMITED CIRCUMSTANCES AND SUBJECT TO APPROVAL) ...................... 5",
+        "subsections": [
+          {
+            "section_id": "5.1",
+            "section_title": "GIFT S ................................ ................................ ................................ ............................... 5",
+            "subsections": [],
+            "items": []
+          },
+          {
+            "section_id": "5.2",
+            "section_title": "OTHER EXCEPTION S TO GIFT POLICY ................................ ................................ ........ 6",
+            "subsections": [],
+            "items": []
+          },
+          {
+            "section_id": "5.3",
+            "section_title": "ENTERTAINMENT AND HOSPITALITY ................................ ................................ .......... 6",
+            "subsections": [],
+            "items": []
+          }
+        ],
+        "items": []
+      },
+      {
+        "section_id": "6",
+        "section_title": ". STRICT PROHIBITION ................................ ................................ ................................ ................ 7",
+        "subsections": [],
+        "items": []
+      },
+      {
+        "section_id": "7",
+        "section_title": ". DEALING WITH PUBLIC OFFICIAL S ................................ ................................ ......................... 8",
+        "subsections": [],
+        "items": []
+      },
+      {
+        "section_id": "8",
+        "section_title": ". GROUP EXCO, L1, BU HEAD & FUNCTIONAL HEAD ................................ .............................. 9",
+        "subsections": [],
+        "items": []
+      },
+      {
+        "section_id": "9",
+        "section_title": ". MAINTENANCE OF ACCURATE RECORDS ................................ ................................ ............. 9",
+        "subsections": [],
+        "items": []
+      },
+      {
+        "section_id": "10",
+        "section_title": ". BUSINESS UNIT(BU) LEADERSHIP TEAM RESPONSIBILITIES ................................ .............. 9",
+        "subsections": [],
+        "items": []
+      },
+      {
+        "section_id": "11",
+        "section_title": ". EMPLOYEE’S RESPONSIBILITIES ................................ ................................ .......................... 10",
+        "subsections": [],
+        "items": []
+      },
+      {
+        "section_id": "12",
+        "section_title": ". EMPLOYEE’S DECLARATION ................................ ................................ ................................ . 11",
+        "subsections": [],
+        "items": []
+      },
+      {
+        "section_id": "13",
+        "section_title": ". NON - COMPLIANCE ................................ ................................ ................................ .................. 11",
+        "subsections": [],
+        "items": []
+      },
+      {
+        "section_id": "14",
+        "section_title": ". REPORTING OF POLICY VIOLATIONS ................................ ................................ ................... 11",
+        "subsections": [],
+        "items": [
+          {
+            "item_id": "14.1",
+            "text": "Page 1",
+            "sub_items": []
+          },
+          {
+            "item_id": "14.2",
+            "text": "--- Page Break ---",
+            "sub_items": []
+          }
+        ]
+      },
+      {
+        "section_id": "1",
+        "section_title": ". I NTRODUCTION AND PURPOSE",
+        "subsections": [],
+        "items": [
+          {
+            "item_id": "1.1",
+            "text": "Gifts, Entertainment and Hospitality are usually assessed as high risk areas for bribery.",
+            "sub_items": []
+          },
+          {
+            "item_id": "1.2",
+            "text": "S unway has adopted a “No Gift” Policy whereby, S unway ’s employees are prohibited from,",
+            "sub_items": []
+          },
+          {
+            "item_id": "1.3",
+            "text": "directly or indirectly, receiving or providing gifts, entertainment and hospitality subject only",
+            "sub_items": []
+          },
+          {
+            "item_id": "1.4",
+            "text": "to certain narrow exceptions.",
+            "sub_items": []
+          },
+          {
+            "item_id": "1.5",
+            "text": "It is the responsibility of employees and directors to inform any third parties involved in",
+            "sub_items": []
+          },
+          {
+            "item_id": "1.6",
+            "text": "business dealings with S unway of the “No Gift” Policy and to request all parties to",
+            "sub_items": []
+          },
+          {
+            "item_id": "1.7",
+            "text": "understand, respect and adhere t o the policy .",
+            "sub_items": []
+          }
+        ]
+      },
+      {
+        "section_id": "2",
+        "section_title": ". SCOPE",
+        "subsections": [],
+        "items": [
+          {
+            "item_id": "2.1",
+            "text": "This P olicy gives guidance to all Sunway employees, including directors and any third",
+            "sub_items": []
+          },
+          {
+            "item_id": "2.2",
+            "text": "parties deal ing with Sunway, as to what constitutes appropriate forms of Gifts, Hospitality",
+            "sub_items": []
+          },
+          {
+            "item_id": "2.3",
+            "text": "and Entertainment and what constitutes as an improper benefit (bribery or corruption). No",
+            "sub_items": []
+          },
+          {
+            "item_id": "2.4",
+            "text": "policy can describe all circumstances and rules. Therefore, employees are expected to use",
+            "sub_items": []
+          },
+          {
+            "item_id": "2.5",
+            "text": "good and professional judgment at all times in the areas of offering and receiv ing any gifts,",
+            "sub_items": []
+          },
+          {
+            "item_id": "2.6",
+            "text": "entertainment and hospitality .",
+            "sub_items": []
+          },
+          {
+            "item_id": "2.7",
+            "text": "All forms of Gifts, Entertainment and Hospitality referred to in this Policy must comply with",
+            "sub_items": []
+          },
+          {
+            "item_id": "2.8",
+            "text": "the principles laid out in the Sunway Berhad Group’s Anti - Bribery and Corruption Policy .",
+            "sub_items": []
+          }
+        ]
+      },
+      {
+        "section_id": "3",
+        "section_title": ". DEFINITION",
+        "subsections": [],
+        "items": [
+          {
+            "item_id": "3.1",
+            "text": "Gift Money, goods or services, which, if given appropriately, are a mark of friendship or appreciation. Gifts should be given without expectation of consideration or value in return. Entertainment and Meals, drinks, lodging, travel or other expenses gi ven to or received Hospitality from people who have, who may have facilitated the creation of a business relationship with the Group. This include expenses incurred by a prospective client, customer or business partner. Expenses can be a legitimate contribution to ach ieving a business outcome and includes attendance at social, cultural or sporting events. B usiness U nit(BU) A member / team of management that is determined by the BU Head Leadership Team or Functional Head after consultin g with L1.",
+            "sub_items": []
+          },
+          {
+            "item_id": "3.2",
+            "text": "Page 2",
+            "sub_items": []
+          },
+          {
+            "item_id": "3.3",
+            "text": "--- Page Break ---",
+            "sub_items": []
+          },
+          {
+            "item_id": "3.4",
+            "text": "Basic Rules The basic rules on Gifts, Entertainment and Hospitality expense * :",
+            "sub_items": []
+          },
+          {
+            "item_id": "3.5",
+            "text": " Bona fide : Made for the right reason: if a gift, entertainment or hospitality, should be given clearly as an act of appreciation, if travel expenses then for a bona fide business purpose.  No obligation : The activity will not create any obligation or expectation on the recipient.  No undue influence : The expenditure will not be seen as intended for, or capable of, achieving undue influence in relation to a business transaction or public policy engagement.  Made openly : It will not be performed in secret and undocumented – if it is, then the purpose becomes questionable.  Legality : It is compliant with relevant laws.  Accords with stakeholder perception : The activity would not be viewed unfavourably by stakeholders were it made known to them.  Proportionate : The value and nature of the expenditure is not disproportionate to the occasion.  Conforms to the recipient’s rules : The gift, hospitality or reimbursement of expenses will meet the rules or code of conduct of the recipient’s organisation.  Infrequent : The giving or receiving of gifts, entertainment and hospitality is not overly frequent between the giver and the recipient.  Documented : The expense will be fully documented including purpose, approvals given and value.  Reviewed : The records of entertainment and hospitality expenses and the effectiveness of the policy and procedures are reviewed by management.",
+            "sub_items": []
+          },
+          {
+            "item_id": "3.6",
+            "text": "* Clause 5.3 o f Sunway Berhad Group’s Anti - Bribery and Corruption Policy Tender Processes Any processes of tender such as request for tender, tender submission, envelope opening, tender evaluation, final selection, final negotiations, and awards. Conflict of Interest A situation in which an employee has a private or personal interest sufficient to influence or appear to influence the objective exercise of his or her official duties as an employee, or a professional. Actual or Perceived Value Actual Value – Based on the purchase receipt s/invoices",
+            "sub_items": []
+          },
+          {
+            "item_id": "3.7",
+            "text": "Perceived V alue – E stimated value of t he gift, entertainment and hospitality being offered in the absence of purchase receipt or invoices . Public Official Includes officers to Public Bodies, candidates for public office, officials of any political parties and officials of any state - owned enterprises Public Bodies Includes Government of Malaysia, State Government, any local and statutory authority, national or state department, registered societies, registered sport s governing bodies, company or subsidiaries of any public bodies",
+            "sub_items": []
+          }
+        ]
+      },
+      {
+        "section_id": "4",
+        "section_title": ". GENERAL RULES ON GIFT S , ENTERTAINMENT AND HOSPITALITY",
+        "subsections": [],
+        "items": [
+          {
+            "item_id": "4.1",
+            "text": "a. S unway ’s employees are prohibited from offering or accepting gift, entertainment and",
+            "sub_items": []
+          },
+          {
+            "item_id": "4.2",
+            "text": "hospitality with a view to improperly cause undue influence on any other party in",
+            "sub_items": []
+          },
+          {
+            "item_id": "4.3",
+            "text": "exchange for some future benefit or result. Any acts of this nature whether provided or",
+            "sub_items": []
+          },
+          {
+            "item_id": "4.4",
+            "text": "accepted directly or indi rectly through intermediary, will be construed as an act of bribery",
+            "sub_items": []
+          },
+          {
+            "item_id": "4.5",
+            "text": "and contrary to the core values of Sunway.",
+            "sub_items": []
+          },
+          {
+            "item_id": "4.6",
+            "text": "Page 3",
+            "sub_items": []
+          },
+          {
+            "item_id": "4.7",
+            "text": "--- Page Break ---",
+            "sub_items": []
+          },
+          {
+            "item_id": "4.8",
+            "text": "b. S unway’s employees are required to abide by this policy to avoid conflict of interest or",
+            "sub_items": []
+          },
+          {
+            "item_id": "4.9",
+            "text": "the appearance of conflict of interest for either party in on - going or potential business",
+            "sub_items": []
+          },
+          {
+            "item_id": "4.10",
+            "text": "dealings between S unw ay Group and external parties as gifts can be seen as bribes",
+            "sub_items": []
+          },
+          {
+            "item_id": "4.11",
+            "text": "that may tarnish Sunway G roup ’s reputation or be in violation of an ti - bribery a nd",
+            "sub_items": []
+          },
+          {
+            "item_id": "4.12",
+            "text": "corruption laws . This include s participation in tender processes , on - going or potential",
+            "sub_items": []
+          },
+          {
+            "item_id": "4.13",
+            "text": "business dealings between S unway Group and external parties . Under the conflict of",
+            "sub_items": []
+          },
+          {
+            "item_id": "4.14",
+            "text": "interest circumstances, a ny gift, entertainment and hospitality offered by the external",
+            "sub_items": []
+          },
+          {
+            "item_id": "4.15",
+            "text": "parties must be refused by the employee concerned immediately .",
+            "sub_items": []
+          },
+          {
+            "item_id": "4.16",
+            "text": "c. S unway’s employees are responsible to check and understand any restrictions for gifts ,",
+            "sub_items": []
+          },
+          {
+            "item_id": "4.17",
+            "text": "entertainment and hospitality that has been set out by a receiving company prior to",
+            "sub_items": []
+          },
+          {
+            "item_id": "4.18",
+            "text": "offering a gift.",
+            "sub_items": []
+          },
+          {
+            "item_id": "4.19",
+            "text": "d. Employees are expected to exercise due care and diligence in accepting gift s ,",
+            "sub_items": []
+          },
+          {
+            "item_id": "4.20",
+            "text": "entertainment and hos pitality . If the gift s , entertainment and hospitality places S unway",
+            "sub_items": []
+          },
+          {
+            "item_id": "4.21",
+            "text": "under an y obligation, or potential risk of a n undue influence , then the employees must",
+            "sub_items": []
+          },
+          {
+            "item_id": "4.22",
+            "text": "refuse and avoid it.",
+            "sub_items": []
+          },
+          {
+            "item_id": "4.23",
+            "text": "e. Value is not the only consideration. Employees must also take into account o the r factor s",
+            "sub_items": []
+          },
+          {
+            "item_id": "4.24",
+            "text": "which could be seen as an undue influence even if the gift s , entertainment and hospitality",
+            "sub_items": []
+          },
+          {
+            "item_id": "4.25",
+            "text": "is of low value. In addition, employees shall also take into account the frequency and",
+            "sub_items": []
+          },
+          {
+            "item_id": "4.26",
+            "text": "cumulative value of exchanges with the same giver or recipient. I t is not acceptable to",
+            "sub_items": []
+          },
+          {
+            "item_id": "4.27",
+            "text": "keep offering gifts , entertainment and hospitality to the same recipient or receive",
+            "sub_items": []
+          },
+          {
+            "item_id": "4.28",
+            "text": "repeat ing gifts , entertainment and hospitality from the same giver, even if each individual",
+            "sub_items": []
+          },
+          {
+            "item_id": "4.29",
+            "text": "gift s , entertainment and hospitality is of low value.",
+            "sub_items": []
+          },
+          {
+            "item_id": "4.30",
+            "text": "f. T he B usiness U nit (BU) Head or Functional Head and BU Leadership Team are",
+            "sub_items": []
+          },
+          {
+            "item_id": "4.31",
+            "text": "responsible to exercise proper care and judgement in each case, taking into",
+            "sub_items": []
+          },
+          {
+            "item_id": "4.32",
+            "text": "consideration pertinent circumstances, including the character of gift, entertainment and",
+            "sub_items": []
+          },
+          {
+            "item_id": "4.33",
+            "text": "hospitality, its purpose, the position(s) / seniority of the person(s) providing the gift,",
+            "sub_items": []
+          },
+          {
+            "item_id": "4.34",
+            "text": "entertainment and hospitality, the business context, reciprocity, appl icable laws and",
+            "sub_items": []
+          },
+          {
+            "item_id": "4.35",
+            "text": "cultural norms.",
+            "sub_items": []
+          },
+          {
+            "item_id": "4.36",
+            "text": "Page 4",
+            "sub_items": []
+          },
+          {
+            "item_id": "4.37",
+            "text": "--- Page Break ---",
+            "sub_items": []
+          }
+        ]
+      },
+      {
+        "section_id": "5",
+        "section_title": "Section 5",
+        "subsections": [],
+        "items": [
+          {
+            "item_id": "5.1",
+            "text": ". EXCEPTIONAL (LIMITED CIRCUMSTANCES AND S UBJECT TO APPROVAL)",
+            "sub_items": []
+          },
+          {
+            "item_id": "5.2",
+            "text": "Generally, all employees must not give or receive gift, entertainment and hospitality of any",
+            "sub_items": []
+          },
+          {
+            "item_id": "5.3",
+            "text": "value unless it is legal, modest, reasonable and free of any intent, understanding or",
+            "sub_items": []
+          },
+          {
+            "item_id": "5.4",
+            "text": "appearance that it will influence a business decision or government action. I n appropriate",
+            "sub_items": []
+          },
+          {
+            "item_id": "5.5",
+            "text": "circumstances, a modest gift, entertainment and hospitality maybe a thoughtful gesture of",
+            "sub_items": []
+          },
+          {
+            "item_id": "5.6",
+            "text": "appreciation that legitimate to create goodwill and/or strengthen business and relationship.",
+            "sub_items": []
+          },
+          {
+            "item_id": "5.7",
+            "text": "Such courtesies are allowed if they are not lavish , appr opriate and reasonable in the light",
+            "sub_items": []
+          },
+          {
+            "item_id": "5.8",
+            "text": "of accepted business practices of the relevant businesses that the Group operates in and",
+            "sub_items": []
+          },
+          {
+            "item_id": "5.9",
+            "text": "is not intended to improperly influence the decisions of the person involved and must also",
+            "sub_items": []
+          },
+          {
+            "item_id": "5.10",
+            "text": "be in accordance to the Basic Rules .",
+            "sub_items": []
+          }
+        ]
+      },
+      {
+        "section_id": "5",
+        "section_title": "Section 5",
+        "subsections": [],
+        "items": [
+          {
+            "item_id": "5.1",
+            "text": ".1 GIFT S",
+            "sub_items": []
+          },
+          {
+            "item_id": "5.2",
+            "text": "a. The Group recognises the exchange of business courtesies, such as modest gifts during",
+            "sub_items": []
+          },
+          {
+            "item_id": "5.3",
+            "text": "festive periods is customary and legitimate to create goodwill, and/or strengthen",
+            "sub_items": []
+          },
+          {
+            "item_id": "5.4",
+            "text": "business relationships. The exchange of such courtesies are by the way of hampe rs,",
+            "sub_items": []
+          },
+          {
+            "item_id": "5.5",
+            "text": "b everages , food, flowers, souvenir s and / or any other modest gift (s) .",
+            "sub_items": []
+          },
+          {
+            "item_id": "5.6",
+            "text": "b. D uring major festive periods such as Chinese New Year, Hari Raya Aidilfitri, Christmas,",
+            "sub_items": []
+          },
+          {
+            "item_id": "5.7",
+            "text": "Deepavali or other related festivals , exchange of modest and appropriate gifts a re",
+            "sub_items": []
+          },
+          {
+            "item_id": "5.8",
+            "text": "allowed subject to the following approval process:",
+            "sub_items": []
+          },
+          {
+            "item_id": "5.9",
+            "text": "Value or Perceived Value Approver",
+            "sub_items": []
+          },
+          {
+            "item_id": "5.10",
+            "text": "Below RM 500 B U Leadership Team",
+            "sub_items": []
+          },
+          {
+            "item_id": "5.11",
+            "text": "Above RM 500 B U Head or Functional Head",
+            "sub_items": []
+          },
+          {
+            "item_id": "5.12",
+            "text": "c. An e mployee who gives or receives a gift must obtain approval f rom the relevant",
+            "sub_items": []
+          },
+          {
+            "item_id": "5.13",
+            "text": "approver as stipulated in the table above .",
+            "sub_items": []
+          },
+          {
+            "item_id": "5.14",
+            "text": "d. In deciding to give , accept or decline , t he approver is guided by the Basic Rules.",
+            "sub_items": []
+          },
+          {
+            "item_id": "5.15",
+            "text": "Page 5",
+            "sub_items": []
+          },
+          {
+            "item_id": "5.16",
+            "text": "--- Page Break ---",
+            "sub_items": []
+          },
+          {
+            "item_id": "5.17",
+            "text": "e. In the event the B usiness Unit (B U ) Head or Functional Head or BU Leadership team",
+            "sub_items": []
+          },
+          {
+            "item_id": "5.18",
+            "text": "approves the acc ept ance of the gift , the treatment options for the gift are as follows :",
+            "sub_items": []
+          },
+          {
+            "item_id": "5.19",
+            "text": "i. D istribut e and shar e the gift with employees .",
+            "sub_items": []
+          },
+          {
+            "item_id": "5.20",
+            "text": "ii. Any o ther methods w hich is deemed appropriate by the BU Head or Functional Head .",
+            "sub_items": []
+          },
+          {
+            "item_id": "5.21",
+            "text": "f. In circumstances whereby the approver declines the acceptance of the gift, it m ust be",
+            "sub_items": []
+          },
+          {
+            "item_id": "5.22",
+            "text": "politely returned to the sender , soonest possible , with an explana tory note on Sunway",
+            "sub_items": []
+          },
+          {
+            "item_id": "5.23",
+            "text": "Berhad Group ’s Anti - Bribery & Corruption P olicy .",
+            "sub_items": []
+          },
+          {
+            "item_id": "5.24",
+            "text": "g. In the absence of purchase receipt or invoices, the approver is responsible to anticipate",
+            "sub_items": []
+          },
+          {
+            "item_id": "5.25",
+            "text": "t he perceived value of the gift offered to them after considering the type, nature, market",
+            "sub_items": []
+          },
+          {
+            "item_id": "5.26",
+            "text": "value, design, qua ntity, and quality of the gift.",
+            "sub_items": []
+          }
+        ]
+      },
+      {
+        "section_id": "5",
+        "section_title": "Section 5",
+        "subsections": [],
+        "items": [
+          {
+            "item_id": "5.1",
+            "text": ".2 OTHER EXCEPTION S TO GIFT POLICY",
+            "sub_items": []
+          },
+          {
+            "item_id": "5.2",
+            "text": "a. Exchange of gifts within S unway Group of C ompanies.",
+            "sub_items": []
+          },
+          {
+            "item_id": "5.3",
+            "text": "b. Gifts from Sunway Group of Companies to employees and their family members in",
+            "sub_items": []
+          },
+          {
+            "item_id": "5.4",
+            "text": "relation to employees ’ welfare, an internally organi s ed or recogni s ed Company function,",
+            "sub_items": []
+          },
+          {
+            "item_id": "5.5",
+            "text": "event and celebration.",
+            "sub_items": []
+          },
+          {
+            "item_id": "5.6",
+            "text": "c. Gifts bearing Sunway’s logo that are given out as part of brand building or promotional",
+            "sub_items": []
+          },
+          {
+            "item_id": "5.7",
+            "text": "activities. Usuall y to members of the public, delegates, customers, participants of trade",
+            "sub_items": []
+          },
+          {
+            "item_id": "5.8",
+            "text": "shows, campaigns and exhibitions.",
+            "sub_items": []
+          }
+        ]
+      },
+      {
+        "section_id": "5",
+        "section_title": "Section 5",
+        "subsections": [],
+        "items": [
+          {
+            "item_id": "5.1",
+            "text": ".3 ENTERTAINMENT AND HO SPITALITY",
+            "sub_items": []
+          },
+          {
+            "item_id": "5.2",
+            "text": "a. Every B usiness U nit (BU) will continue with its existing approval procedures in providing",
+            "sub_items": []
+          },
+          {
+            "item_id": "5.3",
+            "text": "reasonable and appropriate meals, entertainment and hospitality to any third parties for",
+            "sub_items": []
+          },
+          {
+            "item_id": "5.4",
+            "text": "legitimate business purposes /events . However , it must be in compliance with the Basic",
+            "sub_items": []
+          },
+          {
+            "item_id": "5.5",
+            "text": "Rules.",
+            "sub_items": []
+          },
+          {
+            "item_id": "5.6",
+            "text": "b. For receiving of entertainment and hospitality, the employee concerned is required to",
+            "sub_items": []
+          },
+          {
+            "item_id": "5.7",
+            "text": "adhere to the approval procedures based on t he following table :",
+            "sub_items": []
+          },
+          {
+            "item_id": "5.8",
+            "text": "Page 6",
+            "sub_items": []
+          },
+          {
+            "item_id": "5.9",
+            "text": "--- Page Break ---",
+            "sub_items": []
+          },
+          {
+            "item_id": "5.10",
+            "text": "Actual or Perceived Value Approver",
+            "sub_items": []
+          },
+          {
+            "item_id": "5.11",
+            "text": "Below RM 500 Self - empowerment",
+            "sub_items": []
+          },
+          {
+            "item_id": "5.12",
+            "text": "Above RM 500 BU Head or Functional Head",
+            "sub_items": []
+          },
+          {
+            "item_id": "5.13",
+            "text": "i. B usiness U nit (BU) Leadership team is required to identify group of employees who",
+            "sub_items": []
+          },
+          {
+            "item_id": "5.14",
+            "text": "will be e mpowered to decide whether to accept or decline entertainment or hospitality",
+            "sub_items": []
+          },
+          {
+            "item_id": "5.15",
+            "text": "in the course of performing their duties . This is applicable for actual or perceived value",
+            "sub_items": []
+          },
+          {
+            "item_id": "5.16",
+            "text": "below RM 500 . The empowered e mployees are guided by th e Basic Rules and must",
+            "sub_items": []
+          },
+          {
+            "item_id": "5.17",
+            "text": "exercise reasonable care and judgement in their decisions .",
+            "sub_items": []
+          },
+          {
+            "item_id": "5.18",
+            "text": "ii. Although no pre - approval is required for receiving entertainment and hospitality below",
+            "sub_items": []
+          },
+          {
+            "item_id": "5.19",
+            "text": "RM 500 , we expect the employee concerned to keep t he BU leadership team",
+            "sub_items": []
+          },
+          {
+            "item_id": "5.20",
+            "text": "informed.",
+            "sub_items": []
+          },
+          {
+            "item_id": "5.21",
+            "text": "iii. I f the en tertainment and hospitality actual value or perceived value offered to the",
+            "sub_items": []
+          },
+          {
+            "item_id": "5.22",
+            "text": "employee is above RM 5 00, the employee shall obtain pre - approval from relevant BU",
+            "sub_items": []
+          },
+          {
+            "item_id": "5.23",
+            "text": "Head or Functional Head before deciding to accept or decline the offer .",
+            "sub_items": []
+          },
+          {
+            "item_id": "5.24",
+            "text": "iv. For the purpose of this policy, the actual or perceived value of receiving entertainment",
+            "sub_items": []
+          },
+          {
+            "item_id": "5.25",
+            "text": "and hospitality shall be based on per pax or per occasion , whichever is relevant .",
+            "sub_items": []
+          },
+          {
+            "item_id": "5.26",
+            "text": "v. The actual or perceived value of p er pax or per occasion is defined as follows:",
+            "sub_items": []
+          },
+          {
+            "item_id": "5.27",
+            "text": "Per pax : gratification offered for an individual e mployee Per occasion: gratification offered for a group of employees",
+            "sub_items": []
+          }
+        ]
+      },
+      {
+        "section_id": "6",
+        "section_title": "Section 6",
+        "subsections": [],
+        "items": [
+          {
+            "item_id": "6.1",
+            "text": ". STRICT PROHIBITION",
+            "sub_items": []
+          },
+          {
+            "item_id": "6.2",
+            "text": "a. Notwithstanding the above, S unway ’s employees are prohibited to offer or accept gifts,",
+            "sub_items": []
+          },
+          {
+            "item_id": "6.3",
+            "text": "entertainment and /or hospitality from external parties if it involves the following:",
+            "sub_items": []
+          },
+          {
+            "item_id": "6.4",
+            "text": "i. Any gift of cash or cash equivalents. Cash equivalent in the form of vouchers,",
+            "sub_items": []
+          },
+          {
+            "item_id": "6.5",
+            "text": "discounts, coupons, shares, commission and others .",
+            "sub_items": []
+          },
+          {
+            "item_id": "6.6",
+            "text": "Page 7",
+            "sub_items": []
+          },
+          {
+            "item_id": "6.7",
+            "text": "--- Page Break ---",
+            "sub_items": []
+          },
+          {
+            "item_id": "6.8",
+            "text": "ii. Any act of soliciting gift, entertainment and hospitality for work or non - work related",
+            "sub_items": []
+          },
+          {
+            "item_id": "6.9",
+            "text": "matters",
+            "sub_items": []
+          },
+          {
+            "item_id": "6.10",
+            "text": "iii. Any act of soliciting gift, entertainment and hospitality for any organis ation, individual",
+            "sub_items": []
+          },
+          {
+            "item_id": "6.11",
+            "text": "or personal welfare, sports or community or religious events which d efies the Basic",
+            "sub_items": []
+          },
+          {
+            "item_id": "6.12",
+            "text": "R ules.",
+            "sub_items": []
+          },
+          {
+            "item_id": "6.13",
+            "text": "iv. Any gifts, hospitality and/or entertainment, whether offered separately, as part of an",
+            "sub_items": []
+          },
+          {
+            "item_id": "6.14",
+            "text": "activity, or in combination with other benefits .",
+            "sub_items": []
+          },
+          {
+            "item_id": "6.15",
+            "text": "v. Any gift, entertainment and hospitality that would be illegal or in breach of local or",
+            "sub_items": []
+          },
+          {
+            "item_id": "6.16",
+            "text": "foreign bribery and corruption laws .",
+            "sub_items": []
+          },
+          {
+            "item_id": "6.17",
+            "text": "vi. Loans .",
+            "sub_items": []
+          },
+          {
+            "item_id": "6.18",
+            "text": "vii. A ny goods and services for the employee’s personal benefit .",
+            "sub_items": []
+          },
+          {
+            "item_id": "6.19",
+            "text": "viii. Gifts, entertainment and hospitality of any nature that might affect our business and",
+            "sub_items": []
+          },
+          {
+            "item_id": "6.20",
+            "text": "decision makings.",
+            "sub_items": []
+          },
+          {
+            "item_id": "6.21",
+            "text": "ix. Any gifts, entertainment and hospitality that comes with a direct / indirect suggestion,",
+            "sub_items": []
+          },
+          {
+            "item_id": "6.22",
+            "text": "hint, understanding or implication that in return for the gift, some expected or desirable",
+            "sub_items": []
+          },
+          {
+            "item_id": "6.23",
+            "text": "outcome is required (“quid pro quo”).",
+            "sub_items": []
+          },
+          {
+            "item_id": "6.24",
+            "text": "b. The above list is not exhaustive and subject to further addition by the Company from",
+            "sub_items": []
+          },
+          {
+            "item_id": "6.25",
+            "text": "time to time.",
+            "sub_items": []
+          }
+        ]
+      },
+      {
+        "section_id": "7",
+        "section_title": ". DEALING WITH PUBLIC OFFICIAL S",
+        "subsections": [],
+        "items": [
+          {
+            "item_id": "7.1",
+            "text": "a. Any offering of gift s , entertainment and hospitality to a Public Offic ial s must be approved",
+            "sub_items": []
+          },
+          {
+            "item_id": "7.2",
+            "text": "based on the table below :",
+            "sub_items": []
+          },
+          {
+            "item_id": "7.3",
+            "text": "Value or Perceived Value Approver",
+            "sub_items": []
+          },
+          {
+            "item_id": "7.4",
+            "text": "Below RM 500 BU Leadership Team",
+            "sub_items": []
+          },
+          {
+            "item_id": "7.5",
+            "text": "Above RM 500 BU Head or Functional Head",
+            "sub_items": []
+          },
+          {
+            "item_id": "7.6",
+            "text": "Page 8",
+            "sub_items": []
+          },
+          {
+            "item_id": "7.7",
+            "text": "--- Page Break ---",
+            "sub_items": []
+          },
+          {
+            "item_id": "7.8",
+            "text": "b. The BU Leadership Team m ust exercise proper care and judgment as well as observe",
+            "sub_items": []
+          },
+          {
+            "item_id": "7.9",
+            "text": "the Basic Rules when offering gift, entertainment and hospi tality to a Public Official .",
+            "sub_items": []
+          },
+          {
+            "item_id": "7.10",
+            "text": "c. The BU Leadership Team must ensure that such gift, entertainment and hospitality is",
+            "sub_items": []
+          },
+          {
+            "item_id": "7.11",
+            "text": "not violating any existing laws o f the country specifically anti - bribery and corruption laws.",
+            "sub_items": []
+          },
+          {
+            "item_id": "7.12",
+            "text": "d. Sunway ’s e mployees are prohibited from providing gift s , entertainment or h ospitality to",
+            "sub_items": []
+          },
+          {
+            "item_id": "7.13",
+            "text": "public officials or their family/household members in exchange for future benefits or",
+            "sub_items": []
+          },
+          {
+            "item_id": "7.14",
+            "text": "results.",
+            "sub_items": []
+          }
+        ]
+      },
+      {
+        "section_id": "8",
+        "section_title": ". GROUP EXCO, L1, BU H EAD AND FUNCTIONAL HEAD",
+        "subsections": [],
+        "items": [
+          {
+            "item_id": "8.1",
+            "text": "Group EXCO, L1, BU Head and Functional Head are to observe self - governance by",
+            "sub_items": []
+          },
+          {
+            "item_id": "8.2",
+            "text": "applying the Basic Rules on receiving or giving any gift, entertainment and hospitality. In",
+            "sub_items": []
+          },
+          {
+            "item_id": "8.3",
+            "text": "coming to a decision on the treatment of the gift, entertainment and hospitality, they are",
+            "sub_items": []
+          },
+          {
+            "item_id": "8.4",
+            "text": "responsible to exercise proper care and judgment on each case.",
+            "sub_items": []
+          }
+        ]
+      },
+      {
+        "section_id": "9",
+        "section_title": ". MAINTENANCE OF ACCUR ATE RECORDS",
+        "subsections": [],
+        "items": [
+          {
+            "item_id": "9.1",
+            "text": "a. All records of approval and any relevant supporting documents on receiving, giving, rejection, distribution, and return of every gift, entertainment and hospitality must be kept by the BU Management.",
+            "sub_items": []
+          },
+          {
+            "item_id": "9.2",
+            "text": "b. It is important that the BU Management maintain complete and accurate gift, entertainment and hospitality records to fulfill their responsibilities to auditors, regulators and others.",
+            "sub_items": []
+          },
+          {
+            "item_id": "9.3",
+            "text": "c. The records must be produced as and when required by the audit department or by any other relevant authority.",
+            "sub_items": []
+          }
+        ]
+      },
+      {
+        "section_id": "10",
+        "section_title": ". B USINESS U NIT(BU) LEADERSHIP TEAM RESPONSIBILITIES",
+        "subsections": [],
+        "items": [
+          {
+            "item_id": "10.1",
+            "text": "BU Leadership Team must lead by example and the ir key responsibilities are:",
+            "sub_items": []
+          },
+          {
+            "item_id": "10.2",
+            "text": "a. Communicate the no gift policy to our business partners, customers, colleagues and",
+            "sub_items": []
+          },
+          {
+            "item_id": "10.3",
+            "text": "employees .",
+            "sub_items": []
+          },
+          {
+            "item_id": "10.4",
+            "text": "b. Ensure all employees are trained in Gift s , Entertainment and Hospitality Policy and",
+            "sub_items": []
+          },
+          {
+            "item_id": "10.5",
+            "text": "procedures.",
+            "sub_items": []
+          },
+          {
+            "item_id": "10.6",
+            "text": "Page 9",
+            "sub_items": []
+          },
+          {
+            "item_id": "10.7",
+            "text": "--- Page Break ---",
+            "sub_items": []
+          },
+          {
+            "item_id": "10.8",
+            "text": "c. Maintenance of accurate records .",
+            "sub_items": []
+          },
+          {
+            "item_id": "10.9",
+            "text": "d. Take disciplinary action on non - compliance .",
+            "sub_items": []
+          },
+          {
+            "item_id": "10.10",
+            "text": "e. Encourage e mployees to report a concern or issues to BU Leadership Team .",
+            "sub_items": []
+          },
+          {
+            "item_id": "10.11",
+            "text": "f. Respond promptly and effectively to con cerns raised or when misconduct is discovered.",
+            "sub_items": []
+          },
+          {
+            "item_id": "10.12",
+            "text": "g. Notify Group Internal Audit when you are aware of a violation or potential violation of the law",
+            "sub_items": []
+          },
+          {
+            "item_id": "10.13",
+            "text": "or Sunway Berhad Group’s Anti - Bribery and Corruption policy.",
+            "sub_items": []
+          }
+        ]
+      },
+      {
+        "section_id": "11",
+        "section_title": ". EMPLOYEE’S RESPONSIB ILITIES",
+        "subsections": [],
+        "items": [
+          {
+            "item_id": "11.1",
+            "text": "a. Comply with S unway Berhad Group ’s Anti - Bribery and Corruption Policy and G ift s ,",
+            "sub_items": []
+          },
+          {
+            "item_id": "11.2",
+            "text": "E ntertainment and H ospitality P olicy.",
+            "sub_items": []
+          },
+          {
+            "item_id": "11.3",
+            "text": "b. Complete and submit Staff D eclaration on Anti - Bribery and Corruption Form annually",
+            "sub_items": []
+          },
+          {
+            "item_id": "11.4",
+            "text": "c. Obey all laws and regulations that apply to you.",
+            "sub_items": []
+          },
+          {
+            "item_id": "11.5",
+            "text": "d. Complete all required training to understand your responsibilities.",
+            "sub_items": []
+          },
+          {
+            "item_id": "11.6",
+            "text": "e. Speak up if there are any concern s about work - related behavior that may b e a violation of",
+            "sub_items": []
+          },
+          {
+            "item_id": "11.7",
+            "text": "the law or Sunway Berhad Group’s Anti - Bribery and Corruption P olicy.",
+            "sub_items": []
+          },
+          {
+            "item_id": "11.8",
+            "text": "f. Do not give, promise or offer any benefit including gift s , entertainment or hospitality to a",
+            "sub_items": []
+          },
+          {
+            "item_id": "11.9",
+            "text": "government official without the necessary pre - approvals",
+            "sub_items": []
+          },
+          {
+            "item_id": "11.10",
+            "text": "g. Cooperate fully in all internal and external audits and investigations",
+            "sub_items": []
+          },
+          {
+            "item_id": "11.11",
+            "text": "h. When in doubt as to whether it is an acceptable gift, hospitality and entertainment, he/she",
+            "sub_items": []
+          },
+          {
+            "item_id": "11.12",
+            "text": "sh all con sult their BU Leadership Team.",
+            "sub_items": []
+          },
+          {
+            "item_id": "11.13",
+            "text": "i. Report to Group Internal Audit if there is any violation or potential violation of the law or",
+            "sub_items": []
+          },
+          {
+            "item_id": "11.14",
+            "text": "Sunway Berhad Group’s Anti - Bribery and Corruption P olicy.",
+            "sub_items": []
+          },
+          {
+            "item_id": "11.15",
+            "text": "j. S ome questions that may guide our employee s to decide whether to offer, accept or reject",
+            "sub_items": []
+          },
+          {
+            "item_id": "11.16",
+            "text": "the g ift, e ntertainment and h ospitality are as follows:",
+            "sub_items": []
+          },
+          {
+            "item_id": "11.17",
+            "text": "i. Am I guided by the Basic Rules of Sunway Berhad Group’s Anti - Bribery and Corruption",
+            "sub_items": []
+          },
+          {
+            "item_id": "11.18",
+            "text": "Policy ?",
+            "sub_items": []
+          },
+          {
+            "item_id": "11.19",
+            "text": "ii. Would it potentially impact or influence business objectivity?",
+            "sub_items": []
+          },
+          {
+            "item_id": "11.20",
+            "text": "Page 10",
+            "sub_items": []
+          },
+          {
+            "item_id": "11.21",
+            "text": "--- Page Break ---",
+            "sub_items": []
+          },
+          {
+            "item_id": "11.22",
+            "text": "iii. Am I to receive or give gift s , entertainment or hospitality frequently from or to a third",
+            "sub_items": []
+          },
+          {
+            "item_id": "11.23",
+            "text": "party ?",
+            "sub_items": []
+          },
+          {
+            "item_id": "11.24",
+            "text": "iv. Is it more than the nominal value ?",
+            "sub_items": []
+          },
+          {
+            "item_id": "11.25",
+            "text": "v. Is it modest , appropriate or reasonable ?",
+            "sub_items": []
+          },
+          {
+            "item_id": "11.26",
+            "text": "vi. Have I obtained approval as required by the Policy?",
+            "sub_items": []
+          }
+        ]
+      },
+      {
+        "section_id": "12",
+        "section_title": ". EMPLOYEE’S DECLARATI ON",
+        "subsections": [],
+        "items": [
+          {
+            "item_id": "12.1",
+            "text": "All Sunway ’s e mployees shall certify in writing on annual basis that they have read, understood",
+            "sub_items": []
+          },
+          {
+            "item_id": "12.2",
+            "text": "and will abide by Sunway Berhad Group’s Anti - Bribery and Corruption P olicy. A copy of this",
+            "sub_items": []
+          },
+          {
+            "item_id": "12.3",
+            "text": "declaration shall be documented and retained by the Business Unit Human Resources",
+            "sub_items": []
+          },
+          {
+            "item_id": "12.4",
+            "text": "Department for the duration of the employee’s tenure.",
+            "sub_items": []
+          }
+        ]
+      },
+      {
+        "section_id": "13",
+        "section_title": ". NON - COMPLIANCE",
+        "subsections": [],
+        "items": [
+          {
+            "item_id": "13.1",
+            "text": "All e mployees are reminded that he/she will be subject ed to stern disciplinary action, including",
+            "sub_items": []
+          },
+          {
+            "item_id": "13.2",
+            "text": "dismissal as well as civil and criminal liability if he/she is found in violation of this policy .",
+            "sub_items": []
+          }
+        ]
+      },
+      {
+        "section_id": "14",
+        "section_title": ". REPORTING OF POLICY VIOLATIONS",
+        "subsections": [],
+        "items": [
+          {
+            "item_id": "14.1",
+            "text": "Sunway e mployees who encounter actual or potential violations of this policy are required",
+            "sub_items": []
+          },
+          {
+            "item_id": "14.2",
+            "text": "to report their concerns immediately to their BU Leadership Team or reach out directly to",
+            "sub_items": []
+          },
+          {
+            "item_id": "14.3",
+            "text": "the Head of Group Internal Audit via our Whistleblowing platform as follows:",
+            "sub_items": []
+          },
+          {
+            "item_id": "14.4",
+            "text": "Em ail to: whistleblowing@sunway.com.my Direct line: +603 5639 8025 Fax to: +603 5639 8027 Write to : Head of Internal Audit Department Level 4, Menara Sunway Jalan Lagoon Timur , Bandar Sunway 46150 Petaling Jaya Selangor Darul Ehsan , Malaysia .",
+            "sub_items": []
+          },
+          {
+            "item_id": "14.5",
+            "text": "Page 11",
+            "sub_items": []
+          }
+        ]
+      }
+    ]
+  },
+  "structured_data_tables": {
+    "tables": []
+  },
+  "terms_conditions_clauses": {
+    "clauses": [
+      {
+        "clause_number": "1",
+        "text": ". INTRODUCTION AND PURPOSE ................................ ................................ .............................. 2",
+        "sub_clauses": []
+      },
+      {
+        "clause_number": "2",
+        "text": ". SCOPE ................................ ................................ ................................ ................................ ....... 2",
+        "sub_clauses": []
+      },
+      {
+        "clause_number": "3",
+        "text": ". DEFINITION ................................ ................................ ................................ ................................ 2",
+        "sub_clauses": []
+      },
+      {
+        "clause_number": "4",
+        "text": ". GENERAL RULES ON GIFT, ENTERTAINMENT AND HOSPITALITY ................................ ..... 3",
+        "sub_clauses": []
+      },
+      {
+        "clause_number": "5",
+        "text": ". EXCEPTIONAL(LIMITED CIRCUMSTANCES AND SUBJECT TO APPROVAL) ...................... 5",
+        "sub_clauses": []
+      },
+      {
+        "clause_number": "5.1",
+        "text": "GIFT S ................................ ................................ ................................ ............................... 5",
+        "sub_clauses": []
+      },
+      {
+        "clause_number": "5.2",
+        "text": "OTHER EXCEPTION S TO GIFT POLICY ................................ ................................ ........ 6",
+        "sub_clauses": []
+      },
+      {
+        "clause_number": "5.3",
+        "text": "ENTERTAINMENT AND HOSPITALITY ................................ ................................ .......... 6",
+        "sub_clauses": []
+      },
+      {
+        "clause_number": "6",
+        "text": ". STRICT PROHIBITION ................................ ................................ ................................ ................ 7",
+        "sub_clauses": []
+      },
+      {
+        "clause_number": "7",
+        "text": ". DEALING WITH PUBLIC OFFICIAL S ................................ ................................ ......................... 8",
+        "sub_clauses": []
+      },
+      {
+        "clause_number": "8",
+        "text": ". GROUP EXCO, L1, BU HEAD & FUNCTIONAL HEAD ................................ .............................. 9",
+        "sub_clauses": []
+      },
+      {
+        "clause_number": "9",
+        "text": ". MAINTENANCE OF ACCURATE RECORDS ................................ ................................ ............. 9",
+        "sub_clauses": []
+      },
+      {
+        "clause_number": "10",
+        "text": ". BUSINESS UNIT(BU) LEADERSHIP TEAM RESPONSIBILITIES ................................ .............. 9",
+        "sub_clauses": []
+      },
+      {
+        "clause_number": "11",
+        "text": ". EMPLOYEE’S RESPONSIBILITIES ................................ ................................ .......................... 10",
+        "sub_clauses": []
+      },
+      {
+        "clause_number": "12",
+        "text": ". EMPLOYEE’S DECLARATION ................................ ................................ ................................ . 11",
+        "sub_clauses": []
+      },
+      {
+        "clause_number": "13",
+        "text": ". NON - COMPLIANCE ................................ ................................ ................................ .................. 11",
+        "sub_clauses": []
+      },
+      {
+        "clause_number": "14",
+        "text": ". REPORTING OF POLICY VIOLATIONS ................................ ................................ ................... 11",
+        "sub_clauses": []
+      },
+      {
+        "clause_number": "1",
+        "text": ". I NTRODUCTION AND PURPOSE",
+        "sub_clauses": []
+      },
+      {
+        "clause_number": "2",
+        "text": ". SCOPE",
+        "sub_clauses": []
+      },
+      {
+        "clause_number": "3",
+        "text": ". DEFINITION",
+        "sub_clauses": []
+      },
+      {
+        "clause_number": "4",
+        "text": ". GENERAL RULES ON GIFT S , ENTERTAINMENT AND HOSPITALITY",
+        "sub_clauses": []
+      },
+      {
+        "clause_number": "5",
+        "text": "",
+        "sub_clauses": []
+      },
+      {
+        "clause_number": "5",
+        "text": "",
+        "sub_clauses": []
+      },
+      {
+        "clause_number": "5",
+        "text": "",
+        "sub_clauses": []
+      },
+      {
+        "clause_number": "5",
+        "text": "",
+        "sub_clauses": []
+      },
+      {
+        "clause_number": "6",
+        "text": "",
+        "sub_clauses": []
+      },
+      {
+        "clause_number": "7",
+        "text": ". DEALING WITH PUBLIC OFFICIAL S",
+        "sub_clauses": []
+      },
+      {
+        "clause_number": "8",
+        "text": ". GROUP EXCO, L1, BU H EAD AND FUNCTIONAL HEAD",
+        "sub_clauses": []
+      },
+      {
+        "clause_number": "9",
+        "text": ". MAINTENANCE OF ACCUR ATE RECORDS",
+        "sub_clauses": []
+      },
+      {
+        "clause_number": "10",
+        "text": ". B USINESS U NIT(BU) LEADERSHIP TEAM RESPONSIBILITIES",
+        "sub_clauses": []
+      },
+      {
+        "clause_number": "11",
+        "text": ". EMPLOYEE’S RESPONSIB ILITIES",
+        "sub_clauses": []
+      },
+      {
+        "clause_number": "12",
+        "text": ". EMPLOYEE’S DECLARATI ON",
+        "sub_clauses": []
+      },
+      {
+        "clause_number": "13",
+        "text": ". NON - COMPLIANCE",
+        "sub_clauses": []
+      },
+      {
+        "clause_number": "14",
+        "text": ". REPORTING OF POLICY VIOLATIONS",
+        "sub_clauses": []
+      }
+    ]
+  },
+  "metadata": {
+    "model": "claude-sonnet-4-20250514",
+    "max_tokens": 16000,
+    "temperature": 0,
+    "top_p": 1,
+    "generated_at": "2025-10-17T15:21:08.797Z",
+    "prompt_path": "config/prompts/vision-ultimate.txt",
+    "reason": "table_structure_loss"
+  }
+}

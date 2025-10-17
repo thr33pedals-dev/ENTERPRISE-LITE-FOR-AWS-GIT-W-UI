@@ -1,0 +1,24 @@
+{
+  "source": "advanced_pdf_parser",
+  "document_metadata": {
+    "detected_type": "pdf_document",
+    "title": "Document",
+    "pages": 1
+  },
+  "hierarchical_content": {
+    "sections": []
+  },
+  "structured_data_tables": {
+    "tables": []
+  },
+  "terms_conditions_clauses": {
+    "clauses": []
+  },
+  "vision_metadata": {
+    "model": "local_fallback",
+    "generated_at": "2025-10-17T16:19:02.650Z",
+    "prompt_path": "config/prompts/vision-ultimate.txt",
+    "reason": "low_quality_text",
+    "source": "local_fallback"
+  }
+}

@@ -1,0 +1,1811 @@
+{
+  "source": "advanced_pdf_parser",
+  "document_metadata": {
+    "detected_type": "pdf_document",
+    "title": "This policy is copyright of Sunway Berhad. All rights reserved. Any redistribution or reproduction of part or all of this policy in any form is prohibited and shall",
+    "pages": 21
+  },
+  "hierarchical_content": {
+    "sections": [
+      {
+        "section_id": "1",
+        "section_title": ". Introduction 6 2. Objectives 6 3. Overall Policy 7 4. Procedure to Handle a Donation Request 7 5. Donations versus Business Value 8 6. Consideration for Donations & Contributions 9 7. Types of Sponsorship 10 8. Criteria for Selection 10 9. Limits of Authority (LOA) 11 10. Checklist for Evaluation 11 11. Approval/ Declining Process 12 12. Monitoring and Reporting 13 13. Corporate Responsibility 13 14. Tax Exemptions 14 15. Index References 15 16. Approval 15 17. Appendices 16",
+        "subsections": [],
+        "items": []
+      },
+      {
+        "section_id": "2",
+        "section_title": "| D O N A T I O N S , S P O N S O R S H I P S A N D C O R P O R A T E R E S P O N S I B I L I T Y P O L I C Y",
+        "subsections": [],
+        "items": [
+          {
+            "item_id": "2.1",
+            "text": "This policy is copyright of Sunway Berhad . All rights reserved. Any redistribution or reproduction of part or all of this policy in any form is prohibited and shall not be reproduced without permission. All hard copies should be checked against the current electronic version within Sunway Berhad prior to use and destroyed promptly thereafter. All hard copies are considered uncontrolled documents.",
+            "sub_items": []
+          },
+          {
+            "item_id": "2.2",
+            "text": "--- Page Break ---",
+            "sub_items": []
+          },
+          {
+            "item_id": "2.3",
+            "text": "I. Purpose This section encompasses the principle regarding donations and contributions within Sunway Group. As a responsible corporate citizen, Sunway Group always seeks avenues in which it can contribute to the community through three areas, one of which is via it s social responsibility programmes.",
+            "sub_items": []
+          },
+          {
+            "item_id": "2.4",
+            "text": "Be it through monetary contributions or in - kind, the Sunway Group has always worked t owards benefiting the community. The other two areas that Sunway contribute s back to the community are through healthcare and educati on.",
+            "sub_items": []
+          },
+          {
+            "item_id": "2.5",
+            "text": "Sunway Group Brand Marketing and Communications d epartment (GBMC) plays an important role in organising these donations/contributions to various Non - Government al and Government Organisations.",
+            "sub_items": []
+          },
+          {
+            "item_id": "2.6",
+            "text": "Sunway Group strongly believes that donations/contributions made to these organisations are worthwhile because the Group seeks to:",
+            "sub_items": []
+          },
+          {
+            "item_id": "2.7",
+            "text": " Improve the lives of the community in which it serves",
+            "sub_items": []
+          },
+          {
+            "item_id": "2.8",
+            "text": " Build good relationships/ rapport with members of the community",
+            "sub_items": []
+          },
+          {
+            "item_id": "2.9",
+            "text": " Posit ion the Group as a good corporate citizen in the eyes of the community as well as the government",
+            "sub_items": []
+          },
+          {
+            "item_id": "2.10",
+            "text": "II. Sc ope This covers all donations of cash, services or donations in - kind, to individuals , organisations or other bodies but excludes scholarships under the Educ ation division.",
+            "sub_items": []
+          },
+          {
+            "item_id": "2.11",
+            "text": "All donations , sponsorships and contributions activities referred to in this Policy must comply with the principles laid out in the Anti - Bribery and Corruption Policy and the Anti - Money Laundering Policy of Sunway Berhad Group .",
+            "sub_items": []
+          },
+          {
+            "item_id": "2.12",
+            "text": "III. D efinitions “ Non - Governmental Organisation ” or NGO is defined as an organisation in Malaysia which is not operated or conducted primarily for profit and is:",
+            "sub_items": []
+          },
+          {
+            "item_id": "2.13",
+            "text": " A hospital;",
+            "sub_items": []
+          },
+          {
+            "item_id": "2.14",
+            "text": " A public or benevolent institution/organisation;",
+            "sub_items": []
+          },
+          {
+            "item_id": "2.15",
+            "text": " A university or other educational institution;",
+            "sub_items": []
+          },
+          {
+            "item_id": "2.16",
+            "text": " A public authority or society engaged solely in research or other work connected with the causes, prevention or cure of disease in human beings;",
+            "sub_items": []
+          }
+        ]
+      },
+      {
+        "section_id": "3",
+        "section_title": "| D O N A T I O N S , S P O N S O R S H I P S A N D C O R P O R A T E R E S P O N S I B I L I T Y P O L I C Y",
+        "subsections": [],
+        "items": [
+          {
+            "item_id": "3.1",
+            "text": "This policy is copyright of Sunway Berhad . All rights reserved. Any redistribution or reproduction of part or all of this policy in any form is prohibited and shall not be reproduced without permission. All hard copies should be checked against the current electronic version within Sunway Berhad prior to use and destroyed promptly thereafter. All hard copies are considered uncontrolled documents.",
+            "sub_items": []
+          },
+          {
+            "item_id": "3.2",
+            "text": "--- Page Break ---",
+            "sub_items": []
+          },
+          {
+            "item_id": "3.3",
+            "text": " A Government - assisted institution engaged in socio - economic research;",
+            "sub_items": []
+          },
+          {
+            "item_id": "3.4",
+            "text": " A technical or vocational training institution; or",
+            "sub_items": []
+          },
+          {
+            "item_id": "3.5",
+            "text": " A society registered with the Registrar of Societies.",
+            "sub_items": []
+          },
+          {
+            "item_id": "3.6",
+            "text": "IV. R esponsibilities  Overall responsibilities",
+            "sub_items": []
+          },
+          {
+            "item_id": "3.7",
+            "text": "GBMC department and Sunway Group Tax should be jointly responsible for administering and complying with this Sunway standard operating procedure ( SSOP ) .",
+            "sub_items": []
+          },
+          {
+            "item_id": "3.8",
+            "text": " Interpretations",
+            "sub_items": []
+          },
+          {
+            "item_id": "3.9",
+            "text": "GBMC d epartment , in consultation with relevant parties, if required, shall be responsible to provide clarity to this SSOP in the event of ambiguity.",
+            "sub_items": []
+          },
+          {
+            "item_id": "3.10",
+            "text": " Exceptions",
+            "sub_items": []
+          },
+          {
+            "item_id": "3.11",
+            "text": "Any exception, waiver or deviation from the requirements of this SSOP requires the approval of GBMC d epartment .",
+            "sub_items": []
+          },
+          {
+            "item_id": "3.12",
+            "text": "V. Best Practice  Set a strategy and specify criteria for making donations and/or contributions and/or sponsorships. Ad - hoc proposals that fall out side the strategy and do not meet the criteria should be reviewed by the respective manager and/ or Head of Department.",
+            "sub_items": []
+          },
+          {
+            "item_id": "3.13",
+            "text": " Notify employees and relevant third parties of the company’s conflicts of interest policy and provide guidance on avoiding and managing conflicts arising from contributions and sponsorships.",
+            "sub_items": []
+          },
+          {
+            "item_id": "3.14",
+            "text": " Conduct risk - based due diligence on all intended recipient s . Check for red flags such as past integrity issues, a pre - existing or potential business relationship with the company or an affiliation with a public official.",
+            "sub_items": []
+          },
+          {
+            "item_id": "3.15",
+            "text": " Assess the legitimacy, capability and financial viability of the recipient organisation.",
+            "sub_items": []
+          },
+          {
+            "item_id": "3.16",
+            "text": " Set approval thresholds for donations and sponsorships of different values and/or risk levels .",
+            "sub_items": []
+          },
+          {
+            "item_id": "3.17",
+            "text": " Document donations and/or contributions and/or spo nsorships according to their size, nature and level of risk. This documentation will be used to determine the required approvals , monitoring and post - completion review and reporting.",
+            "sub_items": []
+          }
+        ]
+      },
+      {
+        "section_id": "4",
+        "section_title": "| D O N A T I O N S , S P O N S O R S H I P S A N D C O R P O R A T E R E S P O N S I B I L I T Y P O L I C Y",
+        "subsections": [],
+        "items": [
+          {
+            "item_id": "4.1",
+            "text": "This policy is copyright of Sunway Berhad . All rights reserved. Any redistribution or reproduction of part or all of this policy in any form is prohibited and shall not be reproduced without permission. All hard copies should be checked against the current electronic version within Sunway Berhad prior to use and destroyed promptly thereafter. All hard copies are considered uncontrolled documents.",
+            "sub_items": []
+          },
+          {
+            "item_id": "4.2",
+            "text": "--- Page Break ---",
+            "sub_items": []
+          },
+          {
+            "item_id": "4.3",
+            "text": " Monitor all donations and/or contributions and/or sponsorships to en sure that they have been used for their intended purpose . Conduct checks to ensure all donations comply with th is policy.",
+            "sub_items": []
+          },
+          {
+            "item_id": "4.4",
+            "text": " Record all donations and/or contributions and/or sponsorships accurately for internal audit .",
+            "sub_items": []
+          },
+          {
+            "item_id": "4.5",
+            "text": "Publish th is policy for donations and/or con tributions and/or sponsorships and disclose the donations and/or contributions and/or sponsorships made on a regular basis .",
+            "sub_items": []
+          }
+        ]
+      },
+      {
+        "section_id": "5",
+        "section_title": "| D O N A T I O N S , S P O N S O R S H I P S A N D C O R P O R A T E R E S P O N S I B I L I T Y P O L I C Y",
+        "subsections": [],
+        "items": [
+          {
+            "item_id": "5.1",
+            "text": "This policy is copyright of Sunway Berhad . All rights reserved. Any redistribution or reproduction of part or all of this policy in any form is prohibited and shall not be reproduced without permission. All hard copies should be checked against the current electronic version within Sunway Berhad prior to use and destroyed promptly thereafter. All hard copies are considered uncontrolled documents.",
+            "sub_items": []
+          },
+          {
+            "item_id": "5.2",
+            "text": "--- Page Break ---",
+            "sub_items": []
+          }
+        ]
+      },
+      {
+        "section_id": "1",
+        "section_title": ". Introduction",
+        "subsections": [],
+        "items": [
+          {
+            "item_id": "1.1",
+            "text": "Charitable donations and/or contributions and/or sponsorships are usually assessed as high risk areas for various forms of bribery, money laundering and any other corruption related activities . There should be an adequate control in place to ensure that all such payments for donations, contributions or sponsorships are made in full compliance with applicable laws and regulations, together with Sunway’s anti - bribery and corruption and anti - money laundering policies.",
+            "sub_items": []
+          },
+          {
+            "item_id": "1.2",
+            "text": "Therefore , t he purpose of this policy is to:",
+            "sub_items": []
+          },
+          {
+            "item_id": "1.3",
+            "text": " Provide guidance for the strategy of making donations and sponsorships to ensure all proposals fit within the strategy and meet the established criteria.",
+            "sub_items": []
+          },
+          {
+            "item_id": "1.4",
+            "text": " Provide guidance on the c onduct of due diligence on all proposed re cipients to check whether they are affiliated with public officials or existing or potential customers, among other anti - bribery red flags.",
+            "sub_items": []
+          },
+          {
+            "item_id": "1.5",
+            "text": " Establish proper controls, including approval thresholds and counter - signatures, to counter the risk of kickbacks.",
+            "sub_items": []
+          }
+        ]
+      },
+      {
+        "section_id": "2",
+        "section_title": ". Objectives",
+        "subsections": [],
+        "items": [
+          {
+            "item_id": "2.1",
+            "text": "In fulfilling its corporate citizenship, Sunway manages its businesses ethically in accordance with its Code of Conduct & Business Ethics, and positively contributes to social good, and to programmes, which benefit its customers, employees, shareholders and other stakeholders.",
+            "sub_items": []
+          },
+          {
+            "item_id": "2.2",
+            "text": "Donations and/or cash contributions by the Company are part of its Corporate Responsibility (CR) efforts, which are undertaken to meet one or all of the following objectives:",
+            "sub_items": []
+          },
+          {
+            "item_id": "2.3",
+            "text": " Garner positive and/or favourable support o f its stakeholders as well as serve their expectations and/or needs;",
+            "sub_items": []
+          },
+          {
+            "item_id": "2.4",
+            "text": " Contribute resources - people, money, products and services - to support the communities in which it operates;",
+            "sub_items": []
+          },
+          {
+            "item_id": "2.5",
+            "text": " Support the n ational a genda by supporting key propellers of growth to includ e overall capacity, skills, ICT infrastructure and capabilities, and talent development.",
+            "sub_items": []
+          },
+          {
+            "item_id": "2.6",
+            "text": " Ensure all d onations and/or cash contributions are allowed by applicable bylaws of Malaysia",
+            "sub_items": []
+          },
+          {
+            "item_id": "2.7",
+            "text": " Be made to established entities having an adequate organisational structure to guarantee proper administration of the funds",
+            "sub_items": []
+          },
+          {
+            "item_id": "2.8",
+            "text": " Strictly prohibited to use as a means to cover up an undue payment or bribery",
+            "sub_items": []
+          }
+        ]
+      },
+      {
+        "section_id": "6",
+        "section_title": "| D O N A T I O N S , S P O N S O R S H I P S A N D C O R P O R A T E R E S P O N S I B I L I T Y P O L I C Y",
+        "subsections": [],
+        "items": [
+          {
+            "item_id": "6.1",
+            "text": "This policy is copyright of Sunway Berhad . All rights reserved. Any redistribution or reproduction of part or all of this policy in any form is prohibited and shall not be reproduced without permission. All hard copies should be checked against the current electronic version within Sunway Berhad prior to use and destroyed promptly thereafter. All hard copies are considered uncontrolled documents.",
+            "sub_items": []
+          },
+          {
+            "item_id": "6.2",
+            "text": "--- Page Break ---",
+            "sub_items": []
+          }
+        ]
+      },
+      {
+        "section_id": "3",
+        "section_title": ". Overall Policy",
+        "subsections": [],
+        "items": [
+          {
+            "item_id": "3.1",
+            "text": "Policy on Donation and Contributions",
+            "sub_items": []
+          },
+          {
+            "item_id": "3.2",
+            "text": "Ad - hoc d onations or charity contributions in cash and kind can be considered by Sunway within acceptable limits of authority and disbursement; but only to support institutions, platforms and individuals undertaking community or stakeholder initiatives in the areas of Educ ation, Healthcare , and Community Enrichment . All requests for donations must be channelled through Sunway Group Brand Marketing and Communications (GBMC) department.",
+            "sub_items": []
+          },
+          {
+            "item_id": "3.3",
+            "text": "Exception of t his policy can be taken within the prescribed limit on the amount of funds and subject to:",
+            "sub_items": []
+          },
+          {
+            "item_id": "3.4",
+            "text": " prior written approval of the BU Heads/ Functional Heads ;",
+            "sub_items": []
+          },
+          {
+            "item_id": "3.5",
+            "text": " the direct authority of the BU Heads/ Functional Heads , EXCO or Chairman;",
+            "sub_items": []
+          },
+          {
+            "item_id": "3.6",
+            "text": " special considerations due to out - of - scope requests from Government authorit ies, related agencies or members of the royal families.",
+            "sub_items": []
+          },
+          {
+            "item_id": "3.7",
+            "text": " Sunway does not make donations for political causes or any politically affiliated institutions. However, to meet the obligatory requirements as a conglomerate, Sunway does contribute to events organised by political parties especial ly those concerning industry/policy issues with key regulatory bodies, with private sector involvement.",
+            "sub_items": []
+          }
+        ]
+      },
+      {
+        "section_id": "4",
+        "section_title": ". Procedure to Handle a Donation Request",
+        "subsections": [],
+        "items": [
+          {
+            "item_id": "4.1",
+            "text": "Applicant’s Request for Proposed Donation/Contribution",
+            "sub_items": []
+          },
+          {
+            "item_id": "4.2",
+            "text": "The proposal for a donation/contribution may originate from GBMC or from a Business Unit (BU). All proposals for donations or contributions must be accompanied by the completed Application Form for Donations or Contributions. T he duly completed Application Form for Donations or Contributions is to be approved by the respective parties and Managing Director/ CEO before forwarding it to GBMC.",
+            "sub_items": []
+          },
+          {
+            "item_id": "4.3",
+            "text": "Reason(s) to justify the donations or contributions is (are) required to be specified in the Application Form for Donations or Contributions. Reasons may include, amongst others, as follows:",
+            "sub_items": []
+          },
+          {
+            "item_id": "4.4",
+            "text": "I. Improve the lives of the community in which it serves .",
+            "sub_items": []
+          },
+          {
+            "item_id": "4.5",
+            "text": "II. Build good relationships/rapport with relevant members of the community .",
+            "sub_items": []
+          },
+          {
+            "item_id": "4.6",
+            "text": "III. Position the group and Sunway brand as a good corporate citizen in the eyes of the community as well as the government . 7 | D O N A T I O N S , S P O N S O R S H I P S A N D C O R P O R A T E R E S P O N S I B I L I T Y P O L I C Y",
+            "sub_items": []
+          },
+          {
+            "item_id": "4.7",
+            "text": "This policy is copyright of Sunway Berhad . All rights reserved. Any redistribution or reproduction of part or all of this policy in any form is prohibited and shall not be reproduced without permission. All hard copies should be checked against the current electronic version within Sunway Berhad prior to use and destroyed promptly thereafter. All hard copies are considered uncontrolled documents.",
+            "sub_items": []
+          },
+          {
+            "item_id": "4.8",
+            "text": "--- Page Break ---",
+            "sub_items": []
+          },
+          {
+            "item_id": "4.9",
+            "text": "I f the donation or contribution amount is RM50,000 or more, GBMC will then consult with the Deputy Chairman of Sunway Group to evaluate the benefits derived from giving the donations/contributions, as indicated in the Application Form for Donations or Contributions. If satisfactory, the proposal for donations/contr ibutions will then be tabled to the Group EXCO for approval.",
+            "sub_items": []
+          }
+        ]
+      },
+      {
+        "section_id": "5",
+        "section_title": ". Donations versus Business Value",
+        "subsections": [],
+        "items": [
+          {
+            "item_id": "5.1",
+            "text": " While the primary objective of all ad - hoc donations is to meet the social obligations of the organisation, it is important to evaluate the requests for d onations in terms of the value ( tangible or intangible) to the overall business.",
+            "sub_items": []
+          },
+          {
+            "item_id": "5.2",
+            "text": " ALWAYS ASK - Will the donation add value in terms of providing Sunway with brand visibility, social equity, exclusivity, goodwill, media exposure, new partnership opportunities, impact, and perception to the brand?",
+            "sub_items": []
+          },
+          {
+            "item_id": "5.3",
+            "text": " Any donations, which are linked to business and commercial interests or carr y business and commercial w eight, will be channel l ed through the relevant business units . Business Units must evaluate and submit recommendations for endorsement to Sunway Group Brand Marketing and Communications (GBMC) department.",
+            "sub_items": []
+          },
+          {
+            "item_id": "5.4",
+            "text": " BUs may use the checklist to evaluate ad - hoc donation requests.",
+            "sub_items": []
+          },
+          {
+            "item_id": "5.5",
+            "text": " BUs are required to fill up the ad - hoc donation request form and submit to GBMC for endorsement.",
+            "sub_items": []
+          },
+          {
+            "item_id": "5.6",
+            "text": " All requests must be submitted to GBMC at least three weeks before the event. Valid reasons need to be presented for any request lesser than three weeks .",
+            "sub_items": []
+          },
+          {
+            "item_id": "5.7",
+            "text": "P riority for donation and contributions",
+            "sub_items": []
+          },
+          {
+            "item_id": "5.8",
+            "text": " Registered societies, organisations or charitable and non - governmental organisations and/or institutions with tax exemption status .",
+            "sub_items": []
+          },
+          {
+            "item_id": "5.9",
+            "text": " Organisations that benefit the sick, elderly, underprivileged, di sabled and/or disadvantaged .",
+            "sub_items": []
+          },
+          {
+            "item_id": "5.10",
+            "text": " Organisations that encourage higher learning and/or promote intellectual activities .",
+            "sub_items": []
+          },
+          {
+            "item_id": "5.11",
+            "text": " Activities that enable Sunway to play its part as a responsible corporate citizen .",
+            "sub_items": []
+          }
+        ]
+      },
+      {
+        "section_id": "8",
+        "section_title": "| D O N A T I O N S , S P O N S O R S H I P S A N D C O R P O R A T E R E S P O N S I B I L I T Y P O L I C Y",
+        "subsections": [],
+        "items": [
+          {
+            "item_id": "8.1",
+            "text": "This policy is copyright of Sunway Berhad . All rights reserved. Any redistribution or reproduction of part or all of this policy in any form is prohibited and shall not be reproduced without permission. All hard copies should be checked against the current electronic version within Sunway Berhad prior to use and destroyed promptly thereafter. All hard copies are considered uncontrolled documents.",
+            "sub_items": []
+          },
+          {
+            "item_id": "8.2",
+            "text": "--- Page Break ---",
+            "sub_items": []
+          }
+        ]
+      },
+      {
+        "section_id": "6",
+        "section_title": ". Consideration for Donations & Contributions",
+        "subsections": [],
+        "items": [
+          {
+            "item_id": "6.1",
+            "text": "Acceptable list",
+            "sub_items": []
+          },
+          {
+            "item_id": "6.2",
+            "text": " Regulatory Authorities / Bodies",
+            "sub_items": []
+          },
+          {
+            "item_id": "6.3",
+            "text": " National organisations",
+            "sub_items": []
+          },
+          {
+            "item_id": "6.4",
+            "text": " Charities and non - governmental organisations",
+            "sub_items": []
+          },
+          {
+            "item_id": "6.5",
+            "text": " Public services organisations",
+            "sub_items": []
+          },
+          {
+            "item_id": "6.6",
+            "text": " Schools and institutions of higher education (Only education and charitable community - related projects)",
+            "sub_items": []
+          },
+          {
+            "item_id": "6.7",
+            "text": "Unacceptable list",
+            "sub_items": []
+          },
+          {
+            "item_id": "6.8",
+            "text": " Privileged organisations with access to alternative sources of funding",
+            "sub_items": []
+          },
+          {
+            "item_id": "6.9",
+            "text": " Politically - affiliated institutions or groups",
+            "sub_items": []
+          },
+          {
+            "item_id": "6.10",
+            "text": " Well - networked organisations",
+            "sub_items": []
+          },
+          {
+            "item_id": "6.11",
+            "text": " Organisations with independent CR flagship programmes",
+            "sub_items": []
+          },
+          {
+            "item_id": "6.12",
+            "text": " Organisations which are not aligned to Sunway CR gu idelines",
+            "sub_items": []
+          },
+          {
+            "item_id": "6.13",
+            "text": " Institutions/programmes/initiatives, which are/were supported by competitors",
+            "sub_items": []
+          },
+          {
+            "item_id": "6.14",
+            "text": " Programmes that serve religious objectives or are averse to cultural and ethnic diversity",
+            "sub_items": []
+          },
+          {
+            "item_id": "6.15",
+            "text": " Groups or organisations which suffer from reputational issues and/or are associa ted with legal proceedings or other with controversial personalities issues",
+            "sub_items": []
+          },
+          {
+            "item_id": "6.16",
+            "text": " Corporate organisations that serve and/or act as a middle party to any charitable organisations and/or NGOs.",
+            "sub_items": []
+          },
+          {
+            "item_id": "6.17",
+            "text": " Activities which may cause physical harm (examples: motorcycle expediti ons, extreme sports)",
+            "sub_items": []
+          }
+        ]
+      },
+      {
+        "section_id": "9",
+        "section_title": "| D O N A T I O N S , S P O N S O R S H I P S A N D C O R P O R A T E R E S P O N S I B I L I T Y P O L I C Y",
+        "subsections": [],
+        "items": [
+          {
+            "item_id": "9.1",
+            "text": "This policy is copyright of Sunway Berhad . All rights reserved. Any redistribution or reproduction of part or all of this policy in any form is prohibited and shall not be reproduced without permission. All hard copies should be checked against the current electronic version within Sunway Berhad prior to use and destroyed promptly thereafter. All hard copies are considered uncontrolled documents.",
+            "sub_items": []
+          },
+          {
+            "item_id": "9.2",
+            "text": "--- Page Break ---",
+            "sub_items": []
+          }
+        ]
+      },
+      {
+        "section_id": "7",
+        "section_title": ". Types of Sponsorship",
+        "subsections": [],
+        "items": [
+          {
+            "item_id": "7.1",
+            "text": "CATEGORY OBJECTIVE",
+            "sub_items": []
+          },
+          {
+            "item_id": "7.2",
+            "text": "Goodwill Sponsorships To respect existing stakeholder relationships and/or build new networks while meeting various business (Can be exceptions i.e. outside the areas objectives. defined by the guidelines. Minor impact on business)",
+            "sub_items": []
+          },
+          {
+            "item_id": "7.3",
+            "text": "Media Sponsorships To nurture media relationships, especially the media which have continually supported Sunway (Strictly as per the areas defined i.e. events and initiatives through positive and Education, Healthcare and Community consistent coverage. Enrichment programmes, with some measurable impact on core business)",
+            "sub_items": []
+          },
+          {
+            "item_id": "7.4",
+            "text": "Community - driven Sponsorships To support various stakeholder communities to include institutions for the disadvantaged and (Strictly as per the areas defined i.e. underprivileged groups, etc. Education, Healthcare and Community Enrichment programmes, with some measurable impact on core business)",
+            "sub_items": []
+          }
+        ]
+      },
+      {
+        "section_id": "8",
+        "section_title": ". Criteria for Selection",
+        "subsections": [],
+        "items": [
+          {
+            "item_id": "8.1",
+            "text": "Checklist / c onsiderations for e valuation of donation and contribution r equest",
+            "sub_items": []
+          },
+          {
+            "item_id": "8.2",
+            "text": " Did you receive the request in writing, from an approved, legal and credible institution or source?",
+            "sub_items": []
+          },
+          {
+            "item_id": "8.3",
+            "text": " Did the request come from an institution endorsed /a pproved by a Governmental body?",
+            "sub_items": []
+          },
+          {
+            "item_id": "8.4",
+            "text": " D oes the request for donation meet the objectives and the guidelines defined?",
+            "sub_items": []
+          },
+          {
+            "item_id": "8.5",
+            "text": " Does the request allow enough time to process the application and secure necessary approvals?",
+            "sub_items": []
+          },
+          {
+            "item_id": "8.6",
+            "text": " Does the institution fall under the broad categories as defined in this guidel ines document?",
+            "sub_items": []
+          },
+          {
+            "item_id": "8.7",
+            "text": " Is there a reason or necessity to make an exception and do you need additional time to process the request?",
+            "sub_items": []
+          },
+          {
+            "item_id": "8.8",
+            "text": " Have you in the past six months approved a donation to or sponsorship appeal from the requesting institution? If yes, for sustainabil ity of the cause, does it merit an exception?",
+            "sub_items": []
+          }
+        ]
+      },
+      {
+        "section_id": "10",
+        "section_title": "| D O N A T I O N S , S P O N S O R S H I P S A N D C O R P O R A T E R E S P O N S I B I L I T Y P O L I C Y",
+        "subsections": [],
+        "items": [
+          {
+            "item_id": "10.1",
+            "text": "This policy is copyright of Sunway Berhad . All rights reserved. Any redistribution or reproduction of part or all of this policy in any form is prohibited and shall not be reproduced without permission. All hard copies should be checked against the current electronic version within Sunway Berhad prior to use and destroyed promptly thereafter. All hard copies are considered uncontrolled documents.",
+            "sub_items": []
+          },
+          {
+            "item_id": "10.2",
+            "text": "--- Page Break ---",
+            "sub_items": []
+          },
+          {
+            "item_id": "10.3",
+            "text": "Note: The evaluation and selection forms part and parcel of due diligence required on the intended recipient s/b eneficiaries.",
+            "sub_items": []
+          }
+        ]
+      },
+      {
+        "section_id": "9",
+        "section_title": ". Limits of Authority (LOA)",
+        "subsections": [],
+        "items": [
+          {
+            "item_id": "9.1",
+            "text": "Amount Approving authority",
+            "sub_items": []
+          },
+          {
+            "item_id": "9.2",
+            "text": "For amounts up to RM50,000.00 Sunway BU H eads/ Function al Heads",
+            "sub_items": []
+          },
+          {
+            "item_id": "9.3",
+            "text": "For amounts more than RM50,000.00 Sunway E XCO",
+            "sub_items": []
+          },
+          {
+            "item_id": "9.4",
+            "text": "* Company Secretary to seek approval from BOD as per Bursa guidelines",
+            "sub_items": []
+          },
+          {
+            "item_id": "9.5",
+            "text": "The BUs must exercise prudence when evaluating and approving charitable donations. The LOA, as defined in the policy document, of approving departments/individuals should be adhered to at all times.",
+            "sub_items": []
+          },
+          {
+            "item_id": "9.6",
+            "text": "LOA Explanatory Notes:",
+            "sub_items": []
+          },
+          {
+            "item_id": "9.7",
+            "text": "LOA has been kept at two tiers for simplification purposes and ease of process.",
+            "sub_items": []
+          },
+          {
+            "item_id": "9.8",
+            "text": " As defined in the table, the approval authority can exer cise his and/or her LOA according to the budget allocated for this purpose in a year.",
+            "sub_items": []
+          },
+          {
+            "item_id": "9.9",
+            "text": " For any particular one request, the donation can be made or granted in either cash, in - kind or both provided that the amount is within the approver’s limit and budget and made under one single request only.",
+            "sub_items": []
+          },
+          {
+            "item_id": "9.10",
+            "text": " The above LOA for approval is strictly for donations, contributions and/or sponsorships and not for business related activities. CR related requests should be centralised at GBMC and Business or Branding related opportu nities to either Marketing or respective Divisional Heads.",
+            "sub_items": []
+          }
+        ]
+      },
+      {
+        "section_id": "10",
+        "section_title": ". Checklist for Evaluation",
+        "subsections": [],
+        "items": [
+          {
+            "item_id": "10.1",
+            "text": " Checklist of information that shall be requested and furnished in order to conduct an evaluation",
+            "sub_items": []
+          },
+          {
+            "item_id": "10.2",
+            "text": " Official name, business/NGO registration number , address and contact details of the organisation on an official letterhead",
+            "sub_items": []
+          },
+          {
+            "item_id": "10.3",
+            "text": " Names and contact details of the officials of the organisation",
+            "sub_items": []
+          },
+          {
+            "item_id": "10.4",
+            "text": " Details of the organisation’s credentials/track record of projects",
+            "sub_items": []
+          },
+          {
+            "item_id": "10.5",
+            "text": " Project details e.g. objectives, budget, tim eline, location/venue",
+            "sub_items": []
+          }
+        ]
+      },
+      {
+        "section_id": "11",
+        "section_title": "| D O N A T I O N S , S P O N S O R S H I P S A N D C O R P O R A T E R E S P O N S I B I L I T Y P O L I C Y",
+        "subsections": [],
+        "items": [
+          {
+            "item_id": "11.1",
+            "text": "This policy is copyright of Sunway Berhad . All rights reserved. Any redistribution or reproduction of part or all of this policy in any form is prohibited and shall not be reproduced without permission. All hard copies should be checked against the current electronic version within Sunway Berhad prior to use and destroyed promptly thereafter. All hard copies are considered uncontrolled documents.",
+            "sub_items": []
+          },
+          {
+            "item_id": "11.2",
+            "text": "--- Page Break ---",
+            "sub_items": []
+          },
+          {
+            "item_id": "11.3",
+            "text": " Details of relevant market research, if any",
+            "sub_items": []
+          },
+          {
+            "item_id": "11.4",
+            "text": " Details of other sponsoring organisations/partners, if any",
+            "sub_items": []
+          },
+          {
+            "item_id": "11.5",
+            "text": " If an event, details of media exposure and media partners, if any",
+            "sub_items": []
+          },
+          {
+            "item_id": "11.6",
+            "text": " Profile of the audience and expected viewing numbers",
+            "sub_items": []
+          },
+          {
+            "item_id": "11.7",
+            "text": " Extent/level of sponsorship sought and sponsorship amount",
+            "sub_items": []
+          },
+          {
+            "item_id": "11.8",
+            "text": " Details of benefits to the sponsoring organisations",
+            "sub_items": []
+          },
+          {
+            "item_id": "11.9",
+            "text": " Tax exemption approval number/letter of approval from the Inland Revenue Board",
+            "sub_items": []
+          }
+        ]
+      },
+      {
+        "section_id": "11",
+        "section_title": ". Approval/ Declining Process",
+        "subsections": [],
+        "items": [
+          {
+            "item_id": "11.1",
+            "text": "All requests for donation to be centralised and channelled to Group Brand Marketing and Communications (GBMC) department.",
+            "sub_items": []
+          },
+          {
+            "item_id": "11.2",
+            "text": "Register the request in the database, check the source of donation request and records to meet the Donation P olicy requirements and criteria",
+            "sub_items": []
+          },
+          {
+            "item_id": "11.3",
+            "text": "YES N O",
+            "sub_items": []
+          },
+          {
+            "item_id": "11.4",
+            "text": "Submit request to the approving authority Send a decline letter to the source",
+            "sub_items": []
+          },
+          {
+            "item_id": "11.5",
+            "text": "If donation request meets all criteria, submit recommendation and rationale for acceptance and/or exception",
+            "sub_items": []
+          },
+          {
+            "item_id": "11.6",
+            "text": "Upon approval, letter of acceptance to be sent to the source, along with request for all pertinent information for disbursement.",
+            "sub_items": []
+          },
+          {
+            "item_id": "11.7",
+            "text": "File the successful/ unsuccessful donation req uest for GB MC ’s record purpose",
+            "sub_items": []
+          }
+        ]
+      },
+      {
+        "section_id": "12",
+        "section_title": "| D O N A T I O N S , S P O N S O R S H I P S A N D C O R P O R A T E R E S P O N S I B I L I T Y P O L I C Y",
+        "subsections": [],
+        "items": [
+          {
+            "item_id": "12.1",
+            "text": "This policy is copyright of Sunway Berhad . All rights reserved. Any redistribution or reproduction of part or all of this policy in any form is prohibited and shall not be reproduced without permission. All hard copies should be checked against the current electronic version within Sunway Berhad prior to use and destroyed promptly thereafter. All hard copies are considered uncontrolled documents.",
+            "sub_items": []
+          },
+          {
+            "item_id": "12.2",
+            "text": "--- Page Break ---",
+            "sub_items": []
+          }
+        ]
+      },
+      {
+        "section_id": "12",
+        "section_title": ". Monitoring and Reporting",
+        "subsections": [],
+        "items": [
+          {
+            "item_id": "12.1",
+            "text": " Donations must not be considered as arbitrary contributions, but as sustainable efforts to meet CR objectives.",
+            "sub_items": []
+          },
+          {
+            "item_id": "12.2",
+            "text": " Sunway must represent itself through a nominee, for participation in the donated cause, to demonstrate sincerity as well as commitment beyond cash contribution.",
+            "sub_items": []
+          },
+          {
+            "item_id": "12.3",
+            "text": " The do nation recipient must be asked to submit a Management Synopsis on the cause supported by Sunway d onation, along with details of branding and representation as well as credit opportunities provided to Sunway.",
+            "sub_items": []
+          },
+          {
+            "item_id": "12.4",
+            "text": " All BUs to submit all donation s and/or contribut ions requests to GBMC for tracking purpose every six months, to ensure Sunway maintains sustainable interest in the causes supported.",
+            "sub_items": []
+          },
+          {
+            "item_id": "12.5",
+            "text": " Showcase and publish the causes and/or initiative s supported by Sunway through:",
+            "sub_items": []
+          },
+          {
+            "item_id": "12.6",
+            "text": "o Sustainability Reports",
+            "sub_items": []
+          },
+          {
+            "item_id": "12.7",
+            "text": "o Annual Reports",
+            "sub_items": []
+          },
+          {
+            "item_id": "12.8",
+            "text": "o Media Coverage",
+            "sub_items": []
+          },
+          {
+            "item_id": "12.9",
+            "text": "o Stakeholder d ialogues, f orums and c onferences",
+            "sub_items": []
+          }
+        ]
+      },
+      {
+        "section_id": "13",
+        "section_title": ". C orporate Responsibility",
+        "subsections": [],
+        "items": [
+          {
+            "item_id": "13.1",
+            "text": "Community Programmes",
+            "sub_items": []
+          },
+          {
+            "item_id": "13.2",
+            "text": "Proposals for community programmes must be submitted to and approved by Sunway Group Brand Marketing and Communications (GBMC) department.",
+            "sub_items": []
+          },
+          {
+            "item_id": "13.3",
+            "text": "GBMC will ensure that:",
+            "sub_items": []
+          },
+          {
+            "item_id": "13.4",
+            "text": " All programmes adher e to the Company’s CR framework",
+            "sub_items": []
+          },
+          {
+            "item_id": "13.5",
+            "text": "o Education",
+            "sub_items": []
+          },
+          {
+            "item_id": "13.6",
+            "text": "o Healthcare",
+            "sub_items": []
+          },
+          {
+            "item_id": "13.7",
+            "text": "o Community Enrichment",
+            "sub_items": []
+          },
+          {
+            "item_id": "13.8",
+            "text": " There is integration of messaging and no duplication of efforts",
+            "sub_items": []
+          },
+          {
+            "item_id": "13.9",
+            "text": " All CR programmes must take into account the following key factors:",
+            "sub_items": []
+          },
+          {
+            "item_id": "13.10",
+            "text": "o Sustainability: Sunway’s CR goals are long term and not subject to frequent change.",
+            "sub_items": []
+          }
+        ]
+      },
+      {
+        "section_id": "13",
+        "section_title": "| D O N A T I O N S , S P O N S O R S H I P S A N D C O R P O R A T E R E S P O N S I B I L I T Y P O L I C Y",
+        "subsections": [],
+        "items": [
+          {
+            "item_id": "13.1",
+            "text": "This policy is copyright of Sunway Berhad . All rights reserved. Any redistribution or reproduction of part or all of this policy in any form is prohibited and shall not be reproduced without permission. All hard copies should be checked against the current electronic version within Sunway Berhad prior to use and destroyed promptly thereafter. All hard copies are considered uncontrolled documents.",
+            "sub_items": []
+          },
+          {
+            "item_id": "13.2",
+            "text": "--- Page Break ---",
+            "sub_items": []
+          },
+          {
+            "item_id": "13.3",
+            "text": "o Focus: CR key deliverables should ride on Sunway’s existing strength, competencies and infrastructure to strengthen and enhance the Company’s position in the market and / or communities that Sunway built / locations that Sunway has presence.",
+            "sub_items": []
+          },
+          {
+            "item_id": "13.4",
+            "text": "o Participation: Employee involvement is a cornerstone of Sunway CR initiatives. All community programmes should encourage employee participation, generate teamwork and instil a sense of responsibility amongst staff towards the vario us communities that they serve.",
+            "sub_items": []
+          },
+          {
+            "item_id": "13.5",
+            "text": "o Support: It is important that all CR programmes and messages enhance Sunway’s corporate image and not deflect from the Company’s overall positioning. They should incorporate Sunway brand values.",
+            "sub_items": []
+          },
+          {
+            "item_id": "13.6",
+            "text": " All community projects must use the Sunway logo and the “ # sunwayforgood ” logo for their programme communications either in media statements, advertisements, brochures or flyers. The design, look and feel of the internal collateral mu st be reviewed by th e Branding Unit of GBMC before it is produced and distributed.",
+            "sub_items": []
+          },
+          {
+            "item_id": "13.7",
+            "text": " Supporting CR collaterals may be obtained fro m G BMC to be u sed at the programme location. All items borrowe d must be returned after use. If items are damaged, the department responsible must reimburse for replacements.",
+            "sub_items": []
+          },
+          {
+            "item_id": "13.8",
+            "text": " Organisers of community programmes involving donations or monetary contributions to charitable organisations are required to check if donations to them will qualify for tax exemption.",
+            "sub_items": []
+          }
+        ]
+      },
+      {
+        "section_id": "14",
+        "section_title": ". T ax E xemptions",
+        "subsections": [],
+        "items": [
+          {
+            "item_id": "14.1",
+            "text": " Check with the relevant organisation if it ha s tax exemption status .",
+            "sub_items": []
+          },
+          {
+            "item_id": "14.2",
+            "text": " Obtain an authorised receipt that clearly identifies Sunway as the donor or contributor:",
+            "sub_items": []
+          },
+          {
+            "item_id": "14.3",
+            "text": "o Receipts for contributions by cash should be made to: “ Sunway Berhad ” or otherwise advised by Sunway Group Finance d ivision .",
+            "sub_items": []
+          },
+          {
+            "item_id": "14.4",
+            "text": "o Receipts for contributions in - kind, functions and advertisements should be made to “ Sunway Berhad” or otherwise advised by Sunway Group Finance d ivision .",
+            "sub_items": []
+          },
+          {
+            "item_id": "14.5",
+            "text": " Ensure that the obtained receipt has a serial number .",
+            "sub_items": []
+          },
+          {
+            "item_id": "14.6",
+            "text": " Forward all receipts to the Group Tax d epartment (Finance d ivision) .",
+            "sub_items": []
+          }
+        ]
+      },
+      {
+        "section_id": "14",
+        "section_title": "| D O N A T I O N S , S P O N S O R S H I P S A N D C O R P O R A T E R E S P O N S I B I L I T Y P O L I C Y",
+        "subsections": [],
+        "items": [
+          {
+            "item_id": "14.1",
+            "text": "This policy is copyright of Sunway Berhad . All rights reserved. Any redistribution or reproduction of part or all of this policy in any form is prohibited and shall not be reproduced without permission. All hard copies should be checked against the current electronic version within Sunway Berhad prior to use and destroyed promptly thereafter. All hard copies are considered uncontrolled documents.",
+            "sub_items": []
+          },
+          {
+            "item_id": "14.2",
+            "text": "--- Page Break ---",
+            "sub_items": []
+          }
+        ]
+      },
+      {
+        "section_id": "15",
+        "section_title": ". Index R eferences",
+        "subsections": [],
+        "items": [
+          {
+            "item_id": "15.1",
+            "text": "Short Form Full Text",
+            "sub_items": []
+          },
+          {
+            "item_id": "15.2",
+            "text": "BU Business Unit",
+            "sub_items": []
+          },
+          {
+            "item_id": "15.3",
+            "text": "F&A Head Finance and Administration Head",
+            "sub_items": []
+          },
+          {
+            "item_id": "15.4",
+            "text": "CEO Chief Executive Office",
+            "sub_items": []
+          },
+          {
+            "item_id": "15.5",
+            "text": "GBMC Group Brand Marketing and Communications",
+            "sub_items": []
+          },
+          {
+            "item_id": "15.6",
+            "text": "PCM Profit Centre Manager",
+            "sub_items": []
+          },
+          {
+            "item_id": "15.7",
+            "text": "BOD Board of Directors",
+            "sub_items": []
+          },
+          {
+            "item_id": "15.8",
+            "text": "CR Corporate Responsibility",
+            "sub_items": []
+          },
+          {
+            "item_id": "15.9",
+            "text": "SSOP Sunway standard operating procedure",
+            "sub_items": []
+          }
+        ]
+      },
+      {
+        "section_id": "16",
+        "section_title": ". A pproval",
+        "subsections": [],
+        "items": [
+          {
+            "item_id": "16.1",
+            "text": "Done by:",
+            "sub_items": []
+          },
+          {
+            "item_id": "16.2",
+            "text": "Kishen Alex Raj",
+            "sub_items": []
+          },
+          {
+            "item_id": "16.3",
+            "text": "Reviewed by:",
+            "sub_items": []
+          },
+          {
+            "item_id": "16.4",
+            "text": "Bernard Paul",
+            "sub_items": []
+          },
+          {
+            "item_id": "16.5",
+            "text": "Ho Sheng Yueh",
+            "sub_items": []
+          },
+          {
+            "item_id": "16.6",
+            "text": "Ong Pang Yen",
+            "sub_items": []
+          },
+          {
+            "item_id": "16.7",
+            "text": "Tan Kim Aun",
+            "sub_items": []
+          },
+          {
+            "item_id": "16.8",
+            "text": "Ho Sheng Yueh",
+            "sub_items": []
+          },
+          {
+            "item_id": "16.9",
+            "text": "Yee Meng Haw",
+            "sub_items": []
+          },
+          {
+            "item_id": "16.10",
+            "text": "Tan Poh Chan",
+            "sub_items": []
+          }
+        ]
+      },
+      {
+        "section_id": "15",
+        "section_title": "| D O N A T I O N S , S P O N S O R S H I P S A N D C O R P O R A T E R E S P O N S I B I L I T Y P O L I C Y",
+        "subsections": [],
+        "items": [
+          {
+            "item_id": "15.1",
+            "text": "This policy is copyright of Sunway Berhad . All rights reserved. Any redistribution or reproduction of part or all of this policy in any form is prohibited and shall not be reproduced without permission. All hard copies should be checked against the current electronic version within Sunway Berhad prior to use and destroyed promptly thereafter. All hard copies are considered uncontrolled documents.",
+            "sub_items": []
+          },
+          {
+            "item_id": "15.2",
+            "text": "--- Page Break ---",
+            "sub_items": []
+          }
+        ]
+      },
+      {
+        "section_id": "17",
+        "section_title": ". Appendices",
+        "subsections": [],
+        "items": [
+          {
+            "item_id": "17.1",
+            "text": "a) Donations / Sponsorship form",
+            "sub_items": []
+          }
+        ]
+      },
+      {
+        "section_id": "16",
+        "section_title": "| D O N A T I O N S , S P O N S O R S H I P S A N D C O R P O R A T E R E S P O N S I B I L I T Y P O L I C Y",
+        "subsections": [],
+        "items": [
+          {
+            "item_id": "16.1",
+            "text": "This policy is copyright of Sunway Berhad . All rights reserved. Any redistribution or reproduction of part or all of this policy in any form is prohibited and shall not be reproduced without permission. All hard copies should be checked against the current electronic version within Sunway Berhad prior to use and destroyed promptly thereafter. All hard copies are considered uncontrolled documents.",
+            "sub_items": []
+          },
+          {
+            "item_id": "16.2",
+            "text": "--- Page Break ---",
+            "sub_items": []
+          }
+        ]
+      },
+      {
+        "section_id": "17",
+        "section_title": "| D O N A T I O N S , S P O N S O R S H I P S A N D C O R P O R A T E R E S P O N S I B I L I T Y P O L I C Y",
+        "subsections": [],
+        "items": [
+          {
+            "item_id": "17.1",
+            "text": "This policy is copyright of Sunway Berhad . All rights reserved. Any redistribution or reproduction of part or all of this policy in any form is prohibited and shall not be reproduced without permission. All hard copies should be checked against the current electronic version within Sunway Berhad prior to use and destroyed promptly thereafter. All hard copies are considered uncontrolled documents.",
+            "sub_items": []
+          },
+          {
+            "item_id": "17.2",
+            "text": "--- Page Break ---",
+            "sub_items": []
+          },
+          {
+            "item_id": "17.3",
+            "text": "b) Donations / Sponsorship Checklist",
+            "sub_items": []
+          },
+          {
+            "item_id": "17.4",
+            "text": "c) Template – Letter of Acceptance",
+            "sub_items": []
+          },
+          {
+            "item_id": "17.5",
+            "text": "The letter must indicate the following:",
+            "sub_items": []
+          },
+          {
+            "item_id": "17.6",
+            "text": " Organisation's name and the contribution amount",
+            "sub_items": []
+          },
+          {
+            "item_id": "17.7",
+            "text": " Description (but not value) of non - cash contributions, if any",
+            "sub_items": []
+          },
+          {
+            "item_id": "17.8",
+            "text": " Positive statement of acknowledgement for approaching Sunway",
+            "sub_items": []
+          },
+          {
+            "item_id": "17.9",
+            "text": " Request for receipts or tax benefit statements for record purposes, if applicable",
+            "sub_items": []
+          },
+          {
+            "item_id": "17.10",
+            "text": " Details of Sunway Brand Guidelines etc.",
+            "sub_items": []
+          },
+          {
+            "item_id": "17.11",
+            "text": " A Statement of Support, acknowledging the Objectives of the Cause",
+            "sub_items": []
+          }
+        ]
+      },
+      {
+        "section_id": "18",
+        "section_title": "| D O N A T I O N S , S P O N S O R S H I P S A N D C O R P O R A T E R E S P O N S I B I L I T Y P O L I C Y",
+        "subsections": [],
+        "items": [
+          {
+            "item_id": "18.1",
+            "text": "This policy is copyright of Sunway Berhad . All rights reserved. Any redistribution or reproduction of part or all of this policy in any form is prohibited and shall not be reproduced without permission. All hard copies should be checked against the current electronic version within Sunway Berhad prior to use and destroyed promptly thereafter. All hard copies are considered uncontrolled documents.",
+            "sub_items": []
+          },
+          {
+            "item_id": "18.2",
+            "text": "--- Page Break ---",
+            "sub_items": []
+          },
+          {
+            "item_id": "18.3",
+            "text": "<On Sunway Letterhead>",
+            "sub_items": []
+          },
+          {
+            "item_id": "18.4",
+            "text": "<Date>",
+            "sub_items": []
+          },
+          {
+            "item_id": "18.5",
+            "text": "<Salutation><First Name><Last Name>",
+            "sub_items": []
+          },
+          {
+            "item_id": "18.6",
+            "text": "<Designation>",
+            "sub_items": []
+          },
+          {
+            "item_id": "18.7",
+            "text": "<Company Name>",
+            "sub_items": []
+          },
+          {
+            "item_id": "18.8",
+            "text": "<Full Address>",
+            "sub_items": []
+          },
+          {
+            "item_id": "18.9",
+            "text": "Dear <Last Name>,",
+            "sub_items": []
+          },
+          {
+            "item_id": "18.10",
+            "text": "Subject: Acceptance of your request for Donation to support <name of the cause / event etc.>",
+            "sub_items": []
+          },
+          {
+            "item_id": "18.11",
+            "text": "We would like to thank you for giving us the opportunity to support your <name of the cause or event>, which is in keeping with our corporate responsibility framew ork and policy. Such initiatives bring about positive change and support community development towards sustainable results.",
+            "sub_items": []
+          },
+          {
+            "item_id": "18.12",
+            "text": "We are happy to consider a contribution of <RM Amount><(in words)> , and a cheque no. <12345> towards this amount has been issued and enclosed with this letter. Kindly provide us with an acknowledgement receipt for our records.",
+            "sub_items": []
+          },
+          {
+            "item_id": "18.13",
+            "text": "Thank you once again. For any additional information or clarifications, please feel free to contact me at <Email and Contact Number>.",
+            "sub_items": []
+          },
+          {
+            "item_id": "18.14",
+            "text": "Yours sincerely,",
+            "sub_items": []
+          },
+          {
+            "item_id": "18.15",
+            "text": "<Full Name >and<Designation>",
+            "sub_items": []
+          }
+        ]
+      },
+      {
+        "section_id": "19",
+        "section_title": "| D O N A T I O N S , S P O N S O R S H I P S A N D C O R P O R A T E R E S P O N S I B I L I T Y P O L I C Y",
+        "subsections": [],
+        "items": [
+          {
+            "item_id": "19.1",
+            "text": "This policy is copyright of Sunway Berhad . All rights reserved. Any redistribution or reproduction of part or all of this policy in any form is prohibited and shall not be reproduced without permission. All hard copies should be checked against the current electronic version within Sunway Berhad prior to use and destroyed promptly thereafter. All hard copies are considered uncontrolled documents.",
+            "sub_items": []
+          },
+          {
+            "item_id": "19.2",
+            "text": "--- Page Break ---",
+            "sub_items": []
+          },
+          {
+            "item_id": "19.3",
+            "text": "d) Template – Letter of Decline",
+            "sub_items": []
+          },
+          {
+            "item_id": "19.4",
+            "text": "<On Sunway Letterhead>",
+            "sub_items": []
+          },
+          {
+            "item_id": "19.5",
+            "text": "<Date>",
+            "sub_items": []
+          },
+          {
+            "item_id": "19.6",
+            "text": "<Salutation><First Name><Last Name>",
+            "sub_items": []
+          },
+          {
+            "item_id": "19.7",
+            "text": "<Designation>",
+            "sub_items": []
+          },
+          {
+            "item_id": "19.8",
+            "text": "<Company Name>",
+            "sub_items": []
+          },
+          {
+            "item_id": "19.9",
+            "text": "<Full Address>",
+            "sub_items": []
+          },
+          {
+            "item_id": "19.10",
+            "text": "Dear <Last Name>,",
+            "sub_items": []
+          },
+          {
+            "item_id": "19.11",
+            "text": "Subject: Your request for Donation to support <name of the cause / event etc.>",
+            "sub_items": []
+          },
+          {
+            "item_id": "19.12",
+            "text": "We would like to thank you for giving us the opportunity to support your <name of the cause or event>, which in our view is a commendable contribution to the <xx groups/ society / industry>",
+            "sub_items": []
+          },
+          {
+            "item_id": "19.13",
+            "text": "Please be informed that Sunway has a sustainable Corporate Respons ibility framework and in keeping with our policies, we welcome special Donation / Sponsorship requests for any worthy causes / events to support <Education and Community Development.>",
+            "sub_items": []
+          },
+          {
+            "item_id": "19.14",
+            "text": "Unfortunately, we are unable to hono u r /accept your request for donation in this instance. However, we welcome any other proposal/s which you may have, that complements our priority areas, as stated above. We will be happy to substantiate your efforts for a meaningful cause /event.",
+            "sub_items": []
+          },
+          {
+            "item_id": "19.15",
+            "text": "Thank you once again for writing to us. For a ny additional information or clarifications, please feel free to contact me at <Email and Contact Number>.",
+            "sub_items": []
+          },
+          {
+            "item_id": "19.16",
+            "text": "Yours sincerely,",
+            "sub_items": []
+          },
+          {
+            "item_id": "19.17",
+            "text": "EMAIL",
+            "sub_items": []
+          },
+          {
+            "item_id": "19.18",
+            "text": "We refer to <name> proposal on the above matter.",
+            "sub_items": []
+          },
+          {
+            "item_id": "19.19",
+            "text": "Thank you for reaching out to the Sunway Group. After deliberation, we have to respectfully decline this request as it is not aligned with Sunway 's focus at this moment and our current commitment in a number of Corporate Sustainability projects are focuse d on Education. Nevertheless, we thank you for y our kind interest in our organi s ation and take this opportunity in wishing you all the best in your endeavours .",
+            "sub_items": []
+          },
+          {
+            "item_id": "19.20",
+            "text": "Thank you.",
+            "sub_items": []
+          }
+        ]
+      },
+      {
+        "section_id": "20",
+        "section_title": "| D O N A T I O N S , S P O N S O R S H I P S A N D C O R P O R A T E R E S P O N S I B I L I T Y P O L I C Y",
+        "subsections": [],
+        "items": [
+          {
+            "item_id": "20.1",
+            "text": "This policy is copyright of Sunway Berhad . All rights reserved. Any redistribution or reproduction of part or all of this policy in any form is prohibited and shall not be reproduced without permission. All hard copies should be checked against the current electronic version within Sunway Berhad prior to use and destroyed promptly thereafter. All hard copies are considered uncontrolled documents.",
+            "sub_items": []
+          },
+          {
+            "item_id": "20.2",
+            "text": "--- Page Break ---",
+            "sub_items": []
+          },
+          {
+            "item_id": "20.3",
+            "text": "e) Template – Report",
+            "sub_items": []
+          },
+          {
+            "item_id": "20.4",
+            "text": "All parties receiving the d onation must be requested to submit a r eceipt for record purposes. For event sponsorships, the receiving organisation ( s ) must submit a post - event report for good governance purposes. Such information should be requested in view of specific requirements, which might be helpful when drafting an Annual Report or Sustainability Report. The Report must follow the prescribed format as below.",
+            "sub_items": []
+          },
+          {
+            "item_id": "20.5",
+            "text": " 250 Word Description of the Project / Event / Cause [recipient of the Donation / Sponsorship]",
+            "sub_items": []
+          },
+          {
+            "item_id": "20.6",
+            "text": " 100 Word Profile of the Parent Organisation / Supporting Organisati ons / Participating Members / Organisations etc.",
+            "sub_items": []
+          },
+          {
+            "item_id": "20.7",
+            "text": " Statement of Undertaking – How was the Donation / Sponsorship amount put to use?",
+            "sub_items": []
+          },
+          {
+            "item_id": "20.8",
+            "text": " Sunway Logo Placements – Images and Brief Descriptions (if applicable)",
+            "sub_items": []
+          },
+          {
+            "item_id": "20.9",
+            "text": " Media Coverage on the Event (if applicable)",
+            "sub_items": []
+          },
+          {
+            "item_id": "20.10",
+            "text": " Sunway Spok espersons’ Presentation – with Audience Feedback, Comments, Media Requests etc. (if applicable)",
+            "sub_items": []
+          },
+          {
+            "item_id": "20.11",
+            "text": " Way Forward – Will the event / cause / project be sustainable? If yes, will Sunway be presented an opportunity to support? Special requests etc.",
+            "sub_items": []
+          }
+        ]
+      },
+      {
+        "section_id": "21",
+        "section_title": "| D O N A T I O N S , S P O N S O R S H I P S A N D C O R P O R A T E R E S P O N S I B I L I T Y P O L I C Y",
+        "subsections": [],
+        "items": [
+          {
+            "item_id": "21.1",
+            "text": "This policy is copyright of Sunway Berhad . All rights reserved. Any redistribution or reproduction of part or all of this policy in any form is prohibited and shall not be reproduced without permission. All hard copies should be checked against the current electronic version within Sunway Berhad prior to use and destroyed promptly thereafter. All hard copies are considered uncontrolled documents.",
+            "sub_items": []
+          }
+        ]
+      }
+    ]
+  },
+  "structured_data_tables": {
+    "tables": []
+  },
+  "terms_conditions_clauses": {
+    "clauses": [
+      {
+        "clause_number": "1",
+        "text": ". Introduction 6 2. Objectives 6 3. Overall Policy 7 4. Procedure to Handle a Donation Request 7 5. Donations versus Business Value 8 6. Consideration for Donations & Contributions 9 7. Types of Sponsorship 10 8. Criteria for Selection 10 9. Limits of Authority (LOA) 11 10. Checklist for Evaluation 11 11. Approval/ Declining Process 12 12. Monitoring and Reporting 13 13. Corporate Responsibility 13 14. Tax Exemptions 14 15. Index References 15 16. Approval 15 17. Appendices 16",
+        "sub_clauses": []
+      },
+      {
+        "clause_number": "2",
+        "text": "| D O N A T I O N S , S P O N S O R S H I P S A N D C O R P O R A T E R E S P O N S I B I L I T Y P O L I C Y",
+        "sub_clauses": []
+      },
+      {
+        "clause_number": "3",
+        "text": "| D O N A T I O N S , S P O N S O R S H I P S A N D C O R P O R A T E R E S P O N S I B I L I T Y P O L I C Y",
+        "sub_clauses": []
+      },
+      {
+        "clause_number": "4",
+        "text": "| D O N A T I O N S , S P O N S O R S H I P S A N D C O R P O R A T E R E S P O N S I B I L I T Y P O L I C Y",
+        "sub_clauses": []
+      },
+      {
+        "clause_number": "5",
+        "text": "| D O N A T I O N S , S P O N S O R S H I P S A N D C O R P O R A T E R E S P O N S I B I L I T Y P O L I C Y",
+        "sub_clauses": []
+      },
+      {
+        "clause_number": "1",
+        "text": ". Introduction",
+        "sub_clauses": []
+      },
+      {
+        "clause_number": "2",
+        "text": ". Objectives",
+        "sub_clauses": []
+      },
+      {
+        "clause_number": "6",
+        "text": "| D O N A T I O N S , S P O N S O R S H I P S A N D C O R P O R A T E R E S P O N S I B I L I T Y P O L I C Y",
+        "sub_clauses": []
+      },
+      {
+        "clause_number": "3",
+        "text": ". Overall Policy",
+        "sub_clauses": []
+      },
+      {
+        "clause_number": "4",
+        "text": ". Procedure to Handle a Donation Request",
+        "sub_clauses": []
+      },
+      {
+        "clause_number": "5",
+        "text": ". Donations versus Business Value",
+        "sub_clauses": []
+      },
+      {
+        "clause_number": "8",
+        "text": "| D O N A T I O N S , S P O N S O R S H I P S A N D C O R P O R A T E R E S P O N S I B I L I T Y P O L I C Y",
+        "sub_clauses": []
+      },
+      {
+        "clause_number": "6",
+        "text": ". Consideration for Donations & Contributions",
+        "sub_clauses": []
+      },
+      {
+        "clause_number": "9",
+        "text": "| D O N A T I O N S , S P O N S O R S H I P S A N D C O R P O R A T E R E S P O N S I B I L I T Y P O L I C Y",
+        "sub_clauses": []
+      },
+      {
+        "clause_number": "7",
+        "text": ". Types of Sponsorship",
+        "sub_clauses": []
+      },
+      {
+        "clause_number": "8",
+        "text": ". Criteria for Selection",
+        "sub_clauses": []
+      },
+      {
+        "clause_number": "10",
+        "text": "| D O N A T I O N S , S P O N S O R S H I P S A N D C O R P O R A T E R E S P O N S I B I L I T Y P O L I C Y",
+        "sub_clauses": []
+      },
+      {
+        "clause_number": "9",
+        "text": ". Limits of Authority (LOA)",
+        "sub_clauses": []
+      },
+      {
+        "clause_number": "10",
+        "text": ". Checklist for Evaluation",
+        "sub_clauses": []
+      },
+      {
+        "clause_number": "11",
+        "text": "| D O N A T I O N S , S P O N S O R S H I P S A N D C O R P O R A T E R E S P O N S I B I L I T Y P O L I C Y",
+        "sub_clauses": []
+      },
+      {
+        "clause_number": "11",
+        "text": ". Approval/ Declining Process",
+        "sub_clauses": []
+      },
+      {
+        "clause_number": "12",
+        "text": "| D O N A T I O N S , S P O N S O R S H I P S A N D C O R P O R A T E R E S P O N S I B I L I T Y P O L I C Y",
+        "sub_clauses": []
+      },
+      {
+        "clause_number": "12",
+        "text": ". Monitoring and Reporting",
+        "sub_clauses": []
+      },
+      {
+        "clause_number": "13",
+        "text": ". C orporate Responsibility",
+        "sub_clauses": []
+      },
+      {
+        "clause_number": "13",
+        "text": "| D O N A T I O N S , S P O N S O R S H I P S A N D C O R P O R A T E R E S P O N S I B I L I T Y P O L I C Y",
+        "sub_clauses": []
+      },
+      {
+        "clause_number": "14",
+        "text": ". T ax E xemptions",
+        "sub_clauses": []
+      },
+      {
+        "clause_number": "14",
+        "text": "| D O N A T I O N S , S P O N S O R S H I P S A N D C O R P O R A T E R E S P O N S I B I L I T Y P O L I C Y",
+        "sub_clauses": []
+      },
+      {
+        "clause_number": "15",
+        "text": ". Index R eferences",
+        "sub_clauses": []
+      },
+      {
+        "clause_number": "16",
+        "text": ". A pproval",
+        "sub_clauses": []
+      },
+      {
+        "clause_number": "15",
+        "text": "| D O N A T I O N S , S P O N S O R S H I P S A N D C O R P O R A T E R E S P O N S I B I L I T Y P O L I C Y",
+        "sub_clauses": []
+      },
+      {
+        "clause_number": "17",
+        "text": ". Appendices",
+        "sub_clauses": []
+      },
+      {
+        "clause_number": "16",
+        "text": "| D O N A T I O N S , S P O N S O R S H I P S A N D C O R P O R A T E R E S P O N S I B I L I T Y P O L I C Y",
+        "sub_clauses": []
+      },
+      {
+        "clause_number": "17",
+        "text": "| D O N A T I O N S , S P O N S O R S H I P S A N D C O R P O R A T E R E S P O N S I B I L I T Y P O L I C Y",
+        "sub_clauses": []
+      },
+      {
+        "clause_number": "18",
+        "text": "| D O N A T I O N S , S P O N S O R S H I P S A N D C O R P O R A T E R E S P O N S I B I L I T Y P O L I C Y",
+        "sub_clauses": []
+      },
+      {
+        "clause_number": "19",
+        "text": "| D O N A T I O N S , S P O N S O R S H I P S A N D C O R P O R A T E R E S P O N S I B I L I T Y P O L I C Y",
+        "sub_clauses": []
+      },
+      {
+        "clause_number": "20",
+        "text": "| D O N A T I O N S , S P O N S O R S H I P S A N D C O R P O R A T E R E S P O N S I B I L I T Y P O L I C Y",
+        "sub_clauses": []
+      },
+      {
+        "clause_number": "21",
+        "text": "| D O N A T I O N S , S P O N S O R S H I P S A N D C O R P O R A T E R E S P O N S I B I L I T Y P O L I C Y",
+        "sub_clauses": []
+      }
+    ]
+  },
+  "metadata": {
+    "model": "claude-sonnet-4-20250514",
+    "max_tokens": 16000,
+    "temperature": 0,
+    "top_p": 1,
+    "generated_at": "2025-10-17T06:14:44.672Z",
+    "prompt_path": "config/prompts/vision-ultimate.txt",
+    "reason": "table_structure_loss"
+  }
+}

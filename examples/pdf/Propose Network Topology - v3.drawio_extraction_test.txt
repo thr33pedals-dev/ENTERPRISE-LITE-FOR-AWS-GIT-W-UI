@@ -1,0 +1,44 @@
+
+
+Ayer Rajah CO Core
+Switch
+Bedok CO Core Switch
+Level 5 Main OfficeBasement LevelLevel 4 Netco RoomLevel 1 EntranceLevel 3 Colo Room
+Level 2 Server Room
+Server Switch / C9300X-48TX-A / C9300X-NM-8Y
+StackWise Virtual
+StackWise Virtual
+Dual Active Detect
+C9200-48PXG-A Stack
+C9200-NM-4X
+C9200-48PXG-A Stack
+C9200-NM-4X
+EtherChannel
+EtherChannelEtherChannelEtherChannelEtherChannel
+Patch Panel
+Patch Panel
+Patch Panel
+C9200-48PXG-A Stack
+C9200-NM-4X
+C9200-48PXG-A Stack
+C9200-NM-4X
+C9200-48PXG-A Stack
+C9200-NM-4X
+C9200-48PXG-A Stack
+C9200-NM-4X
+EtherChannelEtherChannel
+C9300X-24Y-A Stack
+C9300X-NM-8Y
+EtherChannel
+EtherChannel
+UTP 1G/ Multi-Gigabit
+25G SFP28, Multimode
+10G SFP+ Singlemode
+C9200 Stack Cable
+10G SFP+, Single Mode ER 40KM
+10G SFP+ Multimode
+10G SFP+, Single Mode ZR 80KM
+Endpoint Devices
+With 10G Multimode Connection
+x 12
+x12

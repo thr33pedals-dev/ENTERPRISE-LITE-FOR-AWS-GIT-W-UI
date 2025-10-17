@@ -44,7 +44,7 @@ const response = await anthropic.messages.create({
 
 ```env
 # Claude Model Configuration
-CLAUDE_MODEL=claude-3-5-sonnet-20241022
+CLAUDE_MODEL=claude-sonnet-4-20250514
 CLAUDE_MAX_TOKENS=4096
 CLAUDE_TEMPERATURE=0.3  # ← Add this (0.0-1.0, lower = more deterministic)
 ```
@@ -217,7 +217,7 @@ async function processPDFWithVision(file) {
     const base64Image = imageData.toString('base64');
     
     const message = await anthropic.messages.create({
-      model: 'claude-3-5-sonnet-20241022',
+      model: 'claude-sonnet-4-20250514',
       max_tokens: 4096,
       messages: [{
         role: 'user',
@@ -360,7 +360,7 @@ async function processInsuranceBrochure(file) {
 
 ```env
 # Claude Model Configuration
-CLAUDE_MODEL=claude-3-5-sonnet-20241022
+CLAUDE_MODEL=claude-sonnet-4-20250514
 CLAUDE_MAX_TOKENS=4096
 CLAUDE_TEMPERATURE=0.3  # Lower for factual responses (0.0-1.0)
 

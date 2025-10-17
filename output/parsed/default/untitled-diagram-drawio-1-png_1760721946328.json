@@ -1,0 +1,883 @@
+{
+  "document_profile": {
+    "detected_type": "network_diagram",
+    "primary_purpose": "Network architecture visualization showing multi-site connectivity and component relationships",
+    "complexity_level": "complex",
+    "confidence_score": 0.95
+  },
+  "document_metadata": {
+    "title": "Untitled Diagram",
+    "version": "1.0",
+    "dates": {
+      "created": null,
+      "modified": null,
+      "effective": null,
+      "expires": null
+    },
+    "authors": [
+      "Unknown"
+    ],
+    "stakeholders": [
+      "Network Operations",
+      "IT Infrastructure"
+    ],
+    "document_ids": {
+      "reference_number": "Untitled Diagram.drawio (1).png.pdf",
+      "control_number": null
+    },
+    "classification": "internal"
+  },
+  "core_content": {
+    "hierarchical_structure": {
+      "sections": [
+        {
+          "section_id": "1",
+          "section_title": "Network Architecture Overview",
+          "section_content": "Multi-site network topology with interconnected components across different network zones",
+          "subsections": []
+        }
+      ]
+    },
+    "structured_data_tables": {
+      "tables": []
+    },
+    "numerical_entities": [],
+    "technical_diagram": {
+      "architecture_type": "multi-site",
+      "components": [
+        {
+          "component_id": "comp_001",
+          "component_name": "Site A",
+          "component_type": "site",
+          "model_number": "N/A",
+          "quantity": 1,
+          "specifications": {
+            "capacity": "Unknown",
+            "modules": [],
+            "features": [
+              "Multi-component site"
+            ]
+          },
+          "location": {
+            "site": "Site A",
+            "floor": "Unknown",
+            "room": "Unknown"
+          },
+          "criticality": "high"
+        },
+        {
+          "component_id": "comp_002",
+          "component_name": "Access Layer",
+          "component_type": "access",
+          "model_number": "Unknown",
+          "quantity": 1,
+          "specifications": {
+            "capacity": "Unknown",
+            "modules": [],
+            "features": [
+              "Access layer functionality"
+            ]
+          },
+          "location": {
+            "site": "Site A",
+            "floor": "Unknown",
+            "room": "Unknown"
+          },
+          "criticality": "medium"
+        },
+        {
+          "component_id": "comp_003",
+          "component_name": "Web",
+          "component_type": "server",
+          "model_number": "Unknown",
+          "quantity": 1,
+          "specifications": {
+            "capacity": "Unknown",
+            "modules": [],
+            "features": [
+              "Web services"
+            ]
+          },
+          "location": {
+            "site": "Site A",
+            "floor": "Unknown",
+            "room": "Unknown"
+          },
+          "criticality": "high"
+        },
+        {
+          "component_id": "comp_004",
+          "component_name": "MPLS Layer Network",
+          "component_type": "core",
+          "model_number": "Unknown",
+          "quantity": 1,
+          "specifications": {
+            "capacity": "Unknown",
+            "modules": [],
+            "features": [
+              "MPLS connectivity"
+            ]
+          },
+          "location": {
+            "site": "Unknown",
+            "floor": "Unknown",
+            "room": "Unknown"
+          },
+          "criticality": "critical"
+        },
+        {
+          "component_id": "comp_005",
+          "component_name": "MPLS Cloud",
+          "component_type": "core",
+          "model_number": "Unknown",
+          "quantity": 1,
+          "specifications": {
+            "capacity": "Unknown",
+            "modules": [],
+            "features": [
+              "MPLS cloud services"
+            ]
+          },
+          "location": {
+            "site": "Cloud",
+            "floor": "Unknown",
+            "room": "Unknown"
+          },
+          "criticality": "critical"
+        },
+        {
+          "component_id": "comp_006",
+          "component_name": "DB Gateway",
+          "component_type": "server",
+          "model_number": "Unknown",
+          "quantity": 1,
+          "specifications": {
+            "capacity": "Unknown",
+            "modules": [],
+            "features": [
+              "Database gateway services"
+            ]
+          },
+          "location": {
+            "site": "Unknown",
+            "floor": "Unknown",
+            "room": "Unknown"
+          },
+          "criticality": "high"
+        },
+        {
+          "component_id": "comp_007",
+          "component_name": "Logging/Monitoring Server",
+          "component_type": "server",
+          "model_number": "Unknown",
+          "quantity": 1,
+          "specifications": {
+            "capacity": "Unknown",
+            "modules": [],
+            "features": [
+              "Logging and monitoring services"
+            ]
+          },
+          "location": {
+            "site": "Unknown",
+            "floor": "Unknown",
+            "room": "Unknown"
+          },
+          "criticality": "medium"
+        },
+        {
+          "component_id": "comp_008",
+          "component_name": "ATM Domestic Server",
+          "component_type": "server",
+          "model_number": "Unknown",
+          "quantity": 1,
+          "specifications": {
+            "capacity": "Unknown",
+            "modules": [],
+            "features": [
+              "ATM domestic services"
+            ]
+          },
+          "location": {
+            "site": "Unknown",
+            "floor": "Unknown",
+            "room": "Unknown"
+          },
+          "criticality": "high"
+        },
+        {
+          "component_id": "comp_009",
+          "component_name": "Domestic Transactions",
+          "component_type": "server",
+          "model_number": "Unknown",
+          "quantity": 1,
+          "specifications": {
+            "capacity": "Unknown",
+            "modules": [],
+            "features": [
+              "Domestic transaction processing"
+            ]
+          },
+          "location": {
+            "site": "Unknown",
+            "floor": "Unknown",
+            "room": "Unknown"
+          },
+          "criticality": "critical"
+        },
+        {
+          "component_id": "comp_010",
+          "component_name": "Site Processor",
+          "component_type": "server",
+          "model_number": "Unknown",
+          "quantity": 1,
+          "specifications": {
+            "capacity": "Unknown",
+            "modules": [],
+            "features": [
+              "Site processing services"
+            ]
+          },
+          "location": {
+            "site": "Unknown",
+            "floor": "Unknown",
+            "room": "Unknown"
+          },
+          "criticality": "high"
+        },
+        {
+          "component_id": "comp_011",
+          "component_name": "Operations Controller App",
+          "component_type": "server",
+          "model_number": "Unknown",
+          "quantity": 1,
+          "specifications": {
+            "capacity": "Unknown",
+            "modules": [],
+            "features": [
+              "Operations control application"
+            ]
+          },
+          "location": {
+            "site": "Unknown",
+            "floor": "Unknown",
+            "room": "Unknown"
+          },
+          "criticality": "high"
+        },
+        {
+          "component_id": "comp_012",
+          "component_name": "Server EFTPOS Simulator",
+          "component_type": "server",
+          "model_number": "Unknown",
+          "quantity": 1,
+          "specifications": {
+            "capacity": "Unknown",
+            "modules": [],
+            "features": [
+              "EFTPOS simulation services"
+            ]
+          },
+          "location": {
+            "site": "Unknown",
+            "floor": "Unknown",
+            "room": "Unknown"
+          },
+          "criticality": "medium"
+        },
+        {
+          "component_id": "comp_013",
+          "component_name": "Acquirer Database",
+          "component_type": "server",
+          "model_number": "Unknown",
+          "quantity": 1,
+          "specifications": {
+            "capacity": "Unknown",
+            "modules": [],
+            "features": [
+              "Acquirer database services"
+            ]
+          },
+          "location": {
+            "site": "Unknown",
+            "floor": "Unknown",
+            "room": "Unknown"
+          },
+          "criticality": "critical"
+        },
+        {
+          "component_id": "comp_014",
+          "component_name": "DCS Server",
+          "component_type": "server",
+          "model_number": "Unknown",
+          "quantity": 1,
+          "specifications": {
+            "capacity": "Unknown",
+            "modules": [],
+            "features": [
+              "DCS server services"
+            ]
+          },
+          "location": {
+            "site": "Unknown",
+            "floor": "Unknown",
+            "room": "Unknown"
+          },
+          "criticality": "high"
+        },
+        {
+          "component_id": "comp_015",
+          "component_name": "Authorisation Response Engine",
+          "component_type": "server",
+          "model_number": "Unknown",
+          "quantity": 1,
+          "specifications": {
+            "capacity": "Unknown",
+            "modules": [],
+            "features": [
+              "Authorization response processing"
+            ]
+          },
+          "location": {
+            "site": "Unknown",
+            "floor": "Unknown",
+            "room": "Unknown"
+          },
+          "criticality": "critical"
+        },
+        {
+          "component_id": "comp_016",
+          "component_name": "Logging Server",
+          "component_type": "server",
+          "model_number": "Unknown",
+          "quantity": 1,
+          "specifications": {
+            "capacity": "Unknown",
+            "modules": [],
+            "features": [
+              "Logging services"
+            ]
+          },
+          "location": {
+            "site": "Unknown",
+            "floor": "Unknown",
+            "room": "Unknown"
+          },
+          "criticality": "medium"
+        },
+        {
+          "component_id": "comp_017",
+          "component_name": "Archive Portal",
+          "component_type": "server",
+          "model_number": "Unknown",
+          "quantity": 1,
+          "specifications": {
+            "capacity": "Unknown",
+            "modules": [],
+            "features": [
+              "Archive portal services"
+            ]
+          },
+          "location": {
+            "site": "Unknown",
+            "floor": "Unknown",
+            "room": "Unknown"
+          },
+          "criticality": "medium"
+        }
+      ],
+      "connections": [
+        {
+          "connection_id": "conn_001",
+          "source_component": "Site A",
+          "destination_component": "Access Layer",
+          "connection_type": "lan",
+          "cable_specifications": {
+            "cable_type": "unknown",
+            "speed": "unknown",
+            "protocol": "unknown",
+            "distance": "unknown"
+          },
+          "redundancy": {
+            "is_redundant": false,
+            "redundancy_type": null,
+            "protocol": null
+          }
+        },
+        {
+          "connection_id": "conn_002",
+          "source_component": "Access Layer",
+          "destination_component": "Web",
+          "connection_type": "lan",
+          "cable_specifications": {
+            "cable_type": "unknown",
+            "speed": "unknown",
+            "protocol": "unknown",
+            "distance": "unknown"
+          },
+          "redundancy": {
+            "is_redundant": false,
+            "redundancy_type": null,
+            "protocol": null
+          }
+        },
+        {
+          "connection_id": "conn_003",
+          "source_component": "MPLS Layer Network",
+          "destination_component": "MPLS Cloud",
+          "connection_type": "wan",
+          "cable_specifications": {
+            "cable_type": "unknown",
+            "speed": "unknown",
+            "protocol": "MPLS",
+            "distance": "unknown"
+          },
+          "redundancy": {
+            "is_redundant": false,
+            "redundancy_type": null,
+            "protocol": null
+          }
+        },
+        {
+          "connection_id": "conn_004",
+          "source_component": "MPLS Cloud",
+          "destination_component": "ATM Domestic Server",
+          "connection_type": "wan",
+          "cable_specifications": {
+            "cable_type": "unknown",
+            "speed": "unknown",
+            "protocol": "MPLS",
+            "distance": "unknown"
+          },
+          "redundancy": {
+            "is_redundant": false,
+            "redundancy_type": null,
+            "protocol": null
+          }
+        }
+      ],
+      "legend": []
+    }
+  },
+  "entities": [
+    {
+      "entity_name": "Site A",
+      "entity_type": "location",
+      "role": "Primary network site",
+      "relationships": [
+        "Connected to Access Layer"
+      ],
+      "dependencies": [
+        "Access Layer connectivity"
+      ],
+      "criticality": "high"
+    },
+    {
+      "entity_name": "MPLS Network",
+      "entity_type": "infrastructure",
+      "role": "Wide area network connectivity",
+      "relationships": [
+        "Connects multiple sites and services"
+      ],
+      "dependencies": [
+        "Service provider MPLS infrastructure"
+      ],
+      "criticality": "critical"
+    },
+    {
+      "entity_name": "Financial Transaction Services",
+      "entity_type": "service_group",
+      "role": "ATM and payment processing services",
+      "relationships": [
+        "ATM Domestic Server",
+        "Domestic Transactions",
+        "Authorization Response Engine"
+      ],
+      "dependencies": [
+        "Database connectivity",
+        "Network connectivity"
+      ],
+      "criticality": "critical"
+    }
+  ],
+  "concepts": [
+    {
+      "concept_name": "Multi-tier Architecture",
+      "description": "Layered network architecture with access, distribution, and core layers",
+      "business_domain": "Network Infrastructure"
+    },
+    {
+      "concept_name": "Financial Transaction Processing",
+      "description": "ATM and payment card transaction processing system",
+      "business_domain": "Financial Services"
+    },
+    {
+      "concept_name": "MPLS Connectivity",
+      "description": "Multi-Protocol Label Switching for wide area network connectivity",
+      "business_domain": "Network Infrastructure"
+    }
+  ],
+  "relationships": [
+    {
+      "relationship_type": "network_connectivity",
+      "source": "Site A",
+      "target": "MPLS Cloud",
+      "description": "Site A connects to MPLS cloud for wide area connectivity"
+    },
+    {
+      "relationship_type": "service_dependency",
+      "source": "ATM Services",
+      "target": "Database Services",
+      "description": "ATM services depend on database connectivity for transaction processing"
+    },
+    {
+      "relationship_type": "data_flow",
+      "source": "Authorization Response Engine",
+      "target": "ATM Domestic Server",
+      "description": "Authorization responses flow to ATM services"
+    }
+  ],
+  "obligations": [
+    {
+      "obligation_type": "operational",
+      "description": "Maintain MPLS connectivity for critical financial services",
+      "mandatory": true,
+      "conditions": [
+        "24/7 availability required"
+      ],
+      "affected_components": [
+        "MPLS Cloud",
+        "ATM Services"
+      ]
+    },
+    {
+      "obligation_type": "security",
+      "description": "Secure financial transaction data in transit and at rest",
+      "mandatory": true,
+      "conditions": [
+        "PCI DSS compliance required"
+      ],
+      "affected_components": [
+        "All financial transaction components"
+      ]
+    }
+  ],
+  "risks": [
+    {
+      "risk_id": "RISK_001",
+      "risk_type": "single_point_of_failure",
+      "description": "MPLS Cloud appears to be single point of failure for wide area connectivity",
+      "likelihood": "medium",
+      "impact": "critical",
+      "affected_components": [
+        "MPLS Cloud",
+        "All remote services"
+      ],
+      "consequences": [
+        "Complete loss of wide area connectivity",
+        "Financial service disruption"
+      ],
+      "mitigation_recommendations": [
+        "Implement redundant MPLS connections",
+        "Add backup connectivity options"
+      ]
+    },
+    {
+      "risk_id": "RISK_002",
+      "risk_type": "capacity",
+      "description": "No visible redundancy in critical financial transaction components",
+      "likelihood": "high",
+      "impact": "critical",
+      "affected_components": [
+        "ATM Domestic Server",
+        "Authorization Response Engine",
+        "Acquirer Database"
+      ],
+      "consequences": [
+        "Service outage during component failure",
+        "Financial transaction processing disruption"
+      ],
+      "mitigation_recommendations": [
+        "Implement high availability clustering",
+        "Add redundant components"
+      ]
+    },
+    {
+      "risk_id": "RISK_003",
+      "risk_type": "security",
+      "description": "Unclear security boundaries and access controls in diagram",
+      "likelihood": "medium",
+      "impact": "high",
+      "affected_components": [
+        "All components"
+      ],
+      "consequences": [
+        "Potential unauthorized access",
+        "Compliance violations"
+      ],
+      "mitigation_recommendations": [
+        "Define security zones",
+        "Implement firewalls and access controls"
+      ]
+    },
+    {
+      "risk_id": "RISK_004",
+      "risk_type": "operational",
+      "description": "Limited monitoring and logging infrastructure visible",
+      "likelihood": "medium",
+      "impact": "medium",
+      "affected_components": [
+        "Logging Server",
+        "Logging/Monitoring Server"
+      ],
+      "consequences": [
+        "Poor visibility into system health",
+        "Delayed incident response"
+      ],
+      "mitigation_recommendations": [
+        "Expand monitoring coverage",
+        "Implement centralized logging"
+      ]
+    }
+  ],
+  "opportunities": [
+    {
+      "opportunity_type": "architecture",
+      "description": "Opportunity to implement modern cloud-native architecture",
+      "potential_benefits": [
+        "Improved scalability",
+        "Reduced operational overhead",
+        "Better disaster recovery"
+      ],
+      "affected_components": [
+        "All server components"
+      ]
+    },
+    {
+      "opportunity_type": "security",
+      "description": "Opportunity to implement zero-trust security model",
+      "potential_benefits": [
+        "Enhanced security posture",
+        "Better compliance",
+        "Reduced attack surface"
+      ],
+      "affected_components": [
+        "All components"
+      ]
+    },
+    {
+      "opportunity_type": "performance",
+      "description": "Opportunity to implement load balancing and auto-scaling",
+      "potential_benefits": [
+        "Better performance",
+        "Improved availability",
+        "Cost optimization"
+      ],
+      "affected_components": [
+        "Web servers",
+        "Database servers",
+        "Transaction processing servers"
+      ]
+    }
+  ],
+  "ambiguities": [
+    {
+      "ambiguity_type": "missing_information",
+      "description": "Network speeds, protocols, and capacity specifications not specified",
+      "affected_areas": [
+        "All network connections"
+      ],
+      "clarification_needed": "Define bandwidth requirements and current utilization"
+    },
+    {
+      "ambiguity_type": "unclear_relationships",
+      "description": "Some component relationships and data flows are unclear",
+      "affected_areas": [
+        "Server interconnections"
+      ],
+      "clarification_needed": "Define detailed data flow and API relationships"
+    },
+    {
+      "ambiguity_type": "missing_redundancy",
+      "description": "Redundancy and high availability configurations not clearly shown",
+      "affected_areas": [
+        "All critical components"
+      ],
+      "clarification_needed": "Document HA configurations and failover procedures"
+    }
+  ],
+  "architecture_assessment": {
+    "pattern_type": "Multi-site financial services architecture",
+    "appropriateness": "Partially appropriate - lacks visible redundancy for critical services",
+    "strengths": [
+      "Separation of concerns",
+      "Dedicated financial transaction processing",
+      "Centralized logging"
+    ],
+    "weaknesses": [
+      "Single points of failure",
+      "Unclear security boundaries",
+      "Limited redundancy"
+    ],
+    "design_quality_score": 0.6
+  },
+  "best_practices_analysis": {
+    "followed_practices": [
+      "Layered architecture",
+      "Dedicated transaction processing",
+      "Centralized logging"
+    ],
+    "violated_practices": [
+      "High availability design",
+      "Security zone segmentation",
+      "Redundant connectivity"
+    ],
+    "applicable_standards": [
+      "PCI DSS",
+      "ISO 27001",
+      "NIST Cybersecurity Framework"
+    ],
+    "recommendations": [
+      "Implement HA clustering",
+      "Add security zones",
+      "Document disaster recovery procedures"
+    ]
+  },
+  "impact_analysis": [
+    {
+      "scenario": "MPLS Cloud failure",
+      "impact": "Complete loss of wide area connectivity affecting all remote services",
+      "affected_services": [
+        "ATM services",
+        "Transaction processing",
+        "Database access"
+      ],
+      "recovery_time_estimate": "4-8 hours without redundancy"
+    },
+    {
+      "scenario": "ATM Domestic Server failure",
+      "impact": "Loss of ATM transaction processing capabilities",
+      "affected_services": [
+        "ATM transactions",
+        "Card authorization"
+      ],
+      "recovery_time_estimate": "2-4 hours for server restart/replacement"
+    }
+  ],
+  "executive_summary": "This network diagram shows a financial services architecture with ATM and transaction processing capabilities connected via MPLS. Critical risks include single points of failure in MPLS connectivity and lack of visible redundancy in transaction processing components.",
+  "detailed_summary": "The diagram depicts a multi-site financial services network architecture centered around ATM and payment transaction processing. The architecture includes Site A with access layer connectivity, an MPLS cloud for wide area networking, and multiple specialized servers for transaction processing, authorization, and database services. Key concerns include the apparent lack of redundancy in critical components like the MPLS cloud and transaction processing servers, unclear security boundaries, and missing technical specifications for network connections. The architecture follows a reasonable separation of concerns with dedicated servers for different functions, but requires significant improvements in high availability design and security segmentation to meet financial services standards. Immediate actions needed include implementing redundant MPLS connections, adding high availability clustering for critical servers, and defining clear security zones with appropriate access controls.",
+  "qa_pairs": [
+    {
+      "question": "What type of network architecture is shown in this diagram?",
+      "answer": "A multi-site financial services network architecture with MPLS connectivity, featuring ATM transaction processing and payment authorization services."
+    },
+    {
+      "question": "What are the main components in Site A?",
+      "answer": "Site A contains an Access Layer component and a Web server, connected through the local network infrastructure."
+    },
+    {
+      "question": "What is the primary connectivity method for wide area networking?",
+      "answer": "MPLS (Multi-Protocol Label Switching) cloud provides the primary wide area network connectivity between sites and services."
+    },
+    {
+      "question": "What financial services are supported by this architecture?",
+      "answer": "The architecture supports ATM domestic transactions, payment authorization, acquirer database services, and EFTPOS simulation."
+    },
+    {
+      "question": "What are the biggest risks in this architecture?",
+      "answer": "The biggest risks are single points of failure in MPLS connectivity and lack of visible redundancy in critical transaction processing components."
+    },
+    {
+      "question": "Is there redundancy visible in the MPLS connectivity?",
+      "answer": "No, the diagram shows only a single MPLS cloud connection, which represents a critical single point of failure for wide area connectivity."
+    },
+    {
+      "question": "What monitoring capabilities are shown?",
+      "answer": "The diagram shows a Logging/Monitoring Server and a separate Logging Server, providing some monitoring and logging capabilities."
+    },
+    {
+      "question": "Are security boundaries clearly defined?",
+      "answer": "No, the diagram does not show clear security zones, firewalls, or access control boundaries, which is a concern for financial services."
+    },
+    {
+      "question": "What happens if the ATM Domestic Server fails?",
+      "answer": "ATM transaction processing would be disrupted, potentially affecting all ATM services until the server is restored or failed over to a backup."
+    },
+    {
+      "question": "What compliance standards likely apply to this architecture?",
+      "answer": "PCI DSS for payment card processing, ISO 27001 for information security, and various financial services regulations would likely apply."
+    },
+    {
+      "question": "How could the architecture be improved for high availability?",
+      "answer": "Add redundant MPLS connections, implement server clustering for critical components, and add load balancers for better distribution."
+    },
+    {
+      "question": "What is the role of the Authorization Response Engine?",
+      "answer": "The Authorization Response Engine processes payment authorization requests and provides responses for transaction approval or denial."
+    },
+    {
+      "question": "Is there a disaster recovery plan visible in this architecture?",
+      "answer": "No disaster recovery components or procedures are visible in the diagram, which is a significant gap for financial services."
+    },
+    {
+      "question": "What database services are included?",
+      "answer": "The architecture includes an Acquirer Database for payment processing data and a DCS Server for additional database services."
+    },
+    {
+      "question": "How is transaction data archived?",
+      "answer": "An Archive Portal is shown in the architecture, presumably for storing and retrieving historical transaction data."
+    },
+    {
+      "question": "What operational controls are in place?",
+      "answer": "An Operations Controller App is shown, which likely provides operational monitoring and control capabilities for the system."
+    },
+    {
+      "question": "Are there any simulation or testing capabilities?",
+      "answer": "Yes, a Server EFTPOS Simulator is included, which can be used for testing payment processing functionality."
+    },
+    {
+      "question": "What improvements are needed for security?",
+      "answer": "Define security zones, implement firewalls, add intrusion detection, and establish clear access control boundaries between components."
+    },
+    {
+      "question": "How scalable is this architecture?",
+      "answer": "The architecture appears to have limited scalability due to single-instance components and lack of load balancing or auto-scaling capabilities."
+    },
+    {
+      "question": "What is the estimated recovery time if the MPLS cloud fails?",
+      "answer": "Without redundant connectivity, recovery could take 4-8 hours depending on service provider response and alternative connection setup."
+    }
+  ],
+  "actionable_insights": {
+    "immediate_actions": [
+      "Conduct risk assessment of single points of failure",
+      "Document current network specifications and capacity",
+      "Implement monitoring for all critical components",
+      "Define incident response procedures"
+    ],
+    "short_term_improvements": [
+      "Add redundant MPLS connectivity",
+      "Implement high availability clustering for critical servers",
+      "Define and implement security zones",
+      "Add load balancers for transaction processing servers"
+    ],
+    "long_term_strategic_recommendations": [
+      "Migrate to cloud-native architecture with auto-scaling",
+      "Implement zero-trust security model",
+      "Develop comprehensive disaster recovery plan",
+      "Consider microservices architecture for better scalability"
+    ],
+    "estimated_costs_benefits": {
+      "redundancy_implementation": "High cost, critical benefit for availability",
+      "security_improvements": "Medium cost, high benefit for compliance",
+      "monitoring_expansion": "Low cost, high benefit for operations"
+    }
+  },
+  "vision_metadata": {
+    "model": "claude-sonnet-4-20250514",
+    "generated_at": "2025-10-17T17:27:14.943Z",
+    "prompt_path": "config/prompts/vision-ultimate.txt",
+    "reason": "low_quality_text",
+    "source": "anthropic_vision"
+  }
+}

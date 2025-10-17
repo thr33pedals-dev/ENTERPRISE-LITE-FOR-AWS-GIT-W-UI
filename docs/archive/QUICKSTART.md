@@ -48,7 +48,7 @@ You should see:
 🚀 Support AI Server with MCP
 ================================
 📡 Server running on http://localhost:3000
-🤖 Claude Model: claude-3-5-sonnet-20241022
+🤖 Claude Model: claude-sonnet-4-20250514
 ...
 ```
 

@@ -215,7 +215,7 @@ Before responding, pause and jot notes in the think tool when:
 - A user request might conflict with HR, ethics, or compliance rules.
 - You need to confirm whether company policies allow a specific action.
 - Multiple documents must be cross-checked (e.g., Code of Conduct + Conflict of Interest).
-- A vision summary is available for diagrams/architectures. Review the "Vision Context (summarized)" section and plan which details you'll cite.
+- A vision summary is available for images/diagrams/architectures. Review the "Vision Context (summarized)" section and plan which details you'll cite.
 
 In the think step, explicitly cover:
 1. **Applicable Rules** – Which uploaded policy sections seem relevant?

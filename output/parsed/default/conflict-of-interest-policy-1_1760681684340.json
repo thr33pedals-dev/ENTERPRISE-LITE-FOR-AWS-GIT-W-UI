@@ -1,0 +1,3291 @@
+{
+  "source": "advanced_pdf_parser",
+  "document_metadata": {
+    "detected_type": "pdf_document",
+    "title": "Sunway Berhad Group Companies",
+    "pages": 32
+  },
+  "hierarchical_content": {
+    "sections": [
+      {
+        "section_id": "1",
+        "section_title": ". PURPOSE 3",
+        "subsections": [],
+        "items": []
+      },
+      {
+        "section_id": "2",
+        "section_title": ". SCOPE 3",
+        "subsections": [],
+        "items": []
+      },
+      {
+        "section_id": "3",
+        "section_title": ". DEFINITIONS 3",
+        "subsections": [],
+        "items": []
+      },
+      {
+        "section_id": "4",
+        "section_title": ". GUIDANCE ON DEFINITIONS AND RUL ES ON AVOIDING CONFL ICT OF INTEREST 4",
+        "subsections": [],
+        "items": []
+      },
+      {
+        "section_id": "5",
+        "section_title": ". DISCLOSURE 6",
+        "subsections": [],
+        "items": []
+      },
+      {
+        "section_id": "6",
+        "section_title": ". MANAGING CONFLICT OF INTEREST 7",
+        "subsections": [],
+        "items": []
+      },
+      {
+        "section_id": "7",
+        "section_title": ". MANAGING SPECIFIC CO NFLICT OF INTEREST 9",
+        "subsections": [],
+        "items": []
+      },
+      {
+        "section_id": "8",
+        "section_title": ". MANAGING INTERCOMPAN Y CONFLICT OF INTERE ST 9",
+        "subsections": [],
+        "items": []
+      },
+      {
+        "section_id": "9",
+        "section_title": ". OVERSIGHT RESPONSIBI LITIES 10",
+        "subsections": [],
+        "items": []
+      },
+      {
+        "section_id": "10",
+        "section_title": ". RECORD MAINTENANCE 12",
+        "subsections": [],
+        "items": []
+      },
+      {
+        "section_id": "11",
+        "section_title": ". DISCIPLINARY MEASURE S 12",
+        "subsections": [],
+        "items": []
+      },
+      {
+        "section_id": "12",
+        "section_title": ". OTHER RELEVANT DOCUM ENTS 12",
+        "subsections": [],
+        "items": []
+      },
+      {
+        "section_id": "13",
+        "section_title": ". REVIEW OF CO MPLIANCE 12",
+        "subsections": [],
+        "items": []
+      },
+      {
+        "section_id": "14",
+        "section_title": ". CONTACT 13",
+        "subsections": [],
+        "items": []
+      },
+      {
+        "section_id": "15",
+        "section_title": ". POLICY OWNER 13",
+        "subsections": [],
+        "items": []
+      },
+      {
+        "section_id": "16",
+        "section_title": ". WHISTLEB LOWING 13",
+        "subsections": [],
+        "items": []
+      },
+      {
+        "section_id": "17",
+        "section_title": ". EFFECTIVE DATE 1 3",
+        "subsections": [],
+        "items": [
+          {
+            "item_id": "17.1",
+            "text": "Appendix A: Key Senior Management & Group Senior Management Members 14 Appendix B: Gloss ary 1 7 Appendix C : List of COI Examples 1 8 Appendix D: COI Declaration Forms (D1, D2 & D3) 20 Appe ndix E: Employees COI Management Process Flow Chart & the Process Description (E1 & E2) 2 9 Appendix F: Director’s COI Management Process Flow Chart 3 2",
+            "sub_items": []
+          }
+        ]
+      },
+      {
+        "section_id": "2",
+        "section_title": "Section 2",
+        "subsections": [],
+        "items": [
+          {
+            "item_id": "2.1",
+            "text": "--- Page Break ---",
+            "sub_items": []
+          },
+          {
+            "item_id": "2.2",
+            "text": "Sunway Berha d Group Companies COI Policy",
+            "sub_items": []
+          }
+        ]
+      },
+      {
+        "section_id": "1",
+        "section_title": ". PURPOSE",
+        "subsections": [],
+        "items": [
+          {
+            "item_id": "1.1",
+            "text": "Sunway Berhad and its subsidiaries ( “Sunway” or the “Company”) are committed to upholding the highest standards of our core values of integrity, humility and excellence in all our business dealings . We firmly believe in doing the right thing at all times.",
+            "sub_items": []
+          },
+          {
+            "item_id": "1.2",
+            "text": "The main objective of this policy is to establish and maintain a robust framework of clearly de fined processes and procedures t hat effectively identify, assess and manage both actual and potential conflicts of interest that may arise in a fair and transpar ent manner . These not only conform with regulatory standards but also foster a culture of accountability and integrity among our staff .",
+            "sub_items": []
+          }
+        ]
+      },
+      {
+        "section_id": "2",
+        "section_title": ". SCOPE",
+        "subsections": [],
+        "items": [
+          {
+            "item_id": "2.1",
+            "text": "This Policy applies to Non - Executive Directors (Independent and Non - Independent) and all employees including Executive Directors and Key Senior Manageme nt (as listed in Appendix A) of Sunway Berhad and its subsidiaries (“ Sunway Berhad Group Companies ”) , both domestic and interna tional.",
+            "sub_items": []
+          }
+        ]
+      },
+      {
+        "section_id": "3",
+        "section_title": ". DEFINITION S",
+        "subsections": [],
+        "items": [
+          {
+            "item_id": "3.1",
+            "text": "Bribery 1 means the act of giving, agreeing to give, promises or offers to any person any gratification ( including payment of cash, gifts, or excessive entertainment, or an inducement of any kind offered or given to any person) with the intent (a) to obtain or retain business for the company; or (b) to obtain or retain an advantage in the conduct of business for the company .",
+            "sub_items": []
+          },
+          {
+            "item_id": "3.2",
+            "text": "Business Associates means the partners, agents, vendors, suppliers, contractors, consultants and any other third party service providers or persons who perform services for or on behalf of Sunway Berhad Group C ompanies.",
+            "sub_items": []
+          },
+          {
+            "item_id": "3.3",
+            "text": "Corruption 2 me ans the a buse of entrusted power for private gain .",
+            "sub_items": []
+          },
+          {
+            "item_id": "3.4",
+            "text": "Chief Executive means the principal executive officer of Sunway, who is called the President at Sunway Berhad Group Companies .",
+            "sub_items": []
+          },
+          {
+            "item_id": "3.5",
+            "text": "Chief Financial Officer means the person primarily responsible for the management of the financial affairs of Sunway (such as record keeping, financial planning and financial reporting) as per Main Market Listing Requirements of Bursa Malaysia",
+            "sub_items": []
+          },
+          {
+            "item_id": "3.6",
+            "text": "Insider Trading 3 means the purchase or sale of Sunway ’s securities effected by or on behalf of a person with knowledge of relevant but non - public material information regarding the company that may affect the price of the company's securities (price sensitive information) if made public.",
+            "sub_items": []
+          }
+        ]
+      },
+      {
+        "section_id": "1",
+        "section_title": "As defin ed under Malaysian Anti - Corruption Commission (Amendment) Act 2018",
+        "subsections": [],
+        "items": []
+      },
+      {
+        "section_id": "2",
+        "section_title": "As defined by Transparency International",
+        "subsections": [],
+        "items": []
+      },
+      {
+        "section_id": "3",
+        "section_title": "As defined under S188 of the Capital Markets and Services Act 2007",
+        "subsections": [],
+        "items": []
+      },
+      {
+        "section_id": "3",
+        "section_title": "Section 3",
+        "subsections": [],
+        "items": [
+          {
+            "item_id": "3.1",
+            "text": "--- Page Break ---",
+            "sub_items": []
+          },
+          {
+            "item_id": "3.2",
+            "text": "Sunway Berha d Group Companies COI Policy",
+            "sub_items": []
+          },
+          {
+            "item_id": "3.3",
+            "text": "K ey senior managemen t 4 r efers t o a person who is primarily responsible for the business operations of Sunway ’s core business and principal subsidiaries . (Refer to Appendix A , List of Key Senior Management) .",
+            "sub_items": []
+          },
+          {
+            "item_id": "3.4",
+            "text": "Personal Relationships means the persons connected to an employee :",
+            "sub_items": []
+          },
+          {
+            "item_id": "3.5",
+            "text": "a. f amily members and/or relatives includes spouse(s), children (including step - children and adopted children), parents, step - parents, siblings, step - siblings, grandparents, grandchildren, in - laws, uncles, aunts, nieces, nephews, and first cousins, as well as other persons who are members o f your household.",
+            "sub_items": []
+          },
+          {
+            "item_id": "3.6",
+            "text": "b. p erson(s) with whom the employee has an intimate relationship.",
+            "sub_items": []
+          },
+          {
+            "item_id": "3.7",
+            "text": "Related Party Transaction 5 means a transaction entered between Sunway or its subsidiaries and a related party , other than a transaction of a re venue nature in the ordinary course of business; “ r elated p arty” means a director or major shareholder or a person connected with such director or major shareholder .",
+            "sub_items": []
+          }
+        ]
+      },
+      {
+        "section_id": "4",
+        "section_title": ". GUIDANCE ON DEFINITIONS AND RULES ON AVOIDING CONFLICT OF INTEREST A conflict of interest (COI) 6 arises when :",
+        "subsections": [],
+        "items": [
+          {
+            "item_id": "4.1",
+            "text": "• the interests of an employee or director , interfere, or appear to interfere, with the interests of the Sunway Berhad Group Companies ; or",
+            "sub_items": []
+          },
+          {
+            "item_id": "4.2",
+            "text": "• the employee or director has interests that may make it difficult to perform his or he r role objectively and effectively.",
+            "sub_items": []
+          },
+          {
+            "item_id": "4.3",
+            "text": "A COI situation 7 is defined broadly at Sunway as follows:",
+            "sub_items": []
+          },
+          {
+            "item_id": "4.4",
+            "text": "• An Actual COI can be identified as existing or having created a conflict to the legitimate inter ests of Sunway; or",
+            "sub_items": []
+          },
+          {
+            "item_id": "4.5",
+            "text": "• A P otential C OI means a situation that has yet to materialize or happen, but may aris e subsequently due to, among others, prevailing relationships or interests of the said employee or director.",
+            "sub_items": []
+          },
+          {
+            "item_id": "4.6",
+            "text": "For the purposes of this policy, a COI shall include actual, and potential conflicts of interest.",
+            "sub_items": []
+          },
+          {
+            "item_id": "4.7",
+            "text": "A C OI involving the said employee or director is not limited to direct financial interest but also include an indirect financial interest and/ or non - financial interest (e.g. arising from relationships whether family, business or professional interests), or c ompeting loyalties or interests.",
+            "sub_items": []
+          }
+        ]
+      },
+      {
+        "section_id": "4",
+        "section_title": "As defined by Bursa Malaysia under the Main Market Listing Requirements 20 23",
+        "subsections": [],
+        "items": []
+      },
+      {
+        "section_id": "5",
+        "section_title": "As defined by Bursa Malaysia under the Leap Market Chapter 7 Transactions & Companies Act",
+        "subsections": [],
+        "items": []
+      },
+      {
+        "section_id": "6",
+        "section_title": "As defined by Bursa Malaysia under the Main Market Listing Requirements 2023",
+        "subsections": [],
+        "items": []
+      },
+      {
+        "section_id": "7",
+        "section_title": "Section 7",
+        "subsections": [],
+        "items": [
+          {
+            "item_id": "7.1",
+            "text": "As defined by Bursa Malaysia under the Main Market Listing Requirements 2023",
+            "sub_items": []
+          }
+        ]
+      },
+      {
+        "section_id": "4",
+        "section_title": "Section 4",
+        "subsections": [
+          {
+            "section_id": "4.1",
+            "section_title": "Financial Interests",
+            "subsections": [],
+            "items": [
+              {
+                "item_id": "4.1.1",
+                "text": "a. Financial interests include investment, ownership, proprietary interests, partnership as well as any other financial arrangement that provides a share of profits or revenues , wages, fees, benefi ts - in - kind and any other form s of income /asset .",
+                "sub_items": []
+              },
+              {
+                "item_id": "4.1.2",
+                "text": "b. Employe e s must disclose any financial interest held by themselves, their family members or relatives or in timate partner in Sunway’s business associates, competitors or other busine s ses if they are in a pos ition to influence decision s at Sunway related to that business. .",
+                "sub_items": []
+              }
+            ]
+          },
+          {
+            "section_id": "4.2",
+            "section_title": "Personal Relationships",
+            "subsections": [],
+            "items": [
+              {
+                "item_id": "4.2.1",
+                "text": "a. Whi lst Sunway respects the privacy of its employees and generally refrains from inquir ing about an employee's personal relationships , c ertain connections suc h as famil y ties within Sunway , r elationship s with Sunway’s business associates or competitors , or intimate relationships , could potential ly create conflicts of interest or perception s thereof .",
+                "sub_items": []
+              },
+              {
+                "item_id": "4.2.2",
+                "text": "b. Therefore, employees are required to disclose any p ersonal r e lationships that may create a conflict of interest or could reasonably be perceived as influencing their professional duties or decisions . This includes famility members or relatives or intimate partner s who are employed by competing compan ies or with bus iness associates .",
+                "sub_items": []
+              },
+              {
+                "item_id": "4.2.3",
+                "text": "c. Employees must not engage in direct manager/subordinate relationships with f amily members or relatives or intimate partner s at Sun way . They must also avoid participat ing in employment - related decisions such as hiring, work assignments , compensation, performance reviews, disciplinary actions, and prom otions for these individuals, even there is no direct supervisory relationship .",
+                "sub_items": []
+              }
+            ]
+          },
+          {
+            "section_id": "4.3",
+            "section_title": "Outside Employment or Activities",
+            "subsections": [],
+            "items": [
+              {
+                "item_id": "4.3.1",
+                "text": "a. Sunway does not prohibit all outside employmen t . Outside employment includes freelancing, part - time job, consulting or advisory roles while other activities include outside business es or service s .",
+                "sub_items": []
+              },
+              {
+                "item_id": "4.3.2",
+                "text": "b. However, it is the employee ’s responsibility to ensure that any outside employment and /or other activities do not negatively i mpact the ir work at Sunway, involve misuse of Sunway ’s information , property or assets, create a conflict for Sunway , or otherwise adversely affect Sunway 's interests. E mployee s may engage in outside employment or other activities only if these do not int erfere with their ability to perform their duties and responsibilities at Sunway .",
+                "sub_items": []
+              },
+              {
+                "item_id": "4.3.3",
+                "text": "c. E mployee s are not permitted to engage in any outside employment or activities that improperly influence or may be perceived as improperly influencing their judgment, decisio ns, or actions in their role at Sunway. This applies to any external activities , regardless of th e title or compensation, and w hether they involve positions in another company/organi s ation o r any other entity that could interfere with the employee ’s duties and responsibilities at Sunway.",
+                "sub_items": []
+              },
+              {
+                "item_id": "4.3.4",
+                "text": "d. E mployee s are required to disclose any outside employment or other activities in writing and obtain approval from the BU HR prior to engag ing in such employment or outside business or services.",
+                "sub_items": []
+              },
+              {
+                "item_id": "4.3.5",
+                "text": "e. Employees are prohibited from engaging in outside e mployment or other activities with competitors and business associates.",
+                "sub_items": []
+              }
+            ]
+          }
+        ],
+        "items": [
+          {
+            "item_id": "4.1",
+            "text": "--- Page Break ---",
+            "sub_items": []
+          },
+          {
+            "item_id": "4.2",
+            "text": "Sunway Berha d Group Companies COI Policy",
+            "sub_items": []
+          }
+        ]
+      },
+      {
+        "section_id": "5",
+        "section_title": "Section 5",
+        "subsections": [
+          {
+            "section_id": "4.4",
+            "section_title": "S ervice at another organization",
+            "subsections": [],
+            "items": [
+              {
+                "item_id": "4.4.1",
+                "text": "a. Prior written approval is required for any external service at another organization involving K ey S enior M anagement and BU /Corporate leadership levels. This includes roles such as director , office bearer, council member, committee member, or consultant for a trade or professional association as well as p osition s on advisory board of other compan ies or organization s , govern ment/statutory bodies and non - governmental organizations (NGOs) . Such activit ies w hether undertaken at Sunway’s request or independently must be disclosed due to p otential COI .",
+                "sub_items": []
+              },
+              {
+                "item_id": "4.4.2",
+                "text": "b. Serving as director or office bearer or member of an advisory board of a Sunw ay ’s competitor or business associates is strictly prohibited.",
+                "sub_items": []
+              }
+            ]
+          },
+          {
+            "section_id": "4.5",
+            "section_title": "Personal Benefit s",
+            "subsections": [],
+            "items": [
+              {
+                "item_id": "4.5.1",
+                "text": "a. An employee must not divert to his advantage any business opportunit ies that Sunway is pursuing for personal gain or to benefit others .",
+                "sub_items": []
+              }
+            ]
+          },
+          {
+            "section_id": "4.6",
+            "section_title": "Business Gifts, Entertainment a nd Hospitality",
+            "subsections": [],
+            "items": [
+              {
+                "item_id": "4.6.1",
+                "text": "a. Gifts, Entertainment and Hospitality are usually assessed as high risk areas for bribery. Sunway has adopted a “No Gift” Policy which prohibit s employees from directly or indirectly, receiving or providing gifts , with a view to improperly cause undue influence on any other party in exchange for some future benefit or result , as this will be construed as an act of bribery and contrary to the core values of Sunway .",
+                "sub_items": []
+              },
+              {
+                "item_id": "4.6.2",
+                "text": "b. Employees must not g iv e, r equest , offer or accept gifts, favours or any perso nal benefits that could influence their own or others’ judgement in business dealings for Sunway or any other party. This include situations where such gifts or benefits could lead to improper conduct, misuse of authority o r unfair advantage i n securing co ntracts and concession s .",
+                "sub_items": []
+              }
+            ]
+          },
+          {
+            "section_id": "4.7",
+            "section_title": "Donations , Sponsorships and Corporate Responsibilities",
+            "subsections": [],
+            "items": [
+              {
+                "item_id": "4.7.1",
+                "text": "a. Charitable donations and/or contributions and/or sponsorships are usually assessed as high risk areas for various forms of bribery, money - laundering and any other corru ption related activities.",
+                "sub_items": []
+              },
+              {
+                "item_id": "4.7.2",
+                "text": "b. Employees are prohibited to make donations, contributions and sponsorships for business related activities that fall outside the strategy outlined in the Donations, Sponsorships and Corporate Responsibility Policy.",
+                "sub_items": []
+              },
+              {
+                "item_id": "4.7.3",
+                "text": "Appendix C i s a non - exhaustive list of example s where COI may occur.",
+                "sub_items": []
+              }
+            ]
+          }
+        ],
+        "items": [
+          {
+            "item_id": "5.1",
+            "text": "--- Page Break ---",
+            "sub_items": []
+          },
+          {
+            "item_id": "5.2",
+            "text": "Sunway Berha d Group Companies COI Policy",
+            "sub_items": []
+          }
+        ]
+      },
+      {
+        "section_id": "5",
+        "section_title": ". DISCLOSURE All employees are expected to avoid conflicts of interest and are required to disclose any such conflicts, whether direct or indirect, actual or potential to their respective Head of De partment or BUHR. The disclosure process is as follows:",
+        "subsections": [],
+        "items": [
+          {
+            "item_id": "5.1",
+            "text": "• during the onboarding process o upon new employment or when transferred to a new roles or another business unit .",
+            "sub_items": []
+          }
+        ]
+      },
+      {
+        "section_id": "6",
+        "section_title": "Section 6",
+        "subsections": [],
+        "items": [
+          {
+            "item_id": "6.1",
+            "text": "--- Page Break ---",
+            "sub_items": []
+          },
+          {
+            "item_id": "6.2",
+            "text": "Sunway Berha d Group Companies COI Policy",
+            "sub_items": []
+          },
+          {
+            "item_id": "6.3",
+            "text": "• on an annual basis o i nitiated by BU HR. o a ll employees are required to submit their de claration form to the BU HR whether or not there is a conflict of interest .",
+            "sub_items": []
+          },
+          {
+            "item_id": "6.4",
+            "text": "• on ad hoc basis o th at is, immediately or as soon as they become aware of any changes to their personal situation , whether a conflict of interest has arose or the conflict of inter est has ceased .",
+            "sub_items": []
+          },
+          {
+            "item_id": "6.5",
+            "text": "Notwithstanding that i f an employee is un certain about the existence of a c onflict of interest in any of the situations mentioned in Section 4 above the employee is to disclose it to his/her Head of Department or BUHR .",
+            "sub_items": []
+          },
+          {
+            "item_id": "6.6",
+            "text": "Directors who s erve as Board Members to Sunway Berhad and/ or any of its subsidiaries should refer to Section 10.7 of Sunway’s Board Charter on the requirement of a nnual s elf - d eclaration o n any conflict of interest .",
+            "sub_items": []
+          },
+          {
+            "item_id": "6.7",
+            "text": "Please refer Appendix D 1, D 2 & D 3 for the respective COI disclosure forms.",
+            "sub_items": []
+          }
+        ]
+      },
+      {
+        "section_id": "6",
+        "section_title": ". MANAGING CONFLICT OF INTEREST 6.1 Dealing with Conflict of Interest Declaration",
+        "subsections": [],
+        "items": [
+          {
+            "item_id": "6.1",
+            "text": "a. E stablish a COI Management System to serve as central registry and repository hub for all COI submissions within Sunway Berhad Group Companies. Thi s system ensure s that all personal information and supporting documents related to COI disclosures are collected, stored, or used in accordance wi th the PDPA Policy. GHR is the administrator of the COI Management System.",
+            "sub_items": []
+          },
+          {
+            "item_id": "6.2",
+            "text": "b. T he System adopt s a standardized approach to COI disclosure, management and reporting across the entire Group. It functions as the c entralised record of COI disclosures for all CO I information, consolidating disclosures from various BUs. This system facilitate s the effective management o f conflict inc luding the development and implementation of resolution, elimination and mitigation action plans.",
+            "sub_items": []
+          },
+          {
+            "item_id": "6.3",
+            "text": "c. The respective BUHR shall be responsible for ensuring timely and accurate COI disclosures & submission of relevant documents by employees, e xcluding those of Executive & Non - Executive Directors (which are the responsible of the Company Secretary) . This inc ludes uploading mitigating actions by the corresponding approver . These records will be readily accessible for regulatory scrutiny and revie w by the Board and the Audit Committee.",
+            "sub_items": []
+          },
+          {
+            "item_id": "6.4",
+            "text": "Please refer to A ppendix E 1 and Appendix E2 for the process flow regarding the COI Management for employees and the process description. Appendix F is the process flow regarding the COI Management for directors .",
+            "sub_items": []
+          }
+        ]
+      },
+      {
+        "section_id": "7",
+        "section_title": "Section 7",
+        "subsections": [
+          {
+            "section_id": "6.2",
+            "section_title": "Conflict of Interest Approval Matrix",
+            "subsections": [],
+            "items": [
+              {
+                "item_id": "6.2.1",
+                "text": "Table A below is the Conflict of Interest Approval Matrix which outlines various categories of employees and corresponding authorit ies tasked with identifying, evaluating, and recommending actions to resolve, eliminate, or mitigate conflicts. I t also specifies the appropriate authority responsible for approv ing the recommended actions.",
+                "sub_items": []
+              },
+              {
+                "item_id": "6.2.2",
+                "text": "TABLE A",
+                "sub_items": []
+              },
+              {
+                "item_id": "6.2.3",
+                "text": "Identify, Evaluate & Employee Category Collate & Verify Approval by Recommend by Business Unit/Corporate Employees BUHR L1 Leadership Team",
+                "sub_items": []
+              },
+              {
+                "item_id": "6.2.4",
+                "text": "Business Unit/Corporate Leadership Team BUHR L1 President",
+                "sub_items": []
+              },
+              {
+                "item_id": "6.2.5",
+                "text": "Key Senior Management & Group Senior Group HR Audit Committee Board of Directors Management Executive & Non-Executive Directors CoSec Audit Committee Board of Directors",
+                "sub_items": []
+              },
+              {
+                "item_id": "6.2.6",
+                "text": "The respective BU leader & BU HR are responsible to implement the approved corrective action plan as w ell as for monitor and review its effectiveness involving employees .",
+                "sub_items": []
+              },
+              {
+                "item_id": "6.2.7",
+                "text": "The Company Secretary is responsible to ensure that disclosures submitted by the Exe cutive and Non - Executive Directors, Chief Executive Officer, Chief Financial Officer, Key Senior Manag ement are presented for deliberation and consideration by the Audit Committee, with its recommendation forwarded to the Board of Directors for approval .",
+                "sub_items": []
+              }
+            ]
+          },
+          {
+            "section_id": "6.3",
+            "section_title": "Action Plans to Resolve, Eliminat e or Mitigat e Conflicts Of Interest",
+            "subsections": [],
+            "items": [
+              {
+                "item_id": "6.3.1",
+                "text": "The appropriate action pla ns for managing a conflict of interest will vary depend ing on the specific situation and circumstances involved . Hence, these plans should be determined on a case - by - case basi s by the approving authority. Below are some examples of action plans:",
+                "sub_items": []
+              },
+              {
+                "item_id": "6.3.2",
+                "text": "a. Continuat ion with restrictions Participation may continue with sp ecific limitations imposed.",
+                "sub_items": []
+              },
+              {
+                "item_id": "6.3.3",
+                "text": "b. Abstention The employee shall recuse himself/herself from participation in any deliberations or decisions related to the conflict.",
+                "sub_items": []
+              },
+              {
+                "item_id": "6.3.4",
+                "text": "c. Limiting/denying access Access t o sensitive/confidential information or documents relevant to the conflict may be restricted or denied.",
+                "sub_items": []
+              },
+              {
+                "item_id": "6.3.5",
+                "text": "d. Reassignment/Transfer Employees may be reassigned to alternative roles or departments within the BU/Group, thus removing them from the positions of in fluence or decision - making authority.",
+                "sub_items": []
+              },
+              {
+                "item_id": "6.3.6",
+                "text": "e. Non - Disclosure /Confidentiality Agreement Requiring the said persons to execute a non - disclosure or confidentiality agreement to protect any type of confidential and proprietary information or trade secrets .",
+                "sub_items": []
+              }
+            ]
+          }
+        ],
+        "items": [
+          {
+            "item_id": "7.1",
+            "text": "--- Page Break ---",
+            "sub_items": []
+          },
+          {
+            "item_id": "7.2",
+            "text": "Sunway Berha d Group Companies COI Policy",
+            "sub_items": []
+          }
+        ]
+      },
+      {
+        "section_id": "8",
+        "section_title": "Section 8",
+        "subsections": [],
+        "items": [
+          {
+            "item_id": "8.1",
+            "text": "--- Page Break ---",
+            "sub_items": []
+          },
+          {
+            "item_id": "8.2",
+            "text": "Sunway Berha d Group Companies COI Policy",
+            "sub_items": []
+          },
+          {
+            "item_id": "8.3",
+            "text": "f. Remo ve/Withdraw Entirely In circumstances where the conflict is determined to be significant and the employee has no alternative but to withdraw entirely from the source of conflict or divest the interest causing the conflict or resign from Sunway , he/she wil l be granted a reasona ble period to do so.",
+            "sub_items": []
+          },
+          {
+            "item_id": "8.4",
+            "text": "Failure to address the conflict within the specified timeframe may result in the initiation of disciplinary procedures against the employee, including termination of employment. Typically, this timeframe should not exceed six months .",
+            "sub_items": []
+          }
+        ]
+      },
+      {
+        "section_id": "7",
+        "section_title": ". MANAGING SPECIFIC CONFLICT OF INTEREST",
+        "subsections": [],
+        "items": [
+          {
+            "item_id": "7.1",
+            "text": "Sunway ’s Group Procurement has implemented the Integrity Pact to uphold transparency and fairness in procurement processes and prevent bribery and corrupt practices. In addition to the annual conflict of interest d eclaration, employees involved in the procurement cycle are required to complete the 'Declaration By Employees/Members Of Tender Committees Involved In Sunway Procurement of the Integrity Pact and submit it to their respective BUHR. F or more information on the Integrity Pact, please refer to the Group Governance & Integrity portal on the Sunway Group website.",
+            "sub_items": []
+          }
+        ]
+      },
+      {
+        "section_id": "8",
+        "section_title": ". MANAGING INTERCOMPANY CONFLICT OF INTEREST",
+        "subsections": [],
+        "items": [
+          {
+            "item_id": "8.1",
+            "text": "Conflicts may also arise when a Director on the Board of a listed corporation is als o serving as a director on one or more boards of the listed corporation’s subsidiaries. Such director would have access or possess information that other directors on the board may not have 8 .",
+            "sub_items": []
+          },
+          {
+            "item_id": "8.2",
+            "text": "At all times, material information that is disclosed from sub sidiaries to Sunway, particularly reports of performance, price sensitive information and other key information that is not yet made public, is restricted in accordance with compliance to Su nway’s group governance requirements.",
+            "sub_items": []
+          },
+          {
+            "item_id": "8.3",
+            "text": "A Director who by virtue of him/ her serving as a Board member of Sunway and also on one or more Boards of Sunway’s subsidiaries shall be given access to information that is accurate, relevant, timely and in confidenc e thereby: • enabling the Director to discharge his/ her fidu ci ary d uties as well as Board responsibilities; and • limiting the risks of insider trading, related - party transactions and other forms of misuse of information that could lead to intercompany COI si tuations.",
+            "sub_items": []
+          },
+          {
+            "item_id": "8.4",
+            "text": "Therefore, a Director shall exercise due care in handli ng, disclosing, deliberating and acting on the information disclosed, for the best interest of the Board that he/ she serves as a Board member 8 .",
+            "sub_items": []
+          }
+        ]
+      },
+      {
+        "section_id": "8",
+        "section_title": "T he Securities Commission’s Guidelines on Conflict of Directors of Listed Corporations and their Subsidiaries highlights for",
+        "subsections": [],
+        "items": [
+          {
+            "item_id": "8.1",
+            "text": "a Listed Corporation’s group governance framework to include policies and processes on disclosure of information",
+            "sub_items": []
+          },
+          {
+            "item_id": "8.2",
+            "text": "internally within t he group [Source: Guidelines on Conduct of Directors of Listed Corporations and Their Subsidiaries",
+            "sub_items": []
+          },
+          {
+            "item_id": "8.3",
+            "text": "(sc.com.my) ].",
+            "sub_items": []
+          }
+        ]
+      },
+      {
+        "section_id": "9",
+        "section_title": "Section 9",
+        "subsections": [],
+        "items": [
+          {
+            "item_id": "9.1",
+            "text": "--- Page Break ---",
+            "sub_items": []
+          },
+          {
+            "item_id": "9.2",
+            "text": "Sunway Berha d Group Companies COI Policy",
+            "sub_items": []
+          }
+        ]
+      },
+      {
+        "section_id": "9",
+        "section_title": ". OVERSIGHT RESPONSIBILITIES",
+        "subsections": [
+          {
+            "section_id": "9.1",
+            "section_title": "B OARD OF DIRECTORS",
+            "subsections": [],
+            "items": [
+              {
+                "item_id": "9.1.1",
+                "text": "a. Ensures compliance with regulatory requirements and approves COI Governance Framework .",
+                "sub_items": []
+              },
+              {
+                "item_id": "9.1.2",
+                "text": "b. D eliberate s and approves disclosures of conflicts of interest by the Executive and Non - Executive D irectors , C hief E xecutive Officer , C hief F inancial O fficer and any other K ey S enior M anagement as well as reports/ findings presented by the A udit C ommittee .",
+                "sub_items": []
+              }
+            ]
+          },
+          {
+            "section_id": "9.2",
+            "section_title": "A UDIT COMMITTEE",
+            "subsections": [],
+            "items": [
+              {
+                "item_id": "9.2.1",
+                "text": "a. Monitors compliance with COI Governance Framework and COI Policies and Regulations, ensur es that internal controls related to COI management are in place and functioning effectively to identify, mit igate and manage COI risks .",
+                "sub_items": []
+              },
+              {
+                "item_id": "9.2.2",
+                "text": "b. C onducts reviews and approve s mitigating action plan s for conflict of interest disclosures involving Executive and Non - Executive Directors and Key Senior Management. Where necessary, it escalates these matters to the Board of D irectors for further deliberation and action aimed at res olving, eliminating and mitigating such conflicts. .",
+                "sub_items": []
+              },
+              {
+                "item_id": "9.2.3",
+                "text": "c. M onitor s and follow up on approved action plans designed to resolve, eliminate or mitigate the conflict .",
+                "sub_items": []
+              },
+              {
+                "item_id": "9.2.4",
+                "text": "d. R eport s findings and recommendations to the Board of Directors regarding COI governance and compliance, including summary of reviewed major COI situations and measures taken to resolve, eliminate, or mitigate such conflicts as well as report them in the Audit Committee Report.",
+                "sub_items": []
+              }
+            ]
+          },
+          {
+            "section_id": "9.3",
+            "section_title": "M ANAGEMENT",
+            "subsections": [],
+            "items": [
+              {
+                "item_id": "9.3.1",
+                "text": "a. Report s to the Board of Directors, Audit Committee and relevant stakeholders on the COI Governance Framework and COI Reporting Requirements.",
+                "sub_items": []
+              },
+              {
+                "item_id": "9.3.2",
+                "text": "b. Develops and updates COI Policies and Procedures, ensur es compliance with legal and regulatory requirements and in tegrate s the COI Governance Framework into business processes .",
+                "sub_items": []
+              },
+              {
+                "item_id": "9.3.3",
+                "text": "c. I dentif ies and evaluate s any a ctual COI or p otential COI arising from employee s’ disclosures.",
+                "sub_items": []
+              },
+              {
+                "item_id": "9.3.4",
+                "text": "d. P ropose s appropriate action plans to resolve, eliminate, or mitigate the conflicts identified.",
+                "sub_items": []
+              },
+              {
+                "item_id": "9.3.5",
+                "text": "e. M onitors compliance with COI policies and procedures, conducting regular assessments and audits to identify areas for improvement and ensure adherence to established st andards.",
+                "sub_items": []
+              },
+              {
+                "item_id": "9.3.6",
+                "text": "f. E ngages with internal and external stakeholders, including employees, customers , suppliers, regulators, and shareholders, to communicate COI polic y , address concerns, and foster transparency and trust.",
+                "sub_items": []
+              }
+            ]
+          }
+        ],
+        "items": []
+      },
+      {
+        "section_id": "10",
+        "section_title": "Section 10",
+        "subsections": [
+          {
+            "section_id": "9.4",
+            "section_title": "COMPANY SECRETARY",
+            "subsections": [],
+            "items": [
+              {
+                "item_id": "9.4.1",
+                "text": "a. E nsures that disclosure s submitted by the Executive and Non - Executive Directors and Key Senior Management are presented for deliberation and consideration b y the Audit Committee, with its recommendation forwarded to the Board of Directors for approval",
+                "sub_items": []
+              },
+              {
+                "item_id": "9.4.2",
+                "text": "b. E nsure s full compliance with all legal obligations concerning reporting, disclosures, record keepin g and other requirements relating to COI , particularly those involving the Executive and Non - Executive D irectors and Key Senior Ma nagement.",
+                "sub_items": []
+              },
+              {
+                "item_id": "9.4.3",
+                "text": "c. P rovides guidance to th e Board on matters of corporate governance including conflict of interest resolution .",
+                "sub_items": []
+              }
+            ]
+          },
+          {
+            "section_id": "9.5",
+            "section_title": "RISK & C OMPLIANCE",
+            "subsections": [],
+            "items": [
+              {
+                "item_id": "9.5.1",
+                "text": "a. S ecretariat to the Conflict of Interest Review C ommittee . The Committee review s the proposed corrective actio n plans from the Business Leaders to ensure they adequately address identified conflicts of interest. If the review identifies inadequacies or ineffectiveness, the Committee require s revisions before approval .",
+                "sub_items": []
+              },
+              {
+                "item_id": "9.5.2",
+                "text": "b. W ith the assista nce of GHR and BUHR, e nsu res Sunway’s business units comply with the regulatory requirements and internal controls to mitigate risks and uphold Sunway’s core values of integrity, humility and excellence.",
+                "sub_items": []
+              },
+              {
+                "item_id": "9.5.3",
+                "text": "c. C ontinuously evaluat e and enhance COI management processes and policies i ncorporating feedback , addressing emerging risks, and implementing best practices to effectively manage COI.",
+                "sub_items": []
+              }
+            ]
+          },
+          {
+            "section_id": "9.6",
+            "section_title": "EMPLOYEES",
+            "subsections": [],
+            "items": [
+              {
+                "item_id": "9.6.1",
+                "text": "a. A ll employees including Executive D irectors and Key Senior Management have a fiduciary duty to act in the best interests of Sunway including avoid ing conflicts of interest whilst undertaking their work at Sunway . b. A ll employees must disclose any a ctual COI or p otential COI they may have with Sunway Berhad Group Companies as soon as the conflict arises and the employee discloses tha t he/she may be in a conflict of interest situation. Since the situations that will or will not give rise to a conflict of interest may be subjective and will depend on the specific facts and cir cumstances, it is best for the employees to disclose the matt er to Head of Department, GHR / BU HR when in doubt. c. A ll employees must adhere to this policy and other relevant policies and guidelines as outlined herein. Any breach of the COI Policy shall be a subject matter of investigation and disciplinary actions.",
+                "sub_items": []
+              }
+            ]
+          }
+        ],
+        "items": [
+          {
+            "item_id": "10.1",
+            "text": "--- Page Break ---",
+            "sub_items": []
+          },
+          {
+            "item_id": "10.2",
+            "text": "Sunway Berha d Group Companies COI Policy",
+            "sub_items": []
+          },
+          {
+            "item_id": "10.3",
+            "text": "g. C onducts training and awareness programs to educate employees about COI policies and procedures, ensuring that they understand thei r obligations and how to identify and manage p otential COI .",
+            "sub_items": []
+          },
+          {
+            "item_id": "10.4",
+            "text": "h. The BU /Corporate Head is responsible to ensure the implementation of the corrective action plan , to moni tior its effectiveness and to propose a review where necessary.",
+            "sub_items": []
+          }
+        ]
+      },
+      {
+        "section_id": "11",
+        "section_title": "Section 11",
+        "subsections": [],
+        "items": [
+          {
+            "item_id": "11.1",
+            "text": "--- Page Break ---",
+            "sub_items": []
+          },
+          {
+            "item_id": "11.2",
+            "text": "Sunway Berha d Group Companies COI Policy",
+            "sub_items": []
+          }
+        ]
+      },
+      {
+        "section_id": "10",
+        "section_title": ". RECORD MAINTENANCE",
+        "subsections": [],
+        "items": [
+          {
+            "item_id": "10.1",
+            "text": "The respective BUHR shall be responsible for ensur ing timely annual COI disclosures & submission of relevant documents by employees , excluding those of Executive & Non - Executive Directors (which are the responsible of the Company Secret ary) . This includes safekeeping the COID forms and ensuring mitigating actions are taken by the relevant parties . These records will be readily accessible for regulatory scrutiny and review by the Board and the Audit Committee .",
+            "sub_items": []
+          }
+        ]
+      },
+      {
+        "section_id": "11",
+        "section_title": ". DISCIPLINARY MEASURES",
+        "subsections": [],
+        "items": [
+          {
+            "item_id": "11.1",
+            "text": "Sun way Berhad Group Companies expects the employees to fully disclose any a ctual COI or p otential COI . In the event a conflict is identified, the management and the Audit Committee (where relevant) are required to implement the approved action plans aimed at resolving, eliminating, or mitigating conflicts.",
+            "sub_items": []
+          },
+          {
+            "item_id": "11.2",
+            "text": "Failure to accurately or fully disclose or non - disclosure of conflicts, as well as to implement the approved corrective action plans, constitutes a serious breach of conduct. Such actions may result in disc iplinary measures, including termination of employment . Appropriate lawful action may also be taken against employees who fail to disclose conflicts, potentially harming the company or its stakeholders.",
+            "sub_items": []
+          }
+        ]
+      },
+      {
+        "section_id": "12",
+        "section_title": ". OTHER RELEVANT DOCUMENTS",
+        "subsections": [],
+        "items": [
+          {
+            "item_id": "12.1",
+            "text": "All employees including al l Directors and Key Senior Ma nagement must read this Policy in conjunction with our Code of Conduct and Business Ethics Policy , Anti - Bribery and Corruption Policy , Gifts, Entertainment and Hospitality Policy , Donations , Sponsorships and Corporate Responsib ility Policy , and other rel ated policies.",
+            "sub_items": []
+          }
+        ]
+      },
+      {
+        "section_id": "13",
+        "section_title": ". REVIEW OF COMPLIANCE",
+        "subsections": [],
+        "items": [
+          {
+            "item_id": "13.1",
+            "text": "In developing this policy, we have considered the guidelines set forth in the Main Market Listing Requirements of Bursa Malaysia, Capital Market and Ser vices Act 2007 , the Companies Act 2016 and other relevant regulatory frameworks to ensure compliance with the mandated obligations.",
+            "sub_items": []
+          },
+          {
+            "item_id": "13.2",
+            "text": "C ompliance with Sunway’s policies including t he Insider Trading Policy , Related Party Transaction Policy and other policies as described in Section 12 is essen tial.",
+            "sub_items": []
+          },
+          {
+            "item_id": "13.3",
+            "text": "The Conf lict of Interest Review Committee shall regularly assess this policy to ensure its relevan ce and recommend necessary updates to the Management for consideration.",
+            "sub_items": []
+          },
+          {
+            "item_id": "13.4",
+            "text": "Additionally, the Group Internal Audit Department is responsible for performi ng an annual assessment of the Conflict of Interest policy, including its processes and controls, to ensure they remain effective and aligned with current regulat ory standards and best practices .",
+            "sub_items": []
+          }
+        ]
+      },
+      {
+        "section_id": "12",
+        "section_title": "Section 12",
+        "subsections": [],
+        "items": [
+          {
+            "item_id": "12.1",
+            "text": "--- Page Break ---",
+            "sub_items": []
+          },
+          {
+            "item_id": "12.2",
+            "text": "Sunway Berha d Group Companies COI Policy",
+            "sub_items": []
+          }
+        ]
+      },
+      {
+        "section_id": "14",
+        "section_title": ". CONTACT",
+        "subsections": [],
+        "items": [
+          {
+            "item_id": "14.1",
+            "text": "Employees may reach out to their respective He ad of Department or BUHR for further guidance to this policy.",
+            "sub_items": []
+          }
+        ]
+      },
+      {
+        "section_id": "15",
+        "section_title": ". POLICY OWNER",
+        "subsections": [],
+        "items": [
+          {
+            "item_id": "15.1",
+            "text": "The Conflict of Interest Review Committee is responsible to develop and update the policy while the BU/Corporate Heads are responsible to ensure its implementation and compliance within their respective BU/department.",
+            "sub_items": []
+          }
+        ]
+      },
+      {
+        "section_id": "16",
+        "section_title": ". WHISTLEBLOW ING",
+        "subsections": [],
+        "items": [
+          {
+            "item_id": "16.1",
+            "text": "Sunway’s employees who encounter actual or potential violation s of this policy are required to report their concerns immediately to their BU /Corporate Leadership Team or reach out directly to the Hea d of Group Internal Audit via our Whistleblowing platform as follows:",
+            "sub_items": []
+          },
+          {
+            "item_id": "16.2",
+            "text": "Email to: whistleblowing@sunway.com.my Direct line: +603 5639 8025 Letter to : Head of Internal Audit Department Level 4, Menara S unway Jalan Lagoon Timur, Bandar Sunway 46150 Petaling Jaya Selangor Darul Ehsan Malaysia",
+            "sub_items": []
+          }
+        ]
+      },
+      {
+        "section_id": "17",
+        "section_title": ". EFFECTIVE DATE The effective implementation date of this policy is from 1 September 2 024 .",
+        "subsections": [],
+        "items": [
+          {
+            "item_id": "17.1",
+            "text": "Note: In the event of any discrepancies in interpretation between the English and Malay versions of the policy , the English version shall take precedence and be applied.",
+            "sub_items": []
+          }
+        ]
+      },
+      {
+        "section_id": "13",
+        "section_title": "Section 13",
+        "subsections": [],
+        "items": [
+          {
+            "item_id": "13.1",
+            "text": "--- Page Break ---",
+            "sub_items": []
+          },
+          {
+            "item_id": "13.2",
+            "text": "Sunway Berha d Group Companies COI Policy",
+            "sub_items": []
+          },
+          {
+            "item_id": "13.3",
+            "text": "A ppendix A",
+            "sub_items": []
+          },
+          {
+            "item_id": "13.4",
+            "text": "Key Senior Management Members in Sunway Berhad Group Companies",
+            "sub_items": []
+          },
+          {
+            "item_id": "13.5",
+            "text": "Executive Directors",
+            "sub_items": []
+          }
+        ]
+      },
+      {
+        "section_id": "1",
+        "section_title": ". Executive Chairman - Tan Sri Sir Dr Jeffrey Cheah Fook Ling KBE, AO 2. President - Tan Sri Dato’ (Dr) Chew Chee Kin 3. Advisor Property Malaysia & Group MD Sunway Re al Estate – Sarena Cheah Yean Tih 4. Executive Altern ate Director to Executive Chairman - Evan Cheah Yean Shin",
+        "subsections": [],
+        "items": [
+          {
+            "item_id": "1.1",
+            "text": "Independent Non Executive Directors",
+            "sub_items": []
+          }
+        ]
+      },
+      {
+        "section_id": "1",
+        "section_title": ". Dato’ Sri Idris Jala (Co - Chairperson) 2. Tan Sri Datuk Dr Rebecca Fatima Sta Maria 3. Datuk Tong Poh Keow 4. Datuk Zaiton Mohd Hassan 5. Datuk Mohd Anuar bi n Taib 6. Dr Philip Yeo Liat Kok",
+        "subsections": [],
+        "items": [
+          {
+            "item_id": "1.1",
+            "text": "Corporate Centre (In accordance with Bursa Requirement)",
+            "sub_items": []
+          }
+        ]
+      },
+      {
+        "section_id": "1",
+        "section_title": ". Deputy Chairman of Sunway Group - Tan Sri Razman Md Hashim 2. Senior Managing Director, Chairman Office - Dato’ Tan Kia Loke 3. Managing Director, Chairman Office – Alex Yeow Wai Siaw 4. Execut ive Director , Chairman ’ s Office - Ong Pang Yen 5. Senior Special Advisor, Chairman’s Office – Chong Chang Choong Financial 6. Chief Financial Officer – Joyce Tan Wei Tze 7. Chief Human Resources Officer – Foo Shiang Wyne 8. Chief Information Officer – Kevin Khoo Min Sinn 9. Senior General Manager, Secretarial Management – Tan Kim Aun 10. Senior General Manager, Legal – Liew Wei Ling",
+        "subsections": [],
+        "items": [
+          {
+            "item_id": "1.1",
+            "text": "Healthcare",
+            "sub_items": []
+          }
+        ]
+      },
+      {
+        "section_id": "1",
+        "section_title": ". President, Sunway Healthcare Group - Dato’ Lau Beng Long 2. Managing Director - Hospital & Healthcare Operations – Dr. Khoo Chow Huat",
+        "subsections": [],
+        "items": [
+          {
+            "item_id": "1.1",
+            "text": "Property Development",
+            "sub_items": []
+          }
+        ]
+      },
+      {
+        "section_id": "1",
+        "section_title": ". Managing Director, International – Chung Soo Kiong 2. Chief Executive Officer, Central & Northern Region & SPFM – Chong Sau Min 3. Chief Executive Officer , Southern Regio n & Industrial Development – Gerard Soosay",
+        "subsections": [],
+        "items": []
+      },
+      {
+        "section_id": "14",
+        "section_title": "Section 14",
+        "subsections": [],
+        "items": [
+          {
+            "item_id": "14.1",
+            "text": "--- Page Break ---",
+            "sub_items": []
+          },
+          {
+            "item_id": "14.2",
+            "text": "Sunway Berha d Group Companies COI Policy",
+            "sub_items": []
+          },
+          {
+            "item_id": "14.3",
+            "text": "K ey Senior Management M embers in Sunway Berhad Group Companies (Con’t)",
+            "sub_items": []
+          },
+          {
+            "item_id": "14.4",
+            "text": "Digital & Strategic Investment",
+            "sub_items": []
+          }
+        ]
+      },
+      {
+        "section_id": "1",
+        "section_title": ". Executive Director - Group CEO’s Office, DSI & Sunway Ventures – Lee Soong Hwa 2. Chief Executive Officer, Sunway Multicare – Lang Leong Cheng 3. Chief Innovation Officer, Sunway Innova tion - Matthijs Geert - jan Van Leeuwen 4. Chief Executive Officer, Credit Bureau Malaysia – Leong Weng Choong",
+        "subsections": [],
+        "items": [
+          {
+            "item_id": "1.1",
+            "text": "Hospitality",
+            "sub_items": []
+          }
+        ]
+      },
+      {
+        "section_id": "1",
+        "section_title": ". Chief Operating Officer, Sunway Hospitality Group – Alex Castaldi",
+        "subsections": [],
+        "items": [
+          {
+            "item_id": "1.1",
+            "text": "Themeparks",
+            "sub_items": []
+          }
+        ]
+      },
+      {
+        "section_id": "1",
+        "section_title": ". Executive Director, Sunway Themeparks – Calvin Ho Ch ’an Hin",
+        "subsections": [],
+        "items": [
+          {
+            "item_id": "1.1",
+            "text": "Trading & Manufacturing",
+            "sub_items": []
+          }
+        ]
+      },
+      {
+        "section_id": "1",
+        "section_title": ". Chief Executive Officer – Yeoh Yuen Chee 2. Advisor - Trading & Manufacturing Group – Wong Fook Chai",
+        "subsections": [],
+        "items": [
+          {
+            "item_id": "1.1",
+            "text": "Malls",
+            "sub_items": []
+          }
+        ]
+      },
+      {
+        "section_id": "1",
+        "section_title": ". Chief Executive Officer – Chan Hoi Choy",
+        "subsections": [],
+        "items": [
+          {
+            "item_id": "1.1",
+            "text": "Building Materials Group",
+            "sub_items": []
+          }
+        ]
+      },
+      {
+        "section_id": "1",
+        "section_title": ". Chief Executive Officer – Danny Ng Boo n Liang",
+        "subsections": [],
+        "items": [
+          {
+            "item_id": "1.1",
+            "text": "Quarry",
+            "sub_items": []
+          }
+        ]
+      },
+      {
+        "section_id": "1",
+        "section_title": ". Chief Executive Officer – Lee Chuan Seng",
+        "subsections": [],
+        "items": []
+      },
+      {
+        "section_id": "15",
+        "section_title": "Section 15",
+        "subsections": [],
+        "items": [
+          {
+            "item_id": "15.1",
+            "text": "--- Page Break ---",
+            "sub_items": []
+          },
+          {
+            "item_id": "15.2",
+            "text": "Sunway Berha d Group Companies COI Policy",
+            "sub_items": []
+          },
+          {
+            "item_id": "15.3",
+            "text": "Group Senior Management Members in Sunway Berhad Group Companies",
+            "sub_items": []
+          },
+          {
+            "item_id": "15.4",
+            "text": "Corporate Centre",
+            "sub_items": []
+          }
+        ]
+      },
+      {
+        "section_id": "1",
+        "section_title": ". Chief Brand Strategy Officer – Nik Tasha Nik Kamaruddin 2. Chief Strategy Officer – Faisal Ariff 3. Deputy Chief Human Resources Officer – Clayton Tan Ju Chiae 4. Senior General Manager, Audit – Yee Meng Haw 5. Senior General Manager, Group Corporate Development - Soo Chin Kang 6. Senior General Manager , HR Business Support & Projects – Fong Foo Tat 7. General Manager, Digital Technology Solutions – Wan Hock Wei 8. Chief Information Security Officer – Eddie Hau Lian Hong 9. Head , Group Risk & Compliance – Janet Lim Lee San",
+        "subsections": [],
+        "items": []
+      },
+      {
+        "section_id": "16",
+        "section_title": "Section 16",
+        "subsections": [],
+        "items": [
+          {
+            "item_id": "16.1",
+            "text": "--- Page Break ---",
+            "sub_items": []
+          },
+          {
+            "item_id": "16.2",
+            "text": "Sunway Berha d Group Companies COI Policy",
+            "sub_items": []
+          },
+          {
+            "item_id": "16.3",
+            "text": "Appendix B Glossary",
+            "sub_items": []
+          },
+          {
+            "item_id": "16.4",
+            "text": "Terms Description",
+            "sub_items": []
+          },
+          {
+            "item_id": "16.5",
+            "text": "Sunway A ll companies within Sunway Berhad Group Companies which Berhad Group cover Sunway Berhad and its subsidiaries , both domestic and Companies international.",
+            "sub_items": []
+          },
+          {
+            "item_id": "16.6",
+            "text": "Executive / Executive and Non - Executive Directors of Sunway Berhad. Non - Executive Director s",
+            "sub_items": []
+          },
+          {
+            "item_id": "16.7",
+            "text": "As defined by Bursa Malaysia, key senior management Key Senior members are p erson s who are primarily responsible for the Management business operations of Sunway Berhad’s core business and principal subsidiaries . They are subject to certain disclosure requir e ments under Bursa Malaysia Main Market Listing Requirements .",
+            "sub_items": []
+          },
+          {
+            "item_id": "16.8",
+            "text": "Key Senior Management who reports to the Chairman and/ or L1 President of Sunway Berhad Group Companies.",
+            "sub_items": []
+          },
+          {
+            "item_id": "16.9",
+            "text": "Grou p Senior Management members are corporate Group Senior heads/lead ers of the company and not subject to the certain Management disclosure requirements under Bursa Malaysia Main Market Listing Requirements.",
+            "sub_items": []
+          },
+          {
+            "item_id": "16.10",
+            "text": "Anyone engaged under a contract of employment, including Employees permanent, temporary, contract, and part - time basis an d Executive Directors.",
+            "sub_items": []
+          },
+          {
+            "item_id": "16.11",
+            "text": "BU /Corporate A management team that is determined by the BU Head or Leadership Functional Head after consulting with the relevant L1. Tea m",
+            "sub_items": []
+          },
+          {
+            "item_id": "16.12",
+            "text": "Executive Directors, BU Leaders, Key Senior Management & Management BU Leadership Te am.",
+            "sub_items": []
+          },
+          {
+            "item_id": "16.13",
+            "text": "Members comprising from the Group Human Resource, Group COI Review Legal, Group Risk & Compliance, Group Finance, Group Committee Internal Audit and Group Company Secretarial Departments.",
+            "sub_items": []
+          }
+        ]
+      },
+      {
+        "section_id": "17",
+        "section_title": "Section 17",
+        "subsections": [],
+        "items": [
+          {
+            "item_id": "17.1",
+            "text": "--- Page Break ---",
+            "sub_items": []
+          },
+          {
+            "item_id": "17.2",
+            "text": "Sunway Berha d Group Companies COI Policy",
+            "sub_items": []
+          },
+          {
+            "item_id": "17.3",
+            "text": "Appendix C",
+            "sub_items": []
+          },
+          {
+            "item_id": "17.4",
+            "text": "List of COI Examples",
+            "sub_items": []
+          },
+          {
+            "item_id": "17.5",
+            "text": "Further to Sec tion 4 of COI Policy , employees may be guided by this non - exhaustive list of COI examples. The COI Review Committee updates the list, whether by editing or reclassifying the Types of Conflicts to the Actions. If a particular COI situation is not expressly mentioned, employees should consult their respective H ead of D epartment or BUHR for guidance.",
+            "sub_items": []
+          },
+          {
+            "item_id": "17.6",
+            "text": "T ypes of COI R ed A ction Must/ Unable/ Not possible to avoid",
+            "sub_items": []
+          },
+          {
+            "item_id": "17.7",
+            "text": "Having material interest in a company that competes or does business Relationships with with Sunway or that is likely to influence employee’s decision - making competitors, Declare business Serving as a director, office bearer or member to the advisory board of associates a company that competes or does business with Sunway Having develope d at the workplace: • Manager /subordinate relationships – between employees and family members or someone with whom they have an intimate relationship who is also employed at Sunway; • non - supervisory relationships – between employees and family members or so meone with whom they have a n intimate relationship who is also employed at Sunway; • business relationships - between employees and family members or someone with whom they have intimate relationships who is employed in a company that competes or does busin ess with Sunway Taking advantage of their position in Sunway to secure an opportunity Self - dealing that is meant for Sunway",
+            "sub_items": []
+          },
+          {
+            "item_id": "17.8",
+            "text": "Soliciting or receiving a fee, commission, service, or other favor for personal benefit from any business associate or comp etitor or a Governme nt Official",
+            "sub_items": []
+          },
+          {
+            "item_id": "17.9",
+            "text": "Trading confidential information with outside parties for personal benefits",
+            "sub_items": []
+          },
+          {
+            "item_id": "17.10",
+            "text": "Where one employee directly or indirectly supervises another, or both Personal report to the same Manager relationships Making the fina l decision on hiring/ compensation/ work assignments/ recommendations for promotion/ performance evaluation, performance reviews, or disciplinary actions of a person connected to the employee",
+            "sub_items": []
+          },
+          {
+            "item_id": "17.11",
+            "text": "A cting as an advisor or consultant to any government agency that has Engagement with regulatory power over Sunway, regulators/ Government/ Making political contributions in the name of Sunway political parties",
+            "sub_items": []
+          },
+          {
+            "item_id": "17.12",
+            "text": "Working for another company and diverting focus from responsibilities Outside at Sunw ay employment Employment at a competitor or a business associate’s company",
+            "sub_items": []
+          }
+        ]
+      },
+      {
+        "section_id": "18",
+        "section_title": "Section 18",
+        "subsections": [],
+        "items": [
+          {
+            "item_id": "18.1",
+            "text": "--- Page Break ---",
+            "sub_items": []
+          },
+          {
+            "item_id": "18.2",
+            "text": "Sunway Berha d Group Companies COI Policy",
+            "sub_items": []
+          },
+          {
+            "item_id": "18.3",
+            "text": "List of COI Examples (Con’t)",
+            "sub_items": []
+          },
+          {
+            "item_id": "18.4",
+            "text": "Types Of COI A mber A ction If In Doubt",
+            "sub_items": []
+          },
+          {
+            "item_id": "18.5",
+            "text": "Other Carrying the role of director, office bearer, council affiliations member, committee member, or consu ltant for a trade Declare, or professional association, as well as positions on O btain advisory boards of other companies or organizations, A pproval government/ statutory bodies and non - governm ental organizations",
+            "sub_items": []
+          },
+          {
+            "item_id": "18.6",
+            "text": "Outside Fre elancing, part - time work , c onsulting, advisory employement/ roles, subject matter expert speaker/ guest and engagement outside businesses or services",
+            "sub_items": []
+          },
+          {
+            "item_id": "18.7",
+            "text": "Business Giving or receiving a gift, meal, entertainment or hospitality hospitality including travel and lodging",
+            "sub_items": []
+          },
+          {
+            "item_id": "18.8",
+            "text": "Receivi ng sponsorships from trade or professional associations to attend industrial conferences",
+            "sub_items": []
+          },
+          {
+            "item_id": "18.9",
+            "text": "T ypes of COI G reen A ction Avoided",
+            "sub_items": []
+          },
+          {
+            "item_id": "18.10",
+            "text": "Financial Personal financial investments in securities, equities or Nothing investments real estate properties that have no con nection to whatsoever to position(s) held in the past or at present Declare at Sunway",
+            "sub_items": []
+          },
+          {
+            "item_id": "18.11",
+            "text": "Guiding Note: An employee may evaluate their decision by asking these questions: • “Is it consistent with Sunway’s core values; Integrity, Humility and Excelle nce and Conflict of Interest Policy?” • “Could my personal interest or relations influence or appear to influence my decision - making?” • “Am I confident enough to defend my decisions and actions?”",
+            "sub_items": []
+          }
+        ]
+      },
+      {
+        "section_id": "19",
+        "section_title": "Section 19",
+        "subsections": [],
+        "items": [
+          {
+            "item_id": "19.1",
+            "text": "--- Page Break ---",
+            "sub_items": []
+          },
+          {
+            "item_id": "19.2",
+            "text": "Sunway Berha d Group Companies COI Policy",
+            "sub_items": []
+          },
+          {
+            "item_id": "19.3",
+            "text": "Appendix D1",
+            "sub_items": []
+          },
+          {
+            "item_id": "19.4",
+            "text": "CONFLICT OF INTEREST DECLARATION FORM [ Nothing To Disclose ]",
+            "sub_items": []
+          },
+          {
+            "item_id": "19.5",
+            "text": "Employee Name : ________________________________ Job Grade : _ ____ ____________",
+            "sub_items": []
+          },
+          {
+            "item_id": "19.6",
+            "text": "Job Title : _____________________ ___________ D epartment : _________________",
+            "sub_items": []
+          },
+          {
+            "item_id": "19.7",
+            "text": "Please read and tick ( / ) if you have no conflict of interest to declare.",
+            "sub_items": []
+          },
+          {
+            "item_id": "19.8",
+            "text": "▪ I have read and understood Sunway’s Conflict of Interest Declaration Policy, including the List of COI Examples illustrated in Appendix C of the Policy.",
+            "sub_items": []
+          },
+          {
+            "item_id": "19.9",
+            "text": "▪ I have NOTHING to disclose / any conflict of interest in accord ance with the Policy and the declaration is true and accurate to the best of my knowledge.",
+            "sub_items": []
+          },
+          {
+            "item_id": "19.10",
+            "text": "▪ I undertake to disclose any actual, potential, direct, or indirect conflicts of interest with S unway as soon as they arise.",
+            "sub_items": []
+          },
+          {
+            "item_id": "19.11",
+            "text": "▪ I understand that failure to accur ately or fully disclose or non - disclosure of conflicts, to the company may lead to disciplinary action including dismissal and other legal actions being taken against me .",
+            "sub_items": []
+          },
+          {
+            "item_id": "19.12",
+            "text": "Signature of Employee: ________________________ Date: ________________ ______________",
+            "sub_items": []
+          }
+        ]
+      },
+      {
+        "section_id": "20",
+        "section_title": "Section 20",
+        "subsections": [],
+        "items": [
+          {
+            "item_id": "20.1",
+            "text": "--- Page Break ---",
+            "sub_items": []
+          },
+          {
+            "item_id": "20.2",
+            "text": "Sunway Berha d Group Companies COI Policy",
+            "sub_items": []
+          },
+          {
+            "item_id": "20.3",
+            "text": "Appendix D2",
+            "sub_items": []
+          },
+          {
+            "item_id": "20.4",
+            "text": "CONFLICT OF INTEREST DECLARATION FORM [ Disclos ing Interest]",
+            "sub_items": []
+          },
+          {
+            "item_id": "20.5",
+            "text": "Employee Name : __________________________ __ Job Grade : _ ___ _____________ Job Title : ___________________ _______ __ Department : __________________",
+            "sub_items": []
+          }
+        ]
+      },
+      {
+        "section_id": "1",
+        "section_title": ". FINANCIAL INTEREST",
+        "subsections": [],
+        "items": [
+          {
+            "item_id": "1.1",
+            "text": "I have financial i nterest s that could create a potential conflict of interest. These include financial interests",
+            "sub_items": []
+          },
+          {
+            "item_id": "1.2",
+            "text": "held by myself, my family members, relatives or persons with whom I have intimate relati onships with",
+            "sub_items": []
+          },
+          {
+            "item_id": "1.3",
+            "text": "Sunway’s business associates, competitors, or other businesses wh ic h could potentially i nfluence m y",
+            "sub_items": []
+          },
+          {
+            "item_id": "1.4",
+            "text": "professional duties or decisions in Sunway. These interests encompass investment s , ownership,",
+            "sub_items": []
+          },
+          {
+            "item_id": "1.5",
+            "text": "proprietary interest s , partnership s , or other fin ancial arrangements providing a share of profits or",
+            "sub_items": []
+          },
+          {
+            "item_id": "1.6",
+            "text": "revenues such as wages, fees , benefits in kind , and other forms of income.",
+            "sub_items": []
+          },
+          {
+            "item_id": "1.7",
+            "text": "The details are as follows:",
+            "sub_items": []
+          },
+          {
+            "item_id": "1.8",
+            "text": "Name of family member /relative / intimate person : Nature of relationship (spouse, parent, sibling etc): Name of Company/Business Proprietorship : Nature of Business / Industry :",
+            "sub_items": []
+          },
+          {
+            "item_id": "1.9",
+            "text": "Position Held :",
+            "sub_items": []
+          },
+          {
+            "item_id": "1.10",
+            "text": "Percentage of Shareholding (%) Annual Income / Benefits In Kind (RM) : Commencement Date :",
+            "sub_items": []
+          },
+          {
+            "item_id": "1.11",
+            "text": "Supporting Documents ( Attachments ) :",
+            "sub_items": []
+          }
+        ]
+      },
+      {
+        "section_id": "2",
+        "section_title": ". PERSONAL RELAT IONSHIP",
+        "subsections": [],
+        "items": [
+          {
+            "item_id": "2.1",
+            "text": "I disclose potential conflicts that may arise due to my personal relations w ith family members , relatives or",
+            "sub_items": []
+          },
+          {
+            "item_id": "2.2",
+            "text": "in timate person(s) who are employed by or hold positions in Sunway Berhad Group Companies, Sunway's business",
+            "sub_items": []
+          },
+          {
+            "item_id": "2.3",
+            "text": "associates or competitors . Th ese relat ionships could potentially influence my professional duties and decisions in",
+            "sub_items": []
+          },
+          {
+            "item_id": "2.4",
+            "text": "Sunway.",
+            "sub_items": []
+          },
+          {
+            "item_id": "2.5",
+            "text": "Details are as follows :",
+            "sub_items": []
+          },
+          {
+            "item_id": "2.6",
+            "text": "Name of the family member /",
+            "sub_items": []
+          },
+          {
+            "item_id": "2.7",
+            "text": "relatives / intimate person :",
+            "sub_items": []
+          },
+          {
+            "item_id": "2.8",
+            "text": "Nature of Relationship (spouse,",
+            "sub_items": []
+          },
+          {
+            "item_id": "2.9",
+            "text": "sibling, parent etc) :",
+            "sub_items": []
+          },
+          {
+            "item_id": "2.10",
+            "text": "Company Name :",
+            "sub_items": []
+          },
+          {
+            "item_id": "2.11",
+            "text": "Job Title / Department :",
+            "sub_items": []
+          }
+        ]
+      },
+      {
+        "section_id": "21",
+        "section_title": "Section 21",
+        "subsections": [],
+        "items": [
+          {
+            "item_id": "21.1",
+            "text": "--- Page Break ---",
+            "sub_items": []
+          },
+          {
+            "item_id": "21.2",
+            "text": "Sunway Berha d Group Companies COI Policy",
+            "sub_items": []
+          }
+        ]
+      },
+      {
+        "section_id": "3",
+        "section_title": ". OUTSIDE EMPLOYMENT/ACTIVITIES & SERVICE AT ANOTHER ORGANISATION",
+        "subsections": [],
+        "items": [
+          {
+            "item_id": "3.1",
+            "text": "I engage in outside employment/activities including freelancing, part - time jobs, and consulting/advisory",
+            "sub_items": []
+          },
+          {
+            "item_id": "3.2",
+            "text": "roles with external companies or organisations such as t rade or professional associations , government,",
+            "sub_items": []
+          },
+          {
+            "item_id": "3.3",
+            "text": "statutory bodies and non - governmental organisations (NGOs).",
+            "sub_items": []
+          },
+          {
+            "item_id": "3.4",
+            "text": "These activities could potentially impact my duties and responsibilities at Sunway. The details are as",
+            "sub_items": []
+          },
+          {
+            "item_id": "3.5",
+            "text": "follows : Name of Company/Organi s ation : Nature of Work/Activities (Part Time, Freelancing etc ) Position Held / Roles :",
+            "sub_items": []
+          },
+          {
+            "item_id": "3.6",
+            "text": "Annual Income / Benefits in Kind (RM) : Commencement Date :",
+            "sub_items": []
+          },
+          {
+            "item_id": "3.7",
+            "text": "Supporting Documents (Attachment) :",
+            "sub_items": []
+          }
+        ]
+      },
+      {
+        "section_id": "4",
+        "section_title": ". ANY OTHER CONFLICTS OF INTEREST NOT COVERED ABOVE",
+        "subsections": [],
+        "items": [
+          {
+            "item_id": "4.1",
+            "text": "Please d escribe and specify details in this section.",
+            "sub_items": []
+          },
+          {
+            "item_id": "4.2",
+            "text": "Impact of Personal Interest",
+            "sub_items": []
+          },
+          {
+            "item_id": "4.3",
+            "text": "To provide a description of how your personal interest has influenced or may have influence d your official duties in the decision matte r.",
+            "sub_items": []
+          },
+          {
+            "item_id": "4.4",
+            "text": "Declaration",
+            "sub_items": []
+          },
+          {
+            "item_id": "4.5",
+            "text": "▪ I have read and understood Sunway’s Conflict of Interest Declaration Policy, including the List of COI Examples illustrated in Appendix C of the Policy.",
+            "sub_items": []
+          },
+          {
+            "item_id": "4.6",
+            "text": "▪ I hereby decl are that the declaration is correct , true and accurate to the best of my knowledge.",
+            "sub_items": []
+          },
+          {
+            "item_id": "4.7",
+            "text": "▪ I und erstand that failure to accurately or fully disclose or non - disclosure of conflicts, to the company may lead to disciplinary action including dismissal and other legal actions being taken against me .",
+            "sub_items": []
+          },
+          {
+            "item_id": "4.8",
+            "text": "▪ I hereby undertake to update this declaration should there be a change in status as soon as it arises.",
+            "sub_items": []
+          },
+          {
+            "item_id": "4.9",
+            "text": "Signature of Employee : __________________ Date: _______________________",
+            "sub_items": []
+          }
+        ]
+      },
+      {
+        "section_id": "22",
+        "section_title": "Section 22",
+        "subsections": [],
+        "items": [
+          {
+            "item_id": "22.1",
+            "text": "--- Page Break ---",
+            "sub_items": []
+          },
+          {
+            "item_id": "22.2",
+            "text": "Sunway Berha d Group Companies COI Policy",
+            "sub_items": []
+          },
+          {
+            "item_id": "22.3",
+            "text": "OFFICE USE",
+            "sub_items": []
+          },
+          {
+            "item_id": "22.4",
+            "text": "A. Human Resource Department",
+            "sub_items": []
+          },
+          {
+            "item_id": "22.5",
+            "text": "Have provided relevant supporting documents? □ Yes □ No",
+            "sub_items": []
+          },
+          {
+            "item_id": "22.6",
+            "text": "Evaluation on whether there is a conflict of interest? □ Yes □ No",
+            "sub_items": []
+          },
+          {
+            "item_id": "22.7",
+            "text": "Nature of conflict of interest? □ Actual □ Potential",
+            "sub_items": []
+          },
+          {
+            "item_id": "22.8",
+            "text": "Has the conflict of interest occurred before to the employee? □ Yes □ No",
+            "sub_items": []
+          },
+          {
+            "item_id": "22.9",
+            "text": "Has the same conflict of in terest occurred in the BU? □ Yes □ No",
+            "sub_items": []
+          },
+          {
+            "item_id": "22.10",
+            "text": "Summary of Evaluation: Has the COI occurred due to oversight failure (by whom) or deliberate participation or persist despite implementing a specific action plan? How serious is it, given the persons involved? Has it occurred again and why has it not been eliminated?",
+            "sub_items": []
+          },
+          {
+            "item_id": "22.11",
+            "text": "Name : ___________________________________________ S ignature _______ _______ ___________",
+            "sub_items": []
+          },
+          {
+            "item_id": "22.12",
+            "text": "Designation : ______________________________________ Date : __________________________",
+            "sub_items": []
+          },
+          {
+            "item_id": "22.13",
+            "text": "B. Recommend Action Plan",
+            "sub_items": []
+          },
+          {
+            "item_id": "22.14",
+            "text": "Conflict of Interest established? □ Yes □ No",
+            "sub_items": []
+          },
+          {
+            "item_id": "22.15",
+            "text": "If yes, please briefly describe the situation tha t may present an actual/potential COI.",
+            "sub_items": []
+          },
+          {
+            "item_id": "22.16",
+            "text": "_____________________________________________________________________________ _____________________________________________________________________________ _____________________________________________________________________________ _________________________ ____________________________________________________ _____________________________________________________________________________ _____________________________________________________________________________",
+            "sub_items": []
+          }
+        ]
+      },
+      {
+        "section_id": "23",
+        "section_title": "Section 23",
+        "subsections": [],
+        "items": [
+          {
+            "item_id": "23.1",
+            "text": "--- Page Break ---",
+            "sub_items": []
+          },
+          {
+            "item_id": "23.2",
+            "text": "Sunway Berha d Group Companies COI Policy",
+            "sub_items": []
+          },
+          {
+            "item_id": "23.3",
+            "text": "Please describe the recommended action plan t o mitigate, eliminate or resolve the COI :",
+            "sub_items": []
+          },
+          {
+            "item_id": "23.4",
+            "text": "________________________________________________ _____________________________ _____________________________________________________________________________ _____________________________________________________________________________",
+            "sub_items": []
+          },
+          {
+            "item_id": "23.5",
+            "text": "Expected date of complet ion : ___________________________ Next R eview Date of action plan : ___________________________",
+            "sub_items": []
+          },
+          {
+            "item_id": "23.6",
+            "text": "Name : _________ ___ __________ _______ __ Signature : ______ _ ___ _________ _____",
+            "sub_items": []
+          },
+          {
+            "item_id": "23.7",
+            "text": "Designation : __________________________ Dat e : ___________ _________ ____",
+            "sub_items": []
+          },
+          {
+            "item_id": "23.8",
+            "text": "C. COI Review Committee",
+            "sub_items": []
+          },
+          {
+            "item_id": "23.9",
+            "text": "Conflict of Interest established? □ Yes □ No",
+            "sub_items": []
+          },
+          {
+            "item_id": "23.10",
+            "text": "Agree with the recommended action plan to mitigate , eliminate or resolve the COI ? □ Yes □ No",
+            "sub_items": []
+          },
+          {
+            "item_id": "23.11",
+            "text": "Comments",
+            "sub_items": []
+          },
+          {
+            "item_id": "23.12",
+            "text": "__________________________________________________________________________________",
+            "sub_items": []
+          },
+          {
+            "item_id": "23.13",
+            "text": "__________________________________________________________________________________",
+            "sub_items": []
+          },
+          {
+            "item_id": "23.14",
+            "text": "_______________________________ ________ ____________________________ _______________",
+            "sub_items": []
+          },
+          {
+            "item_id": "23.15",
+            "text": "Name : _ ___ ____________ ____ __________ S ignature : ______ ____________ _____",
+            "sub_items": []
+          },
+          {
+            "item_id": "23.16",
+            "text": "D esignation : ______________________________ D ate : _ ______ _________________",
+            "sub_items": []
+          },
+          {
+            "item_id": "23.17",
+            "text": "D. Approver",
+            "sub_items": []
+          },
+          {
+            "item_id": "23.18",
+            "text": "In consideration of the act ual / potential Conflict of interest, its severity and the proposed action plan, I",
+            "sub_items": []
+          },
+          {
+            "item_id": "23.19",
+            "text": "hereby approve /reject this plan to safeguard the company’s best interest.",
+            "sub_items": []
+          },
+          {
+            "item_id": "23.20",
+            "text": "Name : ______ _______________ ____ ______ Signature : _____________ ___________",
+            "sub_items": []
+          },
+          {
+            "item_id": "23.21",
+            "text": "D esignat ion : _______________________________ Date : ______________________ _ _",
+            "sub_items": []
+          }
+        ]
+      },
+      {
+        "section_id": "24",
+        "section_title": "Section 24",
+        "subsections": [],
+        "items": [
+          {
+            "item_id": "24.1",
+            "text": "--- Page Break ---",
+            "sub_items": []
+          },
+          {
+            "item_id": "24.2",
+            "text": "Sunway Berha d Group Companies COI Policy",
+            "sub_items": []
+          },
+          {
+            "item_id": "24.3",
+            "text": "Appendix D 3",
+            "sub_items": []
+          },
+          {
+            "item_id": "24.4",
+            "text": "Self - Declaration Form Of Conflict Of Interest B y A Director",
+            "sub_items": []
+          },
+          {
+            "item_id": "24.5",
+            "text": "This Form is required to be completed by all Directors of Sunway Berhad and its subsidiaries",
+            "sub_items": []
+          },
+          {
+            "item_id": "24.6",
+            "text": "(“ Sunway Berhad Gro up ”) . Kindly indicate (/) on the checkboxes.",
+            "sub_items": []
+          },
+          {
+            "item_id": "24.7",
+            "text": "No Conflict Of Interest Situation s Yes No",
+            "sub_items": []
+          },
+          {
+            "item_id": "24.8",
+            "text": "Do you or a person/entity connected to you, have a substantial 1 direct or indirect ownership interest or other relationship with a company, firm or organ isation that is currently having business dealings or potentially having business dealings in the future with Sunway Berhad and/or Sunway Berhad Group or that serves as a competitor or customer to Sunway Berhad and/or Sunway Berhad Group?",
+            "sub_items": []
+          },
+          {
+            "item_id": "24.9",
+            "text": "Do yo u hold a position as a director, advisory member, limited 2 partner, trustee, or any other authoritative role that could exert influence or potentially exert influence, whether directly or indirectly, over any organization, firm, or company that might, in tu rn, engage in a direct or indirect competition with any of the businesses of Sunway Berhad and/or Sunway Berhad Group?",
+            "sub_items": []
+          },
+          {
+            "item_id": "24.10",
+            "text": "Do you or a person connected to you utilise Sunway Berhad 3 and/or Sunway Berhad Group’s assets, resources or information for p ersonal use without obtaining prior approval from the Chairman of the Board or the Board or not as part of the approved Board reimbursement?",
+            "sub_items": []
+          },
+          {
+            "item_id": "24.11",
+            "text": "Do you or a person connected to you exploit personal 4 opportunities linked to the businesses of Sunway B erhad and/or Sunway Berhad Group, by utilising property, information, or your position for personal gain, or engaged in competing with Sunway Berhad and/ or Sunway Berhad Group for business opportunities?",
+            "sub_items": []
+          }
+        ]
+      },
+      {
+        "section_id": "5",
+        "section_title": "Are there any additional interests, activ ities, investments, or involvements that you believe should be disclosed to ensure a comprehensive account of any actual, apparent or potential conflicts of interest?",
+        "subsections": [],
+        "items": []
+      },
+      {
+        "section_id": "25",
+        "section_title": "Section 25",
+        "subsections": [],
+        "items": [
+          {
+            "item_id": "25.1",
+            "text": "--- Page Break ---",
+            "sub_items": []
+          },
+          {
+            "item_id": "25.2",
+            "text": "Sunway Berha d Group Companies COI Policy",
+            "sub_items": []
+          },
+          {
+            "item_id": "25.3",
+            "text": "* In cases where you have indicated ' YES ', please provide comprehensive deta ils regarding your",
+            "sub_items": []
+          },
+          {
+            "item_id": "25.4",
+            "text": "interests such as the company name, number of shares, percentage of shareholding, the nature of",
+            "sub_items": []
+          },
+          {
+            "item_id": "25.5",
+            "text": "the relationship, or any other pertinent information. Additionally, kindly furnish the corresponding",
+            "sub_items": []
+          },
+          {
+            "item_id": "25.6",
+            "text": "supporting documents as needed.",
+            "sub_items": []
+          },
+          {
+            "item_id": "25.7",
+            "text": "N o * Explanation for items indicated ‘YES’",
+            "sub_items": []
+          },
+          {
+            "item_id": "25.8",
+            "text": "Definition:",
+            "sub_items": []
+          },
+          {
+            "item_id": "25.9",
+            "text": "Person connected under Paragraph 1.01 of the Main Marketing Listing Requirements of Bursa",
+            "sub_items": []
+          },
+          {
+            "item_id": "25.10",
+            "text": "Malaysia Securities Berhad means such person (referred to as “ said Person ”) who falls under any",
+            "sub_items": []
+          },
+          {
+            "item_id": "25.11",
+            "text": "one of the following categories:",
+            "sub_items": []
+          },
+          {
+            "item_id": "25.12",
+            "text": "a) a family member of the said Person includes (i) spous e (ii) parent (iii) child including adopted child and step - child (iv) brother or sister and (v) spouse of child, brother or sister;",
+            "sub_items": []
+          },
+          {
+            "item_id": "25.13",
+            "text": "b) a trustee of a trust (other than a tru stee for a share scheme for employees or pension scheme) under which the said Person, or a family member of the said Person, is the sole beneficiary;",
+            "sub_items": []
+          },
+          {
+            "item_id": "25.14",
+            "text": "c) a partner of the said Person;",
+            "sub_items": []
+          },
+          {
+            "item_id": "25.15",
+            "text": "d) a person, or where the person is a body corporate, the body corporate o r its directors, who is/are accustomed or under an obligation, whether formal or informal, to act in accordance with the directions, instructions or wishes of the said Person;",
+            "sub_items": []
+          },
+          {
+            "item_id": "25.16",
+            "text": "e) a person, or where the person is a bod y corporate, the body corporate or its directors, in accordance with whose directions, instructions or wishes the said Person is accustomed or is under an obligation, whether formal or informal, to act;",
+            "sub_items": []
+          },
+          {
+            "item_id": "25.17",
+            "text": "f) a body corporate in which the said Person, or pers ons connected with the said Person ar e entitled to exercise, or control the exercise of, not less than 20% of the votes attached to voting shares in the body corporate; or",
+            "sub_items": []
+          },
+          {
+            "item_id": "25.18",
+            "text": "g) a body corporate which is a related corporation of the said Person",
+            "sub_items": []
+          },
+          {
+            "item_id": "25.19",
+            "text": "Name : .......................................................... NRIC/Passport No ................ ............ do",
+            "sub_items": []
+          },
+          {
+            "item_id": "25.20",
+            "text": "hereby solemnly affirm and declare the following:",
+            "sub_items": []
+          },
+          {
+            "item_id": "25.21",
+            "text": "I hereby solemnly affirm and declare the following:",
+            "sub_items": []
+          },
+          {
+            "item_id": "25.22",
+            "text": "(i) I agree to comply with the Conflict of Interest Policy of Sunway Berhad.",
+            "sub_items": []
+          },
+          {
+            "item_id": "25.23",
+            "text": "(ii) I agree to promptly notify the Chairman/Board and/or Company Secretary of Sunway Berhad regarding any modifications in my responses to the aforementioned questions that may arise d ue to alterations in circumstances.",
+            "sub_items": []
+          },
+          {
+            "item_id": "25.24",
+            "text": "(iii) I agree to report any additional financial interests, situations, activities, interests, or conduct that ma y arise before the completion of the next annual disclosure.",
+            "sub_items": []
+          },
+          {
+            "item_id": "25.25",
+            "text": "(iv) The information contained in this Annual Self - Dec laration Form of Conflict of Interest by Directors is true and accurate to the best of my knowledge and belief.",
+            "sub_items": []
+          },
+          {
+            "item_id": "25.26",
+            "text": "Director’s Signature : ________________________________________ Director’s Name : _________________________________________ Position : _________________________________________ Date of Declaration : _______ ___________________________ ______ _",
+            "sub_items": []
+          }
+        ]
+      },
+      {
+        "section_id": "26",
+        "section_title": "Section 26",
+        "subsections": [],
+        "items": [
+          {
+            "item_id": "26.1",
+            "text": "--- Page Break ---",
+            "sub_items": []
+          },
+          {
+            "item_id": "26.2",
+            "text": "Sunway Berha d Group Companies COI Policy",
+            "sub_items": []
+          },
+          {
+            "item_id": "26.3",
+            "text": "Assessment of Declaration",
+            "sub_items": []
+          },
+          {
+            "item_id": "26.4",
+            "text": "R eview of declaration information",
+            "sub_items": []
+          },
+          {
+            "item_id": "26.5",
+            "text": "Have relevant supporting documents? ☐ Yes ☐ No",
+            "sub_items": []
+          },
+          {
+            "item_id": "26.6",
+            "text": "Is there a conflict of interest established? ☐ Yes ☐ No",
+            "sub_items": []
+          },
+          {
+            "item_id": "26.7",
+            "text": "Nature of conflict of interest? ☐ Actual ☐ Potential",
+            "sub_items": []
+          },
+          {
+            "item_id": "26.8",
+            "text": "Has the conflict of interest occurred before with the Director? ☐ Yes ☐ No",
+            "sub_items": []
+          },
+          {
+            "item_id": "26.9",
+            "text": "Has the same con flict of interest occurred before in Sunway? ☐ Yes ☐ No",
+            "sub_items": []
+          },
+          {
+            "item_id": "26.10",
+            "text": "Proposed action plan(s) for managing this Conflict of Interest Declaration",
+            "sub_items": []
+          },
+          {
+            "item_id": "26.11",
+            "text": "The Director shall be advised to:",
+            "sub_items": []
+          },
+          {
+            "item_id": "26.12",
+            "text": "☐ R elinquish the business interest or non - business interest that causes the conflict of interes t",
+            "sub_items": []
+          },
+          {
+            "item_id": "26.13",
+            "text": "☐ R esign from the position that causes the conflict of interest",
+            "sub_items": []
+          },
+          {
+            "item_id": "26.14",
+            "text": "☐ A bstain from participating in Meetings and voting in relation to the contract or proposed contract that causes the conflict of interest",
+            "sub_items": []
+          },
+          {
+            "item_id": "26.15",
+            "text": "☐ C ontinue to pa rticipate in the matter reviewed and observe the restrictions as discussed and agreed with the Audit Committee and the Board",
+            "sub_items": []
+          },
+          {
+            "item_id": "26.16",
+            "text": "☐ E xecute a non - disclosure or confidentiality agreement for the purposes of protecting the insider or proprietary information",
+            "sub_items": []
+          },
+          {
+            "item_id": "26.17",
+            "text": "☐",
+            "sub_items": []
+          },
+          {
+            "item_id": "26.18",
+            "text": "Reviewed and Proposed by the Audit Committee",
+            "sub_items": []
+          },
+          {
+            "item_id": "26.19",
+            "text": "Signature : _________________________________________ ____ Director’s Name : _____________________________________________ Designation : _____________________________________________ Date : _____________________________________________",
+            "sub_items": []
+          },
+          {
+            "item_id": "26.20",
+            "text": "Signature : ____________________________________________ _ Director’s Name : _____________________________________________ Designation : _____________________________________________ Date : _____________________________________________",
+            "sub_items": []
+          },
+          {
+            "item_id": "26.21",
+            "text": "Signature : ________________________ _____________________ Director’s Name : _____________________________________________ Designation : _____________________________________________ Date : _____________________________________________",
+            "sub_items": []
+          }
+        ]
+      },
+      {
+        "section_id": "27",
+        "section_title": "Section 27",
+        "subsections": [],
+        "items": [
+          {
+            "item_id": "27.1",
+            "text": "--- Page Break ---",
+            "sub_items": []
+          },
+          {
+            "item_id": "27.2",
+            "text": "Sunway Berha d Group Companies COI Policy",
+            "sub_items": []
+          }
+        ]
+      },
+      {
+        "section_id": "2",
+        "section_title": ". Board’s Appro val on Action Plan",
+        "subsections": [],
+        "items": [
+          {
+            "item_id": "2.1",
+            "text": "Signature : _____________________________________________",
+            "sub_items": []
+          },
+          {
+            "item_id": "2.2",
+            "text": "Director’s Name : _____________________________________________ Designation : _____________________________________________ Date : ________________________________ ______________",
+            "sub_items": []
+          }
+        ]
+      },
+      {
+        "section_id": "3",
+        "section_title": ". Agreement to Action Plan(s) by the Director of this Conflict of Interest Declaration",
+        "subsections": [],
+        "items": [
+          {
+            "item_id": "3.1",
+            "text": "Signature : _____________________________________________",
+            "sub_items": []
+          },
+          {
+            "item_id": "3.2",
+            "text": "Director’s Name : _____________________________________________ Designation : _____________________________________________ Date : ____________________________ __________________",
+            "sub_items": []
+          }
+        ]
+      },
+      {
+        "section_id": "28",
+        "section_title": "Section 28",
+        "subsections": [],
+        "items": [
+          {
+            "item_id": "28.1",
+            "text": "--- Page Break ---",
+            "sub_items": []
+          },
+          {
+            "item_id": "28.2",
+            "text": "Sunway Berha d Group Companies COI Policy",
+            "sub_items": []
+          },
+          {
+            "item_id": "28.3",
+            "text": "Employees COI Management Process Flow Chart Appendix E1",
+            "sub_items": []
+          },
+          {
+            "item_id": "28.4",
+            "text": "Responsibility Documents START",
+            "sub_items": []
+          },
+          {
+            "item_id": "28.5",
+            "text": "COI Directors & COI Forms Self Disclosure Employees & supporting documents",
+            "sub_items": []
+          },
+          {
+            "item_id": "28.6",
+            "text": "Any COI Declared? No Yes Refer to Table A Supporting Collate of COI Policy documents & Verify",
+            "sub_items": []
+          },
+          {
+            "item_id": "28.7",
+            "text": "Identify & Evaluate Refer to Table A Supporting Disclosed COI of COI Policy documents",
+            "sub_items": []
+          },
+          {
+            "item_id": "28.8",
+            "text": "Is Actual / Potential No No Action COI? / End Yes",
+            "sub_items": []
+          },
+          {
+            "item_id": "28.9",
+            "text": "Recommend Seek employee's action plan proposed solution Refer to Table A COI Policy",
+            "sub_items": []
+          },
+          {
+            "item_id": "28.10",
+            "text": "COI Review Committee Review No Recommended Action Yes",
+            "sub_items": []
+          },
+          {
+            "item_id": "28.11",
+            "text": "Approve Action Communicate action Refer to Table A COI Policy plan to employee No Yes BU Head & BUHR Letter to Implement Yes Employee agree Employee Action Plan with action plan?",
+            "sub_items": []
+          },
+          {
+            "item_id": "28.12",
+            "text": "No BU Head & BUHR Follow - up & Monitor Effectiveness of Action Plan No Yes",
+            "sub_items": []
+          },
+          {
+            "item_id": "28.13",
+            "text": "COI Resolved / Disciplinary BUHR / GHR Disciplinary Mitigated / Eliminated Action Letters No Yes",
+            "sub_items": []
+          },
+          {
+            "item_id": "28.14",
+            "text": "END",
+            "sub_items": []
+          },
+          {
+            "item_id": "28.15",
+            "text": "Notes",
+            "sub_items": []
+          },
+          {
+            "item_id": "28.16",
+            "text": "▪ In all the above COI Declaration Process, from start to the end, the relevant documents must be maintained under the COI management system.",
+            "sub_items": []
+          }
+        ]
+      },
+      {
+        "section_id": "29",
+        "section_title": "Section 29",
+        "subsections": [],
+        "items": [
+          {
+            "item_id": "29.1",
+            "text": "--- Page Break ---",
+            "sub_items": []
+          },
+          {
+            "item_id": "29.2",
+            "text": "Sunway Berha d Group Companies COI Policy",
+            "sub_items": []
+          },
+          {
+            "item_id": "29.3",
+            "text": "Appendix E2",
+            "sub_items": []
+          },
+          {
+            "item_id": "29.4",
+            "text": "COI Process Description",
+            "sub_items": []
+          },
+          {
+            "item_id": "29.5",
+            "text": "Process Description An employee is required to declare any conflict of interest via the relevant declaration Declaration form on th e following occasions: a) Upon commencement of employment; b) On an annual basis by 1Q of the year ; c) As soon as the employee becomes aware of a COI situation; d) Immediately when there are changes in the status of the declared COI.",
+            "sub_items": []
+          },
+          {
+            "item_id": "29.6",
+            "text": "The declaration should include: • a description of the nature of the COI situation; and relevant supporting documents; together referred to as “information”.",
+            "sub_items": []
+          },
+          {
+            "item_id": "29.7",
+            "text": "Hav Collate & Verify The BUHR shall collate all relevant information declared by the employee con cerned. This COI Information includes but is not limited to financial statements, company profiles and any other Disclosed documentation pertinent to the COI.",
+            "sub_items": []
+          },
+          {
+            "item_id": "29.8",
+            "text": "The BUHR shall verify the information to ensure the accuracy and authenticity of the information. The BUHR may consult w ith other departments or individuals (e.g., IT, Finance, Legal, Company Secretary) to verify specific aspects of the information provide d. This helps in obtaining a comprehensive view and ensures all relevant data is accurate.",
+            "sub_items": []
+          },
+          {
+            "item_id": "29.9",
+            "text": "All steps taken during the ve rification process should be documented. This includes noting any discrepancies found, actions taken to resolve them, and the final veri fication outcome.",
+            "sub_items": []
+          },
+          {
+            "item_id": "29.10",
+            "text": "The assigned authority under Table A Conflict of Intere st Approval Matrix shall promptly Identification, review the information provided and consider the particular BU’s operations to assess the Evaluation & facts and circumstances in the determination of a COI. COI situations can exist in the Recommendation forms of Actual COI or Potential COI .",
+            "sub_items": []
+          },
+          {
+            "item_id": "29.11",
+            "text": "If a C OI is identified, the assigned authority shall recommend an appropriate action plan to resolve, eliminate or mitigate the COI. The action plan should: • outline the timeline to implement the recommended measures; and • monitor and follow up on the effective ness of the proposed action plan.",
+            "sub_items": []
+          },
+          {
+            "item_id": "29.12",
+            "text": "The Company may seek the employee’s input when working on the proposed solution to the conflict.",
+            "sub_items": []
+          },
+          {
+            "item_id": "29.13",
+            "text": "All declaration form s, relevant documents, as well as the evaluation and the justi fication by the assigned authorities, must be recorded in the COI management system, including cases of COI not identified.",
+            "sub_items": []
+          }
+        ]
+      },
+      {
+        "section_id": "30",
+        "section_title": "Section 30",
+        "subsections": [],
+        "items": [
+          {
+            "item_id": "30.1",
+            "text": "--- Page Break ---",
+            "sub_items": []
+          },
+          {
+            "item_id": "30.2",
+            "text": "Sunway Berha d Group Companies COI Policy",
+            "sub_items": []
+          },
+          {
+            "item_id": "30.3",
+            "text": "COI Process Description (Con’t)",
+            "sub_items": []
+          },
+          {
+            "item_id": "30.4",
+            "text": "Process Description The COI Review C ommittee reviews proposed corrective action plans from the Bus iness Review Leaders to ensure they adequately address identified conflicts of interest. Action Plan",
+            "sub_items": []
+          },
+          {
+            "item_id": "30.5",
+            "text": "T h e designated approving authority shall evaluate the nature, likelihood and impact of the Approval COI to Sunway’s interests when approving the recommended action plan o r accepting an alternative recommended action plan.",
+            "sub_items": []
+          },
+          {
+            "item_id": "30.6",
+            "text": "The BU Head and BUHR are responsible for communicating and implementing the Implementation/ approved action plan to relevant stakeholders including the employee involved, his/ her Communication line manager , and other affected parties. If the employee does not accept the approved action plan without reasonable explanation, then the BUHR shall initiate the relevant disciplinary action against the employee .",
+            "sub_items": []
+          },
+          {
+            "item_id": "30.7",
+            "text": "The BU Head and BUHR are responsible to continuously monitor the compliance and Monitoring & effective ness of the action plan. Following up If the initial plan proves ineffective, the BU Head and the BUHR should assess the situation and propose additional corrective measures as necessary. This m ay include taking other actions deemed appropriate by the Company.",
+            "sub_items": []
+          },
+          {
+            "item_id": "30.8",
+            "text": "In a ll the above COI Declaration Process, from start to the end, the relevant documents Doc umentation must be maintained under the COI management system.",
+            "sub_items": []
+          }
+        ]
+      },
+      {
+        "section_id": "31",
+        "section_title": "Section 31",
+        "subsections": [],
+        "items": [
+          {
+            "item_id": "31.1",
+            "text": "--- Page Break ---",
+            "sub_items": []
+          },
+          {
+            "item_id": "31.2",
+            "text": "Sunway Berha d Group Companies COI Policy",
+            "sub_items": []
+          },
+          {
+            "item_id": "31.3",
+            "text": "Appendix F Director's COI Management Process Flow Chart Responsibility Documents START",
+            "sub_items": []
+          },
+          {
+            "item_id": "31.4",
+            "text": "COI Director Director's COI Self Disclosure Declaration Form",
+            "sub_items": []
+          },
+          {
+            "item_id": "31.5",
+            "text": "Collate & Company Supporting Verify Secretary documents on COI",
+            "sub_items": []
+          },
+          {
+            "item_id": "31.6",
+            "text": "Identify & Evaluate Disclosed COI Audit Committee Supporting & Company Secretary documents on COI No Is Actual / No Action Potential COI? / End",
+            "sub_items": []
+          },
+          {
+            "item_id": "31.7",
+            "text": "Yes Recommend Audit Committee action plan & Company Secretary",
+            "sub_items": []
+          },
+          {
+            "item_id": "31.8",
+            "text": "Board of Directors BOD Meeting Approve action plan Minutes No Yes Implement Action Plan Board of Directors Letter to Director",
+            "sub_items": []
+          },
+          {
+            "item_id": "31.9",
+            "text": "Follow - up & Monitor effectiveness of action Board of Directors BOD Meeting plan Minutes",
+            "sub_items": []
+          },
+          {
+            "item_id": "31.10",
+            "text": "COI Resolved / Mitigated/ Eliminated No Yes END",
+            "sub_items": []
+          },
+          {
+            "item_id": "31.11",
+            "text": "Disclosure of actual/potential COI",
+            "sub_items": []
+          },
+          {
+            "item_id": "31.12",
+            "text": "Comply with Comply with Comply with Board of Directors & Chapter 8 Chapter 9 Chapter 15 Company Secretary Continuing Listing Continuing Corporate Obligation Disclosure Governance",
+            "sub_items": []
+          },
+          {
+            "item_id": "31.13",
+            "text": "- Announcement - Contents of AGM Notice on the - Function of Audit statement appointment of Committee Bursa Announcement accompanying Directors, CEO, - Audit Commitee Annual Report notice of AGM and CFO Report Disclosure - Annual report specifically on the profile of the directors, CEO and key senior management",
+            "sub_items": []
+          },
+          {
+            "item_id": "31.14",
+            "text": "Notes ▪ In all the above COI Declaration Process, from start to the end, the relevant documents must be maintained under the COI management system.",
+            "sub_items": []
+          }
+        ]
+      },
+      {
+        "section_id": "32",
+        "section_title": "Section 32",
+        "subsections": [],
+        "items": []
+      }
+    ]
+  },
+  "structured_data_tables": {
+    "tables": []
+  },
+  "terms_conditions_clauses": {
+    "clauses": [
+      {
+        "clause_number": "1",
+        "text": ". PURPOSE 3",
+        "sub_clauses": []
+      },
+      {
+        "clause_number": "2",
+        "text": ". SCOPE 3",
+        "sub_clauses": []
+      },
+      {
+        "clause_number": "3",
+        "text": ". DEFINITIONS 3",
+        "sub_clauses": []
+      },
+      {
+        "clause_number": "4",
+        "text": ". GUIDANCE ON DEFINITIONS AND RUL ES ON AVOIDING CONFL ICT OF INTEREST 4",
+        "sub_clauses": []
+      },
+      {
+        "clause_number": "5",
+        "text": ". DISCLOSURE 6",
+        "sub_clauses": []
+      },
+      {
+        "clause_number": "6",
+        "text": ". MANAGING CONFLICT OF INTEREST 7",
+        "sub_clauses": []
+      },
+      {
+        "clause_number": "7",
+        "text": ". MANAGING SPECIFIC CO NFLICT OF INTEREST 9",
+        "sub_clauses": []
+      },
+      {
+        "clause_number": "8",
+        "text": ". MANAGING INTERCOMPAN Y CONFLICT OF INTERE ST 9",
+        "sub_clauses": []
+      },
+      {
+        "clause_number": "9",
+        "text": ". OVERSIGHT RESPONSIBI LITIES 10",
+        "sub_clauses": []
+      },
+      {
+        "clause_number": "10",
+        "text": ". RECORD MAINTENANCE 12",
+        "sub_clauses": []
+      },
+      {
+        "clause_number": "11",
+        "text": ". DISCIPLINARY MEASURE S 12",
+        "sub_clauses": []
+      },
+      {
+        "clause_number": "12",
+        "text": ". OTHER RELEVANT DOCUM ENTS 12",
+        "sub_clauses": []
+      },
+      {
+        "clause_number": "13",
+        "text": ". REVIEW OF CO MPLIANCE 12",
+        "sub_clauses": []
+      },
+      {
+        "clause_number": "14",
+        "text": ". CONTACT 13",
+        "sub_clauses": []
+      },
+      {
+        "clause_number": "15",
+        "text": ". POLICY OWNER 13",
+        "sub_clauses": []
+      },
+      {
+        "clause_number": "16",
+        "text": ". WHISTLEB LOWING 13",
+        "sub_clauses": []
+      },
+      {
+        "clause_number": "17",
+        "text": ". EFFECTIVE DATE 1 3",
+        "sub_clauses": []
+      },
+      {
+        "clause_number": "2",
+        "text": "",
+        "sub_clauses": []
+      },
+      {
+        "clause_number": "1",
+        "text": ". PURPOSE",
+        "sub_clauses": []
+      },
+      {
+        "clause_number": "2",
+        "text": ". SCOPE",
+        "sub_clauses": []
+      },
+      {
+        "clause_number": "3",
+        "text": ". DEFINITION S",
+        "sub_clauses": []
+      },
+      {
+        "clause_number": "1",
+        "text": "As defin ed under Malaysian Anti - Corruption Commission (Amendment) Act 2018",
+        "sub_clauses": []
+      },
+      {
+        "clause_number": "2",
+        "text": "As defined by Transparency International",
+        "sub_clauses": []
+      },
+      {
+        "clause_number": "3",
+        "text": "As defined under S188 of the Capital Markets and Services Act 2007",
+        "sub_clauses": []
+      },
+      {
+        "clause_number": "3",
+        "text": "",
+        "sub_clauses": []
+      },
+      {
+        "clause_number": "4",
+        "text": ". GUIDANCE ON DEFINITIONS AND RULES ON AVOIDING CONFLICT OF INTEREST A conflict of interest (COI) 6 arises when :",
+        "sub_clauses": []
+      },
+      {
+        "clause_number": "4",
+        "text": "As defined by Bursa Malaysia under the Main Market Listing Requirements 20 23",
+        "sub_clauses": []
+      },
+      {
+        "clause_number": "5",
+        "text": "As defined by Bursa Malaysia under the Leap Market Chapter 7 Transactions & Companies Act",
+        "sub_clauses": []
+      },
+      {
+        "clause_number": "6",
+        "text": "As defined by Bursa Malaysia under the Main Market Listing Requirements 2023",
+        "sub_clauses": []
+      },
+      {
+        "clause_number": "7",
+        "text": "",
+        "sub_clauses": []
+      },
+      {
+        "clause_number": "4",
+        "text": "",
+        "sub_clauses": []
+      },
+      {
+        "clause_number": "4.1",
+        "text": "Financial Interests",
+        "sub_clauses": []
+      },
+      {
+        "clause_number": "4.2",
+        "text": "Personal Relationships",
+        "sub_clauses": []
+      },
+      {
+        "clause_number": "4.3",
+        "text": "Outside Employment or Activities",
+        "sub_clauses": []
+      },
+      {
+        "clause_number": "5",
+        "text": "",
+        "sub_clauses": []
+      },
+      {
+        "clause_number": "4.4",
+        "text": "S ervice at another organization",
+        "sub_clauses": []
+      },
+      {
+        "clause_number": "4.5",
+        "text": "Personal Benefit s",
+        "sub_clauses": []
+      },
+      {
+        "clause_number": "4.6",
+        "text": "Business Gifts, Entertainment a nd Hospitality",
+        "sub_clauses": []
+      },
+      {
+        "clause_number": "4.7",
+        "text": "Donations , Sponsorships and Corporate Responsibilities",
+        "sub_clauses": []
+      },
+      {
+        "clause_number": "5",
+        "text": ". DISCLOSURE All employees are expected to avoid conflicts of interest and are required to disclose any such conflicts, whether direct or indirect, actual or potential to their respective Head of De partment or BUHR. The disclosure process is as follows:",
+        "sub_clauses": []
+      },
+      {
+        "clause_number": "6",
+        "text": "",
+        "sub_clauses": []
+      },
+      {
+        "clause_number": "6",
+        "text": ". MANAGING CONFLICT OF INTEREST 6.1 Dealing with Conflict of Interest Declaration",
+        "sub_clauses": []
+      },
+      {
+        "clause_number": "7",
+        "text": "",
+        "sub_clauses": []
+      },
+      {
+        "clause_number": "6.2",
+        "text": "Conflict of Interest Approval Matrix",
+        "sub_clauses": []
+      },
+      {
+        "clause_number": "6.3",
+        "text": "Action Plans to Resolve, Eliminat e or Mitigat e Conflicts Of Interest",
+        "sub_clauses": []
+      },
+      {
+        "clause_number": "8",
+        "text": "",
+        "sub_clauses": []
+      },
+      {
+        "clause_number": "7",
+        "text": ". MANAGING SPECIFIC CONFLICT OF INTEREST",
+        "sub_clauses": []
+      },
+      {
+        "clause_number": "8",
+        "text": ". MANAGING INTERCOMPANY CONFLICT OF INTEREST",
+        "sub_clauses": []
+      },
+      {
+        "clause_number": "8",
+        "text": "T he Securities Commission’s Guidelines on Conflict of Directors of Listed Corporations and their Subsidiaries highlights for",
+        "sub_clauses": []
+      },
+      {
+        "clause_number": "9",
+        "text": "",
+        "sub_clauses": []
+      },
+      {
+        "clause_number": "9",
+        "text": ". OVERSIGHT RESPONSIBILITIES",
+        "sub_clauses": []
+      },
+      {
+        "clause_number": "9.1",
+        "text": "B OARD OF DIRECTORS",
+        "sub_clauses": []
+      },
+      {
+        "clause_number": "9.2",
+        "text": "A UDIT COMMITTEE",
+        "sub_clauses": []
+      },
+      {
+        "clause_number": "9.3",
+        "text": "M ANAGEMENT",
+        "sub_clauses": []
+      },
+      {
+        "clause_number": "10",
+        "text": "",
+        "sub_clauses": []
+      },
+      {
+        "clause_number": "9.4",
+        "text": "COMPANY SECRETARY",
+        "sub_clauses": []
+      },
+      {
+        "clause_number": "9.5",
+        "text": "RISK & C OMPLIANCE",
+        "sub_clauses": []
+      },
+      {
+        "clause_number": "9.6",
+        "text": "EMPLOYEES",
+        "sub_clauses": []
+      },
+      {
+        "clause_number": "11",
+        "text": "",
+        "sub_clauses": []
+      },
+      {
+        "clause_number": "10",
+        "text": ". RECORD MAINTENANCE",
+        "sub_clauses": []
+      },
+      {
+        "clause_number": "11",
+        "text": ". DISCIPLINARY MEASURES",
+        "sub_clauses": []
+      },
+      {
+        "clause_number": "12",
+        "text": ". OTHER RELEVANT DOCUMENTS",
+        "sub_clauses": []
+      },
+      {
+        "clause_number": "13",
+        "text": ". REVIEW OF COMPLIANCE",
+        "sub_clauses": []
+      },
+      {
+        "clause_number": "12",
+        "text": "",
+        "sub_clauses": []
+      },
+      {
+        "clause_number": "14",
+        "text": ". CONTACT",
+        "sub_clauses": []
+      },
+      {
+        "clause_number": "15",
+        "text": ". POLICY OWNER",
+        "sub_clauses": []
+      },
+      {
+        "clause_number": "16",
+        "text": ". WHISTLEBLOW ING",
+        "sub_clauses": []
+      },
+      {
+        "clause_number": "17",
+        "text": ". EFFECTIVE DATE The effective implementation date of this policy is from 1 September 2 024 .",
+        "sub_clauses": []
+      },
+      {
+        "clause_number": "13",
+        "text": "",
+        "sub_clauses": []
+      },
+      {
+        "clause_number": "1",
+        "text": ". Executive Chairman - Tan Sri Sir Dr Jeffrey Cheah Fook Ling KBE, AO 2. President - Tan Sri Dato’ (Dr) Chew Chee Kin 3. Advisor Property Malaysia & Group MD Sunway Re al Estate – Sarena Cheah Yean Tih 4. Executive Altern ate Director to Executive Chairman - Evan Cheah Yean Shin",
+        "sub_clauses": []
+      },
+      {
+        "clause_number": "1",
+        "text": ". Dato’ Sri Idris Jala (Co - Chairperson) 2. Tan Sri Datuk Dr Rebecca Fatima Sta Maria 3. Datuk Tong Poh Keow 4. Datuk Zaiton Mohd Hassan 5. Datuk Mohd Anuar bi n Taib 6. Dr Philip Yeo Liat Kok",
+        "sub_clauses": []
+      },
+      {
+        "clause_number": "1",
+        "text": ". Deputy Chairman of Sunway Group - Tan Sri Razman Md Hashim 2. Senior Managing Director, Chairman Office - Dato’ Tan Kia Loke 3. Managing Director, Chairman Office – Alex Yeow Wai Siaw 4. Execut ive Director , Chairman ’ s Office - Ong Pang Yen 5. Senior Special Advisor, Chairman’s Office – Chong Chang Choong Financial 6. Chief Financial Officer – Joyce Tan Wei Tze 7. Chief Human Resources Officer – Foo Shiang Wyne 8. Chief Information Officer – Kevin Khoo Min Sinn 9. Senior General Manager, Secretarial Management – Tan Kim Aun 10. Senior General Manager, Legal – Liew Wei Ling",
+        "sub_clauses": []
+      },
+      {
+        "clause_number": "1",
+        "text": ". President, Sunway Healthcare Group - Dato’ Lau Beng Long 2. Managing Director - Hospital & Healthcare Operations – Dr. Khoo Chow Huat",
+        "sub_clauses": []
+      },
+      {
+        "clause_number": "1",
+        "text": ". Managing Director, International – Chung Soo Kiong 2. Chief Executive Officer, Central & Northern Region & SPFM – Chong Sau Min 3. Chief Executive Officer , Southern Regio n & Industrial Development – Gerard Soosay",
+        "sub_clauses": []
+      },
+      {
+        "clause_number": "14",
+        "text": "",
+        "sub_clauses": []
+      },
+      {
+        "clause_number": "1",
+        "text": ". Executive Director - Group CEO’s Office, DSI & Sunway Ventures – Lee Soong Hwa 2. Chief Executive Officer, Sunway Multicare – Lang Leong Cheng 3. Chief Innovation Officer, Sunway Innova tion - Matthijs Geert - jan Van Leeuwen 4. Chief Executive Officer, Credit Bureau Malaysia – Leong Weng Choong",
+        "sub_clauses": []
+      },
+      {
+        "clause_number": "1",
+        "text": ". Chief Operating Officer, Sunway Hospitality Group – Alex Castaldi",
+        "sub_clauses": []
+      },
+      {
+        "clause_number": "1",
+        "text": ". Executive Director, Sunway Themeparks – Calvin Ho Ch ’an Hin",
+        "sub_clauses": []
+      },
+      {
+        "clause_number": "1",
+        "text": ". Chief Executive Officer – Yeoh Yuen Chee 2. Advisor - Trading & Manufacturing Group – Wong Fook Chai",
+        "sub_clauses": []
+      },
+      {
+        "clause_number": "1",
+        "text": ". Chief Executive Officer – Chan Hoi Choy",
+        "sub_clauses": []
+      },
+      {
+        "clause_number": "1",
+        "text": ". Chief Executive Officer – Danny Ng Boo n Liang",
+        "sub_clauses": []
+      },
+      {
+        "clause_number": "1",
+        "text": ". Chief Executive Officer – Lee Chuan Seng",
+        "sub_clauses": []
+      },
+      {
+        "clause_number": "15",
+        "text": "",
+        "sub_clauses": []
+      },
+      {
+        "clause_number": "1",
+        "text": ". Chief Brand Strategy Officer – Nik Tasha Nik Kamaruddin 2. Chief Strategy Officer – Faisal Ariff 3. Deputy Chief Human Resources Officer – Clayton Tan Ju Chiae 4. Senior General Manager, Audit – Yee Meng Haw 5. Senior General Manager, Group Corporate Development - Soo Chin Kang 6. Senior General Manager , HR Business Support & Projects – Fong Foo Tat 7. General Manager, Digital Technology Solutions – Wan Hock Wei 8. Chief Information Security Officer – Eddie Hau Lian Hong 9. Head , Group Risk & Compliance – Janet Lim Lee San",
+        "sub_clauses": []
+      },
+      {
+        "clause_number": "16",
+        "text": "",
+        "sub_clauses": []
+      },
+      {
+        "clause_number": "17",
+        "text": "",
+        "sub_clauses": []
+      },
+      {
+        "clause_number": "18",
+        "text": "",
+        "sub_clauses": []
+      },
+      {
+        "clause_number": "19",
+        "text": "",
+        "sub_clauses": []
+      },
+      {
+        "clause_number": "20",
+        "text": "",
+        "sub_clauses": []
+      },
+      {
+        "clause_number": "1",
+        "text": ". FINANCIAL INTEREST",
+        "sub_clauses": []
+      },
+      {
+        "clause_number": "2",
+        "text": ". PERSONAL RELAT IONSHIP",
+        "sub_clauses": []
+      },
+      {
+        "clause_number": "21",
+        "text": "",
+        "sub_clauses": []
+      },
+      {
+        "clause_number": "3",
+        "text": ". OUTSIDE EMPLOYMENT/ACTIVITIES & SERVICE AT ANOTHER ORGANISATION",
+        "sub_clauses": []
+      },
+      {
+        "clause_number": "4",
+        "text": ". ANY OTHER CONFLICTS OF INTEREST NOT COVERED ABOVE",
+        "sub_clauses": []
+      },
+      {
+        "clause_number": "22",
+        "text": "",
+        "sub_clauses": []
+      },
+      {
+        "clause_number": "23",
+        "text": "",
+        "sub_clauses": []
+      },
+      {
+        "clause_number": "24",
+        "text": "",
+        "sub_clauses": []
+      },
+      {
+        "clause_number": "5",
+        "text": "Are there any additional interests, activ ities, investments, or involvements that you believe should be disclosed to ensure a comprehensive account of any actual, apparent or potential conflicts of interest?",
+        "sub_clauses": []
+      },
+      {
+        "clause_number": "25",
+        "text": "",
+        "sub_clauses": []
+      },
+      {
+        "clause_number": "26",
+        "text": "",
+        "sub_clauses": []
+      },
+      {
+        "clause_number": "27",
+        "text": "",
+        "sub_clauses": []
+      },
+      {
+        "clause_number": "2",
+        "text": ". Board’s Appro val on Action Plan",
+        "sub_clauses": []
+      },
+      {
+        "clause_number": "3",
+        "text": ". Agreement to Action Plan(s) by the Director of this Conflict of Interest Declaration",
+        "sub_clauses": []
+      },
+      {
+        "clause_number": "28",
+        "text": "",
+        "sub_clauses": []
+      },
+      {
+        "clause_number": "29",
+        "text": "",
+        "sub_clauses": []
+      },
+      {
+        "clause_number": "30",
+        "text": "",
+        "sub_clauses": []
+      },
+      {
+        "clause_number": "31",
+        "text": "",
+        "sub_clauses": []
+      },
+      {
+        "clause_number": "32",
+        "text": "",
+        "sub_clauses": []
+      }
+    ]
+  },
+  "metadata": {
+    "model": "claude-sonnet-4-20250514",
+    "max_tokens": 16000,
+    "temperature": 0,
+    "top_p": 1,
+    "generated_at": "2025-10-17T06:14:44.451Z",
+    "prompt_path": "config/prompts/vision-ultimate.txt",
+    "reason": "table_structure_loss"
+  }
+}

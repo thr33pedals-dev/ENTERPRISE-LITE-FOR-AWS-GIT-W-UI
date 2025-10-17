@@ -52,7 +52,7 @@ async function testPDFQuality() {
     console.log('');
 
     const startTime = Date.now();
-    const processed = await processFiles([mockFile]);
+    const processed = await processFiles([mockFile], { tenantId: 'test' });
     const extractionTime = Date.now() - startTime;
 
     if (processed.length === 0) {

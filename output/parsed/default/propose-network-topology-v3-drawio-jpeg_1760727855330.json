@@ -1,0 +1,801 @@
+{
+  "document_profile": {
+    "detected_type": "network_diagram",
+    "primary_purpose": "Network topology design proposal showing hierarchical campus network architecture",
+    "complexity_level": "complex",
+    "confidence_score": 0.95
+  },
+  "document_metadata": {
+    "title": "Propose Network Topology - v3",
+    "version": "v3",
+    "dates": {
+      "created": null,
+      "modified": null,
+      "effective": null,
+      "expires": null
+    },
+    "authors": [],
+    "stakeholders": [],
+    "document_ids": {
+      "reference_number": null,
+      "control_number": null
+    },
+    "classification": "internal"
+  },
+  "core_content": {
+    "hierarchical_structure": {
+      "sections": []
+    },
+    "structured_data_tables": {
+      "tables": []
+    },
+    "numerical_entities": [
+      {
+        "value": 10,
+        "unit": "Gbps",
+        "context": "SFP+ Single Mode ZR 40KM uplink speed",
+        "source_section": "core_layer",
+        "type": "speed"
+      },
+      {
+        "value": 25,
+        "unit": "Gbps",
+        "context": "SFP28 Multimode connection speed",
+        "source_section": "core_layer",
+        "type": "speed"
+      },
+      {
+        "value": 100,
+        "unit": "Gbps",
+        "context": "SFP+ connection speeds throughout network",
+        "source_section": "distribution_access",
+        "type": "speed"
+      }
+    ],
+    "technical_diagram": {
+      "architecture_type": "three-tier",
+      "components": [
+        {
+          "component_id": "core_switch_1",
+          "component_name": "Core Switch",
+          "component_type": "core",
+          "model_number": "Not specified",
+          "quantity": 1,
+          "specifications": {
+            "capacity": "High-capacity core switching",
+            "modules": [
+              "10G SFP+",
+              "25G SFP28"
+            ],
+            "features": [
+              "Redundant uplinks",
+              "High availability"
+            ]
+          },
+          "location": {
+            "site": "Main Campus",
+            "floor": "Core Layer",
+            "room": "Data Center"
+          },
+          "criticality": "critical"
+        },
+        {
+          "component_id": "agg_switch_server_closet",
+          "component_name": "Aggregation Switch - Server Closet",
+          "component_type": "distribution",
+          "model_number": "Not specified",
+          "quantity": 1,
+          "specifications": {
+            "capacity": "Distribution layer aggregation",
+            "modules": [
+              "100G SFP+"
+            ],
+            "features": [
+              "Server connectivity",
+              "Uplink aggregation"
+            ]
+          },
+          "location": {
+            "site": "Main Campus",
+            "floor": "Distribution Layer",
+            "room": "Server Closet"
+          },
+          "criticality": "high"
+        },
+        {
+          "component_id": "stackwise_switches_left",
+          "component_name": "StackWise Virtual Switches",
+          "component_type": "distribution",
+          "model_number": "C9300-24UX-A",
+          "quantity": 2,
+          "specifications": {
+            "capacity": "24-port distribution switching",
+            "modules": [
+              "StackWise Virtual",
+              "Dual-Homed"
+            ],
+            "features": [
+              "High availability",
+              "Redundant connections"
+            ]
+          },
+          "location": {
+            "site": "Main Campus",
+            "floor": "Distribution Layer",
+            "room": "Left Distribution"
+          },
+          "criticality": "high"
+        },
+        {
+          "component_id": "stackwise_switches_right",
+          "component_name": "StackWise Virtual Switches",
+          "component_type": "distribution",
+          "model_number": "C9300-24UX-A",
+          "quantity": 2,
+          "specifications": {
+            "capacity": "24-port distribution switching",
+            "modules": [
+              "StackWise Virtual",
+              "Dual-Homed"
+            ],
+            "features": [
+              "High availability",
+              "Redundant connections"
+            ]
+          },
+          "location": {
+            "site": "Main Campus",
+            "floor": "Distribution Layer",
+            "room": "Right Distribution"
+          },
+          "criticality": "high"
+        },
+        {
+          "component_id": "access_switches_level5",
+          "component_name": "Access Layer Switches - Level 5",
+          "component_type": "access",
+          "model_number": "C9300-48P/C9-A Stack",
+          "quantity": 4,
+          "specifications": {
+            "capacity": "48-port access switching",
+            "modules": [
+              "PoE+",
+              "Stacking"
+            ],
+            "features": [
+              "End device connectivity",
+              "Power over Ethernet"
+            ]
+          },
+          "location": {
+            "site": "Main Campus",
+            "floor": "Level 5",
+            "room": "Main Office"
+          },
+          "criticality": "medium"
+        },
+        {
+          "component_id": "access_switches_level4",
+          "component_name": "Access Layer Switches - Level 4",
+          "component_type": "access",
+          "model_number": "C9300-48P/C9-A Stack",
+          "quantity": 4,
+          "specifications": {
+            "capacity": "48-port access switching",
+            "modules": [
+              "PoE+",
+              "Stacking"
+            ],
+            "features": [
+              "End device connectivity",
+              "Power over Ethernet"
+            ]
+          },
+          "location": {
+            "site": "Main Campus",
+            "floor": "Level 4",
+            "room": "Main Office"
+          },
+          "criticality": "medium"
+        },
+        {
+          "component_id": "access_switches_level3",
+          "component_name": "Access Layer Switches - Level 3",
+          "component_type": "access",
+          "model_number": "C9300-48P/C9-A Stack",
+          "quantity": 4,
+          "specifications": {
+            "capacity": "48-port access switching",
+            "modules": [
+              "PoE+",
+              "Stacking"
+            ],
+            "features": [
+              "End device connectivity",
+              "Power over Ethernet"
+            ]
+          },
+          "location": {
+            "site": "Main Campus",
+            "floor": "Level 3",
+            "room": "Main Office"
+          },
+          "criticality": "medium"
+        },
+        {
+          "component_id": "access_switches_level2",
+          "component_name": "Access Layer Switches - Level 2",
+          "component_type": "access",
+          "model_number": "C9300-48P/C9-A Stack",
+          "quantity": 4,
+          "specifications": {
+            "capacity": "48-port access switching",
+            "modules": [
+              "PoE+",
+              "Stacking"
+            ],
+            "features": [
+              "End device connectivity",
+              "Power over Ethernet"
+            ]
+          },
+          "location": {
+            "site": "Main Campus",
+            "floor": "Level 2",
+            "room": "Main Office"
+          },
+          "criticality": "medium"
+        },
+        {
+          "component_id": "access_switches_basement",
+          "component_name": "Access Layer Switches - Basement",
+          "component_type": "access",
+          "model_number": "C9300-48P/C9-A Stack",
+          "quantity": 4,
+          "specifications": {
+            "capacity": "48-port access switching",
+            "modules": [
+              "PoE+",
+              "Stacking"
+            ],
+            "features": [
+              "End device connectivity",
+              "Power over Ethernet"
+            ]
+          },
+          "location": {
+            "site": "Main Campus",
+            "floor": "Basement Level",
+            "room": "Basement"
+          },
+          "criticality": "medium"
+        }
+      ],
+      "connections": [
+        {
+          "connection_id": "core_to_agg_server",
+          "source_component": "core_switch_1",
+          "destination_component": "agg_switch_server_closet",
+          "connection_type": "downlink",
+          "cable_specifications": {
+            "cable_type": "fiber",
+            "speed": "25G",
+            "protocol": "SFP28 Multimode",
+            "distance": "short_range"
+          },
+          "redundancy": {
+            "is_redundant": false,
+            "redundancy_type": null,
+            "protocol": null
+          }
+        },
+        {
+          "connection_id": "core_to_stackwise_left",
+          "source_component": "core_switch_1",
+          "destination_component": "stackwise_switches_left",
+          "connection_type": "downlink",
+          "cable_specifications": {
+            "cable_type": "fiber",
+            "speed": "10G",
+            "protocol": "SFP+ Single Mode ZR 40KM",
+            "distance": "long_range"
+          },
+          "redundancy": {
+            "is_redundant": true,
+            "redundancy_type": "dual-homed",
+            "protocol": "StackWise Virtual"
+          }
+        },
+        {
+          "connection_id": "core_to_stackwise_right",
+          "source_component": "core_switch_1",
+          "destination_component": "stackwise_switches_right",
+          "connection_type": "downlink",
+          "cable_specifications": {
+            "cable_type": "fiber",
+            "speed": "10G",
+            "protocol": "SFP+ Single Mode ZR 40KM",
+            "distance": "long_range"
+          },
+          "redundancy": {
+            "is_redundant": true,
+            "redundancy_type": "dual-homed",
+            "protocol": "StackWise Virtual"
+          }
+        },
+        {
+          "connection_id": "stackwise_to_access_level5",
+          "source_component": "stackwise_switches_left",
+          "destination_component": "access_switches_level5",
+          "connection_type": "downlink",
+          "cable_specifications": {
+            "cable_type": "fiber",
+            "speed": "100G",
+            "protocol": "SFP+",
+            "distance": "medium_range"
+          },
+          "redundancy": {
+            "is_redundant": true,
+            "redundancy_type": "dual-homed",
+            "protocol": "EtherChannel"
+          }
+        },
+        {
+          "connection_id": "stackwise_to_access_level4",
+          "source_component": "stackwise_switches_left",
+          "destination_component": "access_switches_level4",
+          "connection_type": "downlink",
+          "cable_specifications": {
+            "cable_type": "fiber",
+            "speed": "100G",
+            "protocol": "SFP+",
+            "distance": "medium_range"
+          },
+          "redundancy": {
+            "is_redundant": true,
+            "redundancy_type": "dual-homed",
+            "protocol": "EtherChannel"
+          }
+        },
+        {
+          "connection_id": "stackwise_to_access_level3",
+          "source_component": "stackwise_switches_right",
+          "destination_component": "access_switches_level3",
+          "connection_type": "downlink",
+          "cable_specifications": {
+            "cable_type": "fiber",
+            "speed": "100G",
+            "protocol": "SFP+",
+            "distance": "medium_range"
+          },
+          "redundancy": {
+            "is_redundant": true,
+            "redundancy_type": "dual-homed",
+            "protocol": "EtherChannel"
+          }
+        },
+        {
+          "connection_id": "stackwise_to_access_level2",
+          "source_component": "stackwise_switches_right",
+          "destination_component": "access_switches_level2",
+          "connection_type": "downlink",
+          "cable_specifications": {
+            "cable_type": "fiber",
+            "speed": "100G",
+            "protocol": "SFP+",
+            "distance": "medium_range"
+          },
+          "redundancy": {
+            "is_redundant": true,
+            "redundancy_type": "dual-homed",
+            "protocol": "EtherChannel"
+          }
+        },
+        {
+          "connection_id": "stackwise_to_access_basement",
+          "source_component": "stackwise_switches_right",
+          "destination_component": "access_switches_basement",
+          "connection_type": "downlink",
+          "cable_specifications": {
+            "cable_type": "fiber",
+            "speed": "100G",
+            "protocol": "SFP+",
+            "distance": "medium_range"
+          },
+          "redundancy": {
+            "is_redundant": true,
+            "redundancy_type": "dual-homed",
+            "protocol": "EtherChannel"
+          }
+        }
+      ],
+      "legend": [
+        {
+          "symbol": "Blue switch icon",
+          "description": "Network switches (Core, Distribution, Access)"
+        },
+        {
+          "symbol": "Purple lines",
+          "description": "10G SFP+ Single Mode ZR 40KM connections"
+        },
+        {
+          "symbol": "Cyan lines",
+          "description": "25G SFP28 Multimode connections"
+        },
+        {
+          "symbol": "Green lines",
+          "description": "100G SFP+ connections"
+        },
+        {
+          "symbol": "Yellow lines",
+          "description": "EtherChannel connections"
+        },
+        {
+          "symbol": "Oval groupings",
+          "description": "EtherChannel logical groupings"
+        }
+      ]
+    }
+  },
+  "semantic_synthesis": {
+    "key_entities": [
+      {
+        "entity": "Core Layer",
+        "role": "Central switching and routing hub",
+        "relationships": [
+          "Connects to all distribution switches",
+          "Provides campus-wide connectivity"
+        ],
+        "dependencies": [
+          "Critical single point for campus connectivity"
+        ],
+        "criticality": "critical"
+      },
+      {
+        "entity": "Distribution Layer",
+        "role": "Aggregation and policy enforcement",
+        "relationships": [
+          "Connects core to access layers",
+          "Provides redundancy via StackWise Virtual"
+        ],
+        "dependencies": [
+          "Depends on core layer for inter-VLAN routing"
+        ],
+        "criticality": "high"
+      },
+      {
+        "entity": "Access Layer",
+        "role": "End device connectivity",
+        "relationships": [
+          "Connects end devices to network",
+          "Dual-homed to distribution switches"
+        ],
+        "dependencies": [
+          "Depends on distribution layer for uplink connectivity"
+        ],
+        "criticality": "medium"
+      }
+    ],
+    "core_concepts": [
+      "Three-tier hierarchical network design",
+      "High availability through redundancy",
+      "StackWise Virtual technology for switch virtualization",
+      "EtherChannel for link aggregation",
+      "Dual-homed access layer design",
+      "Fiber optic backbone with various speed tiers"
+    ],
+    "relationship_mapping": [
+      {
+        "relationship": "Core-to-Distribution",
+        "description": "Single core switch connects to dual StackWise Virtual distribution switches",
+        "dependency_type": "critical_path"
+      },
+      {
+        "relationship": "Distribution-to-Access",
+        "description": "Each access layer switch stack dual-homed to both distribution switches",
+        "dependency_type": "redundant_path"
+      },
+      {
+        "relationship": "StackWise Virtual Pairing",
+        "description": "Distribution switches operate as virtual single unit",
+        "dependency_type": "high_availability"
+      }
+    ],
+    "obligations": [
+      {
+        "type": "mandatory",
+        "description": "Maintain dual-homed connectivity for all access layer switches",
+        "scope": "access_layer_design"
+      },
+      {
+        "type": "mandatory",
+        "description": "Implement StackWise Virtual for distribution layer redundancy",
+        "scope": "distribution_layer_design"
+      },
+      {
+        "type": "recommended",
+        "description": "Use appropriate fiber types for distance requirements",
+        "scope": "cabling_infrastructure"
+      }
+    ]
+  },
+  "risk_analysis": {
+    "identified_risks": [
+      {
+        "risk_id": "SPOF_CORE",
+        "description": "Single core switch represents critical single point of failure",
+        "likelihood": "medium",
+        "impact": "critical",
+        "affected_components": [
+          "core_switch_1"
+        ],
+        "consequences": [
+          "Complete campus network outage",
+          "Loss of inter-VLAN routing",
+          "Server connectivity loss"
+        ],
+        "mitigation": "Implement redundant core switches with HSRP/VRRP"
+      },
+      {
+        "risk_id": "BANDWIDTH_BOTTLENECK",
+        "description": "Core uplinks may become bottlenecks under high load",
+        "likelihood": "medium",
+        "impact": "high",
+        "affected_components": [
+          "core_to_stackwise_left",
+          "core_to_stackwise_right"
+        ],
+        "consequences": [
+          "Network congestion",
+          "Performance degradation",
+          "Application timeouts"
+        ],
+        "mitigation": "Monitor utilization and upgrade to higher capacity links"
+      },
+      {
+        "risk_id": "STACKWISE_FAILURE",
+        "description": "StackWise Virtual failure could impact distribution layer redundancy",
+        "likelihood": "low",
+        "impact": "high",
+        "affected_components": [
+          "stackwise_switches_left",
+          "stackwise_switches_right"
+        ],
+        "consequences": [
+          "Reduced redundancy",
+          "Potential access layer isolation",
+          "Manual failover required"
+        ],
+        "mitigation": "Regular monitoring of StackWise Virtual health and backup procedures"
+      },
+      {
+        "risk_id": "FIBER_DISTANCE_LIMITS",
+        "description": "Long-range fiber connections may approach distance limitations",
+        "likelihood": "low",
+        "impact": "medium",
+        "affected_components": [
+          "10G SFP+ Single Mode ZR 40KM connections"
+        ],
+        "consequences": [
+          "Signal degradation",
+          "Connection instability",
+          "Link failures"
+        ],
+        "mitigation": "Verify actual distances and use appropriate optics"
+      }
+    ],
+    "opportunities": [
+      {
+        "opportunity": "High Availability Design",
+        "description": "Dual-homed access layer provides excellent redundancy",
+        "benefits": [
+          "Minimal downtime",
+          "Automatic failover",
+          "Load distribution"
+        ]
+      },
+      {
+        "opportunity": "Scalable Architecture",
+        "description": "Three-tier design allows for easy expansion",
+        "benefits": [
+          "Future growth accommodation",
+          "Modular expansion",
+          "Performance scaling"
+        ]
+      },
+      {
+        "opportunity": "Modern Technology Stack",
+        "description": "Use of StackWise Virtual and high-speed optics",
+        "benefits": [
+          "Simplified management",
+          "High performance",
+          "Future-ready infrastructure"
+        ]
+      }
+    ],
+    "ambiguities": [
+      {
+        "ambiguity": "Core Switch Specifications",
+        "description": "Core switch model and detailed specifications not specified",
+        "impact": "Cannot assess capacity and feature compatibility",
+        "clarification_needed": "Specify exact core switch model and capabilities"
+      },
+      {
+        "ambiguity": "Server Connectivity Details",
+        "description": "Server closet aggregation switch connections not fully detailed",
+        "impact": "Unclear how servers connect to main network",
+        "clarification_needed": "Define server connectivity architecture and requirements"
+      },
+      {
+        "ambiguity": "VLAN and Routing Design",
+        "description": "Layer 3 boundaries and VLAN design not shown",
+        "impact": "Cannot assess routing efficiency and broadcast domains",
+        "clarification_needed": "Define VLAN structure and Layer 3 routing points"
+      }
+    ]
+  },
+  "cognitive_reasoning": {
+    "architecture_assessment": {
+      "pattern": "Three-tier hierarchical campus network",
+      "appropriateness": "Well-suited for medium to large campus environments",
+      "strengths": [
+        "Clear hierarchical structure",
+        "Built-in redundancy at access layer",
+        "Scalable design",
+        "Modern technology implementation"
+      ],
+      "weaknesses": [
+        "Single point of failure at core",
+        "Potential bandwidth bottlenecks",
+        "Complex StackWise Virtual dependency"
+      ],
+      "design_quality_score": 0.75
+    },
+    "best_practices_validation": {
+      "followed_practices": [
+        "Hierarchical network design principles",
+        "Dual-homed access layer for redundancy",
+        "Use of link aggregation (EtherChannel)",
+        "Appropriate fiber optic selection for distances"
+      ],
+      "violated_practices": [
+        "Single core switch violates redundancy best practices",
+        "No visible spanning tree or loop prevention details",
+        "Missing network management and monitoring infrastructure"
+      ],
+      "recommendations": [
+        "Implement redundant core switches",
+        "Add network management station",
+        "Document spanning tree design",
+        "Include security appliances in design"
+      ]
+    },
+    "capacity_planning": {
+      "current_utilization": "New deployment - 0% utilization",
+      "available_headroom": "High - modern high-speed infrastructure",
+      "growth_projections": "Can accommodate significant growth with current design",
+      "bottleneck_identification": [
+        "Core switch uplink capacity",
+        "Distribution to core connections",
+        "Server closet aggregation capacity"
+      ]
+    }
+  },
+  "knowledge_synthesis": {
+    "executive_summary": "This is a three-tier hierarchical campus network design featuring a single core switch, dual StackWise Virtual distribution switches, and dual-homed access layer switches across 5 floors plus basement. The design provides good redundancy at the access and distribution layers but has a critical single point of failure at the core layer.",
+    "detailed_summary": "The proposed network topology implements a classic three-tier hierarchical design suitable for a multi-floor campus environment. The architecture features a single core switch connecting to redundant StackWise Virtual distribution switches, which in turn provide dual-homed connectivity to access layer switch stacks on each floor (Levels 2-5 and Basement). The design uses modern high-speed fiber optics including 10G SFP+ for core-to-distribution links, 25G SFP28 for server connectivity, and 100G SFP+ for distribution-to-access connections. While the design provides excellent redundancy at the access layer through dual-homing and at the distribution layer through StackWise Virtual technology, it suffers from a critical single point of failure at the core layer. The use of Cisco C9300 series switches throughout the access layer provides consistency and modern features including PoE+ capability. Key risks include core switch failure causing campus-wide outage and potential bandwidth bottlenecks at core uplinks. Opportunities include the scalable architecture design and high availability features at lower layers.",
+    "qa_database": [
+      {
+        "question": "What type of network architecture is this?",
+        "answer": "This is a three-tier hierarchical campus network design with core, distribution, and access layers."
+      },
+      {
+        "question": "How many floors does this network serve?",
+        "answer": "The network serves 5 floors (Levels 2-5) plus a basement level, for a total of 6 levels."
+      },
+      {
+        "question": "What is the biggest risk in this design?",
+        "answer": "The single core switch represents a critical single point of failure that could cause complete campus network outage if it fails."
+      },
+      {
+        "question": "What redundancy features are implemented?",
+        "answer": "The design includes StackWise Virtual at the distribution layer and dual-homed access switches with EtherChannel connections."
+      },
+      {
+        "question": "What switch models are used in the access layer?",
+        "answer": "Cisco C9300-48P/C9-A Stack switches are used throughout the access layer, providing 48 ports with PoE+ capability."
+      },
+      {
+        "question": "What connection speeds are used between layers?",
+        "answer": "10G SFP+ for core-to-distribution, 25G SFP28 for server connections, and 100G SFP+ for distribution-to-access connections."
+      },
+      {
+        "question": "How should the core layer be improved?",
+        "answer": "Implement redundant core switches with HSRP or VRRP to eliminate the single point of failure."
+      },
+      {
+        "question": "What fiber types are used for long-distance connections?",
+        "answer": "Single Mode ZR 40KM fiber is used for the 10G SFP+ connections between core and distribution layers."
+      },
+      {
+        "question": "How many access switches are deployed per floor?",
+        "answer": "Each floor has 2 access switches configured in a stack, providing 4 total switch units per floor."
+      },
+      {
+        "question": "What is StackWise Virtual and why is it used?",
+        "answer": "StackWise Virtual allows two physical distribution switches to operate as a single logical unit, providing redundancy and simplified management."
+      },
+      {
+        "question": "What happens if one distribution switch fails?",
+        "answer": "The StackWise Virtual configuration allows the remaining distribution switch to continue operations, maintaining connectivity to all access switches."
+      },
+      {
+        "question": "Are there any bandwidth bottlenecks?",
+        "answer": "Potential bottlenecks exist at the core uplinks (10G each) which may be insufficient under high load conditions."
+      },
+      {
+        "question": "What is the purpose of EtherChannel in this design?",
+        "answer": "EtherChannel provides link aggregation and load balancing for the dual-homed connections between distribution and access layers."
+      },
+      {
+        "question": "How is the server closet connected?",
+        "answer": "The server closet has a dedicated aggregation switch connected to the core via 25G SFP28 Multimode fiber."
+      },
+      {
+        "question": "What are the main strengths of this design?",
+        "answer": "Clear hierarchical structure, dual-homed access layer redundancy, modern high-speed technology, and scalable architecture."
+      },
+      {
+        "question": "What information is missing from this diagram?",
+        "answer": "Missing details include exact core switch specifications, VLAN design, Layer 3 boundaries, and network management infrastructure."
+      },
+      {
+        "question": "Is this design suitable for future growth?",
+        "answer": "Yes, the three-tier hierarchical design is highly scalable and can accommodate additional floors and increased capacity requirements."
+      },
+      {
+        "question": "What security considerations are visible?",
+        "answer": "No security appliances or segmentation details are shown in this topology diagram."
+      },
+      {
+        "question": "How should network monitoring be implemented?",
+        "answer": "A dedicated network management station should be added, likely connected to the core or distribution layer for comprehensive monitoring."
+      },
+      {
+        "question": "What is the estimated cost impact of the core redundancy recommendation?",
+        "answer": "Adding a second core switch would roughly double the core layer cost but eliminate the most critical single point of failure."
+      }
+    ],
+    "actionable_insights": {
+      "immediate_actions": [
+        "Specify exact core switch model and capabilities",
+        "Validate fiber distance requirements against actual building measurements",
+        "Design VLAN structure and Layer 3 boundaries"
+      ],
+      "short_term_improvements": [
+        "Add redundant core switch with HSRP/VRRP configuration",
+        "Implement network management and monitoring infrastructure",
+        "Document spanning tree and loop prevention design",
+        "Add security appliances and network segmentation"
+      ],
+      "long_term_recommendations": [
+        "Plan for bandwidth upgrades at core layer",
+        "Consider software-defined networking (SDN) implementation",
+        "Develop disaster recovery and business continuity procedures",
+        "Implement comprehensive network automation"
+      ],
+      "estimated_costs": {
+        "core_redundancy": "High - Additional core switch and licensing",
+        "monitoring_infrastructure": "Medium - Management station and software",
+        "security_appliances": "Medium to High - Firewalls and security tools"
+      }
+    }
+  },
+  "vision_metadata": {
+    "model": "claude-sonnet-4-20250514",
+    "generated_at": "2025-10-17T19:05:52.261Z",
+    "prompt_path": "config/prompts/vision-ultimate.txt",
+    "reason": "low_quality_text",
+    "source": "anthropic_vision"
+  }
+}

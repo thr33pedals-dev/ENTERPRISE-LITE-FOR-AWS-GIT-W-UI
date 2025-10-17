@@ -1,0 +1,312 @@
+{
+  "source": "advanced_pdf_parser",
+  "document_metadata": {
+    "detected_type": "pdf_document",
+    "title": "(Insert the approval date here)",
+    "pages": 5
+  },
+  "hierarchical_content": {
+    "sections": [
+      {
+        "section_id": "1",
+        "section_title": ". PURPOSE ......................................................................................................... 3",
+        "subsections": [],
+        "items": []
+      },
+      {
+        "section_id": "2",
+        "section_title": ". SCOPE .............................................................................................................. 3",
+        "subsections": [],
+        "items": []
+      },
+      {
+        "section_id": "3",
+        "section_title": ". COMMITMENT .......... ........................................................................................ 3",
+        "subsections": [],
+        "items": []
+      },
+      {
+        "section_id": "4",
+        "section_title": ". IMPLEMENTATION .......................................................................................... 4",
+        "subsections": [],
+        "items": []
+      },
+      {
+        "section_id": "5",
+        "section_title": ". RESPONSIBILITIES AND REPORTING .................. ........................................ 4",
+        "subsections": [],
+        "items": [
+          {
+            "item_id": "5.1",
+            "text": "This policy is endorsed by the Board of Sunway Berhad and will be effective on 1 st January 2021",
+            "sub_items": []
+          },
+          {
+            "item_id": "5.2",
+            "text": "--- Page Break ---",
+            "sub_items": []
+          },
+          {
+            "item_id": "5.3",
+            "text": "Group H uman R esources Human Rights Policy",
+            "sub_items": []
+          }
+        ]
+      },
+      {
+        "section_id": "1",
+        "section_title": ". PURPOSE 1.1. At Sunway, we respect and support the Universal Declaration of Human Rights and the United Nations Guiding Principles on Business and Human Rights and the rights of all employees and as well as our business associates. We use these frameworks to guide the development and implementation of this policy.",
+        "subsections": [],
+        "items": []
+      },
+      {
+        "section_id": "2",
+        "section_title": ". SCOPE 2.1. This Policy applies to all Directors, employees of Sunway Berhad Group as well as our b usiness associates such as partners, agents, vendors, suppliers, contractors, consultants and any other third party service providers or persons who perform services for or on behalf of the Group.",
+        "subsections": [],
+        "items": [
+          {
+            "item_id": "2.1",
+            "text": "We are committed to working with our Directors, employees and business associates to en sure that the y uphold respect for human rights as outlined in our policies and to encourage them to have similar commitments within their own business practices.",
+            "sub_items": []
+          }
+        ]
+      },
+      {
+        "section_id": "3",
+        "section_title": ". COMMITMENT 3.1. As a responsible global corporate citizen, we shall endeavour to meet standards and practices that are consistent with internationally recognised principles, subject to the laws and regulations of the countries and territories in which we operate. We do not tolerate unethical labour practices such as child labour, forced or compulsory labour, restriction of freedom of movement.",
+        "subsections": [
+          {
+            "section_id": "3.2",
+            "section_title": ". We respect the rights of our employees, stakeholders and communities through our commitments which include, but are not limited to:",
+            "subsections": [],
+            "items": [
+              {
+                "item_id": "3.2.1",
+                "text": "a) Providing Equal Opportunities We promote diversity and inclusion and will not condone discrimination.",
+                "sub_items": []
+              },
+              {
+                "item_id": "3.2.2",
+                "text": "b) Respecting Freedom of Association We respect our employees’ rights to join or form labour unions of their choice, without fear of reprisal or harassment and to barg ain collectively. Where the right to freedom of association and collective bargaining are restricted under law, parallel means of independent and free association and bargaining should be made available to all such employees.",
+                "sub_items": []
+              },
+              {
+                "item_id": "3.2.3",
+                "text": "c) Eradicating any form of Harassment or Abuses We will maintain a workplace that is free from physical, psychological or verbal abuse, the threat of abuse and sexual or other harassments. We provide a conducive working environment that is characterized by equality and mutual respe ct. We take all reasonable measures to prevent such incidents and deal promptly and fairly with any reports of sexual harassment in a confidential and discreet manner.",
+                "sub_items": []
+              },
+              {
+                "item_id": "3.2.4",
+                "text": "This policy is endorsed by the Board of Sunway Berhad and will be effective on 1 st January 2021",
+                "sub_items": []
+              },
+              {
+                "item_id": "3.2.5",
+                "text": "--- Page Break ---",
+                "sub_items": []
+              },
+              {
+                "item_id": "3.2.6",
+                "text": "Group H uman R esources Human Rights Policy",
+                "sub_items": []
+              },
+              {
+                "item_id": "3.2.7",
+                "text": "d) Enhancing Safety and Health We strive to provide a safe, secure and conducive workplace environment. Every Employee must diligently observe and comply with all Occupational Health, Safety and Environment laws and regulations of any country they are working in as well as the Group’s policies and procedures as Safety and health is everyone’s responsibility.",
+                "sub_items": []
+              },
+              {
+                "item_id": "3.2.8",
+                "text": "e) Forced /Compulsory Labour Sunway and its suppliers and sub - contractors shall not knowingly use or promote the use of forced or bonded labour and shall take appropriate measures to prevent the use of such labour in con nection with their activities.",
+                "sub_items": []
+              },
+              {
+                "item_id": "3.2.9",
+                "text": "f) Protecting the Rights of Children We will adhere to minimum age provisions of applicable laws and regulations, being consistent with the United Nations Convention on the Rights of the Child and the relevant standards under the International Labour Organization. We are committed to ensuring that no children are employed directly by Sunway or our contractors.",
+                "sub_items": []
+              }
+            ]
+          }
+        ],
+        "items": []
+      },
+      {
+        "section_id": "4",
+        "section_title": ". IMPLEMENTATION 4.1. Our approach to prevent negative impacts to human rights is in three parts: a) a public commitment to respect human rights; b) an ongoing process of human rights due diligence; and c) a process for providing access to remedy to anyone who is harmed where the harm is caused or contributed directly or indirectly by the business activit ies .",
+        "subsections": [
+          {
+            "section_id": "4.2",
+            "section_title": ". We commit to periodic reviews and assessments of our business activities to identify both positive and negative impacts on human rights; and subsequently to integrate the mitigating outcomes into our internal control systems where appropriate.",
+            "subsections": [],
+            "items": []
+          },
+          {
+            "section_id": "4.3",
+            "section_title": ". Through awareness and training & communication initiatives , we shall engage and educate all levels of the workforce within Sunway to enable them to understand their responsibility in respect of human rights and to empower them to positiv ely influence and encourage our business partners.",
+            "subsections": [],
+            "items": []
+          }
+        ],
+        "items": []
+      },
+      {
+        "section_id": "5",
+        "section_title": ". RESPONSIBILITIES AND REPORTING 5.1. The responsibility to respect human rights resides in all of our employees. The oversight of this Policy is led by the Board of Directors, Sustainability Committee, Group Internal Audit and Group Human Resources. The implementation and administration of this policy is the responsibility of the management within each Business Units.",
+        "subsections": [
+          {
+            "section_id": "5.2",
+            "section_title": ". Within Sunway, there are firmly established grievance procedures and whistle blow ing channels which are available to all of our employees and external parties. An employee who whistleblow will be accorded with protection of confidentiality of identity, be protected against any adverse and detrimental actions for disclosing any improper conduct committed.",
+            "subsections": [],
+            "items": [
+              {
+                "item_id": "5.2.1",
+                "text": "We commit to investigate all violations of this policy through:",
+                "sub_items": []
+              },
+              {
+                "item_id": "5.2.2",
+                "text": "Whistleblowing Email: whistleblowing@sunway.com.my",
+                "sub_items": []
+              },
+              {
+                "item_id": "5.2.3",
+                "text": "or",
+                "sub_items": []
+              },
+              {
+                "item_id": "5.2.4",
+                "text": "Head of Internal Audit Department Level 4, Menara Sunway Jalan Lagoon Timur, Bandar Sunway 46500 Petaling Jaya Selangor Darul Ehsan, Malaysia",
+                "sub_items": []
+              }
+            ]
+          }
+        ],
+        "items": [
+          {
+            "item_id": "5.1",
+            "text": "This policy is endorsed by the Board of Sunway Berhad and will be effective on 1 st January 2021",
+            "sub_items": []
+          },
+          {
+            "item_id": "5.2",
+            "text": "--- Page Break ---",
+            "sub_items": []
+          },
+          {
+            "item_id": "5.3",
+            "text": "Group H uman R esources Human Rights Policy",
+            "sub_items": []
+          }
+        ]
+      },
+      {
+        "section_id": "6",
+        "section_title": ". EFFECTIVE DATE",
+        "subsections": [],
+        "items": [
+          {
+            "item_id": "6.1",
+            "text": "The policy was endorsed by the Board and effective as of 1 st January 2021 .",
+            "sub_items": []
+          },
+          {
+            "item_id": "6.2",
+            "text": "This policy is endorsed by the Board of Sunway Berhad and will be effective on 1 st January 2021",
+            "sub_items": []
+          }
+        ]
+      }
+    ]
+  },
+  "structured_data_tables": {
+    "tables": []
+  },
+  "terms_conditions_clauses": {
+    "clauses": [
+      {
+        "clause_number": "1",
+        "text": ". PURPOSE ......................................................................................................... 3",
+        "sub_clauses": []
+      },
+      {
+        "clause_number": "2",
+        "text": ". SCOPE .............................................................................................................. 3",
+        "sub_clauses": []
+      },
+      {
+        "clause_number": "3",
+        "text": ". COMMITMENT .......... ........................................................................................ 3",
+        "sub_clauses": []
+      },
+      {
+        "clause_number": "4",
+        "text": ". IMPLEMENTATION .......................................................................................... 4",
+        "sub_clauses": []
+      },
+      {
+        "clause_number": "5",
+        "text": ". RESPONSIBILITIES AND REPORTING .................. ........................................ 4",
+        "sub_clauses": []
+      },
+      {
+        "clause_number": "1",
+        "text": ". PURPOSE 1.1. At Sunway, we respect and support the Universal Declaration of Human Rights and the United Nations Guiding Principles on Business and Human Rights and the rights of all employees and as well as our business associates. We use these frameworks to guide the development and implementation of this policy.",
+        "sub_clauses": []
+      },
+      {
+        "clause_number": "2",
+        "text": ". SCOPE 2.1. This Policy applies to all Directors, employees of Sunway Berhad Group as well as our b usiness associates such as partners, agents, vendors, suppliers, contractors, consultants and any other third party service providers or persons who perform services for or on behalf of the Group.",
+        "sub_clauses": []
+      },
+      {
+        "clause_number": "3",
+        "text": ". COMMITMENT 3.1. As a responsible global corporate citizen, we shall endeavour to meet standards and practices that are consistent with internationally recognised principles, subject to the laws and regulations of the countries and territories in which we operate. We do not tolerate unethical labour practices such as child labour, forced or compulsory labour, restriction of freedom of movement.",
+        "sub_clauses": []
+      },
+      {
+        "clause_number": "3.2",
+        "text": ". We respect the rights of our employees, stakeholders and communities through our commitments which include, but are not limited to:",
+        "sub_clauses": []
+      },
+      {
+        "clause_number": "4",
+        "text": ". IMPLEMENTATION 4.1. Our approach to prevent negative impacts to human rights is in three parts: a) a public commitment to respect human rights; b) an ongoing process of human rights due diligence; and c) a process for providing access to remedy to anyone who is harmed where the harm is caused or contributed directly or indirectly by the business activit ies .",
+        "sub_clauses": []
+      },
+      {
+        "clause_number": "4.2",
+        "text": ". We commit to periodic reviews and assessments of our business activities to identify both positive and negative impacts on human rights; and subsequently to integrate the mitigating outcomes into our internal control systems where appropriate.",
+        "sub_clauses": []
+      },
+      {
+        "clause_number": "4.3",
+        "text": ". Through awareness and training & communication initiatives , we shall engage and educate all levels of the workforce within Sunway to enable them to understand their responsibility in respect of human rights and to empower them to positiv ely influence and encourage our business partners.",
+        "sub_clauses": []
+      },
+      {
+        "clause_number": "5",
+        "text": ". RESPONSIBILITIES AND REPORTING 5.1. The responsibility to respect human rights resides in all of our employees. The oversight of this Policy is led by the Board of Directors, Sustainability Committee, Group Internal Audit and Group Human Resources. The implementation and administration of this policy is the responsibility of the management within each Business Units.",
+        "sub_clauses": []
+      },
+      {
+        "clause_number": "5.2",
+        "text": ". Within Sunway, there are firmly established grievance procedures and whistle blow ing channels which are available to all of our employees and external parties. An employee who whistleblow will be accorded with protection of confidentiality of identity, be protected against any adverse and detrimental actions for disclosing any improper conduct committed.",
+        "sub_clauses": []
+      },
+      {
+        "clause_number": "6",
+        "text": ". EFFECTIVE DATE",
+        "sub_clauses": []
+      }
+    ]
+  },
+  "metadata": {
+    "model": "claude-sonnet-4-20250514",
+    "max_tokens": 16000,
+    "temperature": 0,
+    "top_p": 1,
+    "generated_at": "2025-10-17T06:14:44.137Z",
+    "prompt_path": "config/prompts/vision-ultimate.txt",
+    "reason": "table_structure_loss"
+  }
+}
