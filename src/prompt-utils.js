@@ -1,41 +1,5 @@
-import fs from 'fs';
-import path from 'path';
-import { fileURLToPath } from 'url';
-
-const __filename = fileURLToPath(import.meta.url);
-const __dirname = path.dirname(__filename);
-const PROJECT_ROOT = path.resolve(path.join(__dirname, '..'));
-
-export function resolveArtifactPath(relativePath) {
-  if (!relativePath) return null;
-  if (path.isAbsolute(relativePath)) {
-    return relativePath;
-  }
-  const projectResolved = path.resolve(PROJECT_ROOT, relativePath);
-  if (fs.existsSync(projectResolved)) {
-    return projectResolved;
-  }
-
-  // Many saved artifacts are stored relative to the uploads directory
-  const uploadsResolved = path.resolve(PROJECT_ROOT, 'uploads', relativePath);
-  if (fs.existsSync(uploadsResolved)) {
-    return uploadsResolved;
-  }
-
-  return projectResolved;
-}
-
-export function loadJsonIfExists(targetPath) {
-  if (!targetPath) return null;
-  try {
-    if (!fs.existsSync(targetPath)) return null;
-    const raw = fs.readFileSync(targetPath, 'utf-8');
-    return JSON.parse(raw);
-  } catch (err) {
-    console.warn(`Unable to load JSON from ${targetPath}:`, err.message);
-    return null;
-  }
-}
+// Prompt utilities no longer expose direct filesystem access.
+// Storage handling is managed by the storage abstraction defined in src/storage.
 
 export function buildVisionExcerpt(payload) {
   if (!payload || typeof payload !== 'object') return '';

@@ -3,10 +3,12 @@ import fs from 'fs';
 import path from 'path';
 import { fileURLToPath } from 'url';
 import { checkGuardrails, sanitizeOutput, getGroundingRules, logBlockedRequest } from './guardrails.js';
-import { resolveArtifactPath, loadJsonIfExists, buildVisionExcerpt, renderVisionContext } from './prompt-utils.js';
+import { buildVisionExcerpt, renderVisionContext } from './prompt-utils.js';
+import { getStorage } from './storage/index.js';
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
+const PROJECT_ROOT = path.resolve(__dirname, '..');
 
 const THINK_TOOL = {
   name: 'think',
@@ -68,7 +70,7 @@ export function createClaudeClient() {
       }
       
       // Build system prompt with file context
-      const systemPrompt = buildSystemPrompt(manifest);
+      const systemPrompt = await buildSystemPrompt(manifest);
 
       // Build conversation messages with current user turn
       const baseMessages = [
@@ -83,7 +85,6 @@ export function createClaudeClient() {
       ];
 
       console.log(`🤖 Calling Claude (${model})...`);
-
       let assistantMessage = '';
       let iteration = 0;
       const runtimeMessages = [...baseMessages];
@@ -169,7 +170,7 @@ export function createClaudeClient() {
    * This simulates MCP by giving Claude the file contents directly
    * Handles Excel tracking data, PDFs, DOCX, and other knowledge files
    */
-  function buildSystemPrompt(manifest) {
+  async function buildSystemPrompt(manifest) {
     let prompt = `You are a helpful AI assistant with access to uploaded documents.
 
 Your role:
@@ -259,10 +260,58 @@ User asks: “May I accept a holiday hamper from a vendor?”
       return prompt;
     }
 
-    // Read the actual data (simulating MCP file access)
     try {
-      const processedDir = path.join(__dirname, '..', 'uploads', 'processed');
-      
+      const storage = getStorage();
+
+      const readText = async key => {
+        if (!key || typeof storage.read !== 'function') return '';
+        try {
+          const buffer = await storage.read(key);
+          return buffer.toString('utf-8');
+        } catch (err) {
+          console.warn(`⚠️ Unable to read text artifact (${key}):`, err.message);
+          return '';
+        }
+      };
+
+      const readJson = async key => {
+        if (!key) return null;
+        if (typeof storage.readJson === 'function') {
+          try {
+            return await storage.readJson(key);
+          } catch (err) {
+            console.warn(`⚠️ Unable to read JSON artifact (${key}):`, err.message);
+          }
+        }
+        if (typeof storage.read === 'function') {
+          try {
+            const buffer = await storage.read(key);
+            return JSON.parse(buffer.toString('utf-8'));
+          } catch (err) {
+            console.warn(`⚠️ Unable to parse JSON artifact (${key}):`, err.message);
+          }
+        }
+        return null;
+      };
+
+      const loadVisionPayload = async entry => {
+        const localPath = entry.artifacts?.parsedJsonPath
+          ? path.resolve(PROJECT_ROOT, entry.artifacts.parsedJsonPath)
+          : null;
+
+        if (localPath && fs.existsSync(localPath)) {
+          try {
+            const raw = fs.readFileSync(localPath, 'utf-8');
+            return JSON.parse(raw);
+          } catch (err) {
+            console.warn(`⚠️ Unable to parse local vision JSON (${localPath}):`, err.message);
+          }
+        }
+
+        const storageKey = entry.artifacts?.jsonKey || entry.artifacts?.parsedJsonKey;
+        return await readJson(storageKey);
+      };
+
       prompt += `\n=== UPLOADED FILES (${manifest.totalFiles} total) ===\n`;
       prompt += `Tracking files: ${manifest.fileTypes.tracking}\n`;
       prompt += `Knowledge files: ${manifest.fileTypes.knowledge}\n`;
@@ -278,53 +327,33 @@ User asks: “May I accept a holiday hamper from a vendor?”
         return `\nTriage -> Route: ${route}${toolHint}\nReason: ${reason}${qualitySummary ? `\n${qualitySummary}` : ''}\n`;
       };
 
-      const getArtifactPath = (entry, relativeKey, filenameKey) => {
-        const relPath = entry.artifacts?.[relativeKey] ? resolveArtifactPath(entry.artifacts[relativeKey]) : null;
-        if (relPath && fs.existsSync(relPath)) {
-          return relPath;
-        }
-        const filename = entry.artifacts?.[filenameKey];
-        if (filename) {
-          const candidate = path.join(processedDir, filename);
-          if (fs.existsSync(candidate)) {
-            return candidate;
-          }
-        }
-        return null;
-      };
-
       const structuredEntries = manifest.files.filter(file => (file.type || '').toLowerCase() === 'excel');
       if (structuredEntries.length > 0) {
         prompt += `\n=== STRUCTURED DATA (Excel/CSV) ===\n`;
-        structuredEntries.forEach(entry => {
-          const dataPath = getArtifactPath(entry, 'relativeJsonPath', 'jsonFilename');
+        for (const entry of structuredEntries) {
+          const data = await readJson(entry.artifacts?.jsonKey);
           prompt += `\nFile: ${entry.name}\n`;
           prompt += formatTriageSummary(entry);
 
-          if (dataPath) {
-            try {
-              const data = JSON.parse(fs.readFileSync(dataPath, 'utf-8'));
-              if (Array.isArray(data)) {
-                prompt += `Records: ${data.length}\n`;
-                if (data.length > 0) {
-                  prompt += `Columns: ${Object.keys(data[0]).join(', ')}\n`;
-                  if (data.length <= 100) {
-                    prompt += `\nData:\n${JSON.stringify(data, null, 2)}\n`;
-                  } else {
-                    prompt += `\nSample (first 10):\n${JSON.stringify(data.slice(0, 10), null, 2)}\n`;
-                    prompt += `\n[Full dataset available with ${data.length} records]\n`;
-                  }
-                }
+          if (Array.isArray(data)) {
+            prompt += `Records: ${data.length}\n`;
+            if (data.length > 0) {
+              prompt += `Columns: ${Object.keys(data[0]).join(', ')}\n`;
+              if (data.length <= 100) {
+                prompt += `\nData:\n${JSON.stringify(data, null, 2)}\n`;
+              } else {
+                prompt += `\nSample (first 10):\n${JSON.stringify(data.slice(0, 10), null, 2)}\n`;
+                prompt += `\n[Full dataset available with ${data.length} records]\n`;
               }
-            } catch (err) {
-              prompt += `⚠️ Unable to load structured data: ${err.message}\n`;
             }
+          } else if (data) {
+            prompt += `⚠️ Structured data file parsed but not an array.\n`;
           } else {
             prompt += `⚠️ Structured data file not found in processed artifacts.\n`;
           }
 
           prompt += `\n---\n`;
-        });
+        }
       }
 
       const summarizeVisionPayload = (payload) => {
@@ -374,25 +403,22 @@ User asks: “May I accept a holiday hamper from a vendor?”
       const knowledgeEntries = manifest.files.filter(file => ['pdf', 'docx', 'txt'].includes((file.type || '').toLowerCase()));
       if (knowledgeEntries.length > 0) {
         prompt += `\n=== KNOWLEDGE BASE (PDF/DOCX/Text) ===\n`;
-        knowledgeEntries.forEach(entry => {
-          const textPath = getArtifactPath(entry, 'relativeTxtPath', 'txtFilename');
-          const textContent = textPath && fs.existsSync(textPath) ? fs.readFileSync(textPath, 'utf-8') : '';
+        for (const entry of knowledgeEntries) {
+          const textContent = await readText(entry.artifacts?.txtKey);
 
           prompt += `\nFile: ${entry.name}\n`;
           prompt += formatTriageSummary(entry);
 
-          if (entry.artifacts?.parsedJsonPath) {
-            const parsedJson = loadJsonIfExists(resolveArtifactPath(entry.artifacts.parsedJsonPath));
-            if (parsedJson) {
-              prompt += `Vision JSON available -> ${entry.artifacts.parsedJsonPath}\n`;
-              const excerpt = buildVisionExcerpt(parsedJson);
-              if (excerpt) {
-                prompt += `Vision Extract Summary:\n${excerpt}\n`;
-              }
-              const summarized = summarizeVisionPayload(parsedJson);
-              if (summarized) {
-                prompt += `Vision Context (summarized):\n${JSON.stringify(summarized, null, 2)}\n`;
-              }
+          const visionPayload = await loadVisionPayload(entry);
+          if (visionPayload) {
+            prompt += `Vision JSON available -> ${entry.artifacts.parsedJsonPath || entry.artifacts.jsonKey}\n`;
+            const excerpt = buildVisionExcerpt(visionPayload);
+            if (excerpt) {
+              prompt += `Vision Extract Summary:\n${excerpt}\n`;
+            }
+            const summarized = summarizeVisionPayload(visionPayload);
+            if (summarized) {
+              prompt += `Vision Context (summarized):\n${JSON.stringify(summarized, null, 2)}\n`;
             }
           }
 
@@ -423,7 +449,7 @@ User asks: “May I accept a holiday hamper from a vendor?”
               ];
 
               const highlights = [];
-              importantKeywords.forEach(({ label, regex }) => {
+              for (const { label, regex } of importantKeywords) {
                 const matches = [];
                 let match;
                 while ((match = regex.exec(textContent)) !== null && matches.length < 3) {
@@ -432,13 +458,13 @@ User asks: “May I accept a holiday hamper from a vendor?”
                 if (matches.length > 0) {
                   highlights.push({ label, matches });
                 }
-              });
+              }
 
               if (highlights.length > 0) {
                 prompt += `Key excerpts detected:\n`;
-                highlights.forEach(({ label, matches }) => {
+                for (const { label, matches } of highlights) {
                   prompt += `- ${label}: ${matches.join(' ... ')}\n`;
-                });
+                }
                 prompt += `\n`;
               }
 
@@ -452,7 +478,7 @@ User asks: “May I accept a holiday hamper from a vendor?”
           }
 
           prompt += `\n---\n`;
-        });
+        }
       }
 
       prompt += `\n\n=== INSTRUCTIONS FOR ANSWERING QUESTIONS ===
@@ -531,20 +557,24 @@ function extractTextFromResponse(response) {
  * Helper: Extract specific PO data from tracking file
  * Used for quick lookups without loading all data into prompt
  */
-export function findPOData(poNumber, processedDir) {
+export async function findPOData(poNumber, processedKeyPrefix) {
   try {
-    const mainFilePath = path.join(processedDir, 'tracking_main.json');
-    if (!fs.existsSync(mainFilePath)) {
+    const storage = getStorage();
+    const key = path.join(processedKeyPrefix || '', 'tracking_main.json');
+    if (!(await storage.exists(key))) {
       return null;
     }
 
-    const trackingData = JSON.parse(fs.readFileSync(mainFilePath, 'utf-8'));
-    
-    // Search for PO (case-insensitive, flexible matching)
+    const buffer = await storage.read(key);
+    const trackingData = JSON.parse(buffer.toString('utf-8'));
+
+    const normalizedPO = poNumber?.toLowerCase?.() || '';
+    if (!normalizedPO) return null;
+
     const found = trackingData.find(row => {
       return Object.values(row).some(value => {
         if (typeof value === 'string') {
-          return value.toLowerCase().includes(poNumber.toLowerCase());
+          return value.toLowerCase().includes(normalizedPO);
         }
         return false;
       });

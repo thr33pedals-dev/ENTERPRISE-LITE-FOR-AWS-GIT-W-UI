@@ -6,6 +6,7 @@ import fs from 'fs';
 import { fileURLToPath } from 'url';
 import dotenv from 'dotenv';
 import { processFiles, categorizeFiles, saveProcessedFiles, validateFile, sanitizeTenantId } from './src/file-processor.js';
+import { getStorage } from './src/storage/index.js';
 import { createClaudeClient } from './src/claude-client.js';
 import { analyzeDataQuality } from './src/quality-analyzer.js';
 
@@ -28,11 +29,36 @@ const PROCESSED_DIR = path.join(__dirname, 'uploads', 'processed');
 const TEMP_DIR = path.join(__dirname, 'uploads', 'temp');
 const MANIFESTS_DIR = path.join(PROCESSED_DIR, 'manifests');
 
+const MAX_TEMP_FILE_AGE_MS = 24 * 60 * 60 * 1000; // 24 hours
+
 [UPLOADS_DIR, PROCESSED_DIR, TEMP_DIR, MANIFESTS_DIR].forEach(dir => {
   if (!fs.existsSync(dir)) {
     fs.mkdirSync(dir, { recursive: true });
   }
 });
+
+function purgeStaleTempFiles() {
+  if (!fs.existsSync(TEMP_DIR)) return;
+
+  const now = Date.now();
+
+  fs.readdirSync(TEMP_DIR).forEach(file => {
+    const fullPath = path.join(TEMP_DIR, file);
+    try {
+      const stat = fs.statSync(fullPath);
+      if (!stat.isFile()) return;
+
+      if (now - stat.mtimeMs > MAX_TEMP_FILE_AGE_MS) {
+        fs.unlinkSync(fullPath);
+      }
+    } catch (err) {
+      console.warn(`⚠️ Failed to inspect/delete temp file ${fullPath}: ${err.message}`);
+    }
+  });
+}
+
+purgeStaleTempFiles();
+setInterval(purgeStaleTempFiles, MAX_TEMP_FILE_AGE_MS).unref();
 
 function getTenantId(req) {
   const headerTenant = req.headers['x-tenant-id'] || req.headers['x-tenant'];
@@ -99,21 +125,23 @@ function deleteTenantManifest(tenantId) {
 function getArtifactFilenames(entry) {
   if (!entry?.artifacts) return [];
   const filenames = [];
-  const { jsonFilename, txtFilename, metaFilename } = entry.artifacts;
-  if (jsonFilename) filenames.push(jsonFilename);
-  if (txtFilename) filenames.push(txtFilename);
-  if (metaFilename) filenames.push(metaFilename);
+  const { jsonKey, txtKey, metaKey } = entry.artifacts;
+  if (jsonKey) filenames.push(jsonKey);
+  if (txtKey) filenames.push(txtKey);
+  if (metaKey) filenames.push(metaKey);
   return filenames;
 }
 
-function deleteProcessedFile(filename) {
-  if (!filename) return false;
-  const fullPath = path.join(PROCESSED_DIR, filename);
-  if (!fs.existsSync(fullPath)) return false;
-  const stats = fs.lstatSync(fullPath);
-  if (!stats.isFile()) return false;
-  fs.unlinkSync(fullPath);
-  return true;
+function deleteProcessedFile(key) {
+  if (!key) return false;
+  try {
+    const storage = getStorage();
+    storage.remove(key);
+    return true;
+  } catch (err) {
+    console.warn(`⚠️ Unable to delete artifact ${key}:`, err.message);
+    return false;
+  }
 }
 
 function recalculateManifestStats(manifest) {
@@ -212,9 +240,8 @@ app.post('/api/upload', upload.array('files', 10), async (req, res) => {
     const categories = categorizeFiles(processedFiles);
 
     // Save processed files to filesystem (for MCP access)
-    const savedFiles = saveProcessedFiles(processedFiles, PROCESSED_DIR, {
-      tenantId,
-      processedRoot: UPLOADS_DIR
+    const savedFiles = await saveProcessedFiles(processedFiles, PROCESSED_DIR, {
+      tenantId
     });
 
     // Analyze data quality (if tracking files exist)
@@ -242,12 +269,10 @@ app.post('/api/upload', upload.array('files', 10), async (req, res) => {
       triage: f.triage || null,
       artifacts: {
         storageKey: savedFiles[idx]?.storageKey || null,
-        jsonFilename: savedFiles[idx]?.jsonFilename || null,
-        txtFilename: savedFiles[idx]?.txtFilename || null,
-        metaFilename: savedFiles[idx]?.metaFilename || null,
-        relativeJsonPath: savedFiles[idx]?.relativeJsonPath || null,
-        relativeTxtPath: savedFiles[idx]?.relativeTxtPath || null,
-        relativeMetaPath: savedFiles[idx]?.relativeMetaPath || null,
+        jsonKey: savedFiles[idx]?.jsonKey || null,
+        txtKey: savedFiles[idx]?.txtKey || null,
+        metaKey: savedFiles[idx]?.metaKey || null,
+        downloadUrls: savedFiles[idx]?.downloadUrls || null,
         parsedJsonPath: savedFiles[idx]?.artifacts?.parsedJsonPath || f?.artifacts?.parsedJsonPath || null,
         rawResponsePath: savedFiles[idx]?.artifacts?.rawResponsePath || f?.artifacts?.rawResponsePath || null,
         visionModel: savedFiles[idx]?.artifacts?.model || f?.artifacts?.model || null,

@@ -6,6 +6,7 @@ import pdfParse from 'pdf-parse/lib/pdf-parse.js';
 import mammoth from 'mammoth';
 import { processPDFAdvanced } from './pdf-processor-advanced.js';
 import { runVisionPipeline } from './vision-processor.js';
+import { getStorage } from './storage/index.js';
 
 export const TRIAGE_ROUTES = {
   PATH_A: 'structured_excel',
@@ -278,7 +279,6 @@ function summarizeTextQuality(rawText, pageCount = 1) {
   const words = cleaned.split(' ').filter(Boolean);
   const wordCount = words.length;
   const avgWordLength = wordCount > 0 ? length / wordCount : length;
-  const textDensity = pageCount > 0 ? length / pageCount : length;
 
   const nonPrintableMatches = cleaned.match(/[^\x09\x0A\x0D\x20-\x7E]/g) || [];
   const nonPrintableRatio = length > 0 ? nonPrintableMatches.length / length : 0;
@@ -288,8 +288,6 @@ function summarizeTextQuality(rawText, pageCount = 1) {
 
   const expectedMinLength = Math.max(150, pageCount * 120);
   const tooShort = length < expectedMinLength;
-  const lowDensity = textDensity < 80;
-  const highDensity = textDensity > 1500;
   const highAvgWord = avgWordLength > 16;
   const lowLetterRatio = letterRatio < 0.25;
   const highNonPrintable = nonPrintableRatio > 0.35;
@@ -298,8 +296,6 @@ function summarizeTextQuality(rawText, pageCount = 1) {
 
   const issues = [];
   if (tooShort) issues.push('very little text for document size');
-  if (lowDensity) issues.push(`text density very low (${textDensity.toFixed(1)} chars/page)`);
-  if (highDensity) issues.push(`text density unusually high (${textDensity.toFixed(1)} chars/page)`);
   if (highAvgWord) issues.push('average word length unusually high');
   if (lowLetterRatio) issues.push('letter ratio low');
   if (highNonPrintable) issues.push('many non-printable characters');
@@ -320,7 +316,6 @@ function summarizeTextQuality(rawText, pageCount = 1) {
       nonPrintableRatio,
       letterRatio,
       pageCount,
-      textDensity,
       tableConfidenceScore: tableConfidence.score
     },
     tableConfidence
@@ -578,24 +573,24 @@ export function categorizeFiles(processedFiles) {
 /**
  * Save processed files to filesystem for MCP access
  */
-export function saveProcessedFiles(processedFiles, processedDir, options = {}) {
+export async function saveProcessedFiles(processedFiles, processedDir, options = {}) {
+  const storage = getStorage();
   const savedFiles = [];
   const timestamp = Date.now();
-  const { tenantId = '', processedRoot } = options;
-  const rootDir = processedRoot || processedDir;
+  const { tenantId = '' } = options;
   const tenantSegment = sanitizeTenantId(tenantId);
 
-  processedFiles.forEach((file, index) => {
+  for (const [index, file] of processedFiles.entries()) {
     const baseName = createSafeBaseName(file.originalName, index);
-    const storageKeyBase = [tenantSegment, baseName].filter(Boolean).join('__') || 'file';
+    const storageKeyBase = [tenantSegment, baseName].filter(Boolean).join('/') || 'file';
     const randomSuffix = crypto.randomBytes(4).toString('hex');
-    const storageKey = `${storageKeyBase}__${timestamp}_${index}_${randomSuffix}`;
+    const artifactBaseKey = `${storageKeyBase}/${timestamp}_${index}_${randomSuffix}`;
 
     if (file.fileType === 'excel') {
-      const jsonFilename = `${storageKey}.json`;
-      const txtFilename = `${storageKey}.txt`;
-      const jsonPath = path.join(processedDir, jsonFilename);
-      fs.writeFileSync(jsonPath, JSON.stringify(file.data, null, 2));
+      const jsonKey = `${artifactBaseKey}.json`;
+      const txtKey = `${artifactBaseKey}.txt`;
+
+      await storage.save(jsonKey, file.data);
 
       const textContent = file.data.map((row, i) => {
         const rowText = file.metadata.columns
@@ -604,29 +599,22 @@ export function saveProcessedFiles(processedFiles, processedDir, options = {}) {
         return `Row ${i + 1}: ${rowText}`;
       }).join('\n');
 
-      const txtPath = path.join(processedDir, txtFilename);
-      fs.writeFileSync(txtPath, textContent);
+      await storage.save(txtKey, textContent);
 
       savedFiles.push({
         type: 'excel',
         name: file.originalName,
-        jsonPath,
-        txtPath,
-        storageKey,
-        jsonFilename,
-        txtFilename,
-        relativeJsonPath: path.relative(rootDir, jsonPath),
-        relativeTxtPath: path.relative(rootDir, txtPath)
+        storageKey: artifactBaseKey,
+        jsonKey,
+        txtKey
       });
 
-    } else if (file.fileType === 'pdf' || file.fileType === 'docx' || file.fileType === 'txt') {
-      const txtFilename = `${storageKey}.txt`;
-      const metaFilename = `${storageKey}_meta.json`;
-      const txtPath = path.join(processedDir, txtFilename);
-      const metaPath = path.join(processedDir, metaFilename);
+    } else if (['pdf', 'docx', 'txt'].includes(file.fileType)) {
+      const txtKey = `${artifactBaseKey}.txt`;
+      const metaKey = `${artifactBaseKey}_meta.json`;
 
       if (file.data?.fullText) {
-        fs.writeFileSync(txtPath, file.data.fullText);
+        await storage.save(txtKey, file.data.fullText);
       } else {
         const triageNote = [
           '### Vision Processing ###',
@@ -636,7 +624,7 @@ export function saveProcessedFiles(processedFiles, processedDir, options = {}) {
           file.metadata?.preview ? `Preview snippet: ${file.metadata.preview}` : '',
           file.artifacts?.parsedJsonPath ? `Parsed JSON: ${file.artifacts.parsedJsonPath}` : ''
         ].filter(Boolean).join('\n');
-        fs.writeFileSync(txtPath, triageNote);
+        await storage.save(txtKey, triageNote);
       }
 
       const metaPayload = {
@@ -646,22 +634,18 @@ export function saveProcessedFiles(processedFiles, processedDir, options = {}) {
         triage: file.triage || null,
         artifacts: file.artifacts || null
       };
-      fs.writeFileSync(metaPath, JSON.stringify(metaPayload, null, 2));
+      await storage.save(metaKey, metaPayload);
 
       savedFiles.push({
         type: file.fileType,
         name: file.originalName,
-        txtPath,
-        metaPath,
-        storageKey,
-        txtFilename,
-        metaFilename,
-        relativeTxtPath: path.relative(rootDir, txtPath),
-        relativeMetaPath: path.relative(rootDir, metaPath),
+        storageKey: artifactBaseKey,
+        txtKey,
+        metaKey,
         artifacts: file.artifacts || null
       });
     }
-  });
+  }
 
   return savedFiles;
 }

@@ -27,6 +27,13 @@ Thumbs.db
 *.swp
 *.swo
 
+# Cursor editor metadata
+.cursor/
+
+# Generated artifacts
+logs/
+output/
+
 # Test files (optional - uncomment if you don't want to commit test data)
 # examples/*.xlsx
 # examples/*.xls
