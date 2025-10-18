@@ -141,9 +141,10 @@ async function triagePdfFile(file, tenantId = 'default') {
   const tableConfidenceThreshold = quality.tableConfidence?.threshold ?? 0.25;
   const tableLikelyLost = tableConfidenceScore < tableConfidenceThreshold;
   const textLooksBad = !quality.isUsable || (typeof quality.score === 'number' && quality.score < 0.7);
+  const veryLowDensity = typeof quality.metrics?.textDensity === 'number' && quality.metrics.textDensity < 80;
   const shouldEscalateForTables = visionEnabled && tableLikelyLost && textLooksBad;
 
-  if (!shouldEscalateForTables && quality.isUsable && quickExtract?.data?.fullText?.trim()) {
+  if (!shouldEscalateForTables && !veryLowDensity && quality.isUsable && quickExtract?.data?.fullText?.trim()) {
     return {
       fileType: 'pdf',
       data: quickExtract.data,
@@ -277,6 +278,7 @@ function summarizeTextQuality(rawText, pageCount = 1) {
   const words = cleaned.split(' ').filter(Boolean);
   const wordCount = words.length;
   const avgWordLength = wordCount > 0 ? length / wordCount : length;
+  const textDensity = pageCount > 0 ? length / pageCount : length;
 
   const nonPrintableMatches = cleaned.match(/[^\x09\x0A\x0D\x20-\x7E]/g) || [];
   const nonPrintableRatio = length > 0 ? nonPrintableMatches.length / length : 0;
@@ -286,6 +288,8 @@ function summarizeTextQuality(rawText, pageCount = 1) {
 
   const expectedMinLength = Math.max(150, pageCount * 120);
   const tooShort = length < expectedMinLength;
+  const lowDensity = textDensity < 80;
+  const highDensity = textDensity > 1500;
   const highAvgWord = avgWordLength > 16;
   const lowLetterRatio = letterRatio < 0.25;
   const highNonPrintable = nonPrintableRatio > 0.35;
@@ -294,6 +298,8 @@ function summarizeTextQuality(rawText, pageCount = 1) {
 
   const issues = [];
   if (tooShort) issues.push('very little text for document size');
+  if (lowDensity) issues.push(`text density very low (${textDensity.toFixed(1)} chars/page)`);
+  if (highDensity) issues.push(`text density unusually high (${textDensity.toFixed(1)} chars/page)`);
   if (highAvgWord) issues.push('average word length unusually high');
   if (lowLetterRatio) issues.push('letter ratio low');
   if (highNonPrintable) issues.push('many non-printable characters');
@@ -314,6 +320,7 @@ function summarizeTextQuality(rawText, pageCount = 1) {
       nonPrintableRatio,
       letterRatio,
       pageCount,
+      textDensity,
       tableConfidenceScore: tableConfidence.score
     },
     tableConfidence
