@@ -341,6 +341,7 @@ export async function runVisionPipeline({ file, tenantId = 'default', quickExtra
     }
 
     return {
+      data: finalPayload,
       artifacts: {
         parsedJsonPath: path.relative(PROJECT_ROOT, parsedFullPath),
         rawResponsePath: rawFullPath ? path.relative(PROJECT_ROOT, rawFullPath) : null,

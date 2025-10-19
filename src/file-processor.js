@@ -122,6 +122,24 @@ async function triageAndProcessFile(file, tenantId = 'default') {
   return null;
 }
 
+function buildVisionDataPayload(quickExtract, visionResult) {
+  const visionPayload = visionResult?.data;
+
+  if (!visionPayload) {
+    return quickExtract?.data || null;
+  }
+
+  const rawText = typeof visionPayload.raw_text === 'string' ? visionPayload.raw_text.trim() : '';
+  const quickText = quickExtract?.data?.fullText ? String(quickExtract.data.fullText) : '';
+  const serialized = rawText || quickText || JSON.stringify(visionPayload, null, 2);
+
+  return {
+    fullText: serialized,
+    visionPayload,
+    quickExtract: quickExtract?.data || null
+  };
+}
+
 async function triagePdfFile(file, tenantId = 'default') {
   let quickExtract = null;
 
@@ -175,12 +193,13 @@ async function triagePdfFile(file, tenantId = 'default') {
       extractionMethod: 'triage_table_escalated',
       notes: 'Quick extraction appears to lose table structure. Escalating to vision.',
       preview: quickExtract?.preview || null,
-      visionArtifacts: visionResult?.artifacts || null
+      visionArtifacts: visionResult?.artifacts || null,
+      visionDataAvailable: Boolean(visionResult?.data)
     };
 
     return {
       fileType: 'pdf',
-      data: quickExtract?.data || null,
+      data: buildVisionDataPayload(quickExtract, visionResult),
       metadata: tableEscalatedMetadata,
       triageRoute: TRIAGE_ROUTES.PATH_C,
       triageReason: 'Quick extraction appears to lose table structure. Escalate to vision (Path C).',
@@ -211,12 +230,13 @@ async function triagePdfFile(file, tenantId = 'default') {
     extractionMethod: 'triage_escalated',
     notes: 'Quick text extraction failed or produced low-quality text. Escalate to vision-capable tool.',
     preview: quickExtract?.preview || null,
-    visionArtifacts: visionResult?.artifacts || null
+    visionArtifacts: visionResult?.artifacts || null,
+    visionDataAvailable: Boolean(visionResult?.data)
   };
 
   return {
     fileType: 'pdf',
-    data: quickExtract?.data || null,
+    data: buildVisionDataPayload(quickExtract, visionResult),
     metadata: escalatedMetadata,
     triageRoute: TRIAGE_ROUTES.PATH_C,
     triageReason: 'PDF appears scanned or low quality. Escalate to vision tool (Path C).',
