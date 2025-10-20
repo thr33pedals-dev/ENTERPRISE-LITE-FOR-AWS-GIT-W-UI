@@ -7,6 +7,7 @@ import mammoth from 'mammoth';
 import { processPDFAdvanced } from './pdf-processor-advanced.js';
 import { runVisionPipeline } from './vision-processor.js';
 import { getStorage } from './storage/index.js';
+import { saveJson as saveJsonArtifact, saveText as saveTextArtifact } from './services/storage-helper.js';
 
 export const TRIAGE_ROUTES = {
   PATH_A: 'structured_excel',
@@ -610,7 +611,7 @@ export async function saveProcessedFiles(processedFiles, processedDir, options =
       const jsonKey = `${artifactBaseKey}.json`;
       const txtKey = `${artifactBaseKey}.txt`;
 
-      await storage.save(jsonKey, file.data);
+      await saveJsonArtifact(jsonKey, file.data, { prettyPrint: true });
 
       const textContent = file.data.map((row, i) => {
         const rowText = file.metadata.columns
@@ -619,7 +620,7 @@ export async function saveProcessedFiles(processedFiles, processedDir, options =
         return `Row ${i + 1}: ${rowText}`;
       }).join('\n');
 
-      await storage.save(txtKey, textContent);
+      await saveTextArtifact(txtKey, textContent, 'text/plain');
 
       savedFiles.push({
         type: 'excel',
@@ -634,7 +635,7 @@ export async function saveProcessedFiles(processedFiles, processedDir, options =
       const metaKey = `${artifactBaseKey}_meta.json`;
 
       if (file.data?.fullText) {
-        await storage.save(txtKey, file.data.fullText);
+        await saveTextArtifact(txtKey, file.data.fullText, 'text/plain');
       } else {
         const triageNote = [
           '### Vision Processing ###',
@@ -642,9 +643,10 @@ export async function saveProcessedFiles(processedFiles, processedDir, options =
           file.triage?.reason ? `Reason: ${file.triage.reason}` : 'Reason: Escalated to Path C',
           file.triage?.recommendedTool ? `Recommended tool: ${file.triage.recommendedTool}` : 'Recommended tool: process_pdf_with_vlm',
           file.metadata?.preview ? `Preview snippet: ${file.metadata.preview}` : '',
-          file.artifacts?.parsedJsonPath ? `Parsed JSON: ${file.artifacts.parsedJsonPath}` : ''
+          file.artifacts?.parsedJsonPath ? `Parsed JSON: ${file.artifacts.parsedJsonPath}` : '',
+          file.artifacts?.parsedStorageKey ? `Parsed Storage Key: ${file.artifacts.parsedStorageKey}` : ''
         ].filter(Boolean).join('\n');
-        await storage.save(txtKey, triageNote);
+        await saveTextArtifact(txtKey, triageNote, 'text/plain');
       }
 
       const metaPayload = {
@@ -654,7 +656,7 @@ export async function saveProcessedFiles(processedFiles, processedDir, options =
         triage: file.triage || null,
         artifacts: file.artifacts || null
       };
-      await storage.save(metaKey, metaPayload);
+      await saveJsonArtifact(metaKey, metaPayload, { prettyPrint: true });
 
       savedFiles.push({
         type: file.fileType,

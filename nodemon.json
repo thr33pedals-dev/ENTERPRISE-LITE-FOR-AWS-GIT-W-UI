@@ -1,0 +1,14 @@
+{
+  "watch": ["server.js", "src", "public/js"],
+  "ignore": [
+    "uploads",
+    "output",
+    "logs",
+    "public/images",
+    "docs",
+    "examples"
+  ],
+  "ext": "js,json,html",
+  "delay": "500ms"
+}
+

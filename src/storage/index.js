@@ -7,7 +7,7 @@ const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 const PROJECT_ROOT = path.resolve(__dirname, '..', '..');
 
-let cachedStorage = null;
+const storageCache = new Map();
 
 function resolveOptions(rawOptions = {}) {
   const backend = (rawOptions.backend || process.env.STORAGE_BACKEND || 'local').toLowerCase();
@@ -44,9 +44,7 @@ function resolveOptions(rawOptions = {}) {
   throw new Error(`Unsupported STORAGE_BACKEND: ${backend}`);
 }
 
-function createStorageInstance(options = {}) {
-  const resolved = resolveOptions(options);
-
+function createStorageInstance(resolved) {
   if (resolved.backend === 'local') {
     return createLocalStorage({ baseDir: resolved.baseDir, prefix: resolved.prefix });
   }
@@ -61,14 +59,33 @@ function createStorageInstance(options = {}) {
   });
 }
 
+function getCacheKey(resolved) {
+  return JSON.stringify({
+    backend: resolved.backend,
+    baseDir: resolved.baseDir,
+    bucket: resolved.bucket,
+    prefix: resolved.prefix,
+    region: resolved.region,
+    endpoint: resolved.endpoint,
+    forcePathStyle: resolved.forcePathStyle,
+    signingTTLSeconds: resolved.signingTTLSeconds
+  });
+}
+
 export function getStorage(options = {}) {
-  if (options.forceNew || !cachedStorage) {
-    cachedStorage = createStorageInstance(options);
+  const resolved = resolveOptions(options);
+  const cacheKey = getCacheKey(resolved);
+
+  if (!options.forceNew && storageCache.has(cacheKey)) {
+    return storageCache.get(cacheKey);
   }
-  return cachedStorage;
+
+  const instance = createStorageInstance(resolved);
+  storageCache.set(cacheKey, instance);
+  return instance;
 }
 
 export function resetStorage() {
-  cachedStorage = null;
+  storageCache.clear();
 }
 

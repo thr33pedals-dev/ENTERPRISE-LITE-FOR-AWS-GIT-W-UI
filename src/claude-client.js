@@ -276,6 +276,7 @@ User asks: “May I accept a holiday hamper from a vendor?”
 
       const readJson = async key => {
         if (!key) return null;
+        const storage = getStorage();
         if (typeof storage.readJson === 'function') {
           try {
             return await storage.readJson(key);
@@ -295,6 +296,15 @@ User asks: “May I accept a holiday hamper from a vendor?”
       };
 
       const loadVisionPayload = async entry => {
+        const storage = getStorage();
+        const parsedStorageKey = entry.artifacts?.parsedStorageKey || entry.artifacts?.parsedJsonKey || entry.artifacts?.jsonKey;
+        if (parsedStorageKey) {
+          const payload = await readJson(parsedStorageKey);
+          if (payload) {
+            return payload;
+          }
+        }
+
         const localPath = entry.artifacts?.parsedJsonPath
           ? path.resolve(PROJECT_ROOT, entry.artifacts.parsedJsonPath)
           : null;
@@ -308,8 +318,12 @@ User asks: “May I accept a holiday hamper from a vendor?”
           }
         }
 
-        const storageKey = entry.artifacts?.jsonKey || entry.artifacts?.parsedJsonKey;
-        return await readJson(storageKey);
+        const storageKeyFallback = entry.artifacts?.jsonKey;
+        if (storageKeyFallback) {
+          return await readJson(storageKeyFallback);
+        }
+
+        return null;
       };
 
       prompt += `\n=== UPLOADED FILES (${manifest.totalFiles} total) ===\n`;

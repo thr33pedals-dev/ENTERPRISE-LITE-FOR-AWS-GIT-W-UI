@@ -1,3 +1,94 @@
+function sanitizeConfigRecord(record) {
+  if (!record) return null;
+  const {
+    id,
+    company_id,
+    tenantId,
+    product_info_file,
+    custom_prompt,
+    ai_link,
+    usage_count,
+    last_used,
+    status,
+    sales_approach,
+    qualification_questions,
+    response_tone,
+    support_categories,
+    escalation_rules,
+    response_style,
+    primary_language,
+    collect_feedback,
+    save_transcripts,
+    multi_language,
+    job_role,
+    job_description,
+    interview_questions,
+    createdAt,
+    updatedAt
+  } = record;
+
+  return {
+    id,
+    company_id,
+    tenantId,
+    product_info_file,
+    custom_prompt,
+    ai_link,
+    usage_count,
+    last_used,
+    status,
+    sales_approach,
+    qualification_questions,
+    response_tone,
+    support_categories,
+    escalation_rules,
+    response_style,
+    primary_language,
+    collect_feedback,
+    save_transcripts,
+    multi_language,
+    job_role,
+    job_description,
+    interview_questions,
+    createdAt,
+    updatedAt
+  };
+}
+
+function sanitizeAnalyticsRecords(records) {
+  return (records || []).map(item => ({
+    id: item.id,
+    company_id: item.company_id,
+    ai_type: item.ai_type,
+    usage_date: item.usage_date,
+    session_duration: item.session_duration,
+    success: item.success,
+    metadata: item.metadata || null,
+    createdAt: item.createdAt,
+    updatedAt: item.updatedAt
+  }));
+}
+
+function sanitizeCompanyRecord(record) {
+  if (!record) return null;
+  const { id, company_name, contact_person, email, phone, address, subscription_status, subscription_plan, subscription_date, next_billing_date, tenantId, createdAt, updatedAt } = record;
+  return {
+    id,
+    company_name,
+    contact_person,
+    email,
+    phone,
+    address,
+    subscription_status,
+    subscription_plan,
+    subscription_date,
+    next_billing_date,
+    tenantId,
+    createdAt,
+    updatedAt
+  };
+}
+
 import express from 'express';
 import multer from 'multer';
 import cors from 'cors';
@@ -7,8 +98,11 @@ import { fileURLToPath } from 'url';
 import dotenv from 'dotenv';
 import { processFiles, categorizeFiles, saveProcessedFiles, validateFile, sanitizeTenantId } from './src/file-processor.js';
 import { getStorage } from './src/storage/index.js';
+import dataStore from './src/services/data-store.js';
+import transcriptService from './src/services/transcript-service.js';
 import { createClaudeClient } from './src/claude-client.js';
 import { analyzeDataQuality } from './src/quality-analyzer.js';
+import { loadManifest as loadTenantManifest, saveManifest as saveTenantManifest, deleteManifest as deleteTenantManifest, manifestRelativePath } from './src/services/manifest-store.js';
 
 dotenv.config();
 
@@ -28,6 +122,13 @@ const UPLOADS_DIR = path.join(__dirname, 'uploads');
 const PROCESSED_DIR = path.join(__dirname, 'uploads', 'processed');
 const TEMP_DIR = path.join(__dirname, 'uploads', 'temp');
 const MANIFESTS_DIR = path.join(PROCESSED_DIR, 'manifests');
+
+const COMPANIES_COLLECTION = 'companies';
+const SALES_AI_COLLECTION = 'sales_ai';
+const SUPPORT_AI_COLLECTION = 'support_ai';
+const INTERVIEW_AI_COLLECTION = 'interview_ai';
+const ANALYTICS_COLLECTION = 'usage_analytics';
+const TRANSCRIPTS_COLLECTION = 'transcripts';
 
 const MAX_TEMP_FILE_AGE_MS = 24 * 60 * 60 * 1000; // 24 hours
 
@@ -68,60 +169,6 @@ function getTenantId(req) {
   return sanitized || 'default';
 }
 
-function getManifestPaths(tenantId) {
-  const safeTenant = tenantId || 'default';
-  const manifestFilename = `${safeTenant}.json`;
-  const primaryPath = path.join(MANIFESTS_DIR, manifestFilename);
-  const legacyPath = path.join(PROCESSED_DIR, 'manifest.json');
-  return { safeTenant, primaryPath, legacyPath };
-}
-
-function loadTenantManifest(tenantId) {
-  const { safeTenant, primaryPath, legacyPath } = getManifestPaths(tenantId);
-  const candidates = safeTenant === 'default'
-    ? [legacyPath, primaryPath]
-    : [primaryPath];
-
-  for (const candidate of candidates) {
-    if (!candidate || !fs.existsSync(candidate)) continue;
-    try {
-      const manifest = JSON.parse(fs.readFileSync(candidate, 'utf-8'));
-      return { manifest, path: candidate };
-    } catch (err) {
-      console.warn(`⚠️ Unable to parse manifest at ${candidate}:`, err.message);
-    }
-  }
-
-  return null;
-}
-
-function saveTenantManifest(tenantId, manifest) {
-  const { safeTenant, primaryPath, legacyPath } = getManifestPaths(tenantId);
-  fs.writeFileSync(primaryPath, JSON.stringify({ ...manifest, tenantId: safeTenant }, null, 2));
-
-  if (safeTenant === 'default' && legacyPath !== primaryPath && fs.existsSync(legacyPath)) {
-    try {
-      fs.unlinkSync(legacyPath);
-    } catch (err) {
-      console.warn('⚠️ Unable to remove legacy manifest:', err.message);
-    }
-  }
-
-  return primaryPath;
-}
-
-function deleteTenantManifest(tenantId) {
-  const { safeTenant, primaryPath, legacyPath } = getManifestPaths(tenantId);
-  [primaryPath, legacyPath].forEach(candidate => {
-    if (!candidate || !fs.existsSync(candidate)) return;
-    try {
-      fs.unlinkSync(candidate);
-    } catch (err) {
-      console.warn(`⚠️ Unable to delete manifest at ${candidate}:`, err.message);
-    }
-  });
-}
-
 function getArtifactFilenames(entry) {
   if (!entry?.artifacts) return [];
   const filenames = [];
@@ -132,11 +179,11 @@ function getArtifactFilenames(entry) {
   return filenames;
 }
 
-function deleteProcessedFile(key) {
+async function deleteProcessedFile(key) {
   if (!key) return false;
   try {
     const storage = getStorage();
-    storage.remove(key);
+    await storage.remove(key);
     return true;
   } catch (err) {
     console.warn(`⚠️ Unable to delete artifact ${key}:`, err.message);
@@ -163,6 +210,35 @@ function recalculateManifestStats(manifest) {
   }
 
   return manifest;
+}
+
+function deriveTenantId(inputTenant, fallback = 'default') {
+  const candidate = inputTenant || fallback;
+  return sanitizeTenantId(candidate) || 'default';
+}
+
+async function ensureTranscriptAccess(transcriptId, tenantId) {
+  const transcript = await transcriptService.getById(transcriptId);
+  if (!transcript || deriveTenantId(transcript.tenantId) !== deriveTenantId(tenantId)) {
+    return null;
+  }
+  return transcript;
+}
+
+function serializeTranscriptToText(transcript) {
+  if (!transcript) return '';
+  const lines = [];
+  lines.push(`Tenant: ${transcript.tenantId}`);
+  lines.push(`Conversation ID: ${transcript.conversationId}`);
+  lines.push(`Started At: ${transcript.startedAt}`);
+  lines.push(`Last Message At: ${transcript.lastMessageAt}`);
+  lines.push('');
+  for (const message of transcript.messages || []) {
+    const timestamp = message.timestamp || transcript.lastMessageAt;
+    lines.push(`[${timestamp}] ${message.role?.toUpperCase?.() || 'UNKNOWN'}: ${message.content}`);
+  }
+  lines.push('');
+  return lines.join('\n');
 }
 
 // Configure multer for file uploads
@@ -213,9 +289,9 @@ const claudeClient = createClaudeClient();
 app.post('/api/upload', upload.array('files', 10), async (req, res) => {
   try {
     const tenantId = getTenantId(req);
-    const tenantManifest = loadTenantManifest(tenantId);
-    const manifestPath = tenantManifest?.path;
-    const existingManifest = tenantManifest?.manifest || null;
+    const manifestResult = await loadTenantManifest(tenantId);
+    const manifestPath = manifestResult ? manifestRelativePath(tenantId) : null;
+    const existingManifest = manifestResult || null;
 
     if (!req.files || req.files.length === 0) {
       return res.status(400).json({ 
@@ -343,7 +419,7 @@ app.post('/api/upload', upload.array('files', 10), async (req, res) => {
       tenantId
     };
 
-    const savePath = saveTenantManifest(tenantId, manifest);
+    const saveKey = await saveTenantManifest(tenantId, manifest);
 
     // Clean up temp files
     req.files.forEach(file => {
@@ -384,7 +460,7 @@ app.post('/api/upload', upload.array('files', 10), async (req, res) => {
       qualityReport: qualityReport,
       manifest: {
         ...manifest,
-        manifestPath: path.relative(UPLOADS_DIR, savePath)
+        manifestPath: manifestRelativePath(tenantId)
       }
     });
 
@@ -415,7 +491,7 @@ app.post('/api/upload', upload.array('files', 10), async (req, res) => {
  */
 app.post('/api/chat', async (req, res) => {
   try {
-    const { message, conversationHistory = [] } = req.body;
+    const { message, conversationHistory = [], conversationId, transcriptId } = req.body;
     const tenantId = getTenantId(req);
 
     if (!message) {
@@ -426,15 +502,13 @@ app.post('/api/chat', async (req, res) => {
     }
 
     // Check if tracking data exists
-    const tenantManifest = loadTenantManifest(tenantId);
-    if (!tenantManifest?.manifest) {
+    const manifest = await loadTenantManifest(tenantId);
+    if (!manifest) {
       return res.status(400).json({
         success: false,
         error: 'No tracking data uploaded. Please upload Excel files first.'
       });
     }
-
-    const manifest = tenantManifest.manifest;
 
     console.log(`💬 Customer question: ${message}`);
 
@@ -443,10 +517,20 @@ app.post('/api/chat', async (req, res) => {
 
     console.log(`🤖 Claude response: ${response.substring(0, 100)}...`);
 
+    const transcript = await transcriptService.logInteraction({
+      tenantId,
+      conversationId,
+      userMessage: message,
+      assistantResponse: response,
+      conversationHistory: [...conversationHistory, { role: 'user', content: message }]
+    });
+
     res.json({
       success: true,
       response: response,
-      sources: manifest.mainFile ? manifest.mainFile.filename : 'Uploaded files' // Let user know which data was used
+      sources: manifest.mainFile ? manifest.mainFile.filename : 'Uploaded files',
+      transcriptId: transcript?.id || transcriptId || null,
+      conversationId: transcript?.conversationId || conversationId || null
     });
 
   } catch (error) {
@@ -462,20 +546,18 @@ app.post('/api/chat', async (req, res) => {
  * Get current data quality report
  * GET /api/quality-report
  */
-app.get('/api/quality-report', (req, res) => {
+app.get('/api/quality-report', async (req, res) => {
   try {
     const tenantId = getTenantId(req);
-    const tenantManifest = loadTenantManifest(tenantId);
+    const manifest = await loadTenantManifest(tenantId);
 
-    if (!tenantManifest?.manifest) {
+    if (!manifest) {
       return res.status(404).json({
         success: false,
         error: 'No data uploaded yet'
       });
     }
 
-    const manifest = tenantManifest.manifest;
-    
     res.json({
       success: true,
       qualityReport: manifest.qualityReport,
@@ -496,12 +578,18 @@ app.get('/api/quality-report', (req, res) => {
  * Get system status
  * GET /api/status
  */
-app.get('/api/status', (req, res) => {
+app.get('/api/status', async (req, res) => {
   const tenantId = getTenantId(req);
-  const tenantManifest = loadTenantManifest(tenantId);
-  const manifest = tenantManifest?.manifest || null;
-  const manifestPath = tenantManifest?.path || null;
+  const manifest = await loadTenantManifest(tenantId);
   const hasData = Boolean(manifest);
+
+  const transcripts = await transcriptService.listByTenant(tenantId);
+  const totalTranscripts = transcripts.length;
+  const lastTranscriptAt = transcripts.reduce((latest, item) => {
+    if (!item?.lastMessageAt) return latest;
+    const ts = new Date(item.lastMessageAt).getTime();
+    return Math.max(latest, Number.isFinite(ts) ? ts : 0);
+  }, 0);
 
   res.json({
     success: true,
@@ -515,7 +603,11 @@ app.get('/api/status', (req, res) => {
       fileTypes: manifest?.fileTypes || { tracking: 0, knowledge: 0, other: 0 },
       claudeModel: process.env.CLAUDE_MODEL || 'claude-sonnet-4-20250514',
       tenantId,
-      manifestPath: manifestPath ? path.relative(UPLOADS_DIR, manifestPath) : null
+      manifestPath: manifest ? manifestRelativePath(tenantId) : null,
+      transcripts: {
+        total: totalTranscripts,
+        lastMessageAt: lastTranscriptAt ? new Date(lastTranscriptAt).toISOString() : null
+      }
     },
     manifest: manifest
   });
@@ -525,7 +617,7 @@ app.get('/api/status', (req, res) => {
  * Delete individual file
  * DELETE /api/delete-file
  */
-app.delete('/api/delete-file', (req, res) => {
+app.delete('/api/delete-file', async (req, res) => {
   try {
     const { fileName } = req.body;
     const tenantId = getTenantId(req);
@@ -537,8 +629,7 @@ app.delete('/api/delete-file', (req, res) => {
       });
     }
 
-    const tenantManifest = loadTenantManifest(tenantId);
-    const manifest = tenantManifest?.manifest;
+    const manifest = await loadTenantManifest(tenantId);
 
     if (!manifest) {
       return res.status(404).json({
@@ -551,24 +642,23 @@ app.delete('/api/delete-file', (req, res) => {
     let deletedCount = 0;
     const deletedArtifacts = [];
 
-    filesToDelete.forEach(entry => {
+    for (const entry of filesToDelete) {
       const filenames = getArtifactFilenames(entry);
-      filenames.forEach(filename => {
-        if (deleteProcessedFile(filename)) {
+      for (const filename of filenames) {
+        if (await deleteProcessedFile(filename)) {
           deletedCount++;
           deletedArtifacts.push(filename);
         }
-      });
-    });
+      }
+    }
 
-    // Update manifest if it exists
     manifest.files = manifest.files.filter(f => f.name !== fileName);
     recalculateManifestStats(manifest);
 
     if (manifest.files.length === 0) {
-      deleteTenantManifest(tenantId);
+      await deleteTenantManifest(tenantId);
     } else {
-      saveTenantManifest(tenantId, manifest);
+      await saveTenantManifest(tenantId, manifest);
     }
 
     console.log(`🗑️ Deleted ${deletedCount} processed artifacts for ${fileName} (tenant=${tenantId})`);
@@ -592,23 +682,22 @@ app.delete('/api/delete-file', (req, res) => {
  * Clear all data (for testing)
  * DELETE /api/clear
  */
-app.delete('/api/clear', (req, res) => {
+app.delete('/api/clear', async (req, res) => {
   try {
     const tenantId = getTenantId(req);
     let deletedCount = 0;
 
-    const tenantManifest = loadTenantManifest(tenantId);
-    const manifest = tenantManifest?.manifest;
+    const manifest = await loadTenantManifest(tenantId);
 
     const manifestArtifacts = manifest?.files?.flatMap(entry => getArtifactFilenames(entry)) || [];
 
-    manifestArtifacts.forEach(filename => {
-      if (deleteProcessedFile(filename)) {
+    for (const filename of manifestArtifacts) {
+      if (await deleteProcessedFile(filename)) {
         deletedCount++;
       }
-    });
+    }
 
-    deleteTenantManifest(tenantId);
+    await deleteTenantManifest(tenantId);
 
     console.log(`🗑️ Cleared ${deletedCount} processed artifacts for tenant ${tenantId}`);
 

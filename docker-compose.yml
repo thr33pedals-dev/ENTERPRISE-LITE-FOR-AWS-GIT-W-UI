@@ -1,0 +1,73 @@
+version: "3.9"
+
+services:
+  app:
+    image: node:18-bullseye
+    working_dir: /usr/src/app
+    volumes:
+      - ./:/usr/src/app
+    command: sh -c "npm install && npm run dev"
+    environment:
+      - NODE_ENV=development
+      - PORT=3000
+      - STORAGE_BACKEND=s3
+      - S3_BUCKET=${S3_BUCKET:-sme-lite-local}
+      - S3_REGION=${S3_REGION:-us-east-1}
+      - S3_ENDPOINT=${S3_ENDPOINT:-http://minio:9000}
+      - S3_FORCE_PATH_STYLE=${S3_FORCE_PATH_STYLE:-true}
+      - AWS_ACCESS_KEY_ID=${MINIO_ROOT_USER:-minio}
+      - AWS_SECRET_ACCESS_KEY=${MINIO_ROOT_PASSWORD:-minio123}
+      - METADATA_STORAGE_PREFIX=${METADATA_STORAGE_PREFIX:-metadata}
+      - OPENSEARCH_URL=${OPENSEARCH_URL:-http://opensearch:9200}
+      - ANTHROPIC_API_KEY=${ANTHROPIC_API_KEY:-}
+    ports:
+      - "3000:3000"
+    depends_on:
+      - minio
+      - opensearch
+
+  minio:
+    image: minio/minio:RELEASE.2024-05-10T00-00-00Z
+    command: server /data --console-address ":9001"
+    environment:
+      - MINIO_ROOT_USER=${MINIO_ROOT_USER:-minio}
+      - MINIO_ROOT_PASSWORD=${MINIO_ROOT_PASSWORD:-minio123}
+    volumes:
+      - minio-data:/data
+    ports:
+      - "9000:9000"
+      - "9001:9001"
+
+  opensearch:
+    image: opensearchproject/opensearch:2.11.0
+    environment:
+      - discovery.type=single-node
+      - plugins.security.disabled=true
+      - bootstrap.memory_lock=true
+      - OPENSEARCH_JAVA_OPTS=-Xms512m -Xmx512m
+    ulimits:
+      memlock:
+        soft: -1
+        hard: -1
+      nofile:
+        soft: 65536
+        hard: 65536
+    volumes:
+      - opensearch-data:/usr/share/opensearch/data
+    ports:
+      - "9200:9200"
+      - "9600:9600"
+
+  opensearch-dashboards:
+    image: opensearchproject/opensearch-dashboards:2.11.0
+    environment:
+      - OPENSEARCH_HOSTS=["http://opensearch:9200"]
+    ports:
+      - "5601:5601"
+    depends_on:
+      - opensearch
+
+volumes:
+  minio-data:
+  opensearch-data:
+

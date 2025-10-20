@@ -1,0 +1,334 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sales AI - Enterprise Lite AI Platform</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@6.4.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        body { font-family: 'Inter', sans-serif; }
+        .glass-card { background: rgba(255, 255, 255, 0.95); backdrop-filter: blur(10px); }
+        .primary-bg { background-color: #E31837; }
+        .primary-border { border-color: #E31837; }
+        .primary-text { color: #E31837; }
+        .drop-zone {
+            border: 2px dashed rgba(227, 24, 55, 0.5);
+            transition: all 0.3s ease;
+        }
+        .drop-zone.dragover {
+            border-color: #E31837;
+            background-color: rgba(227, 24, 55, 0.1);
+        }
+    </style>
+</head>
+<body class="bg-gray-50 min-h-screen">
+    
+    <!-- Navigation -->
+    <nav class="glass-card border-b border-gray-200 p-4 shadow-sm">
+        <div class="container mx-auto flex justify-between items-center">
+            <div class="flex items-center space-x-3 text-gray-800">
+                <img src="images/sunway-logo.png" alt="Sunway IntGen" class="h-10 w-auto">
+                <h1 class="text-xl font-bold">Enterprise Lite AI Platform</h1>
+            </div>
+            <div class="flex space-x-4 text-gray-600 items-center">
+                <a href="admin.html" class="hover:text-red-600 transition">Admin</a>
+                <a href="sales-ai.html" class="primary-text font-semibold">Sales AI</a>
+                <a href="support-ai.html" class="hover:text-red-600 transition">Support AI</a>
+                <a href="interview-ai.html" class="hover:text-red-600 transition">Interview AI</a>
+                <button onclick="platform.logout()" class="bg-red-500 hover:bg-red-600 text-white px-4 py-2 rounded transition text-sm">
+                    <i class="fas fa-sign-out-alt mr-2"></i>Logout
+                </button>
+            </div>
+        </div>
+    </nav>
+
+    <div class="container mx-auto px-4 py-8">
+        
+        <!-- Header -->
+        <div class="text-center mb-8">
+            <div class="flex items-center justify-center mb-4">
+                <div class="bg-red-50 w-16 h-16 rounded-full flex items-center justify-center mr-4">
+                    <i class="fas fa-chart-line text-3xl primary-text"></i>
+                </div>
+                <div>
+                    <h1 class="text-4xl font-bold text-gray-800 mb-2">Sales AI - Product/Service FAQ</h1>
+                    <p class="text-gray-600">Configure your intelligent sales FAQ system</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Tutorial Video Section -->
+        <div class="mb-8">
+            <div class="glass-card rounded-2xl border border-gray-200 p-6 shadow-lg">
+                <div class="flex items-center justify-between mb-4">
+                    <h2 class="text-2xl font-bold text-gray-800 flex items-center">
+                        <i class="fas fa-play-circle mr-2 primary-text"></i>
+                        How to Configure Sales AI
+                    </h2>
+                    <button id="toggleVideo" class="primary-bg hover:bg-red-700 text-white px-4 py-2 rounded-lg transition">
+                        <i class="fas fa-eye mr-2"></i>Watch Tutorial
+                    </button>
+                </div>
+                
+                <div id="videoContainer" class="hidden">
+                    <div class="relative bg-gray-100 rounded-lg overflow-hidden mb-4" style="height: 400px;">
+                        <video controls playsinline webkit-playsinline class="w-full h-full object-cover">
+                            <source src="https://sample-videos.com/zip/10/mp4/SampleVideo_1280x720_1mb.mp4" type="video/mp4">
+                            Your browser does not support the video tag.
+                        </video>
+                        <div class="absolute inset-0 flex items-center justify-center bg-gray-800/80 text-white">
+                            <div class="text-center">
+                                <i class="fas fa-video text-4xl mb-2 primary-text"></i>
+                                <p class="text-lg">Sales AI Setup Tutorial</p>
+                                <p class="text-sm text-gray-300">Learn how to create your product/service FAQ system</p>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="bg-red-50 border border-red-200 rounded-lg p-4">
+                        <h4 class="text-gray-800 font-semibold mb-2">Tutorial Highlights:</h4>
+                        <ul class="text-gray-700 text-sm space-y-1">
+                            <li><i class="fas fa-check primary-text mr-2"></i>Upload product information for FAQ generation</li>
+                            <li><i class="fas fa-check primary-text mr-2"></i>Configure custom sales instructions</li>
+                            <li><i class="fas fa-check primary-text mr-2"></i>Generate your Sales AI link</li>
+                            <li><i class="fas fa-check primary-text mr-2"></i>Test and monitor performance</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Configuration Form -->
+        <div class="grid lg:grid-cols-2 gap-8">
+            
+            <!-- Left Column - Upload Sections -->
+            <div class="space-y-6">
+                <!-- Upload Section 1: Product Info -->
+                <div class="glass-card rounded-2xl border border-gray-200 p-6 shadow-lg">
+                    <h3 class="text-xl font-bold text-gray-800 mb-4 flex items-center">
+                        <i class="fas fa-upload mr-2 primary-text"></i>
+                        Product Information Upload
+                    </h3>
+                    
+                    <div class="space-y-4">
+                        <div>
+                            <label class="block text-gray-700 font-medium mb-2">Product/Service Information</label>
+                            <p class="text-gray-600 text-sm mb-3">Upload catalogs, brochures, specifications, or any product-related documents for FAQ generation</p>
+                            
+                            <div id="productDropZone" class="drop-zone border-2 border-dashed border-red-300 rounded-lg p-8 text-center cursor-pointer hover:border-red-500 transition bg-red-50">
+                                <div id="dropContent">
+                                    <i class="fas fa-cloud-upload-alt text-4xl primary-text mb-4"></i>
+                                    <p class="text-gray-800 font-medium mb-2">Drop product files here or click to browse</p>
+                                    <p class="text-gray-600 text-sm">Supports: PDF, DOCX, TXT, CSV, XLSX (Max 10MB each)</p>
+                                </div>
+                                <input type="file" id="productFileInput" multiple accept=".pdf,.docx,.txt,.csv,.xlsx" class="hidden">
+                            </div>
+                            
+                            <div id="productFilesList" class="mt-4 space-y-2"></div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Upload Section 2: Custom Instructions -->
+                <div class="glass-card rounded-2xl border border-gray-200 p-6 shadow-lg">
+                    <h3 class="text-xl font-bold text-gray-800 mb-4 flex items-center">
+                        <i class="fas fa-clipboard-check mr-2 primary-text"></i>
+                        Document Quality & Coverage
+                    </h3>
+                    <div class="space-y-4" id="qualitySummary">
+                        <p class="text-gray-600 text-sm">Upload your product assets to populate quality insights. The AI uses these to ensure accurate FAQ answers.</p>
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-4 text-sm">
+                            <div class="bg-red-50 border border-red-200 rounded-lg p-4">
+                                <div class="flex items-center justify-between mb-1">
+                                    <span class="text-gray-700">Overall Quality Score</span>
+                                    <span class="font-semibold text-red-600" id="qualityScoreDisplay">-</span>
+                                </div>
+                                <p class="text-xs text-gray-500">Higher scores indicate more reliable product answers.</p>
+                            </div>
+                            <div class="bg-red-50 border border-red-200 rounded-lg p-4">
+                                <div class="flex items-center justify-between mb-1">
+                                    <span class="text-gray-700">Documents Uploaded</span>
+                                    <span class="font-semibold text-red-600" id="documentCountDisplay">0</span>
+                                </div>
+                                <p class="text-xs text-gray-500">Keep your catalogs, brochures, and datasheets up to date.</p>
+                            </div>
+                        </div>
+                        <div>
+                            <h4 class="text-gray-700 font-medium mb-2">Recommendations</h4>
+                            <ul class="text-gray-600 text-sm space-y-2" id="qualityRecommendations">
+                                <li class="flex items-start"><i class="fas fa-circle text-xs primary-text mr-2 mt-1"></i><span>Upload product catalogs, pricing sheets, and any comparison charts you use with customers.</span></li>
+                                <li class="flex items-start"><i class="fas fa-circle text-xs primary-text mr-2 mt-1"></i><span>Include brochures or FAQs that highlight differentiators and promotions.</span></li>
+                                <li class="flex items-start"><i class="fas fa-circle text-xs primary-text mr-2 mt-1"></i><span>Refresh documents whenever you launch new features or SKUs.</span></li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+
+            <!-- Right Column - AI Link Generation & Actions -->
+            <div class="space-y-6">
+                <!-- Response Tone -->
+                <div class="glass-card rounded-2xl border border-gray-200 p-6 shadow-lg">
+                    <h3 class="text-xl font-bold text-gray-800 mb-4 flex items-center">
+                        <i class="fas fa-sliders-h mr-2 text-purple-500"></i>
+                        AI Response Tone
+                    </h3>
+                    <div class="space-y-3">
+                        <p class="text-gray-600 text-sm">Choose how the assistant communicates with potential customers.</p>
+                        <div>
+                            <label for="salesToneSelect" class="block text-gray-700 font-medium mb-2">Tone Style</label>
+                            <select id="salesToneSelect" class="w-full bg-white border border-gray-300 rounded-lg px-3 py-2 text-gray-800 text-sm focus:outline-none focus:ring-2 focus:ring-red-400">
+                                <option value="professional">Professional – focused, factual, and concise</option>
+                                <option value="friendly">Friendly – warm, conversational, and welcoming</option>
+                                <option value="enthusiastic">Enthusiastic – energetic with promotional flair</option>
+                                <option value="consultative">Consultative – thoughtful and guidance-driven</option>
+                            </select>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Configuration Actions -->
+                <div class="glass-card rounded-2xl border border-gray-200 p-6 shadow-lg">
+                    <h3 class="text-xl font-bold text-gray-800 mb-4 flex items-center">
+                        <i class="fas fa-cog mr-2 text-orange-500"></i>
+                        Configuration Actions
+                    </h3>
+                    
+                    <form id="salesConfigForm" class="space-y-6">
+                        <!-- Action Buttons -->
+                        <div class="space-y-4">
+                            <button type="submit" class="w-full primary-bg hover:bg-red-700 text-white font-semibold py-4 rounded-lg transition transform hover:scale-105 shadow-lg">
+                                <i class="fas fa-save mr-2"></i>
+                                Save Sales AI Configuration
+                            </button>
+                            <button type="button" id="previewBtn" class="w-full bg-green-500 hover:bg-green-600 text-white font-semibold py-3 rounded-lg transition">
+                                <i class="fas fa-eye mr-2"></i>
+                                Preview Sales AI
+                            </button>
+                            <button type="button" id="generateLinkBtn" class="w-full bg-blue-500 hover:bg-blue-600 text-white font-semibold py-3 rounded-lg transition">
+                                <i class="fas fa-link mr-2"></i>
+                                Generate AI Link
+                            </button>
+                        </div>
+                    </form>
+
+                    <!-- Status Display -->
+                    <div class="mt-6 p-4 bg-gray-100 rounded-lg">
+                        <h4 class="font-medium text-gray-800 mb-2">Configuration Status</h4>
+                        <div class="space-y-2 text-sm">
+                            <div class="flex items-center justify-between">
+                                <span class="text-gray-600">Product Files Uploaded:</span>
+                                <span id="filesStatus" class="text-amber-600 font-medium">0 files</span>
+                            </div>
+                            <div class="flex items-center justify-between">
+                                <span class="text-gray-600">Response Tone:</span>
+                                <span id="toneStatus" class="text-amber-600 font-medium">Professional</span>
+                            </div>
+                            <div class="flex items-center justify-between">
+                                <span class="text-gray-600">Instructions Provided:</span>
+                                <span id="instructionsStatus" class="text-amber-600 font-medium">Not set</span>
+                            </div>
+                            <div class="flex items-center justify-between">
+                                <span class="text-gray-600">AI Link Generated:</span>
+                                <span id="linkStatus" class="text-amber-600 font-medium">Not generated</span>
+                            </div>
+                        </div>
+
+                <!-- Generated AI Link -->
+                <div class="glass-card rounded-2xl border border-gray-200 p-6 shadow-lg">
+                    <h3 class="text-xl font-bold text-gray-800 mb-4 flex items-center">
+                        <i class="fas fa-link mr-2 primary-text"></i>
+                        Generated Sales AI Link
+                    </h3>
+                    
+                    <div id="aiLinkSection" class="space-y-4">
+                        <div class="bg-gray-100 rounded-lg p-4">
+                            <p class="text-gray-600 text-sm mb-2">Your Sales AI will be available at:</p>
+                            <div class="flex items-center space-x-2">
+                                <input type="text" id="aiLinkDisplay" readonly 
+                                    class="flex-1 bg-white border border-gray-300 rounded px-3 py-2 text-gray-800 text-sm">
+                                <button id="copyLinkBtn" class="primary-bg hover:bg-red-700 text-white px-3 py-2 rounded text-sm transition">
+                                    <i class="fas fa-copy"></i>
+                                </button>
+                                <button id="testLinkBtn" class="bg-green-500 hover:bg-green-600 text-white px-3 py-2 rounded text-sm transition">
+                                    <i class="fas fa-external-link-alt"></i>
+                                </button>
+                            </div>
+                        </div>
+                        
+                        <div class="bg-red-50 border border-red-200 rounded-lg p-4">
+                            <h4 class="text-gray-800 font-medium mb-2">Share Your Sales AI:</h4>
+                            <ul class="text-gray-700 text-sm space-y-1">
+                                <li><i class="fas fa-globe mr-2 primary-text"></i>Embed on your website</li>
+                                <li><i class="fas fa-envelope mr-2 primary-text"></i>Send to customers via email</li>
+                                <li><i class="fas fa-share-alt mr-2 primary-text"></i>Share on social media</li>
+                                <li><i class="fas fa-qrcode mr-2 primary-text"></i>Generate QR code for materials</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </div>
+
+    <!-- File Upload Progress Modal -->
+    <div id="uploadModal" class="fixed inset-0 bg-black/50 backdrop-blur-sm hidden items-center justify-center z-50">
+        <div class="bg-white/10 backdrop-filter backdrop-blur-lg rounded-2xl p-8 max-w-md w-full mx-4 border border-white/20">
+            <h3 class="text-white text-xl font-semibold mb-4 text-center">Uploading Files</h3>
+            <div id="uploadProgress" class="space-y-3"></div>
+            <div class="mt-6 text-center">
+                <button id="cancelUpload" class="bg-red-500 hover:bg-red-600 text-white px-6 py-2 rounded-lg transition">
+                    Cancel Upload
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Preview Modal -->
+    <div id="previewModal" class="fixed inset-0 bg-black/50 backdrop-blur-sm hidden items-center justify-center z-50">
+        <div class="bg-white/10 backdrop-filter backdrop-blur-lg rounded-2xl p-8 max-w-2xl w-full mx-4 border border-white/20 max-h-[90vh] overflow-y-auto">
+            <div class="flex items-center justify-between mb-6">
+                <h3 class="text-white text-2xl font-semibold">Sales AI Preview</h3>
+                <button id="closePreview" class="text-gray-400 hover:text-white text-2xl">
+                    <i class="fas fa-times"></i>
+                </button>
+            </div>
+            <div id="previewContent" class="bg-gray-800 rounded-lg p-4 min-h-[400px]">
+                <!-- AI Preview will be loaded here -->
+                <div class="text-center text-gray-400 py-12">
+                    <i class="fas fa-robot text-4xl mb-4"></i>
+                    <p>Sales AI Preview will appear here</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Footer -->
+    <footer class="mt-16 bg-white border-t border-gray-200 shadow-sm">
+        <div class="container mx-auto px-4 py-6">
+            <div class="flex flex-col md:flex-row justify-between items-center">
+                <div class="flex items-center space-x-3 mb-4 md:mb-0">
+                    <img src="images/sunway-logo.png" alt="Sunway IntGen" class="h-6 w-auto">
+                    <span class="text-gray-600 text-sm">Enterprise Lite AI Platform</span>
+                </div>
+                <div class="text-center md:text-right">
+                    <p class="text-gray-600 text-sm">
+                        Copyright © 2025. SUNWAY INTGEN PTE LTD. All rights reserved.
+                    </p>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    <script src="js/main.js"></script>
+    <script src="js/api-client.js"></script>
+    <script src="js/uploader.js"></script>
+    <script src="js/chat.js"></script>
+    <script src="js/sales-ai.js"></script>
+</body>
+</html>

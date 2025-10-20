@@ -3,6 +3,7 @@ import path from 'path';
 import { fileURLToPath } from 'url';
 import Anthropic from '@anthropic-ai/sdk';
 import { processPDFAdvanced } from './pdf-processor-advanced.js';
+import { getStorage } from './storage/index.js';
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
@@ -12,6 +13,7 @@ const DEFAULT_PARSED_ROOT = path.join(PROJECT_ROOT, 'output', 'parsed');
 const DEFAULT_RAW_ROOT = path.join(PROJECT_ROOT, 'logs', 'raw-responses');
 
 let anthropicClient = null;
+let storage = null;
 
 function getAnthropicClient() {
   if (anthropicClient) {
@@ -24,6 +26,7 @@ function getAnthropicClient() {
   }
 
   anthropicClient = new Anthropic({ apiKey });
+  storage = getStorage();
   return anthropicClient;
 }
 
@@ -39,6 +42,12 @@ function ensureDir(dirPath) {
   }
 }
 
+async function saveJsonToStorage(storageKey, payload, { prettyPrint = false } = {}) {
+  const activeStorage = storage || getStorage();
+  const data = prettyPrint ? JSON.stringify(payload, null, 2) : JSON.stringify(payload);
+  return activeStorage.save(storageKey, data, { contentType: 'application/json' });
+}
+
 function sanitizeSegment(value, fallback = 'default') {
   const base = (value || fallback).toString().toLowerCase();
   return base.replace(/[^a-z0-9-_]+/g, '-').replace(/-{2,}/g, '-').replace(/^-+|-+$/g, '') || fallback;
@@ -47,6 +56,13 @@ function sanitizeSegment(value, fallback = 'default') {
 function createSafeBaseName(originalName) {
   const noExt = (originalName || 'document').replace(/\.[^/.]+$/, '');
   return sanitizeSegment(noExt, 'document').slice(0, 80);
+}
+
+function buildStorageKey(...segments) {
+  return segments
+    .map(part => (part || '').toString().replace(/^\/+|\/+$/g, ''))
+    .filter(Boolean)
+    .join('/');
 }
 
 function guessTitle(quickExtract, advancedData) {
@@ -185,11 +201,8 @@ export async function runVisionPipeline({ file, tenantId = 'default', quickExtra
     const parsedRoot = resolveProjectPath(process.env.RESULTS_OUTPUT_PATH, DEFAULT_PARSED_ROOT);
     const rawRoot = resolveProjectPath(process.env.RAW_RESPONSES_PATH, DEFAULT_RAW_ROOT);
 
-    const parsedTenantDir = path.join(parsedRoot, tenantSegment);
-    ensureDir(parsedTenantDir);
-
     const parsedFileName = `${baseName}_${timestamp}.json`;
-    const parsedFullPath = path.join(parsedTenantDir, parsedFileName);
+    const parsedStorageKey = buildStorageKey('vision', tenantSegment, 'parsed', parsedFileName);
 
     const promptPath = process.env.VISION_PROMPT_PATH
       ? resolveProjectPath(process.env.VISION_PROMPT_PATH, null)
@@ -327,29 +340,44 @@ export async function runVisionPipeline({ file, tenantId = 'default', quickExtra
     }
 
     const prettyPrint = process.env.PRETTY_PRINT === 'true';
-    fs.writeFileSync(parsedFullPath, JSON.stringify(finalPayload, null, prettyPrint ? 2 : 0));
+    const parsedSaveResult = await saveJsonToStorage(parsedStorageKey, finalPayload, { prettyPrint });
 
-    let rawFullPath = null;
+    let parsedJsonPath = null;
+    if (parsedSaveResult?.path) {
+      parsedJsonPath = path.relative(PROJECT_ROOT, parsedSaveResult.path);
+    }
+
+    let rawStorageKey = null;
+    let rawSaveResult = null;
     if (process.env.SAVE_RAW_RESPONSES === 'true') {
-      const rawTenantDir = path.join(rawRoot, tenantSegment);
-      ensureDir(rawTenantDir);
-      rawFullPath = path.join(rawTenantDir, `${baseName}_${timestamp}.json`);
+      const rawFileName = `${baseName}_${timestamp}.json`;
+      rawStorageKey = buildStorageKey('vision', tenantSegment, 'raw', rawFileName);
       const rawPayload = anthropicResponse
         ? { response: anthropicResponse, combinedText }
         : { fallback: true, payload: finalPayload };
-      fs.writeFileSync(rawFullPath, JSON.stringify(rawPayload, null, prettyPrint ? 2 : 0));
+      rawSaveResult = await saveJsonToStorage(rawStorageKey, rawPayload, { prettyPrint });
+    }
+
+    const artifacts = {
+      parsedStorageKey,
+      rawStorageKey,
+      model: modelUsed,
+      generatedAt,
+      promptPath: promptPathRelative,
+      source: sourceTag
+    };
+
+    if (parsedJsonPath) {
+      artifacts.parsedJsonPath = parsedJsonPath;
+    }
+
+    if (rawSaveResult?.path) {
+      artifacts.rawResponsePath = path.relative(PROJECT_ROOT, rawSaveResult.path);
     }
 
     return {
       data: finalPayload,
-      artifacts: {
-        parsedJsonPath: path.relative(PROJECT_ROOT, parsedFullPath),
-        rawResponsePath: rawFullPath ? path.relative(PROJECT_ROOT, rawFullPath) : null,
-        model: modelUsed,
-        generatedAt,
-        promptPath: promptPathRelative,
-        source: sourceTag
-      }
+      artifacts
     };
   } catch (error) {
     console.error('Vision pipeline failed:', error);

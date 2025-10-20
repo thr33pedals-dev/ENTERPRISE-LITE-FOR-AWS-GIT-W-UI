@@ -151,6 +151,71 @@ Navigate to: **http://localhost:3000**
 
 ---
 
+## 🐳 Local Stack with Docker Compose (MinIO + OpenSearch)
+
+Spin up a full local environment that mirrors the AWS deployment pattern, including object storage and a search backend.
+
+### 1. Prerequisites
+
+- Docker Desktop 4.20+
+- `docker compose` CLI plugin (bundled with recent Docker Desktop releases)
+
+### 2. Prepare Environment Variables
+
+1. Copy `env.example.txt` to `.env` and set your real `ANTHROPIC_API_KEY`.
+2. Create a `.env.local` file alongside the compose file (this file stays local).
+
+   ```bash
+   cat <<'EOF' > .env.local
+   ANTHROPIC_API_KEY=<your key>
+   PORT=3000
+   NODE_ENV=development
+
+   STORAGE_BACKEND=s3
+   S3_BUCKET=sme-lite-local
+   S3_REGION=us-east-1
+   S3_ENDPOINT=http://minio:9000
+   S3_FORCE_PATH_STYLE=true
+
+   MINIO_ROOT_USER=minio
+   MINIO_ROOT_PASSWORD=minio123
+   METADATA_STORAGE_PREFIX=metadata
+
+   OPENSEARCH_URL=http://opensearch:9200
+   EOF
+   ```
+
+> Keep `.env.local` out of version control. Docker Compose automatically loads variables from `.env` in the project root; the explicit file above keeps local secrets separate.
+
+### 3. Launch the stack
+
+```bash
+docker compose --env-file .env.local up --build
+```
+
+First run installs dependencies inside the `app` container and starts the dev server. Once ready:
+
+- App UI/API: http://localhost:3000
+- MinIO S3 API: http://localhost:9000
+- MinIO Console: http://localhost:9001 (login with `minio` / `minio123`)
+- OpenSearch API: http://localhost:9200
+- OpenSearch Dashboards: http://localhost:5601
+
+### 4. Working with data
+
+- Uploaded files, manifests, and transcripts are stored in the `sme-lite-local` bucket with the prefix from `METADATA_STORAGE_PREFIX`.
+- When you stop the stack, volumes (`minio-data`, `opensearch-data`) retain objects and indices.
+- To reset everything: `docker compose down -v`
+
+### 5. AWS Deployment Parity Checklist
+
+- Update `.env` for production with your AWS S3 bucket, region, and credentials.
+- Switch `STORAGE_BACKEND=s3` and point `S3_ENDPOINT` to the AWS endpoint (remove the MinIO URL).
+- Replace local `AWS_ACCESS_KEY_ID`/`AWS_SECRET_ACCESS_KEY` values with IAM user/role credentials.
+- Provision an OpenSearch domain and update `OPENSEARCH_URL` (feature planned—currently unused but wired for future search/analytics).
+
+---
+
 ## 🎯 Usage
 
 ### Upload Your Excel Files
