@@ -25,6 +25,26 @@ const THINK_TOOL = {
   }
 };
 
+const CONTACT_INTENT_INSTRUCTIONS = `
+## Customer Contact & Escalation Playbook
+- When a customer explicitly asks for follow-up, demo, quote, or to be contacted, treat it as a **sales follow-up intent**.
+- When a customer requests live help, escalation, or says an issue is unresolved, treat it as a **support escalation intent**.
+- Politely gather their **full name**, **email**, and **company (if they have one)**. Keep it natural and empathic.
+- Confirm how we will follow up (e.g., "We’ll reach out via email within one business day.").
+- After collecting details (or the customer declines), append a machine-readable summary at the end of your response inside double braces:
+
+  {{contact_intent:{
+    "type": "sales_follow_up" | "support_escalation",
+    "name": "Customer name or null",
+    "email": "Email address or null",
+    "company": "Company name or null",
+    "notes": "Short context of the request"
+  }}}
+- If the customer refuses to share details, set fields you do not have to null.
+- Only include this block when an intent is detected. Otherwise omit it entirely.
+- Never mention this JSON block to the user; keep it at the very end of your assistant message after a blank line.
+`;
+
 const MAX_THINK_ITERATIONS = 3;
 
 /**
@@ -87,10 +107,10 @@ export function createClaudeClient() {
       console.log(`🤖 Calling Claude (${model})...`);
       let assistantMessage = '';
       let iteration = 0;
-      const runtimeMessages = [...baseMessages];
+  const runtimeMessages = [...baseMessages];
 
       while (iteration < MAX_THINK_ITERATIONS) {
-        const response = await anthropic.messages.create({
+      const response = await anthropic.messages.create({
           model: model,
           max_tokens: parseInt(process.env.CLAUDE_MAX_TOKENS) || 4096,
           temperature: parseFloat(process.env.CLAUDE_TEMPERATURE) || 0.3,
@@ -146,9 +166,13 @@ export function createClaudeClient() {
       }
       
       // Sanitize output to prevent data leakage
-      assistantMessage = sanitizeOutput(assistantMessage);
+      const sanitizedResult = sanitizeOutput(assistantMessage);
+      assistantMessage = sanitizedResult.sanitized;
 
-      return assistantMessage;
+      return {
+        message: assistantMessage,
+        contactIntent: sanitizedResult.contactIntent
+      };
 
     } catch (error) {
       console.error('Claude API error:', error);
@@ -174,11 +198,15 @@ export function createClaudeClient() {
     let prompt = `You are a helpful AI assistant with access to uploaded documents.
 
 Your role:
+- Act as the organisation's trusted representative (sales, support, or compliance) – speak in first person plural when referencing the business ("we", "our team").
 - Answer questions about tracking data, shipment status, and business information
 - Provide clear, accurate information from the uploaded files
 - Search across multiple file types (Excel, PDF, DOCX, text files)
 - Be friendly, professional, and empathetic
-- If you don't have information, admit it clearly
+- Stay in character: do **not** remind customers that you are an AI or describe tooling/limitations unless the policy requires a disclosure for safety or honesty. Instead, keep the focus on how "we" can help and, when needed, reference human follow-up ("I can connect you with our team...").
+- If you don't have information, admit it clearly while offering next-best actions (e.g., collect details for human follow-up).
+
+${CONTACT_INTENT_INSTRUCTIONS}
 
 IMPORTANT - Response Formatting:
 - Use **markdown formatting** for better readability
@@ -249,7 +277,7 @@ User asks: “May I accept a holiday hamper from a vendor?”
   - ### Policy References – Cite document names and sections/clauses used.
   - ### Actions / Escalation – Concrete next steps (forms to submit, approvals, contacts).
   - ### References – Bullet list of every document consulted (filename + section).
-- If the uploaded policies do **not** cover the request, state that clearly, list which files you checked, and advise an appropriate escalation path (e.g., HR, Compliance Officer, external authority).
+- If the uploaded policies do **not** cover the request, state that clearly, list which files you checked, and advise an appropriate escalation path (e.g., HR, Compliance Officer, external authority). Keep a supportive tone ("Let's...", "We can...") even when escalating.
 - When quoting or paraphrasing, reference the policy title and section number if available.
 - Emphasize compliance, duty of disclosure, and record-keeping where relevant.
 - When diagram, architecture, topology, design, or blueprint files are present, proactively describe key components and architecture even if the user request is vague; use available vision extracts before asking for clarification.

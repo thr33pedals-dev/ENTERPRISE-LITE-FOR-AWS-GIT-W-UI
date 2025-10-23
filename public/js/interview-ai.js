@@ -9,7 +9,10 @@ class InterviewAIManager {
 
     init() {
         this.checkAuthentication();
+        this.setupSharedClients();
         this.setupEventListeners();
+        this.initializePreview();
+        this.loadRoleTemplates();
         this.loadExistingConfiguration();
     }
 
@@ -24,6 +27,36 @@ class InterviewAIManager {
             return;
         }
         this.currentUser = currentUser;
+    }
+
+    setupSharedClients() {
+        // This method will be implemented to set up shared clients (e.g., platform)
+        // For now, it's a placeholder.
+        // window.platform = {
+        //     getTenantId: () => 'your_tenant_id', // Replace with actual tenant ID retrieval
+        //     getCompanyId: () => this.currentUser?.id || 'your_company_id' // Replace with actual company ID retrieval
+        // };
+    }
+
+    initializePreview() {
+        // This method will be implemented to initialize preview functionality
+        // For now, it's a placeholder.
+    }
+
+    loadRoleTemplates() {
+        // This method will be implemented to load available role templates
+        // For now, it's a placeholder.
+    }
+
+    buildHeaders() {
+        const headers = new Headers({ 'Content-Type': 'application/json' });
+        if (window.platform?.getTenantId) {
+            headers.set('x-tenant-id', window.platform.getTenantId());
+        }
+        if (this.currentUser?.id) {
+            headers.set('x-company-id', this.currentUser.id);
+        }
+        return headers;
     }
 
     setupEventListeners() {
@@ -477,4 +510,247 @@ class InterviewAIManager {
 
             let response;
             if (this.currentConfig) {
-                response = await fetch(`
+                response = await fetch(`/api/interview-ai/${encodeURIComponent(this.currentConfig.id)}`, {
+                    method: 'PATCH',
+                    headers: this.buildHeaders(),
+                    body: JSON.stringify(configData)
+                });
+            } else {
+                response = await fetch('/api/interview-ai', {
+                    method: 'POST',
+                    headers: this.buildHeaders(),
+                    body: JSON.stringify(configData)
+                });
+            }
+
+            if (!response.ok) {
+                throw new Error('Failed to save Interview AI configuration');
+            }
+
+            const result = await response.json();
+            this.currentConfig = result?.record || result?.data?.[0] || result;
+            if (this.currentConfig?.ai_link) {
+                this.updateAILinkDisplay(this.currentConfig.ai_link);
+            }
+
+            this.showNotification('Interview AI settings saved successfully!', 'success');
+            this.toggleGenerateButton(false);
+            
+        } catch (error) {
+            console.error('Error saving configuration:', error);
+            this.showNotification('Error saving Interview AI settings', 'error');
+        }
+    }
+
+    loadExistingConfiguration() {
+        fetch('/api/interview-ai', {
+            headers: this.buildHeaders()
+        })
+            .then(response => {
+                if (!response.ok) {
+                    throw new Error('Failed to load interview configuration');
+                }
+                return response.json();
+            })
+            .then(data => {
+                const records = Array.isArray(data?.data) ? data.data : [];
+                if (records.length > 0) {
+                    this.currentConfig = records[0];
+                    this.populateFormWithConfig(this.currentConfig);
+                }
+            })
+            .catch(error => {
+                console.error('Error loading interview configuration:', error);
+            });
+    }
+
+    populateFormWithConfig(config) {
+        if (!config) return;
+        const jobRoleInput = document.getElementById('jobRoleInput');
+        if (jobRoleInput) {
+            jobRoleInput.value = config.custom_prompt || '';
+            jobRoleInput.dispatchEvent(new Event('input'));
+        }
+        this.selectedRole = config.job_role || 'custom';
+        this.selectRoleTemplate(document.querySelector(`.role-template[data-role="${this.selectedRole}"]`));
+        this.generatedQuestions = JSON.parse(config.interview_questions || '[]');
+        this.displayQuestions();
+        this.enableActionButtons();
+        this.toggleGenerateButton(true);
+        if (config.ai_link) {
+            this.updateAILinkDisplay(config.ai_link);
+        }
+    }
+
+    updateAILinkDisplay(link) {
+        const input = document.getElementById('interviewAILink');
+        if (input) {
+            input.value = link;
+        }
+    }
+
+    async updateAILinkOnServer(link) {
+        if (!this.currentConfig?.id) return;
+        try {
+            await fetch(`/api/interview-ai/${encodeURIComponent(this.currentConfig.id)}`, {
+                method: 'PATCH',
+                headers: this.buildHeaders(),
+                body: JSON.stringify({ ai_link: link })
+            });
+        } catch (error) {
+            console.error('Error updating AI link:', error);
+        }
+    }
+
+    generateInterviewLink() {
+        const tenantId = window.platform?.getTenantId();
+        const params = new URLSearchParams({ tenant: tenantId, type: 'interview', config: this.currentConfig?.id || 'preview' });
+        const link = `${window.location.origin}/component-preview.html?${params.toString()}`;
+        this.updateAILinkDisplay(link);
+        this.updateAILinkOnServer(link);
+        this.showNotification('Interview AI link generated!', 'success');
+    }
+
+    copyAILink() {
+        const link = document.getElementById('interviewAILink').value;
+        navigator.clipboard.writeText(link).then(() => {
+            this.showNotification('Interview AI link copied to clipboard!', 'success');
+        }).catch(err => {
+            console.error('Failed to copy link:', err);
+            this.showNotification('Failed to copy Interview AI link', 'error');
+        });
+    }
+
+    testAILink() {
+        const link = document.getElementById('interviewAILink').value;
+        if (!link) {
+            this.showNotification('No Interview AI link to test.', 'error');
+            return;
+        }
+        this.showLoadingModal('Testing Interview AI Link...');
+        fetch(link, {
+            method: 'GET',
+            headers: this.buildHeaders()
+        })
+            .then(response => {
+                if (response.ok) {
+                    return response.json();
+                } else {
+                    throw new Error(`HTTP error! status: ${response.status}`);
+                }
+            })
+            .then(data => {
+                this.showNotification(`Interview AI Link is working! Response: ${JSON.stringify(data)}`, 'success');
+            })
+            .catch(error => {
+                console.error('Error testing Interview AI Link:', error);
+                this.showNotification(`Interview AI Link is not working. Error: ${error.message}`, 'error');
+            })
+            .finally(() => {
+                this.hideLoadingModal();
+            });
+    }
+
+    showPreview() {
+        const link = document.getElementById('interviewAILink').value;
+        if (!link) {
+            this.showNotification('No Interview AI link to preview.', 'error');
+            return;
+        }
+        this.showLoadingModal('Previewing Interview AI...');
+        fetch(link, {
+            method: 'GET',
+            headers: this.buildHeaders()
+        })
+            .then(response => {
+                if (response.ok) {
+                    return response.json();
+                } else {
+                    throw new Error(`HTTP error! status: ${response.status}`);
+                }
+            })
+            .then(data => {
+                this.showNotification(`Interview AI Preview successful! Response: ${JSON.stringify(data)}`, 'success');
+            })
+            .catch(error => {
+                console.error('Error previewing Interview AI:', error);
+                this.showNotification(`Interview AI Preview failed. Error: ${error.message}`, 'error');
+            })
+            .finally(() => {
+                this.hideLoadingModal();
+            });
+    }
+
+    toggleGenerateButton(enabled) {
+        const generateJobBtn = document.getElementById('generateJobBtn');
+        const saveQuestionsBtn = document.getElementById('saveQuestionsBtn');
+        const generateLinkBtn = document.getElementById('generateLinkBtn');
+        const previewBtn = document.getElementById('previewInterviewBtn');
+
+        if (generateJobBtn) generateJobBtn.disabled = !enabled;
+        if (saveQuestionsBtn) saveQuestionsBtn.disabled = !enabled;
+        if (generateLinkBtn) generateLinkBtn.disabled = !enabled;
+        if (previewBtn) previewBtn.disabled = !enabled;
+    }
+
+    enableActionButtons() {
+        const saveQuestionsBtn = document.getElementById('saveQuestionsBtn');
+        const generateLinkBtn = document.getElementById('generateLinkBtn');
+        const previewBtn = document.getElementById('previewInterviewBtn');
+
+        if (saveQuestionsBtn) saveQuestionsBtn.disabled = false;
+        if (generateLinkBtn) generateLinkBtn.disabled = false;
+        if (previewBtn) previewBtn.disabled = false;
+    }
+
+    showGeneratingModal() {
+        const modal = document.getElementById('generatingModal');
+        if (modal) {
+            modal.classList.remove('hidden');
+        }
+    }
+
+    hideGeneratingModal() {
+        const modal = document.getElementById('generatingModal');
+        if (modal) {
+            modal.classList.add('hidden');
+        }
+    }
+
+    showLoadingModal(message) {
+        const modal = document.getElementById('loadingModal');
+        if (modal) {
+            modal.querySelector('.modal-content').textContent = message;
+            modal.classList.remove('hidden');
+        }
+    }
+
+    hideLoadingModal() {
+        const modal = document.getElementById('loadingModal');
+        if (modal) {
+            modal.classList.add('hidden');
+        }
+    }
+
+    showNotification(message, type = 'info') {
+        const notification = document.getElementById('notification');
+        if (notification) {
+            notification.textContent = message;
+            notification.className = 'notification';
+            if (type === 'success') {
+                notification.classList.add('success');
+            } else if (type === 'error') {
+                notification.classList.add('error');
+            }
+            notification.classList.remove('hidden');
+            setTimeout(() => {
+                notification.classList.add('hidden');
+            }, 3000);
+        }
+    }
+}
+
+// Assuming InterviewAIManager is instantiated globally or passed to other functions
+// For example:
+// const interviewAI = new InterviewAIManager();
+// interviewAI.init();

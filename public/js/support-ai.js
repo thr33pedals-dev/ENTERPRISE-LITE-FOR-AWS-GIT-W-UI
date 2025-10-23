@@ -16,6 +16,17 @@ class SupportAIManager {
         this.initializeDefaultCategories();
     }
 
+    buildHeaders() {
+        const headers = new Headers({ 'Content-Type': 'application/json' });
+        if (window.platform?.getTenantId) {
+            headers.set('x-tenant-id', window.platform.getTenantId());
+        }
+        if (this.currentUser?.id) {
+            headers.set('x-company-id', this.currentUser.id);
+        }
+        return headers;
+    }
+
     checkAuthentication() {
         const currentUser = JSON.parse(localStorage.getItem('currentUser') || 'null');
         if (!currentUser) {
@@ -485,9 +496,7 @@ class SupportAIManager {
 
         const response = await fetch('/api/support-ai', {
             method: 'POST',
-            headers: {
-                'Content-Type': 'application/json'
-            },
+            headers: this.buildHeaders(),
             body: JSON.stringify(configData)
         });
 
@@ -514,9 +523,7 @@ class SupportAIManager {
 
         const response = await fetch(`/api/support-ai/${encodeURIComponent(this.currentConfig.id)}`, {
             method: 'PATCH',
-            headers: {
-                'Content-Type': 'application/json'
-            },
+            headers: this.buildHeaders(),
             body: JSON.stringify(updateData)
         });
 
@@ -538,15 +545,14 @@ class SupportAIManager {
         const link = `${window.location.origin}/component-preview.html?${params.toString()}`;
         document.getElementById('supportAILink').value = link;
         this.showNotification('Support AI link generated!', 'success');
+        this.updateAILink(link);
     }
 
     async updateAILink(link) {
         try {
             await fetch(`/api/support-ai/${encodeURIComponent(this.currentConfig.id)}`, {
                 method: 'PATCH',
-                headers: {
-                    'Content-Type': 'application/json'
-                },
+                headers: this.buildHeaders(),
                 body: JSON.stringify({ ai_link: link })
             });
         } catch (error) {
@@ -686,7 +692,9 @@ class SupportAIManager {
 
     async loadExistingConfiguration() {
         try {
-            const response = await fetch(`/api/support-ai?companyId=${encodeURIComponent(this.currentUser.id)}`);
+            const response = await fetch('/api/support-ai', {
+                headers: this.buildHeaders()
+            });
             if (!response.ok) {
                 throw new Error('Failed to load Support AI configuration');
             }

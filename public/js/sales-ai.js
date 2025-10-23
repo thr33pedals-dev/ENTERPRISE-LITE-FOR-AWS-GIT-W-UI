@@ -14,6 +14,17 @@ class SalesAIManager {
         this.loadExistingConfiguration();
     }
 
+    buildHeaders() {
+        const headers = new Headers({ 'Content-Type': 'application/json' });
+        if (window.platform?.getTenantId) {
+            headers.set('x-tenant-id', window.platform.getTenantId());
+        }
+        if (this.currentUser?.id) {
+            headers.set('x-company-id', this.currentUser.id);
+        }
+        return headers;
+    }
+
     checkAuthentication() {
         const currentUser = JSON.parse(localStorage.getItem('currentUser') || 'null');
         if (!currentUser) {
@@ -401,9 +412,7 @@ class SalesAIManager {
 
         const response = await fetch('/api/sales-ai', {
             method: 'POST',
-            headers: {
-                'Content-Type': 'application/json'
-            },
+            headers: this.buildHeaders(),
             body: JSON.stringify(configData)
         });
 
@@ -426,9 +435,7 @@ class SalesAIManager {
 
         const response = await fetch(`/api/sales-ai/${encodeURIComponent(this.currentConfig.id)}`, {
             method: 'PATCH',
-            headers: {
-                'Content-Type': 'application/json'
-            },
+            headers: this.buildHeaders(),
             body: JSON.stringify(updateData)
         });
 
@@ -451,6 +458,7 @@ class SalesAIManager {
         document.getElementById('aiLinkDisplay').value = link;
         this.showNotification('Sales AI link generated!', 'success');
         document.getElementById('linkStatus').textContent = 'Generated';
+        this.updateAILinkRecord(link);
     }
 
     async updateAILinkRecord(link) {
@@ -458,8 +466,8 @@ class SalesAIManager {
         try {
             await fetch(`/api/sales-ai/${encodeURIComponent(this.currentConfig.id)}`, {
                 method: 'PATCH',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ ai_link: link, tenant_id: platform.getTenantId() })
+                headers: this.buildHeaders(),
+                body: JSON.stringify({ ai_link: link })
             });
         } catch (error) {
             console.warn('Failed to update AI link record', error);
@@ -569,7 +577,9 @@ Would you mind sharing a bit about your specific needs and budget range so I can
 
     async loadExistingConfiguration() {
         try {
-            const response = await fetch(`/api/sales-ai?companyId=${encodeURIComponent(this.currentUser.id)}`);
+            const response = await fetch('/api/sales-ai', {
+                headers: this.buildHeaders()
+            });
             if (!response.ok) {
                 throw new Error('Failed to load Sales AI configuration');
             }

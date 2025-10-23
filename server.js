@@ -103,6 +103,9 @@ import transcriptService from './src/services/transcript-service.js';
 import { createClaudeClient } from './src/claude-client.js';
 import { analyzeDataQuality } from './src/quality-analyzer.js';
 import { loadManifest as loadTenantManifest, saveManifest as saveTenantManifest, deleteManifest as deleteTenantManifest, manifestRelativePath } from './src/services/manifest-store.js';
+import analyticsService from './src/services/analytics-service.js';
+import { emitUsageEvent } from './src/services/usage-events.js';
+import aiConfigService from './src/services/ai-config-service.js';
 
 dotenv.config();
 
@@ -513,22 +516,43 @@ app.post('/api/chat', async (req, res) => {
     console.log(`💬 Customer question: ${message}`);
 
     // Call Claude with MCP access to files
-    const response = await claudeClient.chat(message, conversationHistory, manifest);
+    const chatResult = await claudeClient.chat(message, conversationHistory, manifest);
+    const assistantMessage = typeof chatResult === 'string' ? chatResult : chatResult?.message;
+    const contactIntent = typeof chatResult === 'object' && chatResult ? chatResult.contactIntent : null;
 
-    console.log(`🤖 Claude response: ${response.substring(0, 100)}...`);
+    if (!assistantMessage) {
+      throw new Error('Claude returned an empty response');
+    }
+
+    console.log(`🤖 Claude response: ${assistantMessage.substring(0, 100)}...`);
 
     const transcript = await transcriptService.logInteraction({
       tenantId,
       conversationId,
       userMessage: message,
-      assistantResponse: response,
-      conversationHistory: [...conversationHistory, { role: 'user', content: message }]
+      assistantResponse: assistantMessage,
+      conversationHistory: [...conversationHistory, { role: 'user', content: message }],
+      contactIntent
+    });
+
+    await emitUsageEvent({
+      tenantId,
+      organizationId: req.headers['x-company-id'] || null,
+      persona: 'chat',
+      action: 'chat_message',
+      metadata: {
+        conversationId: transcript?.conversationId || conversationId || null,
+        transcriptId: transcript?.id || null,
+        contactIntent,
+        responseLength: assistantMessage?.length || 0
+      }
     });
 
     res.json({
       success: true,
-      response: response,
+      response: assistantMessage,
       sources: manifest.mainFile ? manifest.mainFile.filename : 'Uploaded files',
+      contactIntent,
       transcriptId: transcript?.id || transcriptId || null,
       conversationId: transcript?.conversationId || conversationId || null
     });
@@ -712,6 +736,458 @@ app.delete('/api/clear', async (req, res) => {
     res.status(500).json({
       success: false,
       error: error.message
+    });
+  }
+});
+
+/**
+ * Get analytics records
+ * GET /api/analytics
+ */
+app.get('/api/analytics', async (req, res) => {
+  try {
+    const tenantId = getTenantId(req);
+    const type = (req.query?.type || '').toString().trim() || null;
+
+    const records = await analyticsService.listAnalyticsRecords({
+      tenantId,
+      type,
+      limit: parseInt(req.query?.limit, 10) || 500
+    });
+
+    res.json({
+      success: true,
+      tenantId,
+      type,
+      count: records.length,
+      data: records
+    });
+  } catch (error) {
+    console.error('❌ Analytics fetch error:', error);
+    res.status(500).json({
+      success: false,
+      error: error.message || 'Failed to load analytics data'
+    });
+  }
+});
+
+/**
+ * Record analytics event
+ * POST /api/analytics
+ */
+app.post('/api/analytics', async (req, res) => {
+  try {
+    const tenantId = getTenantId(req);
+    const payload = {
+      ...req.body,
+      tenantId
+    };
+
+    const record = await analyticsService.recordAnalyticsEvent(payload);
+
+    await emitUsageEvent({
+      tenantId,
+      organizationId: req.headers['x-company-id'] || null,
+      persona: payload.ai_type || 'unknown',
+      action: 'analytics_recorded',
+      metadata: {
+        recordId: record.id,
+        usageDate: record.usage_date,
+        success: record.success,
+        sessionDuration: record.session_duration || null
+      }
+    });
+
+    res.status(201).json({
+      success: true,
+      record
+    });
+  } catch (error) {
+    console.error('❌ Analytics record error:', error);
+    res.status(500).json({
+      success: false,
+      error: error.message || 'Failed to record analytics event'
+    });
+  }
+});
+
+function buildConfigResponse(record) {
+  if (!record) return null;
+  const {
+    id,
+    tenantId,
+    persona,
+    company_id,
+    ai_link,
+    product_info_file,
+    custom_prompt,
+    sales_approach,
+    qualification_questions,
+    response_tone,
+    support_categories,
+    escalation_rules,
+    response_style,
+    primary_language,
+    collect_feedback,
+    save_transcripts,
+    multi_language,
+    job_role,
+    job_description,
+    interview_questions,
+    usage_count,
+    last_used,
+    status,
+    createdAt,
+    updatedAt
+  } = record;
+
+  return {
+    id,
+    tenantId,
+    persona,
+    company_id,
+    ai_link,
+    product_info_file,
+    custom_prompt,
+    sales_approach,
+    qualification_questions,
+    response_tone,
+    support_categories,
+    escalation_rules,
+    response_style,
+    primary_language,
+    collect_feedback,
+    save_transcripts,
+    multi_language,
+    job_role,
+    job_description,
+    interview_questions,
+    usage_count,
+    last_used,
+    status,
+    createdAt,
+    updatedAt
+  };
+}
+
+function buildLinkEventMetadata(record) {
+  return {
+    configId: record?.id || null,
+    tenantId: record?.tenantId || null,
+    persona: record?.persona || null,
+    aiLink: record?.ai_link || null
+  };
+}
+
+app.get('/api/sales-ai', async (req, res) => {
+  try {
+    const tenantId = getTenantId(req);
+    const config = await aiConfigService.getConfig('sales', tenantId);
+    res.json({
+      success: true,
+      data: config ? [buildConfigResponse(config)] : []
+    });
+  } catch (error) {
+    console.error('❌ Sales AI fetch error:', error);
+    res.status(500).json({
+      success: false,
+      error: error.message || 'Failed to load Sales AI configuration'
+    });
+  }
+});
+
+app.post('/api/sales-ai', async (req, res) => {
+  try {
+    const tenantId = getTenantId(req);
+    const record = await aiConfigService.upsertConfig('sales', tenantId, {
+      ...req.body
+    });
+
+    await emitUsageEvent({
+      tenantId,
+      organizationId: req.headers['x-company-id'] || null,
+      persona: 'sales',
+      action: 'config_created',
+      metadata: buildLinkEventMetadata(record)
+    });
+
+    res.status(201).json({
+      success: true,
+      record: buildConfigResponse(record)
+    });
+  } catch (error) {
+    console.error('❌ Sales AI create error:', error);
+    res.status(500).json({
+      success: false,
+      error: error.message || 'Failed to create Sales AI configuration'
+    });
+  }
+});
+
+app.patch('/api/sales-ai/:id', async (req, res) => {
+  try {
+    const tenantId = getTenantId(req);
+    const { id } = req.params;
+    const updated = await aiConfigService.updateConfig('sales', id, tenantId, req.body);
+
+    await emitUsageEvent({
+      tenantId,
+      organizationId: req.headers['x-company-id'] || null,
+      persona: 'sales',
+      action: 'config_updated',
+      metadata: buildLinkEventMetadata(updated)
+    });
+
+    res.json({
+      success: true,
+      record: buildConfigResponse(updated)
+    });
+  } catch (error) {
+    console.error('❌ Sales AI update error:', error);
+    res.status(500).json({
+      success: false,
+      error: error.message || 'Failed to update Sales AI configuration'
+    });
+  }
+});
+
+app.get('/api/support-ai', async (req, res) => {
+  try {
+    const tenantId = getTenantId(req);
+    const config = await aiConfigService.getConfig('support', tenantId);
+    res.json({
+      success: true,
+      data: config ? [buildConfigResponse(config)] : []
+    });
+  } catch (error) {
+    console.error('❌ Support AI fetch error:', error);
+    res.status(500).json({
+      success: false,
+      error: error.message || 'Failed to load Support AI configuration'
+    });
+  }
+});
+
+app.post('/api/support-ai', async (req, res) => {
+  try {
+    const tenantId = getTenantId(req);
+    const record = await aiConfigService.upsertConfig('support', tenantId, {
+      ...req.body
+    });
+
+    await emitUsageEvent({
+      tenantId,
+      organizationId: req.headers['x-company-id'] || null,
+      persona: 'support',
+      action: 'config_created',
+      metadata: buildLinkEventMetadata(record)
+    });
+
+    res.status(201).json({
+      success: true,
+      record: buildConfigResponse(record)
+    });
+  } catch (error) {
+    console.error('❌ Support AI create error:', error);
+    res.status(500).json({
+      success: false,
+      error: error.message || 'Failed to create Support AI configuration'
+    });
+  }
+});
+
+app.patch('/api/support-ai/:id', async (req, res) => {
+  try {
+    const tenantId = getTenantId(req);
+    const { id } = req.params;
+    const updated = await aiConfigService.updateConfig('support', id, tenantId, req.body);
+
+    await emitUsageEvent({
+      tenantId,
+      organizationId: req.headers['x-company-id'] || null,
+      persona: 'support',
+      action: 'config_updated',
+      metadata: buildLinkEventMetadata(updated)
+    });
+
+    res.json({
+      success: true,
+      record: buildConfigResponse(updated)
+    });
+  } catch (error) {
+    console.error('❌ Support AI update error:', error);
+    res.status(500).json({
+      success: false,
+      error: error.message || 'Failed to update Support AI configuration'
+    });
+  }
+});
+
+app.get('/api/interview-ai', async (req, res) => {
+  try {
+    const tenantId = getTenantId(req);
+    const config = await aiConfigService.getConfig('interview', tenantId);
+    res.json({
+      success: true,
+      data: config ? [buildConfigResponse(config)] : []
+    });
+  } catch (error) {
+    console.error('❌ Interview AI fetch error:', error);
+    res.status(500).json({
+      success: false,
+      error: error.message || 'Failed to load Interview AI configuration'
+    });
+  }
+});
+
+app.post('/api/interview-ai', async (req, res) => {
+  try {
+    const tenantId = getTenantId(req);
+    const record = await aiConfigService.upsertConfig('interview', tenantId, {
+      ...req.body
+    });
+
+    await emitUsageEvent({
+      tenantId,
+      organizationId: req.headers['x-company-id'] || null,
+      persona: 'interview',
+      action: 'config_created',
+      metadata: buildLinkEventMetadata(record)
+    });
+
+    res.status(201).json({
+      success: true,
+      record: buildConfigResponse(record)
+    });
+  } catch (error) {
+    console.error('❌ Interview AI create error:', error);
+    res.status(500).json({
+      success: false,
+      error: error.message || 'Failed to create Interview AI configuration'
+    });
+  }
+});
+
+app.patch('/api/interview-ai/:id', async (req, res) => {
+  try {
+    const tenantId = getTenantId(req);
+    const { id } = req.params;
+    const updated = await aiConfigService.updateConfig('interview', id, tenantId, req.body);
+
+    await emitUsageEvent({
+      tenantId,
+      organizationId: req.headers['x-company-id'] || null,
+      persona: 'interview',
+      action: 'config_updated',
+      metadata: buildLinkEventMetadata(updated)
+    });
+
+    res.json({
+      success: true,
+      record: buildConfigResponse(updated)
+    });
+  } catch (error) {
+    console.error('❌ Interview AI update error:', error);
+    res.status(500).json({
+      success: false,
+      error: error.message || 'Failed to update Interview AI configuration'
+    });
+  }
+});
+
+app.get('/api/transcripts', async (req, res) => {
+  try {
+    const tenantId = getTenantId(req);
+    const transcripts = await transcriptService.listByTenant(tenantId);
+    const sanitized = transcripts.map(item => ({
+      id: item.id,
+      conversationId: item.conversationId,
+      tenantId: item.tenantId,
+      startedAt: item.startedAt,
+      lastMessageAt: item.lastMessageAt,
+      metadata: item.metadata || {}
+    }));
+
+    res.json({
+      success: true,
+      data: sanitized
+    });
+  } catch (error) {
+    console.error('❌ Transcript list error:', error);
+    res.status(500).json({
+      success: false,
+      error: error.message || 'Failed to load transcripts'
+    });
+  }
+});
+
+app.get('/api/transcripts/:id/download', async (req, res) => {
+  try {
+    const tenantId = getTenantId(req);
+    const { id } = req.params;
+    const url = await transcriptService.getDownloadLink(id, tenantId);
+
+    await emitUsageEvent({
+      tenantId,
+      organizationId: req.headers['x-company-id'] || null,
+      persona: 'transcript',
+      action: 'transcript_download_link',
+      metadata: {
+        transcriptId: id,
+        url
+      }
+    });
+
+    res.json({
+      success: true,
+      url
+    });
+  } catch (error) {
+    console.error('❌ Transcript download error:', error);
+    const status = error.message === 'Forbidden' ? 403 : 500;
+    res.status(status).json({
+      success: false,
+      error: error.message || 'Failed to generate download link'
+    });
+  }
+});
+
+app.post('/api/transcripts/:id/send', async (req, res) => {
+  try {
+    const tenantId = getTenantId(req);
+    const { id } = req.params;
+    const { email } = req.body || {};
+
+    if (!email) {
+      return res.status(400).json({
+        success: false,
+        error: 'Email is required'
+      });
+    }
+
+    const result = await transcriptService.sendTranscript(id, email);
+
+    await emitUsageEvent({
+      tenantId,
+      organizationId: req.headers['x-company-id'] || null,
+      persona: 'transcript',
+      action: 'transcript_send',
+      metadata: {
+        transcriptId: id,
+        email: result.email,
+        downloadUrl: result.downloadUrl || null
+      }
+    });
+
+    res.json({
+      success: true,
+      result
+    });
+  } catch (error) {
+    console.error('❌ Transcript send error:', error);
+    res.status(500).json({
+      success: false,
+      error: error.message || 'Failed to send transcript'
     });
   }
 });

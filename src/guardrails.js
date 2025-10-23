@@ -217,9 +217,34 @@ function detectSystemManipulation(message) {
 /**
  * Sanitize output to prevent data leakage
  */
+export function extractContactIntent(output) {
+  if (!output || typeof output !== 'string') {
+    return { sanitized: output || '', contactIntent: null };
+  }
+
+  const CONTACT_REGEX = /\{\{contact_intent:(\{[\s\S]*?\})\}\}\s*$/i;
+  const match = output.match(CONTACT_REGEX);
+
+  if (!match) {
+    return { sanitized: output, contactIntent: null };
+  }
+
+  let parsed = null;
+  try {
+    parsed = JSON.parse(match[1]);
+  } catch (error) {
+    console.warn('⚠️ Failed to parse contact intent payload:', error.message);
+  }
+
+  const sanitized = output.replace(CONTACT_REGEX, '').trimEnd();
+  return { sanitized, contactIntent: parsed };
+}
+
 export function sanitizeOutput(output, context) {
+  const { sanitized: withoutIntent, contactIntent } = extractContactIntent(output);
+
   // Remove any accidentally exposed system information
-  let sanitized = output;
+  let sanitized = withoutIntent;
   
   // Remove file paths
   sanitized = sanitized.replace(/[A-Z]:\\[^\s]+/g, '[FILE_PATH]');
@@ -232,7 +257,7 @@ export function sanitizeOutput(output, context) {
   sanitized = sanitized.replace(/sk-ant-[a-zA-Z0-9-]+/g, '[API_KEY]');
   sanitized = sanitized.replace(/Bearer\s+[a-zA-Z0-9-._]+/g, '[AUTH_TOKEN]');
   
-  return sanitized;
+  return { sanitized, contactIntent };
 }
 
 /**

@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Support AI - Multi-File Excel Upload with MCP</title>
+    <title>AI Assistant</title>
     <style>
         * {
             margin: 0;
@@ -46,13 +46,6 @@
             font-size: 1rem;
             color: #8c2a2f;
             letter-spacing: 0.02em;
-        }
-
-        .main-content {
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 20px;
-            margin-bottom: 20px;
         }
 
         .card {
@@ -233,7 +226,7 @@
         .chat-area {
             display: flex;
             flex-direction: column;
-            height: 500px;
+            height: calc(100vh - 160px);
         }
 
         .messages {
@@ -405,77 +398,23 @@
 </head>
 <body>
     <div class="container">
-        <div class="header">
-            <div class="brand">
-                <span class="brand-title">AI Document Assistant</span>
-                <span class="brand-tagline">Knowledge Upload & Support Agent</span>
-            </div>
-        </div>
-
-        <div class="main-content">
-            <!-- Upload Section -->
-            <div class="card">
-                <h2>📁 Upload Files</h2>
+        <div class="card full-width" style="margin-bottom: 20px;">
+            <h2>💬 AI Assistant</h2>
                 
-                <div class="upload-area" id="uploadArea">
-                    <div class="upload-icon">📄</div>
-                    <p><strong>Drag & drop files here</strong></p>
-                    <p>or click to browse</p>
-                    <p style="font-size: 0.9rem; color: #666; margin-top: 10px;">
-                        Supports: Excel (.xlsx, .xls), CSV, PDF, DOCX, TXT<br>
-                        Up to 10 files, 10MB each
-                    </p>
-                </div>
-
-                <input type="file" id="fileInput" multiple accept=".xlsx,.xls,.csv,.pdf,.docx,.txt">
-
-                <div class="file-list" id="fileList"></div>
-
-                <button class="btn" id="uploadBtn" disabled>
-                    Upload & Process Files
-                </button>
-
-                <div class="status" id="uploadStatus"></div>
-            </div>
-
-            <!-- Quality Report Section -->
-            <div class="card">
-                <h2>📊 Data Quality & Files</h2>
-                
-                <!-- Uploaded Files List -->
-                <div id="uploadedFiles" style="margin-bottom: 20px;">
-                    <p style="color: #999; text-align: center; padding: 20px 0;">
-                        No files uploaded yet
-                    </p>
-                </div>
-                
-                <div id="qualityReport">
-                    <p style="color: #999; text-align: center; padding: 20px 0;">
-                        Upload files to see quality report
-                    </p>
-                </div>
-            </div>
-
-            <!-- Chat Section (Full Width) -->
-            <div class="card full-width">
-                <h2>💬 AI Support Chat</h2>
-                
-                <div class="chat-area">
-                    <div class="messages" id="messages">
-                        <div class="message assistant">
-                            👋 Hi! I'm your AI assistant. Upload your files above (Excel, PDF, DOCX, TXT), then ask me about tracking data, products, procedures, or any information in your documents!
-                        </div>
+            <div class="chat-area">
+                <div class="messages" id="messages">
+                    <div class="message assistant">
+                        👋 Hi! I'm your AI assistant. Ask me about your shipments, products, or policies and I'll help right away!
                     </div>
+                </div>
 
-                    <div class="input-area">
-                        <input 
-                            type="text" 
-                            id="messageInput" 
-                            placeholder="Ask about PO numbers, shipment status, ETA..."
-                            disabled
-                        >
-                        <button class="btn" id="sendBtn" disabled>Send</button>
-                    </div>
+                <div class="input-area">
+                    <input 
+                        type="text" 
+                        id="messageInput" 
+                        placeholder="How can we help today?"
+                    >
+                    <button class="btn" id="sendBtn">Send</button>
                 </div>
             </div>
         </div>
@@ -502,280 +441,17 @@
             window.platform.currentUser.tenantId = initialTenant;
         }
 
-        let selectedFiles = [];
         let conversationHistory = [];
         let isProcessing = false;
         let conversationId = null;
         let transcriptId = null;
 
         // Elements
-        const uploadArea = document.getElementById('uploadArea');
-        const fileInput = document.getElementById('fileInput');
-        const fileList = document.getElementById('fileList');
-        const uploadBtn = document.getElementById('uploadBtn');
-        const uploadStatus = document.getElementById('uploadStatus');
-        const qualityReport = document.getElementById('qualityReport');
         const messages = document.getElementById('messages');
         const messageInput = document.getElementById('messageInput');
         const sendBtn = document.getElementById('sendBtn');
 
         const apiOptions = { tenantId };
-
-        // File upload handling
-        uploadArea.addEventListener('click', () => fileInput.click());
-        
-        uploadArea.addEventListener('dragover', (e) => {
-            e.preventDefault();
-            uploadArea.classList.add('dragover');
-        });
-
-        uploadArea.addEventListener('dragleave', () => {
-            uploadArea.classList.remove('dragover');
-        });
-
-        uploadArea.addEventListener('drop', (e) => {
-            e.preventDefault();
-            uploadArea.classList.remove('dragover');
-            handleFiles(e.dataTransfer.files);
-        });
-
-        fileInput.addEventListener('change', (e) => {
-            handleFiles(e.target.files);
-        });
-
-        function handleFiles(files) {
-            selectedFiles = Array.from(files).filter(file => {
-                const isValid = file.name.match(/\.(xlsx|xls|csv|pdf|docx|txt)$/i);
-                if (!isValid) {
-                    showStatus('error', `Skipped ${file.name}: Invalid file type (supports: Excel, CSV, PDF, DOCX, TXT)`);
-                }
-                return isValid;
-            });
-
-            renderFileList();
-            uploadBtn.disabled = selectedFiles.length === 0;
-        }
-
-        function renderFileList() {
-            if (selectedFiles.length === 0) {
-                fileList.innerHTML = '';
-                return;
-            }
-
-            fileList.innerHTML = '<h3 style="margin-bottom: 10px;">Selected Files:</h3>';
-            selectedFiles.forEach((file, index) => {
-                const item = document.createElement('div');
-                item.className = 'file-item';
-                item.innerHTML = `
-                    <span>📄 ${file.name} (${(file.size / 1024).toFixed(1)} KB)</span>
-                    <button onclick="removeFile(${index})">Remove</button>
-                `;
-                fileList.appendChild(item);
-            });
-        }
-
-        window.removeFile = function(index) {
-            selectedFiles.splice(index, 1);
-            renderFileList();
-            uploadBtn.disabled = selectedFiles.length === 0;
-        };
-
-        // Upload files
-        uploadBtn.addEventListener('click', async () => {
-            if (selectedFiles.length === 0 || isProcessing) return;
-
-            isProcessing = true;
-            uploadBtn.disabled = true;
-            uploadBtn.innerHTML = '<span class="loading"></span> Processing...';
-            showStatus('info', 'Uploading and processing files...');
-
-            try {
-                const result = await window.SMEAIClient.uploadFiles(selectedFiles, apiOptions);
-
-                if (result.success) {
-                    showStatus('success', `✅ Successfully processed ${result.filesProcessed} file(s)!`);
-                    displayQualityReport(result.qualityReport, result.mainFile);
-                    displayUploadedFiles(result.manifest);
-                    messageInput.disabled = false;
-                    sendBtn.disabled = false;
-                    selectedFiles = [];
-                    fileInput.value = '';
-                    renderFileList();
-                } else {
-                    showStatus('error', `❌ Error: ${result.error}`);
-                }
-            } catch (error) {
-                showStatus('error', `❌ Upload failed: ${error.message}`);
-            } finally {
-                isProcessing = false;
-                uploadBtn.disabled = false;
-                uploadBtn.textContent = 'Upload & Process Files';
-            }
-        });
-
-        // Display uploaded files
-        async function reloadManifestAndReport() {
-            try {
-                const statusResult = await window.SMEAIClient.getStatus(apiOptions);
-                if (statusResult.status?.dataUploaded) {
-                    displayUploadedFiles(statusResult.manifest);
-                    const reportResult = await window.SMEAIClient.getQualityReport(apiOptions);
-                    if (reportResult.success) {
-                        displayQualityReport(reportResult.qualityReport, reportResult.mainFile);
-                    }
-                    messageInput.disabled = false;
-                    sendBtn.disabled = false;
-                } else {
-                    resetUIState();
-                }
-            } catch (error) {
-                console.error('Failed to refresh manifest/report', error);
-            }
-        }
-
-        function displayUploadedFiles(manifest) {
-            if (!manifest || !manifest.files || manifest.files.length === 0) {
-                uploadedFiles.innerHTML = '<p style="color: #999; text-align: center;">No files uploaded yet</p>';
-                return;
-            }
-
-            let html = '<div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px;">';
-            html += '<h3 style="margin: 0;">📁 Uploaded Files</h3>';
-            html += '<button onclick="clearAllFiles()" style="background: #CE2029; color: white; border: none; padding: 8px 16px; border-radius: 4px; cursor: pointer; font-size: 0.9rem;">Clear All</button>';
-            html += '</div>';
-
-            html += '<div style="background: #f9f9f9; padding: 15px; border-radius: 8px; margin-bottom: 20px;">';
-            html += `<p style="margin-bottom: 10px;"><strong>Total:</strong> ${manifest.totalFiles} files</p>`;
-            
-            manifest.files.forEach((file) => {
-                const icon = file.type === 'excel' ? '📊' : file.type === 'pdf' ? '📄' : file.type === 'docx' ? '📝' : '📋';
-                html += `
-                    <div style="padding: 8px; background: white; border-radius: 4px; margin-bottom: 6px; border-left: 3px solid #CE2029; display: flex; justify-content: space-between; align-items: center;">
-                        <div>
-                            ${icon} <strong>${file.name}</strong>
-                            <span style="color: #666; font-size: 0.9rem;">
-                                (${file.type.toUpperCase()}${file.metadata?.rows ? `, ${file.metadata.rows} rows` : ''})
-                            </span>
-                        </div>
-                        <button onclick="deleteIndividualFile('${file.name}')" style="background: #dc3545; color: white; border: none; padding: 4px 8px; border-radius: 3px; cursor: pointer; font-size: 0.8rem;">Delete</button>
-                    </div>
-                `;
-            });
-            
-            html += `<p style="margin-top: 10px; font-size: 0.9rem; color: #666;">
-                <em>Uploaded: ${new Date(manifest.uploadTime).toLocaleString()}</em>
-            </p>`;
-            html += '</div>';
-
-            uploadedFiles.innerHTML = html;
-        }
-
-        function resetUIState() {
-            uploadedFiles.innerHTML = '<p style="color: #999; text-align: center; padding: 20px 0;">No files uploaded yet</p>';
-            qualityReport.innerHTML = '<p style="color: #999; text-align: center; padding: 20px 0;">Upload files to see quality report</p>';
-            messageInput.disabled = true;
-            sendBtn.disabled = true;
-            messages.innerHTML = `
-                <div class="message assistant">
-                    👋 Hi! I'm your AI assistant. Upload your files above (Excel, PDF, DOCX, TXT), then ask me about tracking data, products, procedures, or any information in your documents!
-                </div>
-            `;
-            conversationHistory = [];
-            localStorage.removeItem('conversationHistory');
-        }
-
-        // Delete individual file
-        window.deleteIndividualFile = async function(fileName) {
-            if (!confirm(`Are you sure you want to delete "${fileName}"?`)) {
-                return;
-            }
-
-            try {
-                const result = await window.SMEAIClient.deleteFile(fileName, apiOptions);
-                if (result.success) {
-                    showStatus('success', `✅ ${fileName} deleted`);
-                    reloadManifestAndReport();
-                } else {
-                    showStatus('error', result.error || 'Failed to delete file');
-                }
-            } catch (error) {
-                showStatus('error', `Failed to delete file: ${error.message}`);
-            }
-        };
-
-        // Clear all files
-        window.clearAllFiles = async function() {
-            if (!confirm('Are you sure you want to clear all uploaded files? This will remove all data and reset the chat.')) {
-                return;
-            }
-
-            try {
-                const result = await window.SMEAIClient.clearAll(apiOptions);
-                if (result.success) {
-                    showStatus('success', '✅ All files cleared');
-                    resetUIState();
-                } else {
-                    showStatus('error', result.error || 'Failed to clear files');
-                }
-            } catch (error) {
-                showStatus('error', `Failed to clear files: ${error.message}`);
-            }
-        };
-
-        // Display quality report
-        function displayQualityReport(report, mainFile) {
-            if (!report) {
-                qualityReport.innerHTML = '<p style="color: #999; text-align: center;">No quality report available</p>';
-                return;
-            }
-
-            const scoreColor = report.qualityScore >= 80 ? '#28a745' : 
-                              report.qualityScore >= 60 ? '#ffc107' : '#dc3545';
-
-            let html = '<h3 style="margin-bottom: 15px;">📊 Data Quality Analysis</h3>';
-            html += `
-                <div class="stat-grid">
-                    <div class="stat-card">
-                        <div class="stat-value" style="color: ${scoreColor}">${report.qualityScore}%</div>
-                        <div class="stat-label">Quality Score</div>
-                    </div>
-                    <div class="stat-card">
-                        <div class="stat-value">${report.totalRows}</div>
-                        <div class="stat-label">Total Records</div>
-                    </div>
-                    <div class="stat-card">
-                        <div class="stat-value">${report.summary.criticalCount}</div>
-                        <div class="stat-label">Critical Issues</div>
-                    </div>
-                </div>
-            `;
-
-            if (report.criticalIssues.length > 0) {
-                html += '<h3 style="margin-top: 20px;">⚠️ Critical Issues:</h3>';
-                html += '<div class="issue-list">';
-                report.criticalIssues.slice(0, 10).forEach(issue => {
-                    html += `
-                        <div class="issue-item critical">
-                            <strong>Row ${issue.row}, Column "${issue.column}":</strong> ${issue.issue}
-                            ${issue.suggestion ? `<br><small>💡 ${issue.suggestion}</small>` : ''}
-                        </div>
-                    `;
-                });
-                if (report.criticalIssues.length > 10) {
-                    html += `<p style="text-align: center; color: #666;">... and ${report.criticalIssues.length - 10} more</p>`;
-                }
-                html += '</div>';
-            }
-
-            if (report.recommendations && report.recommendations.length > 0) {
-                html += '<h3 style="margin-top: 20px;">💡 Recommendations:</h3>';
-                report.recommendations.forEach(rec => {
-                    html += `<p style="padding: 10px; background: #e7f3ff; border-radius: 4px; margin-bottom: 8px;">${rec.message}</p>`;
-                });
-            }
-
-            qualityReport.innerHTML = html;
-        }
 
         // Chat functionality
         messageInput.addEventListener('keypress', (e) => {
@@ -884,41 +560,8 @@
             return messageId;
         }
 
-        function showStatus(type, message) {
-            uploadStatus.className = `status ${type}`;
-            uploadStatus.textContent = message;
-            uploadStatus.style.display = 'block';
-
-            if (type === 'success' || type === 'info') {
-                setTimeout(() => {
-                    uploadStatus.style.display = 'none';
-                }, 5000);
-            }
-        }
-
         // Load status on page load
-        async function loadStatus(overrideManifest = null) {
-            try {
-                if (overrideManifest) {
-                    displayUploadedFiles(overrideManifest);
-                    messageInput.disabled = false;
-                    sendBtn.disabled = false;
-                    restoreConversation();
-                    const reportResult = await window.SMEAIClient.getQualityReport(apiOptions);
-                    if (reportResult.success) {
-                        displayQualityReport(reportResult.qualityReport, reportResult.mainFile);
-                    }
-                    return;
-                }
-
-                await reloadManifestAndReport();
-                restoreConversation();
-            } catch (error) {
-                console.error('Failed to load status:', error);
-            }
-        }
-
-        loadStatus();
+        restoreConversation();
     </script>
 </body>
 </html>

@@ -120,9 +120,9 @@
                                 <div id="dropContent">
                                     <i class="fas fa-cloud-upload-alt text-4xl primary-text mb-4"></i>
                                     <p class="text-gray-800 font-medium mb-2">Drop support files here or click to browse</p>
-                                    <p class="text-gray-600 text-sm">Supports: PDF, DOCX, TXT, CSV, HTML (Max 10MB each)</p>
+                                    <p class="text-gray-600 text-sm">Supports: PDF, DOCX, TXT, CSV, XLSX (Max 10MB each)</p>
                                 </div>
-                                <input type="file" id="supportFileInput" multiple accept=".pdf,.docx,.txt,.csv,.html" class="hidden">
+                                <input type="file" id="supportFileInput" multiple accept=".pdf,.docx,.txt,.csv,.xlsx,.xls" class="hidden">
                             </div>
                             
                             <div id="supportFilesList" class="mt-4 space-y-2"></div>
@@ -168,6 +168,29 @@
 
             <!-- Right Column - AI Link Generation & Actions -->
             <div class="space-y-6">
+                <!-- Escalation Notification Email -->
+                <div class="glass-card rounded-2xl border border-gray-200 p-6 shadow-lg">
+                    <h3 class="text-xl font-bold text-gray-800 mb-4 flex items-center">
+                        <i class="fas fa-envelope-open mr-2 text-blue-500"></i>
+                        Escalation Notification Email
+                        <i class="fas fa-info-circle text-gray-400 ml-2" title="Email address to receive escalated support requests"></i>
+                    </h3>
+                    <div class="space-y-3">
+                        <p class="text-gray-600 text-sm">Tell Support AI where to send escalation alerts when a customer requests live assistance or raises a critical issue.</p>
+                        <div>
+                            <label for="supportEscalationEmail" class="block text-gray-700 font-medium mb-2">Escalation email</label>
+                            <input
+                                type="email"
+                                id="supportEscalationEmail"
+                                name="supportEscalationEmail"
+                                placeholder="support-escalations@yourcompany.com"
+                                class="w-full bg-white border border-gray-300 rounded-lg px-3 py-2 text-gray-800 text-sm focus:outline-none focus:ring-2 focus:ring-red-400"
+                            >
+                            <p class="text-gray-500 text-xs mt-2">We’ll send escalation summaries and conversation links to this mailbox.</p>
+                        </div>
+                    </div>
+                </div>
+
                 <!-- Response Style -->
                 <div class="glass-card rounded-2xl border border-gray-200 p-6 shadow-lg">
                     <h3 class="text-xl font-bold text-gray-800 mb-4 flex items-center">
@@ -188,31 +211,32 @@
                     </div>
                 </div>
 
-                <!-- Configuration Actions -->
-                <div class="glass-card rounded-2xl border border-gray-200 p-6 shadow-lg">
-                    <h3 class="text-xl font-bold text-gray-800 mb-4 flex items-center">
-                        <i class="fas fa-cog mr-2 text-orange-500"></i>
-                        Configuration Actions
-                    </h3>
-                    <form id="supportConfigForm" class="space-y-4">
-                        <div class="space-y-4">
-                            <button type="submit" class="w-full primary-bg hover:bg-red-700 text-white font-semibold py-4 rounded-lg transition transform hover:scale-105 shadow-lg">
-                                <i class="fas fa-save mr-2"></i>
-                                Save Support AI Configuration
-                            </button>
-                            <button type="button" id="previewSupportBtn" class="w-full bg-green-500 hover:bg-green-600 text-white font-semibold py-3 rounded-lg transition">
-                                <i class="fas fa-eye mr-2"></i>
-                                Preview Support AI
-                            </button>
-                            <button type="button" id="generateLinkBtn" class="w-full bg-blue-500 hover:bg-blue-600 text-white font-semibold py-3 rounded-lg transition">
-                                <i class="fas fa-link mr-2"></i>
-                                Generate AI Link
-                            </button>
-                        </div>
-                    </form>
+                <!-- Configuration Actions & Link -->
+                <div class="glass-card rounded-2xl border border-gray-200 p-6 shadow-lg space-y-6">
+                    <div>
+                        <h3 class="text-xl font-bold text-gray-800 mb-4 flex items-center">
+                            <i class="fas fa-cog mr-2 text-orange-500"></i>
+                            Configuration Actions
+                        </h3>
+                        <form id="supportConfigForm" class="space-y-4">
+                            <div class="space-y-4">
+                                <button type="submit" class="w-full primary-bg hover:bg-red-700 text-white font-semibold py-4 rounded-lg transition transform hover:scale-105 shadow-lg">
+                                    <i class="fas fa-save mr-2"></i>
+                                    Save Support AI Configuration
+                                </button>
+                                <button type="button" id="previewSupportBtn" class="w-full bg-green-500 hover:bg-green-600 text-white font-semibold py-3 rounded-lg transition">
+                                    <i class="fas fa-eye mr-2"></i>
+                                    Preview Support AI
+                                </button>
+                                <button type="button" id="generateLinkBtn" class="w-full bg-blue-500 hover:bg-blue-600 text-white font-semibold py-3 rounded-lg transition">
+                                    <i class="fas fa-link mr-2"></i>
+                                    Generate AI Link
+                                </button>
+                            </div>
+                        </form>
+                    </div>
 
-                    <!-- Status Display -->
-                    <div class="mt-6 p-4 bg-gray-100 rounded-lg">
+                    <div class="p-4 bg-gray-100 rounded-lg">
                         <h4 class="font-medium text-gray-800 mb-2">Configuration Status</h4>
                         <div class="space-y-2 text-sm">
                             <div class="flex items-center justify-between">
@@ -233,39 +257,29 @@
                             </div>
                         </div>
                     </div>
-                </div>
-
-                <!-- Generated Support AI Link -->
-                <div class="glass-card rounded-2xl border border-gray-200 p-6 shadow-lg">
-                    <h3 class="text-xl font-bold text-gray-800 mb-4 flex items-center">
-                        <i class="fas fa-link mr-2 primary-text"></i>
-                        Generated Support AI Link
-                    </h3>
                     
-                    <div id="aiLinkSection" class="space-y-4">
-                        <div class="bg-gray-100 rounded-lg p-4">
-                            <p class="text-gray-600 text-sm mb-2">Your Support AI will be available at:</p>
-                            <div class="flex items-center space-x-2">
-                                <input type="text" id="supportAILink" readonly 
-                                    class="flex-1 bg-white border border-gray-300 rounded px-3 py-2 text-gray-800 text-sm">
-                                <button id="copySupportLinkBtn" class="primary-bg hover:bg-red-700 text-white px-3 py-2 rounded text-sm transition">
-                                    <i class="fas fa-copy"></i>
-                                </button>
-                                <button id="testSupportLinkBtn" class="bg-green-500 hover:bg-green-600 text-white px-3 py-2 rounded text-sm transition">
-                                    <i class="fas fa-external-link-alt"></i>
-                                </button>
-                            </div>
+                    <div class="bg-gray-100 rounded-lg p-4">
+                        <p class="text-gray-600 text-sm mb-2">Your Support AI will be available at:</p>
+                        <div class="flex items-center space-x-2">
+                            <input type="text" id="supportAILink" readonly 
+                                class="flex-1 bg-white border border-gray-300 rounded px-3 py-2 text-gray-800 text-sm">
+                            <button id="copySupportLinkBtn" class="primary-bg hover:bg-red-700 text-white px-3 py-2 rounded text-sm transition">
+                                <i class="fas fa-copy"></i>
+                            </button>
+                            <button id="testSupportLinkBtn" class="bg-green-500 hover:bg-green-600 text-white px-3 py-2 rounded text-sm transition">
+                                <i class="fas fa-external-link-alt"></i>
+                            </button>
                         </div>
-                        
-                        <div class="bg-red-50 border border-red-200 rounded-lg p-4">
-                            <h4 class="text-gray-800 font-medium mb-2">Integration Options:</h4>
-                            <ul class="text-gray-700 text-sm space-y-1">
-                                <li><i class="fas fa-code mr-2 primary-text"></i>Embed widget on website</li>
-                                <li><i class="fas fa-envelope mr-2 primary-text"></i>Email signature integration</li>
-                                <li><i class="fas fa-mobile-alt mr-2 primary-text"></i>Mobile app integration</li>
-                                <li><i class="fas fa-comments mr-2 primary-text"></i>Live chat replacement</li>
-                            </ul>
-                        </div>
+                    </div>
+
+                    <div class="bg-red-50 border border-red-200 rounded-lg p-4">
+                        <h4 class="text-gray-800 font-medium mb-2">Integration Options:</h4>
+                        <ul class="text-gray-700 text-sm space-y-1">
+                            <li><i class="fas fa-code mr-2 primary-text"></i>Embed widget on website</li>
+                            <li><i class="fas fa-envelope mr-2 primary-text"></i>Email signature integration</li>
+                            <li><i class="fas fa-mobile-alt mr-2 primary-text"></i>Mobile app integration</li>
+                            <li><i class="fas fa-comments mr-2 primary-text"></i>Live chat replacement</li>
+                        </ul>
                     </div>
                 </div>
             </div>

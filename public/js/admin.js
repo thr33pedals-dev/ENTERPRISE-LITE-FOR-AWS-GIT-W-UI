@@ -1,4 +1,20 @@
 // Admin Dashboard JavaScript
+const PLACEHOLDER_METRICS = {
+    sales: {
+        totalInteractions: 248,
+        leadsGenerated: 37
+    },
+    support: {
+        totalInteractions: 186,
+        resolved: 153,
+        escalations: 14
+    },
+    interview: {
+        completed: 62,
+        qualified: 27
+    }
+};
+
 class AdminDashboard {
     constructor() {
         this.currentUser = null;
@@ -10,25 +26,11 @@ class AdminDashboard {
             interview: []
         };
         this.agentSummary = {
-            sales: {
-                totalInteractions: 0,
-                conversions: 0,
-                avgSession: 0,
-                leadsGenerated: 0
-            },
-            support: {
-                resolved: 0,
-                avgResolution: 0,
-                satisfaction: 0,
-                escalations: 0
-            },
-            interview: {
-                completed: 0,
-                qualified: 0,
-                avgScore: 0,
-                timeToHire: 0
-            }
+            sales: { ...PLACEHOLDER_METRICS.sales },
+            support: { ...PLACEHOLDER_METRICS.support },
+            interview: { ...PLACEHOLDER_METRICS.interview }
         };
+        this.updateAgentDashboards();
         this.init();
     }
 
@@ -37,6 +39,7 @@ class AdminDashboard {
         this.setupEventListeners();
         this.loadAllData();
         this.initializeCharts();
+        this.loadTranscripts();
     }
 
     checkAuthentication() {
@@ -87,11 +90,6 @@ class AdminDashboard {
                 this.switchAccountTab(target);
             });
         });
-
-        const agentSelector = document.getElementById('aiSelector');
-        if (agentSelector) {
-            agentSelector.addEventListener('change', (event) => this.filterAgentDashboards(event.target.value));
-        }
 
         // Timeframe selection
         const trendsTimeframe = document.getElementById('trendsTimeframe');
@@ -187,11 +185,12 @@ class AdminDashboard {
             this.updateUsageTrendsChart();
             this.updatePerformanceChart();
             this.loadTabData('sales'); // Load default tab
-            this.filterAgentDashboards(document.getElementById('aiSelector') ? document.getElementById('aiSelector').value : 'all');
+            this.filterAgentDashboards('all');
 
         } catch (error) {
             console.error('Error loading analytics data:', error);
             this.showNotification('Error loading analytics data', 'error');
+            this.updateAgentDashboards();
         } finally {
             this.showLoading(false);
         }
@@ -199,7 +198,9 @@ class AdminDashboard {
 
     async loadSalesAnalytics() {
         try {
-            const response = await fetch(`/api/analytics?companyId=${encodeURIComponent(this.currentUser.id)}&type=sales`);
+            const response = await fetch('/api/analytics?type=sales', {
+                headers: this.buildTenantHeaders()
+            });
             if (!response.ok) {
                 throw new Error(`Failed to load sales analytics (status ${response.status})`);
             }
@@ -213,7 +214,9 @@ class AdminDashboard {
 
     async loadSupportAnalytics() {
         try {
-            const response = await fetch(`/api/analytics?companyId=${encodeURIComponent(this.currentUser.id)}&type=support`);
+            const response = await fetch('/api/analytics?type=support', {
+                headers: this.buildTenantHeaders()
+            });
             if (!response.ok) {
                 throw new Error(`Failed to load support analytics (status ${response.status})`);
             }
@@ -227,7 +230,9 @@ class AdminDashboard {
 
     async loadInterviewAnalytics() {
         try {
-            const response = await fetch(`/api/analytics?companyId=${encodeURIComponent(this.currentUser.id)}&type=interview`);
+            const response = await fetch('/api/analytics?type=interview', {
+                headers: this.buildTenantHeaders()
+            });
             if (!response.ok) {
                 throw new Error(`Failed to load interview analytics (status ${response.status})`);
             }
@@ -244,7 +249,6 @@ class AdminDashboard {
         const salesData = this.analyticsData.sales;
         const totalSalesInteractions = salesData.length;
         const salesConversions = salesData.filter(item => item.success).length;
-        const salesConversionRate = totalSalesInteractions > 0 ? Math.round((salesConversions / totalSalesInteractions) * 100) : 0;
 
         // Support AI stats
         const supportData = this.analyticsData.support;
@@ -254,32 +258,26 @@ class AdminDashboard {
         const interviewData = this.analyticsData.interview;
         const totalInterviews = interviewData.length;
 
-        // Overall conversion rate
-        const allInteractions = totalSalesInteractions + totalSupportTickets + totalInterviews;
-        const allSuccessful = salesConversions + supportData.filter(item => item.success).length + interviewData.filter(item => item.success).length;
-        const overallConversion = allInteractions > 0 ? Math.round((allSuccessful / allInteractions) * 100) : 0;
+        const noAnalyticsData = totalSalesInteractions === 0 && totalSupportTickets === 0 && totalInterviews === 0;
 
-        // Update DOM
-        document.getElementById('totalSalesInteractions').textContent = totalSalesInteractions;
-        document.getElementById('totalSupportTickets').textContent = totalSupportTickets;
-        document.getElementById('totalInterviews').textContent = totalInterviews;
-        document.getElementById('overallConversion').textContent = `${overallConversion}%`;
+        if (noAnalyticsData) {
+            this.agentSummary.sales = { ...PLACEHOLDER_METRICS.sales };
+            this.agentSummary.support = { ...PLACEHOLDER_METRICS.support };
+            this.agentSummary.interview = { ...PLACEHOLDER_METRICS.interview };
+            return;
+        }
 
-        // Store agent summaries for dashboards
         this.agentSummary.sales.totalInteractions = totalSalesInteractions;
-        this.agentSummary.sales.conversions = salesConversions;
-        this.agentSummary.sales.avgSession = salesData.length > 0 ? Math.round(salesData.reduce((sum, session) => sum + (session.session_duration || 0), 0) / salesData.length) : 0;
         this.agentSummary.sales.leadsGenerated = Math.round(salesConversions * 0.8);
 
-        this.agentSummary.support.resolved = supportData.filter(item => item.success).length;
-        this.agentSummary.support.avgResolution = supportData.length > 0 ? Math.round(supportData.reduce((sum, session) => sum + (session.session_duration || 0), 0) / supportData.length) : 0;
-        this.agentSummary.support.satisfaction = supportData.length > 0 ? Math.round((this.agentSummary.support.resolved / supportData.length) * 100) : 0;
-        this.agentSummary.support.escalations = Math.round(totalSupportTickets * 0.12);
+        const resolvedCount = supportData.filter(item => item.success).length;
+        this.agentSummary.support.totalInteractions = totalSupportTickets;
+        this.agentSummary.support.resolved = resolvedCount;
+        this.agentSummary.support.escalations = Math.max(0, totalSupportTickets - resolvedCount);
 
-        this.agentSummary.interview.completed = interviewData.filter(item => item.success).length;
-        this.agentSummary.interview.qualified = interviewData.length > 0 ? Math.round(this.agentSummary.interview.completed * 0.6) : 0;
-        this.agentSummary.interview.avgScore = this.agentSummary.interview.completed > 0 ? Math.round(Math.random() * 20 + 70) : 0;
-        this.agentSummary.interview.timeToHire = interviewData.length > 0 ? Math.max(1, 14 - Math.round(this.agentSummary.interview.completed * 0.3)) : 0;
+        const interviewCompleted = interviewData.filter(item => item.success).length;
+        this.agentSummary.interview.completed = interviewCompleted;
+        this.agentSummary.interview.qualified = interviewData.length > 0 ? Math.round(interviewCompleted * 0.6) : 0;
     }
 
     initializeCharts() {
@@ -472,9 +470,12 @@ class AdminDashboard {
         const avgTime = supportData.length > 0 ? Math.round(totalTime / supportData.length) : 0;
         const satisfaction = supportData.length > 0 ? Math.round((resolved / supportData.length) * 100) : 0;
 
-        document.getElementById('supportResolved').textContent = resolved;
-        document.getElementById('supportAvgTime').textContent = `${avgTime}m`;
-        document.getElementById('supportSatisfaction').textContent = `${satisfaction}%`;
+        const interactionsEl = document.getElementById('support-total-interactions');
+        const resolvedEl = document.getElementById('support-total-resolved');
+        const escalationsEl = document.getElementById('support-total-escalations');
+        if (interactionsEl) interactionsEl.textContent = supportData.length.toLocaleString();
+        if (resolvedEl) resolvedEl.textContent = resolved.toLocaleString();
+        if (escalationsEl) escalationsEl.textContent = Math.max(0, supportData.length - resolved).toLocaleString();
 
         // Update table
         this.populateReportTable('supportReportTable', this.generateDailyStats(supportData, 'support'));
@@ -503,17 +504,12 @@ class AdminDashboard {
 
         const dashboardEls = [
             ['sales-total-interactions', sales.totalInteractions.toLocaleString()],
-            ['sales-conversion-rate', `${sales.conversions > 0 && sales.totalInteractions > 0 ? Math.round((sales.conversions / sales.totalInteractions) * 100) : 0}%`],
-            ['sales-avg-session', `${sales.avgSession}m`],
             ['sales-leads-generated', sales.leadsGenerated.toLocaleString()],
-            ['support-tickets-resolved', support.resolved.toLocaleString()],
-            ['support-avg-resolution', `${support.avgResolution}m`],
-            ['support-satisfaction', `${support.satisfaction}%`],
-            ['support-escalations', support.escalations.toLocaleString()],
+            ['support-total-interactions', support.totalInteractions.toLocaleString()],
+            ['support-total-resolved', support.resolved.toLocaleString()],
+            ['support-total-escalations', support.escalations.toLocaleString()],
             ['interview-interviews-completed', interview.completed.toLocaleString()],
-            ['interview-candidates-qualified', interview.qualified.toLocaleString()],
-            ['interview-avg-score', interview.avgScore.toLocaleString()],
-            ['interview-time-to-hire', `${interview.timeToHire}d`]
+            ['interview-candidates-qualified', interview.qualified.toLocaleString()]
         ];
 
         dashboardEls.forEach(([id, value]) => {
@@ -527,11 +523,15 @@ class AdminDashboard {
     filterAgentDashboards(selectedAgent) {
         const dashboards = document.querySelectorAll('.agent-dashboard');
         dashboards.forEach(dashboard => {
-            const agent = dashboard.getAttribute('data-agent');
-            if (selectedAgent === 'all' || agent === selectedAgent) {
+            if (selectedAgent === 'all') {
                 dashboard.classList.remove('hidden');
             } else {
-                dashboard.classList.add('hidden');
+                const agent = dashboard.getAttribute('data-agent');
+                if (agent === selectedAgent) {
+                    dashboard.classList.remove('hidden');
+                } else {
+                    dashboard.classList.add('hidden');
+                }
             }
         });
     }
@@ -632,13 +632,13 @@ class AdminDashboard {
     }
 
     generateCSV(data, type) {
-        const headers = ['Date', 'AI Type', 'Session Duration', 'Success', 'User IP'];
+        const headers = ['Date', 'AI Type', 'Session Duration', 'Success', 'Metadata'];
         const rows = data.map(item => [
             item.usage_date || '',
             item.ai_type || type,
             item.session_duration || 0,
             item.success ? 'Yes' : 'No',
-            item.user_ip || 'N/A'
+            item.metadata ? JSON.stringify(item.metadata) : ''
         ]);
 
         const csvContent = [headers, ...rows]
@@ -800,6 +800,152 @@ ${this.generateRecommendations()}
             window.platform.showNotification(message, type);
         } else {
             alert(message);
+        }
+    }
+
+    buildTenantHeaders() {
+        const headers = new Headers();
+        if (this.currentUser?.tenantId) {
+            headers.set('x-tenant-id', this.currentUser.tenantId);
+        }
+        if (this.currentUser?.id) {
+            headers.set('x-company-id', this.currentUser.id);
+        }
+        return headers;
+    }
+
+    async loadTranscripts() {
+        const container = document.getElementById('transcriptsList');
+        if (!container) return;
+
+        container.innerHTML = `
+            <div class="text-center text-gray-500 py-8">
+                <i class="fas fa-spinner fa-spin text-2xl mb-3"></i>
+                <p>Loading transcripts...</p>
+            </div>
+        `;
+
+        try {
+            const response = await fetch('/api/transcripts', {
+                headers: this.buildTenantHeaders()
+            });
+            if (!response.ok) {
+                throw new Error(`Failed to load transcripts (status ${response.status})`);
+            }
+            const data = await response.json();
+            const transcripts = Array.isArray(data?.data) ? data.data : [];
+            this.renderTranscripts(transcripts);
+        } catch (error) {
+            console.error('Error loading transcripts:', error);
+            container.innerHTML = `
+                <div class="text-center text-red-500 py-8">
+                    <i class="fas fa-exclamation-triangle text-2xl mb-3"></i>
+                    <p>Unable to load transcripts.</p>
+                    <p class="text-sm">${error.message}</p>
+                </div>
+            `;
+        }
+    }
+
+    renderTranscripts(transcripts) {
+        const container = document.getElementById('transcriptsList');
+        if (!container) return;
+
+        if (!transcripts.length) {
+            container.innerHTML = `
+                <div class="text-center text-gray-500 py-8">
+                    <i class="fas fa-comments text-3xl mb-3"></i>
+                    <p>No transcripts yet</p>
+                    <p class="text-sm">Chats will appear here once customers interact with your AI.</p>
+                </div>
+            `;
+            return;
+        }
+
+        container.innerHTML = '';
+
+        transcripts
+            .sort((a, b) => new Date(b.lastMessageAt || 0) - new Date(a.lastMessageAt || 0))
+            .slice(0, 5)
+            .forEach(transcript => {
+                const card = document.createElement('div');
+                card.className = 'border border-gray-200 rounded-lg p-4 hover:shadow transition';
+
+                const contactIntent = transcript.metadata?.contactIntent || null;
+                const hasIntent = Boolean(contactIntent);
+                const intentLabel = hasIntent
+                    ? (contactIntent.type === 'support_escalation' ? 'Support Escalation' : 'Sales Follow Up')
+                    : 'No Intent Detected';
+
+                card.innerHTML = `
+                    <div class="flex items-start justify-between">
+                        <div>
+                            <h4 class="text-sm font-semibold text-gray-800">Conversation ${transcript.conversationId?.slice(-6) || ''}</h4>
+                            <p class="text-xs text-gray-500">${SMEAIUtils.formatDateTime(transcript.lastMessageAt)}</p>
+                        </div>
+                        <span class="text-xs px-3 py-1 rounded-full ${hasIntent ? 'bg-amber-100 text-amber-700' : 'bg-gray-100 text-gray-600'}">
+                            ${intentLabel}
+                        </span>
+                    </div>
+                    <div class="mt-3 text-sm text-gray-700 line-clamp-2">
+                        ${SMEAIUtils.escapeHtml(transcript.metadata?.lastUserMessage || 'No messages yet.')}
+                    </div>
+                    <div class="mt-4 flex items-center space-x-2">
+                        <button class="text-xs bg-blue-500 hover:bg-blue-600 text-white px-3 py-1 rounded" data-transcript-id="${transcript.id}" data-action="download">
+                            <i class="fas fa-download mr-1"></i>Download
+                        </button>
+                        <button class="text-xs bg-gray-100 hover:bg-gray-200 text-gray-700 px-3 py-1 rounded" data-transcript-id="${transcript.id}" data-action="send">
+                            <i class="fas fa-paper-plane mr-1"></i>Email Transcript
+                        </button>
+                    </div>
+                `;
+
+                container.appendChild(card);
+            });
+
+        container.querySelectorAll('[data-action="download"]').forEach(btn => {
+            btn.addEventListener('click', () => this.handleTranscriptDownload(btn.dataset.transcriptId));
+        });
+
+        container.querySelectorAll('[data-action="send"]').forEach(btn => {
+            btn.addEventListener('click', () => this.handleTranscriptSend(btn.dataset.transcriptId));
+        });
+    }
+
+    async handleTranscriptDownload(transcriptId) {
+        try {
+            const response = await fetch(`/api/transcripts/${encodeURIComponent(transcriptId)}/download`, {
+                headers: this.buildTenantHeaders()
+            });
+            if (!response.ok) {
+                throw new Error('Failed to get download link');
+            }
+            const data = await response.json();
+            if (data?.url) {
+                window.open(data.url, '_blank');
+            }
+        } catch (error) {
+            console.error('Transcript download error:', error);
+            this.showNotification('Unable to download transcript', 'error');
+        }
+    }
+
+    async handleTranscriptSend(transcriptId) {
+        const email = prompt('Enter the recipient email address:');
+        if (!email) return;
+        try {
+            const response = await fetch(`/api/transcripts/${encodeURIComponent(transcriptId)}/send`, {
+                method: 'POST',
+                headers: this.buildTenantHeaders(),
+                body: JSON.stringify({ email })
+            });
+            if (!response.ok) {
+                throw new Error('Failed to send transcript');
+            }
+            this.showNotification('Transcript sent successfully', 'success');
+        } catch (error) {
+            console.error('Transcript send error:', error);
+            this.showNotification('Unable to send transcript', 'error');
         }
     }
 }

@@ -21,6 +21,8 @@
   "license": "MIT",
   "dependencies": {
     "@anthropic-ai/sdk": "^0.30.0",
+    "@aws-sdk/client-s3": "^3.669.0",
+    "@aws-sdk/s3-request-presigner": "^3.669.0",
     "@modelcontextprotocol/sdk": "^0.5.0",
     "cors": "^2.8.5",
     "dotenv": "^16.3.1",
@@ -28,12 +30,11 @@
     "mammoth": "^1.6.0",
     "marked": "^16.4.0",
     "multer": "^1.4.5-lts.1",
+    "nodemailer": "^6.10.1",
     "pdf-parse": "1.1.1",
     "pdf.js-extract": "^0.2.1",
     "pdfkit": "^0.17.2",
-    "xlsx": "^0.18.5",
-    "@aws-sdk/client-s3": "^3.669.0",
-    "@aws-sdk/s3-request-presigner": "^3.669.0"
+    "xlsx": "^0.18.5"
   },
   "devDependencies": {
     "nodemon": "^3.0.1"
