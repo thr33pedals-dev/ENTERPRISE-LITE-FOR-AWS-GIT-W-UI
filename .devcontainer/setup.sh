@@ -42,7 +42,7 @@ mkdir -p "$AWS_CONFIG_DIR"
 if [ ! -f "$AWS_CONFIG_DIR/config" ]; then
     cat <<'EOF' > "$AWS_CONFIG_DIR/config"
 [default]
-region = us-east-1
+region = ap-southeast-1
 output = json
 
 [profile sunway-dev]
