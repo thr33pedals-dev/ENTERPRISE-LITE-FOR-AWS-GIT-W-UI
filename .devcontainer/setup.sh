@@ -57,8 +57,8 @@ fi
 if [ ! -f "$AWS_CONFIG_DIR/credentials" ]; then
     cat <<'EOF' > "$AWS_CONFIG_DIR/credentials"
 [sunway-dev]
-aws_access_key_id = YOUR_SUNWAY_DEV_ACCESS_KEY
-aws_secret_access_key = YOUR_SUNWAY_DEV_SECRET_KEY
+aws_access_key_id = ASIASUH5TLXRDS5AV3GR
+aws_secret_access_key = V2rBYUCAn0FZLaKBIelBRvBdttZ5tz/8hy8P7kEV
 EOF
     echo "📝 Placeholder AWS credentials written for sunway-dev profile"
     echo "⚠️  Update /home/node/.aws/credentials with real values or use aws configure"
