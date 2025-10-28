@@ -12,6 +12,7 @@ class SalesAIManager {
         this.setupEventListeners();
         this.initializeTonePicker();
         this.loadExistingConfiguration();
+        this.loadExistingManifest();
     }
 
     buildHeaders() {
@@ -105,8 +106,7 @@ class SalesAIManager {
             if (!fileArray || fileArray.length === 0) return;
             try {
                 await this.uploader.upload(fileArray);
-                this.uploadedFiles = (await this.uploader.refresh()).manifest?.files || [];
-                this.updateStatuses();
+                await this.loadExistingManifest();
             } catch (error) {
                 // error already surfaced via uploader
             }
@@ -143,14 +143,15 @@ class SalesAIManager {
 
             this.uploadedFiles = manifest.files.map(file => {
                 const storageKey = file.path || file.artifacts?.storageKey || file.name;
-                const size = file.size || file.artifacts?.size || 0;
+                const displayName = file.name || (storageKey ? storageKey.split('/').pop() : 'Uploaded file');
+                const rawSize = file.artifacts?.rawSize || file.artifacts?.size || file.size || 0;
                 return {
-                    name: file.name || (storageKey ? storageKey.split('/').pop() : 'Uploaded file'),
-                    displayName: file.name || (storageKey ? storageKey.split('/').pop() : 'Uploaded file'),
+                    name: file.name || displayName,
+                    displayName,
                     type: file.type || '',
-                    size,
+                    size: rawSize,
                     path: storageKey,
-                    uploadedAt: file.uploadDate || file.created_at || new Date().toISOString()
+                    uploadedAt: file.uploadDate || file.uploadedAt || manifest.uploadTime || new Date().toISOString()
                 };
             });
 
@@ -191,17 +192,8 @@ class SalesAIManager {
             try {
                 const result = await SMEAIClient.uploadFiles([file], { tenantId: platform.getTenantId(), persona: 'sales' });
                 if (result.success) {
-                    this.uploadedFiles.push({
-                        name: file.name,
-                        displayName: file.name,
-                        path: result.path,
-                        size: result.size,
-                        type: file.type,
-                        uploadedAt: new Date().toISOString()
-                    });
                     this.updateUploadProgress(file.name, 100, 'completed');
-                    this.renderFilesList();
-                    this.updateStatuses();
+                    await this.loadExistingManifest();
                 } else {
                     this.updateUploadProgress(file.name, 0, 'error');
                 }
@@ -292,10 +284,7 @@ class SalesAIManager {
             if (!confirm(`Remove ${fileName}?`)) return;
             try {
                 await this.uploader.deleteFile(fileName);
-                const refreshed = await this.uploader.refresh();
-                const manifest = refreshed?.manifest || refreshed;
-                this.displayUploadedFiles(manifest);
-                this.showNotification('File removed successfully', 'success');
+                await this.loadExistingManifest();
             } catch (error) {
                 console.error('Error removing file:', error);
                 this.showNotification('Failed to remove file', 'error');
@@ -309,7 +298,6 @@ class SalesAIManager {
         this.uploadedFiles = this.uploadedFiles.filter(file => file.path !== filePath && file.name !== filePath);
         this.renderFilesList();
         this.updateStatuses();
-        this.showNotification('File removed successfully', 'success');
     }
 
     renderFilesList() {
@@ -639,6 +627,18 @@ Would you mind sharing a bit about your specific needs and budget range so I can
         this.updateStatuses();
         this.renderFilesList();
         this.generateAILink();
+    }
+
+    async loadExistingManifest() {
+        try {
+            const status = await SMEAIClient.getStatus({ tenantId: platform.getTenantId(), persona: 'sales' });
+            this.displayUploadedFiles(status.manifest || null);
+            if (status?.status?.qualityReport) {
+                this.updateQualitySummary(status.status.qualityReport);
+            }
+        } catch (error) {
+            console.warn('SalesAI: unable to load manifest', error);
+        }
     }
 
     formatFileSize(bytes) {

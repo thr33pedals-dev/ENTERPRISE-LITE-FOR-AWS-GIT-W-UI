@@ -13,6 +13,7 @@ class SupportAIManager {
         this.setupEventListeners();
         this.initializeTonePicker();
         this.loadExistingConfiguration();
+        this.loadExistingManifest();
         this.initializeDefaultCategories();
     }
 
@@ -194,7 +195,14 @@ class SupportAIManager {
 
         manifest.files.forEach(file => {
             const displayName = file.name || (file.artifacts?.storageKey ? file.artifacts.storageKey.split('/').pop() : 'Uploaded file');
-            this.uploadedFiles.push(file);
+            const rawSize = file.artifacts?.rawSize || file.artifacts?.size || file.size || 0;
+            const hydrated = {
+                ...file,
+                displayName,
+                size: rawSize,
+                uploadedAt: file.uploadedAt || manifest.uploadTime || new Date().toISOString()
+            };
+            this.uploadedFiles.push(hydrated);
             const item = document.createElement('div');
             item.className = 'bg-white rounded-lg p-3 flex items-center justify-between text-gray-800 shadow-sm';
             item.innerHTML = `
@@ -202,7 +210,7 @@ class SupportAIManager {
                     <i class="fas fa-file-alt text-green-500"></i>
                     <div>
                         <div class="font-semibold text-sm text-gray-900">${displayName}</div>
-                        <div class="text-gray-500 text-xs">${file.type?.toUpperCase?.() || ''}</div>
+                        <div class="text-gray-500 text-xs">${(file.type || '').toUpperCase()} • ${this.formatFileSize(rawSize)} • ${new Date(hydrated.uploadedAt).toLocaleDateString()}</div>
                     </div>
                 </div>
                 <button class="text-red-500 hover:text-red-400 transition" data-file-name="${file.name}">
@@ -217,6 +225,18 @@ class SupportAIManager {
             list.appendChild(item);
         });
         this.updateStatuses();
+    }
+
+    async loadExistingManifest() {
+        try {
+            const status = await SMEAIClient.getStatus({ tenantId: platform.getTenantId(), persona: 'support' });
+            this.handleManifest(status.manifest || null);
+            if (status?.status?.qualityReport) {
+                this.updateQualitySummary(status.status.qualityReport);
+            }
+        } catch (error) {
+            console.warn('SupportAI: unable to load existing manifest', error);
+        }
     }
 
     updateQualitySummary(report) {
@@ -287,14 +307,8 @@ class SupportAIManager {
             try {
                 const result = await SMEAIClient.uploadFiles([file], { tenantId: platform.getTenantId(), persona: 'support' });
                 if (result.success) {
-                    this.uploadedFiles.push({
-                        name: file.name,
-                        path: result.path,
-                        size: result.size,
-                        uploadDate: new Date().toISOString()
-                    });
                     this.updateUploadProgress(file.name, 100, 'completed');
-                    this.displayUploadedFile(file.name, result);
+                    await this.loadExistingManifest();
                 } else {
                     this.updateUploadProgress(file.name, 0, 'error');
                 }

@@ -14,6 +14,7 @@ class InterviewAIManager {
         this.initializePreview();
         this.loadRoleTemplates();
         this.loadExistingConfiguration();
+        this.loadExistingManifest();
     }
 
     checkAuthentication() {

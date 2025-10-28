@@ -171,9 +171,10 @@ class SMEAIPlatform {
         };
 
         const tenantId = this.getTenantId();
+        const headers = SMEAIClient ? SMEAIClient.buildHeaders(tenantId, null, { 'Content-Type': 'application/json' }) : { 'Content-Type': 'application/json', 'x-tenant-id': tenantId };
         const response = await fetch('/api/companies', {
             method: 'POST',
-            headers: SMEAIClient ? SMEAIClient.buildHeaders(tenantId, null, { 'Content-Type': 'application/json' }) : { 'Content-Type': 'application/json', 'x-tenant-id': tenantId },
+            headers,
             body: JSON.stringify(companyData)
         });
 
