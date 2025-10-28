@@ -41,6 +41,7 @@ class SalesAIManager {
     setupSharedClients() {
         this.uploader = new SMEAIUploader({
             tenantId: platform.getTenantId(),
+            persona: 'sales',
             onStatus: (type, message) => this.showNotification(message, type),
             onManifest: (manifest) => this.displayUploadedFiles(manifest),
             onQualityReport: (report) => this.updateQualitySummary(report),
@@ -188,7 +189,7 @@ class SalesAIManager {
         for (let i = 0; i < files.length; i++) {
             const file = files[i];
             try {
-                const result = await SMEAIUtils.uploadFile(file, 'sales');
+                const result = await SMEAIClient.uploadFiles([file], { tenantId: platform.getTenantId(), persona: 'sales' });
                 if (result.success) {
                     this.uploadedFiles.push({
                         name: file.name,
@@ -410,9 +411,14 @@ class SalesAIManager {
             response_tone: formData.responseTone
         };
 
+        const tenantId = platform.getTenantId();
+        const personaId = 'sales';
+        const headers = global.SMEAIClient
+            ? global.SMEAIClient.buildHeaders(tenantId, personaId, { 'Content-Type': 'application/json' })
+            : { 'Content-Type': 'application/json', 'x-tenant-id': tenantId, 'x-persona-id': personaId };
         const response = await fetch('/api/sales-ai', {
             method: 'POST',
-            headers: this.buildHeaders(),
+            headers,
             body: JSON.stringify(configData)
         });
 
@@ -433,9 +439,14 @@ class SalesAIManager {
             response_tone: formData.responseTone
         };
 
+        const tenantId = platform.getTenantId();
+        const personaId = 'sales';
+        const headers = global.SMEAIClient
+            ? global.SMEAIClient.buildHeaders(tenantId, personaId, { 'Content-Type': 'application/json' })
+            : { 'Content-Type': 'application/json', 'x-tenant-id': tenantId, 'x-persona-id': personaId };
         const response = await fetch(`/api/sales-ai/${encodeURIComponent(this.currentConfig.id)}`, {
             method: 'PATCH',
-            headers: this.buildHeaders(),
+            headers,
             body: JSON.stringify(updateData)
         });
 
@@ -464,9 +475,14 @@ class SalesAIManager {
     async updateAILinkRecord(link) {
         if (!this.currentConfig) return;
         try {
+            const tenantId = platform.getTenantId();
+            const personaId = 'sales';
+            const headers = global.SMEAIClient
+                ? global.SMEAIClient.buildHeaders(tenantId, personaId, { 'Content-Type': 'application/json' })
+                : { 'Content-Type': 'application/json', 'x-tenant-id': tenantId, 'x-persona-id': personaId };
             await fetch(`/api/sales-ai/${encodeURIComponent(this.currentConfig.id)}`, {
                 method: 'PATCH',
-                headers: this.buildHeaders(),
+                headers,
                 body: JSON.stringify({ ai_link: link })
             });
         } catch (error) {
@@ -577,8 +593,13 @@ Would you mind sharing a bit about your specific needs and budget range so I can
 
     async loadExistingConfiguration() {
         try {
+            const tenantId = platform.getTenantId();
+            const personaId = 'sales';
+            const headers = global.SMEAIClient
+                ? global.SMEAIClient.buildHeaders(tenantId, personaId, { 'Content-Type': 'application/json' })
+                : { 'Content-Type': 'application/json', 'x-tenant-id': tenantId, 'x-persona-id': personaId };
             const response = await fetch('/api/sales-ai', {
-                headers: this.buildHeaders()
+                headers
             });
             if (!response.ok) {
                 throw new Error('Failed to load Sales AI configuration');

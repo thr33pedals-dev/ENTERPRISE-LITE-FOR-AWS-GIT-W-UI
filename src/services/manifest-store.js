@@ -2,6 +2,7 @@ import fs from 'fs';
 import path from 'path';
 import { getStorage } from '../storage/index.js';
 import { sanitizeTenantId } from '../file-processor.js';
+import { manifestsKey } from '../storage/paths.js';
 
 const LEGACY_MANIFEST_FILENAME = 'manifest.json';
 
@@ -9,9 +10,10 @@ const PROJECT_ROOT = path.resolve(new URL('../..', import.meta.url).pathname);
 const LEGACY_PROCESSED_DIR = path.join(PROJECT_ROOT, 'uploads', 'processed');
 const LEGACY_MANIFESTS_DIR = path.join(LEGACY_PROCESSED_DIR, 'manifests');
 
-function manifestKey(rawTenantId) {
+function manifestKey(rawTenantId, personaId = null) {
   const tenantId = sanitizeTenantId(rawTenantId) || 'default';
-  return `manifests/${tenantId}.json`;
+  const personaSegment = personaId ? sanitizeTenantId(personaId) : null;
+  return manifestsKey(tenantId, personaSegment);
 }
 
 function isNotFoundError(error) {
@@ -47,9 +49,9 @@ function readLegacyManifest(tenantId) {
   return null;
 }
 
-export async function loadManifest(tenantId) {
+export async function loadManifest(tenantId, personaId = null) {
   const storage = getStorage();
-  const key = manifestKey(tenantId);
+  const key = manifestKey(tenantId, personaId);
 
   try {
     const buffer = await storage.read(key);
@@ -59,26 +61,34 @@ export async function loadManifest(tenantId) {
     return parsed || null;
   } catch (error) {
     if (isNotFoundError(error)) {
+      const legacy = readLegacyManifest(personaId ? `${tenantId}-${personaId}` : tenantId);
+      if (legacy) {
+        return legacy;
+      }
+      if (personaId) {
+        return loadManifest(tenantId, null);
+      }
       return readLegacyManifest(tenantId);
     }
     throw error;
   }
 }
 
-export async function saveManifest(tenantId, manifest) {
+export async function saveManifest(tenantId, manifest, personaId = null) {
   const storage = getStorage();
-  const key = manifestKey(tenantId);
+  const key = manifestKey(tenantId, personaId);
   const payload = {
     ...manifest,
-    tenantId: sanitizeTenantId(tenantId) || 'default'
+    tenantId: sanitizeTenantId(tenantId) || 'default',
+    persona: personaId ? sanitizeTenantId(personaId) : manifest.persona || null
   };
   await storage.save(key, payload, { contentType: 'application/json' });
   return key;
 }
 
-export async function deleteManifest(tenantId) {
+export async function deleteManifest(tenantId, personaId = null) {
   const storage = getStorage();
-  const key = manifestKey(tenantId);
+  const key = manifestKey(tenantId, personaId);
   try {
     await storage.remove(key);
   } catch (error) {
@@ -88,10 +98,11 @@ export async function deleteManifest(tenantId) {
   }
 
   const safeTenant = sanitizeTenantId(tenantId) || 'default';
+  const safePersona = personaId ? sanitizeTenantId(personaId) : null;
   const legacyPaths = [
-    path.join(LEGACY_MANIFESTS_DIR, `${safeTenant}.json`)
+    path.join(LEGACY_MANIFESTS_DIR, safePersona ? `${safeTenant}-${safePersona}.json` : `${safeTenant}.json`)
   ];
-  if (safeTenant === 'default') {
+  if (!personaId && safeTenant === 'default') {
     legacyPaths.push(path.join(LEGACY_PROCESSED_DIR, LEGACY_MANIFEST_FILENAME));
   }
 
@@ -106,7 +117,7 @@ export async function deleteManifest(tenantId) {
   });
 }
 
-export function manifestRelativePath(tenantId) {
-  const key = manifestKey(tenantId);
+export function manifestRelativePath(tenantId, personaId = null) {
+  const key = manifestKey(tenantId, personaId);
   return key;
 }

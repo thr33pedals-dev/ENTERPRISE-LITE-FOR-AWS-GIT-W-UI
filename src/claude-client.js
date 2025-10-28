@@ -5,6 +5,33 @@ import { fileURLToPath } from 'url';
 import { checkGuardrails, sanitizeOutput, getGroundingRules, logBlockedRequest } from './guardrails.js';
 import { buildVisionExcerpt, renderVisionContext } from './prompt-utils.js';
 import { getStorage } from './storage/index.js';
+import { tenantPersonaPrefix } from './storage/paths.js';
+import { saveJson, saveText, downloadToTemp, readText as loadTextFromStorage, loadVisionPayload as loadVisionArtifacts } from './services/storage-helper.js';
+
+function formatTriageSummary(entry = {}) {
+  const lines = [];
+  const type = entry.type || entry.fileType || entry.metadata?.fileType || 'unknown';
+  const category = entry.category || entry.metadata?.category || null;
+  const persona = entry.persona || null;
+  const triageRoute = entry.triage?.route || entry.metadata?.triageRoute || null;
+  const triageReason = entry.triage?.reason || entry.metadata?.triageReason || null;
+  const textQuality = entry.triage?.quality || entry.metadata?.textQuality || null;
+
+  lines.push(`Type: ${type}`);
+  if (category) lines.push(`Category: ${category}`);
+  if (persona) lines.push(`Persona: ${persona}`);
+  if (triageRoute) lines.push(`Triage Route: ${triageRoute}`);
+  if (triageReason) lines.push(`Reason: ${triageReason}`);
+  if (textQuality) {
+    const qualityScore = typeof textQuality.score === 'number' ? `${Math.round(textQuality.score * 100) / 100}` : textQuality.score;
+    lines.push(`Quality: ${qualityScore ?? 'n/a'} (${textQuality.isUsable ? 'usable' : 'needs review'})`);
+    if (textQuality.reason) {
+      lines.push(`Quality Notes: ${textQuality.reason}`);
+    }
+  }
+
+  return lines.join('\n');
+}
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
@@ -290,112 +317,49 @@ User asks: “May I accept a holiday hamper from a vendor?”
 
     try {
       const storage = getStorage();
+      const tenantPrefix = manifest?.tenantId ? tenantPersonaPrefix(manifest.tenantId, manifest?.persona || null) : null;
+      const manifestFiles = Array.isArray(manifest?.files) ? manifest.files : [];
+      for (const entry of manifestFiles) {
+        const storageKey = entry?.artifacts?.jsonKey || entry?.artifacts?.txtKey || entry?.artifacts?.metaKey;
+        if (!storageKey) continue;
+        const resolvedKey = tenantPrefix ? (storageKey.startsWith(tenantPrefix) ? storageKey : `${tenantPrefix}/${storageKey}`) : storageKey;
+        const buffer = await storage.read(resolvedKey);
+        const content = buffer.toString('utf-8');
 
-      const readText = async key => {
-        if (!key || typeof storage.read !== 'function') return '';
-        try {
-          const buffer = await storage.read(key);
-          return buffer.toString('utf-8');
-        } catch (err) {
-          console.warn(`⚠️ Unable to read text artifact (${key}):`, err.message);
-          return '';
-        }
-      };
+        prompt += `\nFile: ${entry.name}\n`;
+        prompt += formatTriageSummary(entry);
 
-      const readJson = async key => {
-        if (!key) return null;
-        const storage = getStorage();
-        if (typeof storage.readJson === 'function') {
-          try {
-            return await storage.readJson(key);
-          } catch (err) {
-            console.warn(`⚠️ Unable to read JSON artifact (${key}):`, err.message);
-          }
-        }
-        if (typeof storage.read === 'function') {
-          try {
-            const buffer = await storage.read(key);
-            return JSON.parse(buffer.toString('utf-8'));
-          } catch (err) {
-            console.warn(`⚠️ Unable to parse JSON artifact (${key}):`, err.message);
-          }
-        }
-        return null;
-      };
-
-      const loadVisionPayload = async entry => {
-        const storage = getStorage();
-        const parsedStorageKey = entry.artifacts?.parsedStorageKey || entry.artifacts?.parsedJsonKey || entry.artifacts?.jsonKey;
-        if (parsedStorageKey) {
-          const payload = await readJson(parsedStorageKey);
-          if (payload) {
-            return payload;
-          }
-        }
-
-        const localPath = entry.artifacts?.parsedJsonPath
-          ? path.resolve(PROJECT_ROOT, entry.artifacts.parsedJsonPath)
-          : null;
-
-        if (localPath && fs.existsSync(localPath)) {
-          try {
-            const raw = fs.readFileSync(localPath, 'utf-8');
-            return JSON.parse(raw);
-          } catch (err) {
-            console.warn(`⚠️ Unable to parse local vision JSON (${localPath}):`, err.message);
-          }
-        }
-
-        const storageKeyFallback = entry.artifacts?.jsonKey;
-        if (storageKeyFallback) {
-          return await readJson(storageKeyFallback);
-        }
-
-        return null;
-      };
-
-      prompt += `\n=== UPLOADED FILES (${manifest.totalFiles} total) ===\n`;
-      prompt += `Tracking files: ${manifest.fileTypes.tracking}\n`;
-      prompt += `Knowledge files: ${manifest.fileTypes.knowledge}\n`;
-      prompt += `Other files: ${manifest.fileTypes.other}\n\n`;
-
-      const formatTriageSummary = (fileEntry) => {
-        if (!fileEntry?.triage) return '';
-        const { route, reason, quality, recommendedTool } = fileEntry.triage;
-        const qualitySummary = quality
-          ? `Score: ${typeof quality.score === 'number' ? quality.score.toFixed(2) : quality.score} | Usable: ${quality.isUsable}`
-          : '';
-        const toolHint = recommendedTool ? ` | Recommended tool: ${recommendedTool}` : '';
-        return `\nTriage -> Route: ${route}${toolHint}\nReason: ${reason}${qualitySummary ? `\n${qualitySummary}` : ''}\n`;
-      };
-
-      const structuredEntries = manifest.files.filter(file => (file.type || '').toLowerCase() === 'excel');
-      if (structuredEntries.length > 0) {
-        prompt += `\n=== STRUCTURED DATA (Excel/CSV) ===\n`;
-        for (const entry of structuredEntries) {
-          const data = await readJson(entry.artifacts?.jsonKey);
-          prompt += `\nFile: ${entry.name}\n`;
-          prompt += formatTriageSummary(entry);
-
-          if (Array.isArray(data)) {
-            prompt += `Records: ${data.length}\n`;
-            if (data.length > 0) {
-              prompt += `Columns: ${Object.keys(data[0]).join(', ')}\n`;
-              if (data.length <= 100) {
-                prompt += `\nData:\n${JSON.stringify(data, null, 2)}\n`;
+        if (typeof content === 'string') {
+          if (content.startsWith('{') && content.endsWith('}')) {
+            try {
+              const jsonContent = JSON.parse(content);
+              if (Array.isArray(jsonContent)) {
+                prompt += `Records: ${jsonContent.length}\n`;
+                if (jsonContent.length > 0) {
+                  prompt += `Columns: ${Object.keys(jsonContent[0]).join(', ')}\n`;
+                  if (jsonContent.length <= 100) {
+                    prompt += `\nData:\n${JSON.stringify(jsonContent, null, 2)}\n`;
+                  } else {
+                    prompt += `\nSample (first 10):\n${JSON.stringify(jsonContent.slice(0, 10), null, 2)}\n`;
+                    prompt += `\n[Full dataset available with ${jsonContent.length} records]\n`;
+                  }
+                }
+              } else if (content) {
+                prompt += `⚠️ Structured data file parsed but not an array.\n`;
               } else {
-                prompt += `\nSample (first 10):\n${JSON.stringify(data.slice(0, 10), null, 2)}\n`;
-                prompt += `\n[Full dataset available with ${data.length} records]\n`;
+                prompt += `⚠️ Structured data file not found in processed artifacts.\n`;
               }
+            } catch (err) {
+              console.warn(`⚠️ Unable to parse JSON artifact (${resolvedKey}):`, err.message);
             }
-          } else if (data) {
-            prompt += `⚠️ Structured data file parsed but not an array.\n`;
           } else {
-            prompt += `⚠️ Structured data file not found in processed artifacts.\n`;
+            prompt += `Content:\n${content}\n`;
           }
-
-          prompt += `\n---\n`;
+        } else {
+          prompt += `⚠️ File content not found for ${resolvedKey}\n`;
         }
+
+        prompt += `\n---\n`;
       }
 
       const summarizeVisionPayload = (payload) => {
@@ -446,12 +410,18 @@ User asks: “May I accept a holiday hamper from a vendor?”
       if (knowledgeEntries.length > 0) {
         prompt += `\n=== KNOWLEDGE BASE (PDF/DOCX/Text) ===\n`;
         for (const entry of knowledgeEntries) {
-          const textContent = await readText(entry.artifacts?.txtKey);
+          const textContent = await loadTextFromStorage(entry.artifacts?.txtKey, {
+            tenantId: manifest?.tenantId || 'default',
+            personaId: manifest?.persona || null
+          });
 
           prompt += `\nFile: ${entry.name}\n`;
           prompt += formatTriageSummary(entry);
 
-          const visionPayload = await loadVisionPayload(entry);
+          const visionPayload = await loadVisionArtifacts(entry, {
+            tenantId: manifest?.tenantId || 'default',
+            personaId: manifest?.persona || null
+          });
           if (visionPayload) {
             prompt += `Vision JSON available -> ${entry.artifacts.parsedJsonPath || entry.artifacts.jsonKey}\n`;
             const excerpt = buildVisionExcerpt(visionPayload);
@@ -543,7 +513,9 @@ For GENERAL questions:
 3. Be clear about which file(s) you're referencing
 4. If information is uncertain or incomplete, say so
 
-Answer in a friendly, professional tone. Don't mention file formats or JSON - just provide the information naturally as if you're a knowledgeable assistant.`;
+Answer in a friendly, professional tone. Don't mention file formats or JSON - just provide the information naturally as if you're a knowledgeable assistant.
+Always cite the document name and reference the relevant section or quotation, even if the same question is asked repeatedly.";
+`;
 
     } catch (error) {
       console.error('Error reading uploaded data:', error);

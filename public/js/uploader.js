@@ -6,7 +6,11 @@
         this.onStart = options.onStart || function () {};
         this.onComplete = options.onComplete || function () {};
         this.onError = options.onError || function () {};
-        this.apiOptions = { tenantId: global.SMEAIClient?.resolveTenantId?.(options) };
+        this.persona = options.persona || null;
+        this.apiOptions = {
+            tenantId: global.SMEAIClient?.resolveTenantId?.(options),
+            ...(this.persona ? { persona: this.persona } : {})
+        };
     };
 
     Uploader.prototype.upload = async function (files) {

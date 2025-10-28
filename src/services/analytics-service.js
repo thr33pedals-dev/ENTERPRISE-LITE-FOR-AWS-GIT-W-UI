@@ -7,7 +7,7 @@ function normalizeTenantId(rawTenantId) {
   return sanitizeTenantId(rawTenantId || 'default') || 'default';
 }
 
-export async function listAnalyticsRecords({ tenantId, type, limit = 500 } = {}) {
+export async function listAnalyticsRecords({ tenantId, type, personaId = null, limit = 500 } = {}) {
   const normalizedTenant = normalizeTenantId(tenantId);
   const records = await dataStore.list(
     COLLECTION,
@@ -15,9 +15,10 @@ export async function listAnalyticsRecords({ tenantId, type, limit = 500 } = {})
       if (!record) return false;
       if (normalizeTenantId(record.tenantId) !== normalizedTenant) return false;
       if (type && record.ai_type !== type) return false;
+      if (personaId && record.persona && record.persona !== personaId) return false;
       return true;
     },
-    { tenantId: normalizedTenant }
+    { tenantId: normalizedTenant, personaId }
   );
 
   if (!Array.isArray(records)) {
@@ -38,6 +39,7 @@ export async function recordAnalyticsEvent(event = {}) {
     tenantId,
     companyId,
     ai_type,
+    persona,
     usage_date = new Date().toISOString(),
     session_duration = null,
     success = true,
@@ -56,12 +58,13 @@ export async function recordAnalyticsEvent(event = {}) {
       tenantId: normalizedTenant,
       company_id: companyId || null,
       ai_type,
+      persona: persona || null,
       usage_date,
       session_duration,
       success,
       metadata
     },
-    { tenantId: normalizedTenant }
+    { tenantId: normalizedTenant, personaId: persona || null }
   );
 }
 

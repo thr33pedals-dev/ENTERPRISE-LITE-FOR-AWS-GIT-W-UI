@@ -94,8 +94,10 @@ import multer from 'multer';
 import cors from 'cors';
 import path from 'path';
 import fs from 'fs';
+import os from 'os';
 import { fileURLToPath } from 'url';
 import dotenv from 'dotenv';
+import crypto from 'crypto';
 import { processFiles, categorizeFiles, saveProcessedFiles, validateFile, sanitizeTenantId } from './src/file-processor.js';
 import { getStorage } from './src/storage/index.js';
 import dataStore from './src/services/data-store.js';
@@ -106,6 +108,7 @@ import { loadManifest as loadTenantManifest, saveManifest as saveTenantManifest,
 import analyticsService from './src/services/analytics-service.js';
 import { emitUsageEvent } from './src/services/usage-events.js';
 import aiConfigService from './src/services/ai-config-service.js';
+import { buildRawKey, safeSegment } from './src/storage/paths.js';
 
 dotenv.config();
 
@@ -120,12 +123,6 @@ app.use(cors());
 app.use(express.json());
 app.use(express.static('public'));
 
-// Create upload directories
-const UPLOADS_DIR = path.join(__dirname, 'uploads');
-const PROCESSED_DIR = path.join(__dirname, 'uploads', 'processed');
-const TEMP_DIR = path.join(__dirname, 'uploads', 'temp');
-const MANIFESTS_DIR = path.join(PROCESSED_DIR, 'manifests');
-
 const COMPANIES_COLLECTION = 'companies';
 const SALES_AI_COLLECTION = 'sales_ai';
 const SUPPORT_AI_COLLECTION = 'support_ai';
@@ -133,43 +130,20 @@ const INTERVIEW_AI_COLLECTION = 'interview_ai';
 const ANALYTICS_COLLECTION = 'usage_analytics';
 const TRANSCRIPTS_COLLECTION = 'transcripts';
 
-const MAX_TEMP_FILE_AGE_MS = 24 * 60 * 60 * 1000; // 24 hours
-
-[UPLOADS_DIR, PROCESSED_DIR, TEMP_DIR, MANIFESTS_DIR].forEach(dir => {
-  if (!fs.existsSync(dir)) {
-    fs.mkdirSync(dir, { recursive: true });
-  }
-});
-
-function purgeStaleTempFiles() {
-  if (!fs.existsSync(TEMP_DIR)) return;
-
-  const now = Date.now();
-
-  fs.readdirSync(TEMP_DIR).forEach(file => {
-    const fullPath = path.join(TEMP_DIR, file);
-    try {
-      const stat = fs.statSync(fullPath);
-      if (!stat.isFile()) return;
-
-      if (now - stat.mtimeMs > MAX_TEMP_FILE_AGE_MS) {
-        fs.unlinkSync(fullPath);
-      }
-    } catch (err) {
-      console.warn(`⚠️ Failed to inspect/delete temp file ${fullPath}: ${err.message}`);
-    }
-  });
-}
-
-purgeStaleTempFiles();
-setInterval(purgeStaleTempFiles, MAX_TEMP_FILE_AGE_MS).unref();
-
 function getTenantId(req) {
   const headerTenant = req.headers['x-tenant-id'] || req.headers['x-tenant'];
   const queryTenant = req.query?.tenantId || req.query?.tenant;
   const candidate = headerTenant || queryTenant || 'default';
   const sanitized = sanitizeTenantId(candidate);
   return sanitized || 'default';
+}
+
+function getPersonaId(req) {
+  const headerPersona = req.headers['x-persona-id'] || req.headers['x-persona'];
+  const bodyPersona = req.body?.persona;
+  const queryPersona = req.query?.persona || req.query?.personaId;
+  const candidate = headerPersona || bodyPersona || queryPersona;
+  return candidate ? sanitizeTenantId(candidate) : null;
 }
 
 function getArtifactFilenames(entry) {
@@ -245,9 +219,16 @@ function serializeTranscriptToText(transcript) {
 }
 
 // Configure multer for file uploads
-const storage = multer.diskStorage({
+const uploadStorage = multer.diskStorage({
   destination: (req, file, cb) => {
-    cb(null, TEMP_DIR);
+    if (req.uploadTempDir) {
+      return cb(null, req.uploadTempDir);
+    }
+    fs.mkdtemp(path.join(os.tmpdir(), 'enterprise-lite-'), (err, folder) => {
+      if (err) return cb(err);
+      req.uploadTempDir = folder;
+      cb(null, folder);
+    });
   },
   filename: (req, file, cb) => {
     const uniqueSuffix = Date.now() + '-' + Math.round(Math.random() * 1E9);
@@ -256,9 +237,9 @@ const storage = multer.diskStorage({
 });
 
 const upload = multer({
-  storage: storage,
+  storage: uploadStorage,
   limits: {
-    fileSize: parseInt(process.env.MAX_FILE_SIZE) || 10 * 1024 * 1024, // 10MB default
+    fileSize: parseInt(process.env.MAX_FILE_SIZE) || 10 * 1024 * 1024,
     files: parseInt(process.env.MAX_FILES) || 10
   },
   fileFilter: (req, file, cb) => {
@@ -270,8 +251,8 @@ const upload = multer({
       'text/csv',
       'text/plain'
     ];
-    
-    if (allowedTypes.includes(file.mimetype) || 
+
+    if (allowedTypes.includes(file.mimetype) ||
         file.originalname.match(/\.(xlsx|xls|csv|pdf|docx|txt)$/i)) {
       cb(null, true);
     } else {
@@ -290,11 +271,16 @@ const claudeClient = createClaudeClient();
  * POST /api/upload
  */
 app.post('/api/upload', upload.array('files', 10), async (req, res) => {
+  let uploadedRawKeys = [];
   try {
     const tenantId = getTenantId(req);
-    const manifestResult = await loadTenantManifest(tenantId);
-    const manifestPath = manifestResult ? manifestRelativePath(tenantId) : null;
+    const personaId = getPersonaId(req);
+    const manifestResult = await loadTenantManifest(tenantId, personaId);
     const existingManifest = manifestResult || null;
+    const storage = getStorage();
+    uploadedRawKeys = [];
+    const rawArtifacts = [];
+    const rawArtifactByName = new Map();
 
     if (!req.files || req.files.length === 0) {
       return res.status(400).json({ 
@@ -305,8 +291,26 @@ app.post('/api/upload', upload.array('files', 10), async (req, res) => {
 
     console.log(`📁 Processing ${req.files.length} file(s)...`);
 
+    const timestampSeed = Date.now();
+
+    for (const [index, file] of req.files.entries()) {
+      const originalExt = path.extname(file.originalname || '') || '';
+      const originalBase = path.basename(file.originalname || `upload-${index}`, originalExt);
+      const safeBase = safeSegment(originalBase || `upload-${index}`, `upload-${index}`);
+      const rawFilename = `${timestampSeed}-${index}-${safeBase}${originalExt}`;
+      const rawKey = buildRawKey(tenantId, personaId, rawFilename);
+      const fileBuffer = await fs.promises.readFile(file.path);
+      await storage.save(rawKey, fileBuffer, { contentType: file.mimetype || 'application/octet-stream', raw: true });
+      const artifact = { rawKey, mimetype: file.mimetype, size: file.size, originalName: file.originalname };
+      uploadedRawKeys.push(rawKey);
+      rawArtifacts.push(artifact);
+      if (file.originalname) {
+        rawArtifactByName.set(file.originalname, artifact);
+      }
+    }
+
     // Process all files (Excel, PDF, DOCX, TXT, CSV)
-    const processedFiles = await processFiles(req.files, { tenantId });
+    const processedFiles = await processFiles(req.files, { tenantId, personaId });
 
     if (!processedFiles || processedFiles.length === 0) {
       return res.status(400).json({
@@ -319,8 +323,9 @@ app.post('/api/upload', upload.array('files', 10), async (req, res) => {
     const categories = categorizeFiles(processedFiles);
 
     // Save processed files to filesystem (for MCP access)
-    const savedFiles = await saveProcessedFiles(processedFiles, PROCESSED_DIR, {
-      tenantId
+    const savedFiles = await saveProcessedFiles(processedFiles, {
+      tenantId,
+      personaId
     });
 
     // Analyze data quality (if tracking files exist)
@@ -344,10 +349,12 @@ app.post('/api/upload', upload.array('files', 10), async (req, res) => {
       type: f.fileType,
       metadata: f.metadata,
       category: categoryByName.get(f.originalName) || 'other',
+      persona: personaId || f.persona || null,
       uploadedAt: timestamp,
       triage: f.triage || null,
       artifacts: {
         storageKey: savedFiles[idx]?.storageKey || null,
+        rawKey: (rawArtifactByName.get(f.originalName)?.rawKey) || rawArtifacts[idx]?.rawKey || null,
         jsonKey: savedFiles[idx]?.jsonKey || null,
         txtKey: savedFiles[idx]?.txtKey || null,
         metaKey: savedFiles[idx]?.metaKey || null,
@@ -357,7 +364,9 @@ app.post('/api/upload', upload.array('files', 10), async (req, res) => {
         visionModel: savedFiles[idx]?.artifacts?.model || f?.artifacts?.model || null,
         visionGeneratedAt: savedFiles[idx]?.artifacts?.generatedAt || f?.artifacts?.generatedAt || null,
         promptPath: savedFiles[idx]?.artifacts?.promptPath || f?.artifacts?.promptPath || null,
-        source: savedFiles[idx]?.artifacts?.source || f?.artifacts?.source || null
+        source: savedFiles[idx]?.artifacts?.source || f?.artifacts?.source || null,
+        rawSize: (rawArtifactByName.get(f.originalName)?.size) || rawArtifacts[idx]?.size || null,
+        rawContentType: (rawArtifactByName.get(f.originalName)?.mimetype) || rawArtifacts[idx]?.mimetype || null
       }
     }));
 
@@ -377,6 +386,7 @@ app.post('/api/upload', upload.array('files', 10), async (req, res) => {
 
     const combinedFiles = combinedFilesRaw.map(file => ({
       ...file,
+      persona: file.persona || personaId || null,
       category: determineCategory(file)
     }));
 
@@ -419,19 +429,18 @@ app.post('/api/upload', upload.array('files', 10), async (req, res) => {
       files: combinedFiles,
       mainFile: manifestMainFile,
       qualityReport: qualityReport || existingManifest?.qualityReport,
-      tenantId
+      tenantId,
+      persona: personaId || null
     };
 
-    const saveKey = await saveTenantManifest(tenantId, manifest);
+    const saveKey = await saveTenantManifest(tenantId, manifest, personaId);
 
-    // Clean up temp files
-    req.files.forEach(file => {
-      try {
-        fs.unlinkSync(file.path);
-      } catch (err) {
-        console.warn(`Failed to delete temp file: ${file.path}`);
-      }
-    });
+    await Promise.all((req.files || []).map(file => (
+      file?.path ? fs.promises.unlink(file.path).catch(() => {}) : Promise.resolve()
+    )));
+    if (req.uploadTempDir) {
+      await fs.promises.rm(req.uploadTempDir, { recursive: true, force: true }).catch(() => {});
+    }
 
     console.log('✅ Files processed successfully');
     console.log(`📊 Total files: ${processedFiles.length}`);
@@ -443,6 +452,7 @@ app.post('/api/upload', upload.array('files', 10), async (req, res) => {
     res.json({
       success: true,
       filesProcessed: req.files.length,
+      persona: personaId || null,
       categories: {
         tracking: categories.tracking.length,
         knowledge: categories.knowledge.length,
@@ -463,22 +473,24 @@ app.post('/api/upload', upload.array('files', 10), async (req, res) => {
       qualityReport: qualityReport,
       manifest: {
         ...manifest,
-        manifestPath: manifestRelativePath(tenantId)
+        manifestPath: manifestRelativePath(tenantId, personaId)
       }
     });
 
   } catch (error) {
     console.error('❌ Upload error:', error);
     
-    // Clean up temp files on error
     if (req.files) {
-      req.files.forEach(file => {
-        try {
-          fs.unlinkSync(file.path);
-        } catch (err) {
-          // Ignore cleanup errors
-        }
-      });
+      await Promise.all(req.files.map(file => (
+        file?.path ? fs.promises.unlink(file.path).catch(() => {}) : Promise.resolve()
+      )));
+    }
+    if (req.uploadTempDir) {
+      await fs.promises.rm(req.uploadTempDir, { recursive: true, force: true }).catch(() => {});
+    }
+    if (uploadedRawKeys?.length) {
+      const storage = getStorage();
+      await Promise.all(uploadedRawKeys.map(key => storage.remove(key, { raw: true }).catch(() => {})));
     }
 
     res.status(500).json({
@@ -496,6 +508,7 @@ app.post('/api/chat', async (req, res) => {
   try {
     const { message, conversationHistory = [], conversationId, transcriptId } = req.body;
     const tenantId = getTenantId(req);
+    const personaId = getPersonaId(req);
 
     if (!message) {
       return res.status(400).json({ 
@@ -505,7 +518,7 @@ app.post('/api/chat', async (req, res) => {
     }
 
     // Check if tracking data exists
-    const manifest = await loadTenantManifest(tenantId);
+    const manifest = await loadTenantManifest(tenantId, personaId);
     if (!manifest) {
       return res.status(400).json({
         success: false,
@@ -528,6 +541,7 @@ app.post('/api/chat', async (req, res) => {
 
     const transcript = await transcriptService.logInteraction({
       tenantId,
+      persona: personaId,
       conversationId,
       userMessage: message,
       assistantResponse: assistantMessage,
@@ -538,11 +552,12 @@ app.post('/api/chat', async (req, res) => {
     await emitUsageEvent({
       tenantId,
       organizationId: req.headers['x-company-id'] || null,
-      persona: 'chat',
+      persona: personaId || 'chat',
       action: 'chat_message',
       metadata: {
         conversationId: transcript?.conversationId || conversationId || null,
         transcriptId: transcript?.id || null,
+        persona: personaId || null,
         contactIntent,
         responseLength: assistantMessage?.length || 0
       }
@@ -554,7 +569,8 @@ app.post('/api/chat', async (req, res) => {
       sources: manifest.mainFile ? manifest.mainFile.filename : 'Uploaded files',
       contactIntent,
       transcriptId: transcript?.id || transcriptId || null,
-      conversationId: transcript?.conversationId || conversationId || null
+      conversationId: transcript?.conversationId || conversationId || null,
+      persona: personaId || null
     });
 
   } catch (error) {
@@ -573,7 +589,8 @@ app.post('/api/chat', async (req, res) => {
 app.get('/api/quality-report', async (req, res) => {
   try {
     const tenantId = getTenantId(req);
-    const manifest = await loadTenantManifest(tenantId);
+    const personaId = getPersonaId(req);
+    const manifest = await loadTenantManifest(tenantId, personaId);
 
     if (!manifest) {
       return res.status(404).json({
@@ -604,7 +621,8 @@ app.get('/api/quality-report', async (req, res) => {
  */
 app.get('/api/status', async (req, res) => {
   const tenantId = getTenantId(req);
-  const manifest = await loadTenantManifest(tenantId);
+  const personaId = getPersonaId(req);
+  const manifest = await loadTenantManifest(tenantId, personaId);
   const hasData = Boolean(manifest);
 
   const transcripts = await transcriptService.listByTenant(tenantId);
@@ -627,7 +645,8 @@ app.get('/api/status', async (req, res) => {
       fileTypes: manifest?.fileTypes || { tracking: 0, knowledge: 0, other: 0 },
       claudeModel: process.env.CLAUDE_MODEL || 'claude-sonnet-4-20250514',
       tenantId,
-      manifestPath: manifest ? manifestRelativePath(tenantId) : null,
+      persona: personaId || null,
+      manifestPath: manifest ? manifestRelativePath(tenantId, personaId) : null,
       transcripts: {
         total: totalTranscripts,
         lastMessageAt: lastTranscriptAt ? new Date(lastTranscriptAt).toISOString() : null
@@ -645,6 +664,7 @@ app.delete('/api/delete-file', async (req, res) => {
   try {
     const { fileName } = req.body;
     const tenantId = getTenantId(req);
+    const personaId = getPersonaId(req);
     
     if (!fileName) {
       return res.status(400).json({
@@ -653,7 +673,7 @@ app.delete('/api/delete-file', async (req, res) => {
       });
     }
 
-    const manifest = await loadTenantManifest(tenantId);
+    const manifest = await loadTenantManifest(tenantId, personaId);
 
     if (!manifest) {
       return res.status(404).json({
@@ -680,9 +700,9 @@ app.delete('/api/delete-file', async (req, res) => {
     recalculateManifestStats(manifest);
 
     if (manifest.files.length === 0) {
-      await deleteTenantManifest(tenantId);
+      await deleteTenantManifest(tenantId, personaId);
     } else {
-      await saveTenantManifest(tenantId, manifest);
+      await saveTenantManifest(tenantId, manifest, personaId);
     }
 
     console.log(`🗑️ Deleted ${deletedCount} processed artifacts for ${fileName} (tenant=${tenantId})`);
@@ -709,9 +729,10 @@ app.delete('/api/delete-file', async (req, res) => {
 app.delete('/api/clear', async (req, res) => {
   try {
     const tenantId = getTenantId(req);
+    const personaId = getPersonaId(req);
     let deletedCount = 0;
 
-    const manifest = await loadTenantManifest(tenantId);
+    const manifest = await loadTenantManifest(tenantId, personaId);
 
     const manifestArtifacts = manifest?.files?.flatMap(entry => getArtifactFilenames(entry)) || [];
 
@@ -721,13 +742,14 @@ app.delete('/api/clear', async (req, res) => {
       }
     }
 
-    await deleteTenantManifest(tenantId);
+    await deleteTenantManifest(tenantId, personaId);
 
     console.log(`🗑️ Cleared ${deletedCount} processed artifacts for tenant ${tenantId}`);
 
     res.json({
       success: true,
       message: `All data cleared for tenant ${tenantId}`,
+      persona: personaId || null,
       deletedCount
     });
 
@@ -748,16 +770,19 @@ app.get('/api/analytics', async (req, res) => {
   try {
     const tenantId = getTenantId(req);
     const type = (req.query?.type || '').toString().trim() || null;
+    const personaId = getPersonaId(req);
 
     const records = await analyticsService.listAnalyticsRecords({
       tenantId,
       type,
+      personaId,
       limit: parseInt(req.query?.limit, 10) || 500
     });
 
     res.json({
       success: true,
       tenantId,
+      persona: personaId || null,
       type,
       count: records.length,
       data: records
@@ -778,9 +803,11 @@ app.get('/api/analytics', async (req, res) => {
 app.post('/api/analytics', async (req, res) => {
   try {
     const tenantId = getTenantId(req);
+    const personaId = getPersonaId(req);
     const payload = {
       ...req.body,
-      tenantId
+      tenantId,
+      persona: personaId
     };
 
     const record = await analyticsService.recordAnalyticsEvent(payload);
@@ -788,7 +815,7 @@ app.post('/api/analytics', async (req, res) => {
     await emitUsageEvent({
       tenantId,
       organizationId: req.headers['x-company-id'] || null,
-      persona: payload.ai_type || 'unknown',
+      persona: payload.ai_type || personaId || 'unknown',
       action: 'analytics_recorded',
       metadata: {
         recordId: record.id,
@@ -882,7 +909,8 @@ function buildLinkEventMetadata(record) {
 app.get('/api/sales-ai', async (req, res) => {
   try {
     const tenantId = getTenantId(req);
-    const config = await aiConfigService.getConfig('sales', tenantId);
+    const personaId = getPersonaId(req);
+    const config = await aiConfigService.getConfig('sales', tenantId, personaId);
     res.json({
       success: true,
       data: config ? [buildConfigResponse(config)] : []
@@ -899,9 +927,10 @@ app.get('/api/sales-ai', async (req, res) => {
 app.post('/api/sales-ai', async (req, res) => {
   try {
     const tenantId = getTenantId(req);
+    const personaId = getPersonaId(req);
     const record = await aiConfigService.upsertConfig('sales', tenantId, {
       ...req.body
-    });
+    }, personaId);
 
     await emitUsageEvent({
       tenantId,
@@ -927,8 +956,9 @@ app.post('/api/sales-ai', async (req, res) => {
 app.patch('/api/sales-ai/:id', async (req, res) => {
   try {
     const tenantId = getTenantId(req);
+    const personaId = getPersonaId(req);
     const { id } = req.params;
-    const updated = await aiConfigService.updateConfig('sales', id, tenantId, req.body);
+    const updated = await aiConfigService.updateConfig('sales', id, tenantId, req.body, personaId);
 
     await emitUsageEvent({
       tenantId,
@@ -954,7 +984,8 @@ app.patch('/api/sales-ai/:id', async (req, res) => {
 app.get('/api/support-ai', async (req, res) => {
   try {
     const tenantId = getTenantId(req);
-    const config = await aiConfigService.getConfig('support', tenantId);
+    const personaId = getPersonaId(req);
+    const config = await aiConfigService.getConfig('support', tenantId, personaId);
     res.json({
       success: true,
       data: config ? [buildConfigResponse(config)] : []
@@ -971,9 +1002,10 @@ app.get('/api/support-ai', async (req, res) => {
 app.post('/api/support-ai', async (req, res) => {
   try {
     const tenantId = getTenantId(req);
+    const personaId = getPersonaId(req);
     const record = await aiConfigService.upsertConfig('support', tenantId, {
       ...req.body
-    });
+    }, personaId);
 
     await emitUsageEvent({
       tenantId,
@@ -999,8 +1031,9 @@ app.post('/api/support-ai', async (req, res) => {
 app.patch('/api/support-ai/:id', async (req, res) => {
   try {
     const tenantId = getTenantId(req);
+    const personaId = getPersonaId(req);
     const { id } = req.params;
-    const updated = await aiConfigService.updateConfig('support', id, tenantId, req.body);
+    const updated = await aiConfigService.updateConfig('support', id, tenantId, req.body, personaId);
 
     await emitUsageEvent({
       tenantId,
@@ -1026,7 +1059,8 @@ app.patch('/api/support-ai/:id', async (req, res) => {
 app.get('/api/interview-ai', async (req, res) => {
   try {
     const tenantId = getTenantId(req);
-    const config = await aiConfigService.getConfig('interview', tenantId);
+    const personaId = req.query?.persona || req.headers['x-persona-id'] || null;
+    const config = await aiConfigService.getConfig('interview', tenantId, personaId);
     res.json({
       success: true,
       data: config ? [buildConfigResponse(config)] : []
@@ -1043,9 +1077,10 @@ app.get('/api/interview-ai', async (req, res) => {
 app.post('/api/interview-ai', async (req, res) => {
   try {
     const tenantId = getTenantId(req);
+    const personaId = getPersonaId(req);
     const record = await aiConfigService.upsertConfig('interview', tenantId, {
       ...req.body
-    });
+    }, personaId);
 
     await emitUsageEvent({
       tenantId,
@@ -1071,8 +1106,9 @@ app.post('/api/interview-ai', async (req, res) => {
 app.patch('/api/interview-ai/:id', async (req, res) => {
   try {
     const tenantId = getTenantId(req);
+    const personaId = getPersonaId(req);
     const { id } = req.params;
-    const updated = await aiConfigService.updateConfig('interview', id, tenantId, req.body);
+    const updated = await aiConfigService.updateConfig('interview', id, tenantId, req.body, personaId);
 
     await emitUsageEvent({
       tenantId,
@@ -1098,11 +1134,13 @@ app.patch('/api/interview-ai/:id', async (req, res) => {
 app.get('/api/transcripts', async (req, res) => {
   try {
     const tenantId = getTenantId(req);
-    const transcripts = await transcriptService.listByTenant(tenantId);
+    const personaId = req.query?.persona || req.headers['x-persona-id'] || null;
+    const transcripts = await transcriptService.listByTenant(tenantId, personaId);
     const sanitized = transcripts.map(item => ({
       id: item.id,
       conversationId: item.conversationId,
       tenantId: item.tenantId,
+      persona: item.persona || null,
       startedAt: item.startedAt,
       lastMessageAt: item.lastMessageAt,
       metadata: item.metadata || {}
@@ -1124,16 +1162,18 @@ app.get('/api/transcripts', async (req, res) => {
 app.get('/api/transcripts/:id/download', async (req, res) => {
   try {
     const tenantId = getTenantId(req);
+    const personaId = req.query?.persona || req.headers['x-persona-id'] || null;
     const { id } = req.params;
-    const url = await transcriptService.getDownloadLink(id, tenantId);
+    const url = await transcriptService.getDownloadLink(id, tenantId, personaId);
 
     await emitUsageEvent({
       tenantId,
       organizationId: req.headers['x-company-id'] || null,
-      persona: 'transcript',
+      persona: personaId || 'transcript',
       action: 'transcript_download_link',
       metadata: {
         transcriptId: id,
+        persona: personaId || null,
         url
       }
     });
@@ -1155,6 +1195,7 @@ app.get('/api/transcripts/:id/download', async (req, res) => {
 app.post('/api/transcripts/:id/send', async (req, res) => {
   try {
     const tenantId = getTenantId(req);
+    const personaId = req.query?.persona || req.headers['x-persona-id'] || null;
     const { id } = req.params;
     const { email } = req.body || {};
 
@@ -1165,15 +1206,16 @@ app.post('/api/transcripts/:id/send', async (req, res) => {
       });
     }
 
-    const result = await transcriptService.sendTranscript(id, email);
+    const result = await transcriptService.sendTranscript(id, email, tenantId, personaId);
 
     await emitUsageEvent({
       tenantId,
       organizationId: req.headers['x-company-id'] || null,
-      persona: 'transcript',
+      persona: personaId || 'transcript',
       action: 'transcript_send',
       metadata: {
         transcriptId: id,
+        persona: personaId || null,
         email: result.email,
         downloadUrl: result.downloadUrl || null
       }
@@ -1224,7 +1266,7 @@ app.listen(PORT, () => {
   console.log('================================');
   console.log(`📡 Server running on http://localhost:${PORT}`);
   console.log(`🤖 Claude Model: ${process.env.CLAUDE_MODEL || 'claude-sonnet-4-20250514'}`);
-  console.log(`📁 Uploads directory: ${PROCESSED_DIR}`);
+  console.log('📁 Storage backend:', process.env.STORAGE_BACKEND || 'local');
   console.log('');
   console.log('📋 API Endpoints:');
   console.log(`   POST   http://localhost:${PORT}/api/upload`);

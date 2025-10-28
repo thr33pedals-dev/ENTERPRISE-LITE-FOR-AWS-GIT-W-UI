@@ -31,7 +31,7 @@ export async function getConfig(persona, tenantId) {
   const records = await dataStore.list(
     collection,
     record => record?.persona === persona,
-    { tenantId: normalizedTenant }
+    { tenantId: normalizedTenant, personaId: persona }
   );
   return records.length > 0 ? records[0] : null;
 }
@@ -40,7 +40,7 @@ export async function getById(persona, id, tenantId) {
   if (!id) return null;
   const collection = resolveCollection(persona);
   const normalizedTenant = normalizeTenant(tenantId);
-  const record = await dataStore.get(collection, id, { tenantId: normalizedTenant });
+  const record = await dataStore.get(collection, id, { tenantId: normalizedTenant, personaId: persona });
   if (record?.persona !== persona) {
     return null;
   }
@@ -60,7 +60,7 @@ export async function upsertConfig(persona, tenantId, payload) {
     collection,
     candidate => candidate?.persona === persona,
     input,
-    { tenantId: normalizedTenant }
+    { tenantId: normalizedTenant, personaId: persona }
   );
 
   return record;
@@ -77,7 +77,7 @@ export async function updateConfig(persona, id, tenantId, updates = {}) {
     collection,
     id,
     sanitizedUpdates,
-    { tenantId: normalizedTenant }
+    { tenantId: normalizedTenant, personaId: persona }
   );
   return updated;
 }
@@ -88,7 +88,7 @@ export async function listConfigs(persona, tenantId) {
   return dataStore.list(
     collection,
     record => record?.persona === persona,
-    { tenantId: normalizedTenant }
+    { tenantId: normalizedTenant, personaId: persona }
   );
 }
 

@@ -1,6 +1,7 @@
 import crypto from 'crypto';
 import dataStore from './data-store.js';
-import { saveJson, buildTenantKey, downloadToTemp } from './storage-helper.js';
+import { saveJson, downloadToTemp } from './storage-helper.js';
+import { buildTranscriptKey, tenantPersonaPrefix } from '../storage/paths.js';
 import nodemailer from 'nodemailer';
 import { getStorage } from '../storage/index.js';
 
@@ -13,6 +14,10 @@ function now() {
 
 function normalizeTenant(tenantId) {
   return (tenantId || 'default').toLowerCase();
+}
+
+function normalizePersona(personaId) {
+  return personaId ? personaId.toLowerCase() : null;
 }
 
 function ensureConversationId(conversationId) {
@@ -30,13 +35,9 @@ function buildMessages(history = [], assistantResponse) {
 async function getTranscriptArchiveKey(transcript) {
   if (!transcript) return null;
   const tenantId = normalizeTenant(transcript.tenantId);
+  const personaId = normalizePersona(transcript.persona);
   const conversationId = transcript.conversationId;
-  const archiveKey = buildTenantKey(
-    tenantId,
-    TRANSCRIPT_ARCHIVE_PREFIX,
-    conversationId,
-    'latest.json'
-  );
+  const archiveKey = buildTranscriptKey(tenantId, personaId, conversationId, 'latest.json');
   return archiveKey;
 }
 
@@ -44,10 +45,14 @@ async function ensureTranscriptArchive(transcript) {
   if (!transcript) return null;
   const archiveKey = await getTranscriptArchiveKey(transcript);
   if (!archiveKey) return null;
+  const tenantPrefix = tenantPersonaPrefix(normalizeTenant(transcript.tenantId), normalizePersona(transcript.persona));
+  const relativeKey = archiveKey.startsWith(`${tenantPrefix}/`)
+    ? archiveKey.slice(tenantPrefix.length + 1)
+    : archiveKey;
   await saveJson(
-    archiveKey.replace(`${normalizeTenant(transcript.tenantId)}/`, ''),
+    relativeKey,
     transcript,
-    { prettyPrint: true, tenantId: normalizeTenant(transcript.tenantId) }
+    { prettyPrint: true, tenantId: normalizeTenant(transcript.tenantId), personaId: normalizePersona(transcript.persona) }
   );
   return archiveKey;
 }
@@ -68,11 +73,18 @@ async function emailTranscript(transcript, email) {
   }
 
   const downloadUrl = await createDownloadUrl(transcript);
-  const tempPath = await downloadToTemp(
-    `${TRANSCRIPT_ARCHIVE_PREFIX}/${transcript.conversationId}/latest.json`,
-    '.json',
-    { tenantId: normalizeTenant(transcript.tenantId) }
-  );
+  const tenantPrefix = tenantPersonaPrefix(normalizeTenant(transcript.tenantId), normalizePersona(transcript.persona));
+  const relativeLatestKey = buildTranscriptKey(null, null, transcript.conversationId, 'latest.json');
+  let tempPath = null;
+  try {
+    tempPath = await downloadToTemp(
+      relativeLatestKey,
+      '.json',
+      { tenantId: normalizeTenant(transcript.tenantId), personaId: normalizePersona(transcript.persona) }
+    );
+  } catch (error) {
+    console.warn('Transcript archive missing, proceeding without attachment:', error.message);
+  }
 
   const transporter = nodemailer.createTransport({
     host: process.env.SMTP_HOST,
@@ -93,7 +105,7 @@ async function emailTranscript(transcript, email) {
     text: downloadUrl
       ? `Transcript is available at: ${downloadUrl}`
       : 'Transcript is attached.',
-    attachments: downloadUrl
+    attachments: downloadUrl || !tempPath
       ? undefined
       : [
           {
@@ -117,35 +129,42 @@ async function emailTranscript(transcript, email) {
 }
 
 class TranscriptService {
-  async findByConversation(tenantId, conversationId) {
+  async findByConversation(tenantId, conversationId, personaId = null) {
     const normalizedTenant = normalizeTenant(tenantId);
+    const normalizedPersona = normalizePersona(personaId);
     const conversation = ensureConversationId(conversationId);
     const transcripts = await dataStore.list(
       COLLECTION,
       record => record.tenantId === normalizedTenant && record.conversationId === conversation,
-      { tenantId: normalizedTenant }
+      { tenantId: normalizedTenant, personaId: normalizedPersona }
     );
     return transcripts.length > 0 ? transcripts[0] : null;
   }
 
-  async listByTenant(tenantId) {
+  async listByTenant(tenantId, personaId = null) {
     const normalizedTenant = normalizeTenant(tenantId);
+    const normalizedPersona = normalizePersona(personaId);
     return dataStore.list(
       COLLECTION,
-      record => record.tenantId === normalizedTenant,
-      { tenantId: normalizedTenant }
+      record => record.tenantId === normalizedTenant && (!normalizedPersona || record.persona === normalizedPersona),
+      { tenantId: normalizedTenant, personaId: normalizedPersona }
     );
   }
 
-  async getById(id) {
-    // Tenant is unknown here; look across the default prefix for backwards compatibility
+  async getById(id, tenantId = null, personaId = null) {
+    const normalizedTenant = tenantId ? normalizeTenant(tenantId) : undefined;
+    const normalizedPersona = personaId ? normalizePersona(personaId) : null;
+    if (normalizedTenant) {
+      return dataStore.get(COLLECTION, id, { tenantId: normalizedTenant, personaId: normalizedPersona });
+    }
     return dataStore.get(COLLECTION, id);
   }
 
-  async logInteraction({ tenantId, conversationId, userMessage, assistantResponse, conversationHistory = [], contactIntent = null }) {
+  async logInteraction({ tenantId, persona, conversationId, userMessage, assistantResponse, conversationHistory = [], contactIntent = null }) {
     const normalizedTenant = normalizeTenant(tenantId);
+    const normalizedPersona = normalizePersona(persona);
     const conversation = ensureConversationId(conversationId);
-    const existing = await this.findByConversation(normalizedTenant, conversation);
+  const existing = await this.findByConversation(normalizedTenant, conversation, normalizedPersona);
 
     const timestamp = now();
     const messages = buildMessages(conversationHistory, assistantResponse).map(message => ({
@@ -169,13 +188,14 @@ class TranscriptService {
             contactIntent: contactIntent || existing.metadata?.contactIntent || null
           }
         },
-        { tenantId: normalizedTenant }
+        { tenantId: normalizedTenant, personaId: normalizedPersona }
       );
     } else {
       savedRecord = await dataStore.create(
         COLLECTION,
         {
           tenantId: normalizedTenant,
+          persona: normalizedPersona,
           conversationId: conversation,
           startedAt: timestamp,
           lastMessageAt: timestamp,
@@ -185,20 +205,16 @@ class TranscriptService {
             contactIntent: contactIntent || null
           }
         },
-        { tenantId: normalizedTenant }
+        { tenantId: normalizedTenant, personaId: normalizedPersona }
       );
     }
 
-    const transcriptKey = buildTenantKey(
-      normalizedTenant,
-      TRANSCRIPT_ARCHIVE_PREFIX,
-      conversation,
-      `${timestamp}.json`
-    );
+    const transcriptKey = buildTranscriptKey(normalizedTenant, normalizedPersona, conversation, `${timestamp}.json`);
 
     const archiveData = {
       id: savedRecord.id,
       tenantId: normalizedTenant,
+      persona: normalizedPersona,
       conversationId: conversation,
       startedAt: savedRecord.startedAt,
       lastMessageAt: timestamp,
@@ -206,19 +222,25 @@ class TranscriptService {
       metadata: savedRecord.metadata || {}
     };
 
-    await saveJson(transcriptKey.replace(`${normalizedTenant}/`, ''), archiveData, { prettyPrint: true, tenantId: normalizedTenant });
+    const tenantPrefix = tenantPersonaPrefix(normalizedTenant, normalizedPersona);
+    const relativeKey = transcriptKey.startsWith(`${tenantPrefix}/`)
+      ? transcriptKey.slice(tenantPrefix.length + 1)
+      : transcriptKey;
+
+    await saveJson(relativeKey, archiveData, { prettyPrint: true, tenantId: normalizedTenant, personaId: normalizedPersona });
     await ensureTranscriptArchive(archiveData);
 
     return savedRecord;
   }
 
-  async deleteTranscript(id, tenantId) {
+  async deleteTranscript(id, tenantId, personaId = null) {
     const normalizedTenant = normalizeTenant(tenantId);
-    return dataStore.delete(COLLECTION, id, { tenantId: normalizedTenant });
+    const normalizedPersona = normalizePersona(personaId);
+    return dataStore.delete(COLLECTION, id, { tenantId: normalizedTenant, personaId: normalizedPersona });
   }
 
-  async sendTranscript(id, email) {
-    const transcript = await this.getById(id);
+  async sendTranscript(id, email, tenantId = null, personaId = null) {
+    const transcript = await this.getById(id, tenantId, personaId);
     if (!transcript) {
       throw new Error('Transcript not found');
     }
@@ -226,8 +248,8 @@ class TranscriptService {
     return emailTranscript(transcript, email);
   }
 
-  async getDownloadLink(id, tenantId) {
-    const transcript = await this.getById(id);
+  async getDownloadLink(id, tenantId, personaId = null) {
+    const transcript = await this.getById(id, tenantId, personaId);
     if (!transcript) {
       throw new Error('Transcript not found');
     }

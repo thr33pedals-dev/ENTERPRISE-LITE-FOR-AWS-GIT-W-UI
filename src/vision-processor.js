@@ -4,13 +4,17 @@ import { fileURLToPath } from 'url';
 import Anthropic from '@anthropic-ai/sdk';
 import { processPDFAdvanced } from './pdf-processor-advanced.js';
 import { getStorage } from './storage/index.js';
+import {
+  buildProcessedKey,
+  buildRawKey,
+  ensureKeyWithinTenant,
+  tenantPersonaPrefix,
+  safeSegment
+} from './storage/paths.js';
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 const PROJECT_ROOT = path.join(__dirname, '..');
-
-const DEFAULT_PARSED_ROOT = path.join(PROJECT_ROOT, 'output', 'parsed');
-const DEFAULT_RAW_ROOT = path.join(PROJECT_ROOT, 'logs', 'raw-responses');
 
 let anthropicClient = null;
 let storage = null;
@@ -36,33 +40,10 @@ function resolveProjectPath(targetPath, fallback) {
   return path.resolve(PROJECT_ROOT, targetPath);
 }
 
-function ensureDir(dirPath) {
-  if (!fs.existsSync(dirPath)) {
-    fs.mkdirSync(dirPath, { recursive: true });
-  }
-}
-
-async function saveJsonToStorage(storageKey, payload, { prettyPrint = false } = {}) {
+async function saveJsonToStorage(storageKey, payload, { prettyPrint = false, tenantId, personaId } = {}) {
   const activeStorage = storage || getStorage();
   const data = prettyPrint ? JSON.stringify(payload, null, 2) : JSON.stringify(payload);
   return activeStorage.save(storageKey, data, { contentType: 'application/json' });
-}
-
-function sanitizeSegment(value, fallback = 'default') {
-  const base = (value || fallback).toString().toLowerCase();
-  return base.replace(/[^a-z0-9-_]+/g, '-').replace(/-{2,}/g, '-').replace(/^-+|-+$/g, '') || fallback;
-}
-
-function createSafeBaseName(originalName) {
-  const noExt = (originalName || 'document').replace(/\.[^/.]+$/, '');
-  return sanitizeSegment(noExt, 'document').slice(0, 80);
-}
-
-function buildStorageKey(...segments) {
-  return segments
-    .map(part => (part || '').toString().replace(/^\/+|\/+$/g, ''))
-    .filter(Boolean)
-    .join('/');
 }
 
 function guessTitle(quickExtract, advancedData) {
@@ -187,22 +168,16 @@ function buildVisionPayload({ quickExtract, advancedData }) {
   };
 }
 
-export async function runVisionPipeline({ file, tenantId = 'default', quickExtract = null, reason = 'escalated' }) {
+export async function runVisionPipeline({ file, tenantId, personaId = null, quickExtract = null, reason = 'manual_trigger' }) {
   const visionEnabled = process.env.VISION_ENABLED === 'true';
   if (!visionEnabled || !file?.path) {
     return null;
   }
 
   try {
-    const tenantSegment = sanitizeSegment(tenantId);
-    const baseName = createSafeBaseName(file.originalname || path.basename(file.path));
-    const timestamp = Date.now();
-
-    const parsedRoot = resolveProjectPath(process.env.RESULTS_OUTPUT_PATH, DEFAULT_PARSED_ROOT);
-    const rawRoot = resolveProjectPath(process.env.RAW_RESPONSES_PATH, DEFAULT_RAW_ROOT);
-
-    const parsedFileName = `${baseName}_${timestamp}.json`;
-    const parsedStorageKey = buildStorageKey('vision', tenantSegment, 'parsed', parsedFileName);
+    const tenantKeyPrefix = tenantPersonaPrefix(tenantId, personaId);
+    const randomSuffix = `${Date.now()}-${Math.random().toString(16).slice(2, 10)}`;
+    const parsedStorageKey = buildProcessedKey(tenantId, personaId, 'vision', 'parsed', `${randomSuffix}.json`);
 
     const promptPath = process.env.VISION_PROMPT_PATH
       ? resolveProjectPath(process.env.VISION_PROMPT_PATH, null)
@@ -235,7 +210,8 @@ export async function runVisionPipeline({ file, tenantId = 'default', quickExtra
 
       const instructionLines = [
         `Filename: ${file.originalname}`,
-        `Tenant: ${tenantSegment}`,
+        `Tenant: ${safeSegment(tenantId, 'default')}`,
+        personaId ? `Persona: ${safeSegment(personaId, 'default')}` : null,
         reason ? `Escalation reason: ${reason}` : null,
         quickExtract?.textQuality?.reason ? `Quick extract quality: ${quickExtract.textQuality.reason}` : null,
         'Return a strictly valid JSON object that captures the document structure and insights as instructed.'
@@ -340,7 +316,7 @@ export async function runVisionPipeline({ file, tenantId = 'default', quickExtra
     }
 
     const prettyPrint = process.env.PRETTY_PRINT === 'true';
-    const parsedSaveResult = await saveJsonToStorage(parsedStorageKey, finalPayload, { prettyPrint });
+    const parsedSaveResult = await saveJsonToStorage(parsedStorageKey, finalPayload, { prettyPrint, tenantId, personaId });
 
     let parsedJsonPath = null;
     if (parsedSaveResult?.path) {
@@ -350,17 +326,17 @@ export async function runVisionPipeline({ file, tenantId = 'default', quickExtra
     let rawStorageKey = null;
     let rawSaveResult = null;
     if (process.env.SAVE_RAW_RESPONSES === 'true') {
-      const rawFileName = `${baseName}_${timestamp}.json`;
-      rawStorageKey = buildStorageKey('vision', tenantSegment, 'raw', rawFileName);
+      rawStorageKey = buildRawKey(tenantId, personaId, 'vision', 'raw', `${randomSuffix}.json`);
       const rawPayload = anthropicResponse
         ? { response: anthropicResponse, combinedText }
         : { fallback: true, payload: finalPayload };
-      rawSaveResult = await saveJsonToStorage(rawStorageKey, rawPayload, { prettyPrint });
+      rawSaveResult = await saveJsonToStorage(rawStorageKey, rawPayload, { prettyPrint, tenantId, personaId });
     }
 
     const artifacts = {
-      parsedStorageKey,
-      rawStorageKey,
+      parsedStorageKey: parsedSaveResult?.resolvedKey || parsedStorageKey,
+      rawResponseStorageKey: rawSaveResult?.resolvedKey || rawStorageKey,
+      promptStorageKey: null, // No prompt storage key in this function's artifacts
       model: modelUsed,
       generatedAt,
       promptPath: promptPathRelative,

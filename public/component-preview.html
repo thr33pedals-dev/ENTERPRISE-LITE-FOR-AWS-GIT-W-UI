@@ -435,6 +435,7 @@
         // State
         const urlParams = new URLSearchParams(window.location.search);
         const initialTenant = urlParams.get('tenant');
+        const persona = urlParams.get('type') || 'sales';
         const tenantId = initialTenant || (window.platform?.getTenantId?.() ?? 'default');
 
         if (initialTenant && window.platform?.currentUser && !window.platform.currentUser.tenantId) {
@@ -451,7 +452,7 @@
         const messageInput = document.getElementById('messageInput');
         const sendBtn = document.getElementById('sendBtn');
 
-        const apiOptions = { tenantId };
+        const apiOptions = { tenantId, persona };
 
         // Chat functionality
         messageInput.addEventListener('keypress', (e) => {
@@ -479,6 +480,7 @@
             try {
                 const result = await window.SMEAIClient.chat(message, conversationHistory, {
                     tenantId,
+                    persona,
                     conversationId,
                     transcriptId
                 });
@@ -504,11 +506,12 @@
         }
 
         function persistConversation() {
-            const storageKey = `previewConversation:${tenantId}`;
+            const storageKey = `previewConversation:${tenantId}:${persona}`;
             const payload = {
                 history: conversationHistory.slice(-50),
                 timestamp: Date.now(),
                 tenantId,
+                persona,
                 conversationId,
                 transcriptId
             };
@@ -521,7 +524,7 @@
 
         function restoreConversation() {
             try {
-                const storageKey = `previewConversation:${tenantId}`;
+                const storageKey = `previewConversation:${tenantId}:${persona}`;
                 const stored = localStorage.getItem(storageKey);
                 if (!stored) return;
                 const payload = JSON.parse(stored);
@@ -562,6 +565,9 @@
 
         // Load status on page load
         restoreConversation();
+    </script>
+    <script>
+      window.__DEFAULT_TENANT_ID__ = 'preview-company';
     </script>
 </body>
 </html>

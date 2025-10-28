@@ -3,18 +3,26 @@ import { getStorage } from '../storage/index.js';
 
 const COLLECTION_PREFIX = process.env.METADATA_STORAGE_PREFIX || 'metadata';
 
-function collectionPrefixForTenant(tenantId) {
+function collectionPrefixForTenant(tenantId, personaId = null) {
   const safeTenant = (tenantId || 'default')
     .toLowerCase()
     .replace(/[^a-z0-9-_]+/g, '-')
     .replace(/-{2,}/g, '-')
     .replace(/^-+|-+$/g, '')
     .slice(0, 60) || 'default';
-  return `${COLLECTION_PREFIX}/${safeTenant}`;
+  const safePersona = personaId
+    ? (personaId || 'default')
+        .toLowerCase()
+        .replace(/[^a-z0-9-_]+/g, '-')
+        .replace(/-{2,}/g, '-')
+        .replace(/^-+|-+$/g, '')
+        .slice(0, 60) || 'default'
+    : null;
+  return safePersona ? `${COLLECTION_PREFIX}/${safeTenant}/${safePersona}` : `${COLLECTION_PREFIX}/${safeTenant}`;
 }
 
-function collectionKey(name, tenantId) {
-  const prefix = collectionPrefixForTenant(tenantId);
+function collectionKey(name, tenantId, personaId = null) {
+  const prefix = collectionPrefixForTenant(tenantId, personaId);
   return `${prefix}/${name}.json`;
 }
 
@@ -26,8 +34,8 @@ function isNotFoundError(error) {
   return false;
 }
 
-async function readCollection(storage, name, tenantId) {
-  const key = collectionKey(name, tenantId);
+async function readCollection(storage, name, tenantId, personaId = null) {
+  const key = collectionKey(name, tenantId, personaId);
   try {
     const buffer = await storage.read(key);
     const text = buffer.toString('utf-8');
@@ -35,6 +43,9 @@ async function readCollection(storage, name, tenantId) {
     const parsed = JSON.parse(text);
     return Array.isArray(parsed) ? parsed : [];
   } catch (error) {
+    if (isNotFoundError(error) && personaId) {
+      return readCollection(storage, name, tenantId, null);
+    }
     if (isNotFoundError(error)) {
       return [];
     }
@@ -42,8 +53,8 @@ async function readCollection(storage, name, tenantId) {
   }
 }
 
-async function writeCollection(storage, name, tenantId, records) {
-  const key = collectionKey(name, tenantId);
+async function writeCollection(storage, name, tenantId, records, personaId = null) {
+  const key = collectionKey(name, tenantId, personaId);
   await storage.save(key, records, { contentType: 'application/json' });
 }
 
@@ -73,7 +84,7 @@ export class DataStore {
 
   async list(collection, predicate = null, options = {}) {
     const storage = getStorage({ prefix: options.prefix });
-    const records = await readCollection(storage, collection, options.tenantId);
+    const records = await readCollection(storage, collection, options.tenantId, options.personaId);
     const materialized = Array.isArray(records)
       ? records.map(record => materializeRecord(record, options.tenantId))
       : [];
@@ -90,7 +101,7 @@ export class DataStore {
 
   async create(collection, input, options = {}) {
     const storage = getStorage({ prefix: options.prefix });
-    const records = await readCollection(storage, collection, options.tenantId);
+    const records = await readCollection(storage, collection, options.tenantId, options.personaId);
     const baseRecord = ensureId({ ...input });
     const timestamp = now();
     const record = {
@@ -99,13 +110,13 @@ export class DataStore {
       updatedAt: timestamp
     };
     records.push(record);
-    await writeCollection(storage, collection, options.tenantId, records);
+    await writeCollection(storage, collection, options.tenantId, records, options.personaId);
     return materializeRecord(record, options.tenantId);
   }
 
   async update(collection, id, updates = {}, options = {}) {
     const storage = getStorage({ prefix: options.prefix });
-    const records = await readCollection(storage, collection, options.tenantId);
+    const records = await readCollection(storage, collection, options.tenantId, options.personaId);
     const index = records.findIndex(record => record.id === id);
     if (index === -1) {
       throw new Error(`Record not found in ${collection}: ${id}`);
@@ -117,24 +128,24 @@ export class DataStore {
       updatedAt: timestamp
     };
     records[index] = updated;
-    await writeCollection(storage, collection, options.tenantId, records);
+    await writeCollection(storage, collection, options.tenantId, records, options.personaId);
     return materializeRecord(updated, options.tenantId);
   }
 
   async delete(collection, id, options = {}) {
     const storage = getStorage({ prefix: options.prefix });
-    const records = await readCollection(storage, collection, options.tenantId);
+    const records = await readCollection(storage, collection, options.tenantId, options.personaId);
     const filtered = records.filter(record => record.id !== id);
     const deleted = records.length !== filtered.length;
     if (deleted) {
-      await writeCollection(storage, collection, options.tenantId, filtered);
+      await writeCollection(storage, collection, options.tenantId, filtered, options.personaId);
     }
     return deleted;
   }
 
   async upsert(collection, predicate, payload, options = {}) {
     const storage = getStorage({ prefix: options.prefix });
-    const records = await readCollection(storage, collection, options.tenantId);
+    const records = await readCollection(storage, collection, options.tenantId, options.personaId);
     const index = records.findIndex(predicate);
     if (index === -1) {
       const created = await this.create(collection, payload, options);
@@ -147,7 +158,7 @@ export class DataStore {
       updatedAt: timestamp
     };
     records[index] = updated;
-    await writeCollection(storage, collection, options.tenantId, records);
+    await writeCollection(storage, collection, options.tenantId, records, options.personaId);
     return { record: materializeRecord(updated, options.tenantId), created: false };
   }
 }

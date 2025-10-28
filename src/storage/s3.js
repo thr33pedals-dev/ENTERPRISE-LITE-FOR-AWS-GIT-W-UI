@@ -7,7 +7,7 @@ function toSafeKey(prefix, key) {
   return normalizedPrefix ? `${normalizedPrefix}/${normalizedKey}` : normalizedKey;
 }
 
-export function createS3Storage({ bucket, prefix = '', region, endpoint, forcePathStyle = false, signingTTLSeconds = 3600 }) {
+export function createS3Storage({ bucket, rawBucket, prefix = '', region, endpoint, forcePathStyle = false, signingTTLSeconds = 3600 }) {
   if (!bucket) {
     throw new Error('createS3Storage requires a bucket');
   }
@@ -18,24 +18,32 @@ export function createS3Storage({ bucket, prefix = '', region, endpoint, forcePa
     forcePathStyle
   });
 
+  const rawClient = rawBucket && rawBucket !== bucket
+    ? new S3Client({ region, endpoint, forcePathStyle })
+    : client;
+
   async function save(key, data, options = {}) {
     const safeKey = toSafeKey(prefix, key);
-    const body = (typeof data === 'string' || Buffer.isBuffer(data)) ? data : JSON.stringify(data, null, 2);
+    const body = (typeof data === 'string' || Buffer.isBuffer(data)) ? data : JSON.stringify(data);
 
-    await client.send(new PutObjectCommand({
-      Bucket: bucket,
+    const targetBucket = options.raw === true && rawBucket ? rawBucket : bucket;
+    const targetClient = options.raw === true && rawBucket ? rawClient : client;
+
+    await targetClient.send(new PutObjectCommand({
+      Bucket: targetBucket,
       Key: safeKey,
       Body: body,
       ContentType: options.contentType
     }));
 
-    return { key, backend: 's3', bucket, resolvedKey: safeKey };
+    return { key, backend: 's3', bucket: targetBucket, resolvedKey: safeKey };
   }
 
   async function read(key) {
     const safeKey = toSafeKey(prefix, key);
     const result = await client.send(new GetObjectCommand({ Bucket: bucket, Key: safeKey }));
-    return result.Body.transformToByteArray();
+    const bytes = await result.Body.transformToByteArray();
+    return Buffer.from(bytes);
   }
 
   async function readJson(key) {
@@ -71,6 +79,7 @@ export function createS3Storage({ bucket, prefix = '', region, endpoint, forcePa
   return {
     backend: 's3',
     bucket,
+    rawBucket,
     prefix,
     save,
     read,

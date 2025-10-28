@@ -30,12 +30,16 @@ class InterviewAIManager {
     }
 
     setupSharedClients() {
-        // This method will be implemented to set up shared clients (e.g., platform)
-        // For now, it's a placeholder.
-        // window.platform = {
-        //     getTenantId: () => 'your_tenant_id', // Replace with actual tenant ID retrieval
-        //     getCompanyId: () => this.currentUser?.id || 'your_company_id' // Replace with actual company ID retrieval
-        // };
+        if (!this.uploader) {
+            this.uploader = new SMEAIUploader({
+                tenantId: window.platform?.getTenantId?.() || 'default',
+                persona: 'interview',
+                onStatus: (type, message) => this.showNotification(message, type),
+                onManifest: () => {},
+                onQualityReport: () => {},
+                onError: (error) => console.error('Uploader error:', error)
+            });
+        }
     }
 
     initializePreview() {
@@ -53,6 +57,7 @@ class InterviewAIManager {
         if (window.platform?.getTenantId) {
             headers.set('x-tenant-id', window.platform.getTenantId());
         }
+        headers.set('x-persona-id', 'interview');
         if (this.currentUser?.id) {
             headers.set('x-company-id', this.currentUser.id);
         }
@@ -508,17 +513,22 @@ class InterviewAIManager {
                 status: 'active'
             };
 
+            const tenantId = window.platform?.getTenantId();
+            const personaId = 'interview';
+            const headers = global.SMEAIClient
+                ? global.SMEAIClient.buildHeaders(tenantId, personaId, { 'Content-Type': 'application/json' })
+                : { 'Content-Type': 'application/json', 'x-tenant-id': tenantId, 'x-persona-id': personaId };
             let response;
             if (this.currentConfig) {
                 response = await fetch(`/api/interview-ai/${encodeURIComponent(this.currentConfig.id)}`, {
                     method: 'PATCH',
-                    headers: this.buildHeaders(),
+                    headers,
                     body: JSON.stringify(configData)
                 });
             } else {
                 response = await fetch('/api/interview-ai', {
                     method: 'POST',
-                    headers: this.buildHeaders(),
+                    headers,
                     body: JSON.stringify(configData)
                 });
             }
@@ -543,8 +553,12 @@ class InterviewAIManager {
     }
 
     loadExistingConfiguration() {
+        const tenantId = window.platform?.getTenantId();
+        const headers = global.SMEAIClient
+            ? global.SMEAIClient.buildHeaders(tenantId, 'interview', { 'Content-Type': 'application/json' })
+            : { 'Content-Type': 'application/json', 'x-tenant-id': tenantId, 'x-persona-id': 'interview' };
         fetch('/api/interview-ai', {
-            headers: this.buildHeaders()
+            headers
         })
             .then(response => {
                 if (!response.ok) {
@@ -592,9 +606,13 @@ class InterviewAIManager {
     async updateAILinkOnServer(link) {
         if (!this.currentConfig?.id) return;
         try {
+            const tenantId = window.platform?.getTenantId();
+            const headers = global.SMEAIClient
+                ? global.SMEAIClient.buildHeaders(tenantId, 'interview', { 'Content-Type': 'application/json' })
+                : { 'Content-Type': 'application/json', 'x-tenant-id': tenantId, 'x-persona-id': 'interview' };
             await fetch(`/api/interview-ai/${encodeURIComponent(this.currentConfig.id)}`, {
                 method: 'PATCH',
-                headers: this.buildHeaders(),
+                headers,
                 body: JSON.stringify({ ai_link: link })
             });
         } catch (error) {
@@ -628,9 +646,13 @@ class InterviewAIManager {
             return;
         }
         this.showLoadingModal('Testing Interview AI Link...');
+        const tenantId = window.platform?.getTenantId();
+        const headers = global.SMEAIClient
+            ? global.SMEAIClient.buildHeaders(tenantId, 'interview')
+            : this.buildHeaders();
         fetch(link, {
             method: 'GET',
-            headers: this.buildHeaders()
+            headers
         })
             .then(response => {
                 if (response.ok) {
@@ -658,9 +680,13 @@ class InterviewAIManager {
             return;
         }
         this.showLoadingModal('Previewing Interview AI...');
+        const tenantId = window.platform?.getTenantId();
+        const headers = global.SMEAIClient
+            ? global.SMEAIClient.buildHeaders(tenantId, 'interview')
+            : this.buildHeaders();
         fetch(link, {
             method: 'GET',
-            headers: this.buildHeaders()
+            headers
         })
             .then(response => {
                 if (response.ok) {

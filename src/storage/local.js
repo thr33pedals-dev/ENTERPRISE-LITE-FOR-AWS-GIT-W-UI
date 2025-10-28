@@ -60,16 +60,6 @@ export function createLocalStorage({ baseDir, prefix = '' }) {
       }
     },
 
-    async exists(key) {
-      const targetPath = resolveKey(key);
-      try {
-        await fs.promises.access(targetPath);
-        return true;
-      } catch {
-        return false;
-      }
-    },
-
     async remove(key) {
       const targetPath = resolveKey(key);
       try {

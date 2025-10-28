@@ -43,6 +43,7 @@ class SupportAIManager {
     setupSharedClients() {
         this.uploader = new SMEAIUploader({
             tenantId: platform.getTenantId(),
+            persona: 'support',
             onStatus: (type, message) => this.showNotification(message, type),
             onManifest: (manifest) => this.handleManifest(manifest),
             onQualityReport: (report) => this.updateQualitySummary(report),
@@ -284,7 +285,7 @@ class SupportAIManager {
         for (let i = 0; i < files.length; i++) {
             const file = files[i];
             try {
-                const result = await SMEAIUtils.uploadFile(file, 'support');
+                const result = await SMEAIClient.uploadFiles([file], { tenantId: platform.getTenantId(), persona: 'support' });
                 if (result.success) {
                     this.uploadedFiles.push({
                         name: file.name,
@@ -494,9 +495,14 @@ class SupportAIManager {
             multi_language: formData.multiLanguage
         };
 
+        const tenantId = platform.getTenantId();
+        const personaId = 'support';
+        const headers = global.SMEAIClient
+            ? global.SMEAIClient.buildHeaders(tenantId, personaId, { 'Content-Type': 'application/json' })
+            : { 'Content-Type': 'application/json', 'x-tenant-id': tenantId, 'x-persona-id': personaId };
         const response = await fetch('/api/support-ai', {
             method: 'POST',
-            headers: this.buildHeaders(),
+            headers,
             body: JSON.stringify(configData)
         });
 
@@ -521,9 +527,14 @@ class SupportAIManager {
             multi_language: formData.multiLanguage
         };
 
+        const tenantId = platform.getTenantId();
+        const personaId = 'support';
+        const headers = global.SMEAIClient
+            ? global.SMEAIClient.buildHeaders(tenantId, personaId, { 'Content-Type': 'application/json' })
+            : { 'Content-Type': 'application/json', 'x-tenant-id': tenantId, 'x-persona-id': personaId };
         const response = await fetch(`/api/support-ai/${encodeURIComponent(this.currentConfig.id)}`, {
             method: 'PATCH',
-            headers: this.buildHeaders(),
+            headers,
             body: JSON.stringify(updateData)
         });
 
@@ -550,9 +561,14 @@ class SupportAIManager {
 
     async updateAILink(link) {
         try {
+            const tenantId = platform.getTenantId();
+            const personaId = 'support';
+            const headers = global.SMEAIClient
+                ? global.SMEAIClient.buildHeaders(tenantId, personaId, { 'Content-Type': 'application/json' })
+                : { 'Content-Type': 'application/json', 'x-tenant-id': tenantId, 'x-persona-id': personaId };
             await fetch(`/api/support-ai/${encodeURIComponent(this.currentConfig.id)}`, {
                 method: 'PATCH',
-                headers: this.buildHeaders(),
+                headers,
                 body: JSON.stringify({ ai_link: link })
             });
         } catch (error) {
@@ -692,8 +708,13 @@ class SupportAIManager {
 
     async loadExistingConfiguration() {
         try {
+            const tenantId = platform.getTenantId();
+            const personaId = 'support';
+            const headers = global.SMEAIClient
+                ? global.SMEAIClient.buildHeaders(tenantId, personaId, { 'Content-Type': 'application/json' })
+                : { 'Content-Type': 'application/json', 'x-tenant-id': tenantId, 'x-persona-id': personaId };
             const response = await fetch('/api/support-ai', {
-                headers: this.buildHeaders()
+                headers
             });
             if (!response.ok) {
                 throw new Error('Failed to load Support AI configuration');

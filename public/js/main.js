@@ -170,11 +170,10 @@ class SMEAIPlatform {
             next_billing_date: new Date(Date.now() + 30 * 24 * 60 * 60 * 1000).toISOString() // 30 days from now
         };
 
+        const tenantId = this.getTenantId();
         const response = await fetch('/api/companies', {
             method: 'POST',
-            headers: {
-                'Content-Type': 'application/json'
-            },
+            headers: SMEAIClient ? SMEAIClient.buildHeaders(tenantId, null, { 'Content-Type': 'application/json' }) : { 'Content-Type': 'application/json', 'x-tenant-id': tenantId },
             body: JSON.stringify(companyData)
         });
 
@@ -205,11 +204,13 @@ class SMEAIPlatform {
     }
 
     async updateCompanySubscription(companyId, plan) {
+        const tenantId = this.getTenantId();
+        const headers = global.SMEAIClient
+            ? global.SMEAIClient.buildHeaders(tenantId, null, { 'Content-Type': 'application/json' })
+            : { 'Content-Type': 'application/json', 'x-tenant-id': tenantId };
         const response = await fetch(`/api/companies/${encodeURIComponent(companyId)}`, {
             method: 'PATCH',
-            headers: {
-                'Content-Type': 'application/json'
-            },
+            headers,
             body: JSON.stringify({
                 subscription_status: 'active',
                 subscription_plan: plan
@@ -264,7 +265,7 @@ class SMEAIPlatform {
 
     ensureTenantId() {
         if (!this.currentUser) {
-            this.tenantId = 'default';
+            this.tenantId = this.previewTenant;
             return;
         }
 
@@ -274,7 +275,7 @@ class SMEAIPlatform {
         }
 
         const slug = this.slugifyTenant(this.currentUser.company_name || this.currentUser.email || 'tenant');
-        this.tenantId = slug || 'default';
+        this.tenantId = slug || this.previewTenant;
         this.currentUser.tenantId = this.tenantId;
         localStorage.setItem('currentUser', JSON.stringify(this.currentUser));
     }
@@ -289,8 +290,12 @@ class SMEAIPlatform {
         return slug || 'tenant';
     }
 
+    get previewTenant() {
+        return window.__DEFAULT_TENANT_ID__ || 'preview-company';
+    }
+
     getTenantId() {
-        return this.tenantId || 'default';
+        return this.tenantId || this.previewTenant;
     }
 
     makeTenantAwareUrl(path, extraQuery = {}) {
@@ -355,7 +360,7 @@ const platform = new SMEAIPlatform();
 window.SMEAIUtils = {
     async uploadFile(file, category) {
         console.warn('SMEAIUtils.uploadFile is deprecated. Use SMEAIUploader instead.');
-        return SMEAIClient.uploadFiles([file], { tenantId: platform.getTenantId() });
+        return SMEAIClient.uploadFiles([file], { tenantId: platform.getTenantId(), persona: category });
     },
 
     generateAILink(type, configId) {

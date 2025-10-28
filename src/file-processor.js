@@ -8,6 +8,7 @@ import { processPDFAdvanced } from './pdf-processor-advanced.js';
 import { runVisionPipeline } from './vision-processor.js';
 import { getStorage } from './storage/index.js';
 import { saveJson as saveJsonArtifact, saveText as saveTextArtifact } from './services/storage-helper.js';
+import { buildProcessedKey } from './storage/paths.js';
 
 export const TRIAGE_ROUTES = {
   PATH_A: 'structured_excel',
@@ -29,13 +30,14 @@ export const TRIAGE_ROUTES = {
  */
 export async function processFiles(files, options = {}) {
   const tenantId = options?.tenantId || 'default';
+  const personaId = options?.personaId || null;
   const processedFiles = [];
 
   for (const file of files) {
     try {
       console.log(`📄 Processing: ${file.originalname} (${file.mimetype})`);
 
-      const triageResult = await triageAndProcessFile(file, tenantId);
+      const triageResult = await triageAndProcessFile(file, tenantId, personaId);
 
       if (triageResult) {
         processedFiles.push({
@@ -48,6 +50,7 @@ export async function processFiles(files, options = {}) {
             triageReason: triageResult.triageReason
           },
           fileSize: file.size,
+          persona: personaId || triageResult.persona || null,
           triage: {
             route: triageResult.triageRoute,
             reason: triageResult.triageReason,
@@ -70,9 +73,9 @@ export async function processFiles(files, options = {}) {
   return processedFiles;
 }
 
-async function triageAndProcessFile(file, tenantId = 'default') {
+async function triageAndProcessFile(file, tenantId = 'default', personaId = null) {
   if (isExcelFile(file)) {
-    const excelResult = await processExcelFile(file);
+    const excelResult = await processExcelFile(file, { tenantId, personaId });
     return {
       ...excelResult,
       triageRoute: TRIAGE_ROUTES.PATH_A,
@@ -81,16 +84,17 @@ async function triageAndProcessFile(file, tenantId = 'default') {
         score: 1,
         isUsable: true,
         reason: 'Structured spreadsheet'
-      }
+      },
+      persona: personaId
     };
   }
 
   if (isPDFFile(file)) {
-    return await triagePdfFile(file, tenantId);
+    return await triagePdfFile(file, tenantId, personaId);
   }
 
   if (isDOCXFile(file)) {
-    const docResult = await processDOCXFile(file);
+    const docResult = await processDOCXFile(file, { tenantId, personaId });
     const quality = summarizeTextQuality(docResult.data.fullText);
     const reason = quality.isUsable
       ? 'DOCX text extracted locally (Path B).'
@@ -100,12 +104,13 @@ async function triageAndProcessFile(file, tenantId = 'default') {
       ...docResult,
       triageRoute: TRIAGE_ROUTES.PATH_B_DOCX,
       triageReason: reason,
-      textQuality: quality
+      textQuality: quality,
+      persona: personaId
     };
   }
 
   if (isTXTFile(file)) {
-    const txtResult = await processTXTFile(file);
+    const txtResult = await processTXTFile(file, { tenantId, personaId });
     const quality = summarizeTextQuality(txtResult.data.fullText);
     const reason = quality.isUsable
       ? 'Plain text file processed locally (Path B).'
@@ -115,7 +120,8 @@ async function triageAndProcessFile(file, tenantId = 'default') {
       ...txtResult,
       triageRoute: TRIAGE_ROUTES.PATH_B_TXT,
       triageReason: reason,
-      textQuality: quality
+      textQuality: quality,
+      persona: personaId
     };
   }
 
@@ -141,7 +147,7 @@ function buildVisionDataPayload(quickExtract, visionResult) {
   };
 }
 
-async function triagePdfFile(file, tenantId = 'default') {
+async function triagePdfFile(file, tenantId = 'default', personaId = null) {
   let quickExtract = null;
 
   try {
@@ -168,6 +174,7 @@ async function triagePdfFile(file, tenantId = 'default') {
     return {
       fileType: 'pdf',
       data: quickExtract.data,
+      persona: personaId,
       metadata: {
         ...quickExtract.metadata,
         textQuality: quality,
@@ -184,6 +191,7 @@ async function triagePdfFile(file, tenantId = 'default') {
     const visionResult = await runVisionPipeline({
       file,
       tenantId,
+      personaId,
       quickExtract,
       reason: 'table_structure_loss'
     });
@@ -201,6 +209,7 @@ async function triagePdfFile(file, tenantId = 'default') {
     return {
       fileType: 'pdf',
       data: buildVisionDataPayload(quickExtract, visionResult),
+      persona: personaId,
       metadata: tableEscalatedMetadata,
       triageRoute: TRIAGE_ROUTES.PATH_C,
       triageReason: 'Quick extraction appears to lose table structure. Escalate to vision (Path C).',
@@ -221,6 +230,7 @@ async function triagePdfFile(file, tenantId = 'default') {
   const visionResult = await runVisionPipeline({
     file,
     tenantId,
+    personaId,
     quickExtract,
     reason: textLooksBad ? 'low_quality_text' : 'escalated_for_tables'
   });
@@ -238,6 +248,7 @@ async function triagePdfFile(file, tenantId = 'default') {
   return {
     fileType: 'pdf',
     data: buildVisionDataPayload(quickExtract, visionResult),
+    persona: personaId,
     metadata: escalatedMetadata,
     triageRoute: TRIAGE_ROUTES.PATH_C,
     triageReason: 'PDF appears scanned or low quality. Escalate to vision tool (Path C).',
@@ -405,7 +416,7 @@ function evaluateTableConfidence(rawText, pageCount = 1) {
  * Process Excel files (.xlsx, .xls, .csv)
  * Extracts calculated VLOOKUP values
  */
-async function processExcelFile(file) {
+async function processExcelFile(file, options = {}) {
   const workbook = XLSX.readFile(file.path, {
     cellFormula: false,  // Get calculated values, not formulas
     cellDates: true,
@@ -473,7 +484,7 @@ async function processPDFFile(file) {
  * Process DOCX files
  * Extracts text content with basic formatting
  */
-async function processDOCXFile(file) {
+async function processDOCXFile(file, options = {}) {
   const result = await mammoth.extractRawText({ path: file.path });
 
   if (!result.value || result.value.trim().length === 0) {
@@ -506,7 +517,7 @@ async function processDOCXFile(file) {
 /**
  * Process plain text files
  */
-async function processTXTFile(file) {
+async function processTXTFile(file, options = {}) {
   const text = fs.readFileSync(file.path, 'utf-8');
 
   if (!text || text.trim().length === 0) {
@@ -592,26 +603,30 @@ export function categorizeFiles(processedFiles) {
 }
 
 /**
- * Save processed files to filesystem for MCP access
+ * Save processed files via storage abstraction for MCP access
  */
-export async function saveProcessedFiles(processedFiles, processedDir, options = {}) {
+export async function saveProcessedFiles(processedFiles, options = {}) {
   const storage = getStorage();
   const savedFiles = [];
   const timestamp = Date.now();
-  const { tenantId = '' } = options;
-  const tenantSegment = sanitizeTenantId(tenantId);
+  const { tenantId = '', personaId = null } = options;
 
   for (const [index, file] of processedFiles.entries()) {
     const baseName = createSafeBaseName(file.originalName, index);
-    const storageKeyBase = [tenantSegment, baseName].filter(Boolean).join('/') || 'file';
     const randomSuffix = crypto.randomBytes(4).toString('hex');
-    const artifactBaseKey = `${storageKeyBase}/${timestamp}_${index}_${randomSuffix}`;
+    const artifactBaseKey = buildProcessedKey(
+      tenantId,
+      personaId,
+      'artifacts',
+      baseName,
+      `${timestamp}_${index}_${randomSuffix}`
+    );
 
     if (file.fileType === 'excel') {
       const jsonKey = `${artifactBaseKey}.json`;
       const txtKey = `${artifactBaseKey}.txt`;
 
-      await saveJsonArtifact(jsonKey, file.data, { prettyPrint: true });
+      await saveJsonArtifact(jsonKey, file.data, { prettyPrint: true, tenantId, personaId });
 
       const textContent = file.data.map((row, i) => {
         const rowText = file.metadata.columns
@@ -620,14 +635,15 @@ export async function saveProcessedFiles(processedFiles, processedDir, options =
         return `Row ${i + 1}: ${rowText}`;
       }).join('\n');
 
-      await saveTextArtifact(txtKey, textContent, 'text/plain');
+      await saveTextArtifact(txtKey, textContent, 'text/plain', { tenantId, personaId });
 
       savedFiles.push({
         type: 'excel',
         name: file.originalName,
         storageKey: artifactBaseKey,
         jsonKey,
-        txtKey
+        txtKey,
+        persona: personaId || file.persona || null
       });
 
     } else if (['pdf', 'docx', 'txt'].includes(file.fileType)) {
@@ -635,7 +651,7 @@ export async function saveProcessedFiles(processedFiles, processedDir, options =
       const metaKey = `${artifactBaseKey}_meta.json`;
 
       if (file.data?.fullText) {
-        await saveTextArtifact(txtKey, file.data.fullText, 'text/plain');
+        await saveTextArtifact(txtKey, file.data.fullText, 'text/plain', { tenantId, personaId });
       } else {
         const triageNote = [
           '### Vision Processing ###',
@@ -646,7 +662,7 @@ export async function saveProcessedFiles(processedFiles, processedDir, options =
           file.artifacts?.parsedJsonPath ? `Parsed JSON: ${file.artifacts.parsedJsonPath}` : '',
           file.artifacts?.parsedStorageKey ? `Parsed Storage Key: ${file.artifacts.parsedStorageKey}` : ''
         ].filter(Boolean).join('\n');
-        await saveTextArtifact(txtKey, triageNote, 'text/plain');
+        await saveTextArtifact(txtKey, triageNote, 'text/plain', { tenantId, personaId });
       }
 
       const metaPayload = {
@@ -654,9 +670,10 @@ export async function saveProcessedFiles(processedFiles, processedDir, options =
         fileType: file.fileType,
         metadata: file.metadata,
         triage: file.triage || null,
+        persona: personaId || file.persona || null,
         artifacts: file.artifacts || null
       };
-      await saveJsonArtifact(metaKey, metaPayload, { prettyPrint: true });
+      await saveJsonArtifact(metaKey, metaPayload, { prettyPrint: true, tenantId, personaId });
 
       savedFiles.push({
         type: file.fileType,
@@ -664,6 +681,7 @@ export async function saveProcessedFiles(processedFiles, processedDir, options =
         storageKey: artifactBaseKey,
         txtKey,
         metaKey,
+        persona: personaId || file.persona || null,
         artifacts: file.artifacts || null
       });
     }

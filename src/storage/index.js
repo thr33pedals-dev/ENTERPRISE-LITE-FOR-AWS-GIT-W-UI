@@ -25,14 +25,15 @@ function resolveOptions(rawOptions = {}) {
   }
 
   if (backend === 's3') {
-    const bucket = rawOptions.bucket || process.env.S3_BUCKET;
-    if (!bucket) {
+    const processedBucket = rawOptions.bucket || process.env.S3_BUCKET;
+    if (!processedBucket) {
       throw new Error('STORAGE_BACKEND is set to "s3" but S3_BUCKET is not configured.');
     }
 
     return {
       backend,
-      bucket,
+      bucket: processedBucket,
+      rawBucket: rawOptions.rawBucket || process.env.S3_RAW_BUCKET || processedBucket,
       prefix,
       region: rawOptions.region || process.env.S3_REGION,
       endpoint: rawOptions.endpoint || process.env.S3_ENDPOINT,
@@ -51,6 +52,7 @@ function createStorageInstance(resolved) {
 
   return createS3Storage({
     bucket: resolved.bucket,
+    rawBucket: resolved.rawBucket,
     prefix: resolved.prefix,
     region: resolved.region,
     endpoint: resolved.endpoint,
@@ -64,6 +66,7 @@ function getCacheKey(resolved) {
     backend: resolved.backend,
     baseDir: resolved.baseDir,
     bucket: resolved.bucket,
+    rawBucket: resolved.rawBucket,
     prefix: resolved.prefix,
     region: resolved.region,
     endpoint: resolved.endpoint,
