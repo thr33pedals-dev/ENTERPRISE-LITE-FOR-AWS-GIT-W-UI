@@ -28,7 +28,7 @@
     }
   },
   
-  "postCreateCommand": "npm install",
+  "postCreateCommand": "bash .devcontainer/setup.sh",
   
   "remoteUser": "node"
 }
