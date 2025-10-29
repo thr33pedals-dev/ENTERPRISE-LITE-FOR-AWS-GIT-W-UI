@@ -44,12 +44,13 @@ export async function uploadOriginalFile({ tenantId, file }) {
 
   const safeName = sanitizeFileName(file.originalname);
   const key = `${tenantId}/raw/${Date.now()}-${safeName}`;
+  const body = await resolveUploadBuffer(file);
 
   await s3Client.send(
     new PutObjectCommand({
       Bucket: uploadBucket,
       Key: key,
-      Body: await fs.promises.readFile(file.path),
+      Body: body,
       ContentType: file.mimetype || 'application/octet-stream'
     })
   );
@@ -303,4 +304,20 @@ export const storageHelpers = {
   sanitizeFileName,
   streamToString
 };
+
+async function resolveUploadBuffer(file) {
+  if (file?.buffer && file.buffer.length) {
+    return Buffer.isBuffer(file.buffer) ? file.buffer : Buffer.from(file.buffer);
+  }
+
+  if (file?.rawBuffer && file.rawBuffer.length) {
+    return Buffer.isBuffer(file.rawBuffer) ? file.rawBuffer : Buffer.from(file.rawBuffer);
+  }
+
+  if (file?.path) {
+    return fs.promises.readFile(file.path);
+  }
+
+  throw new Error('Upload buffer unavailable');
+}
 

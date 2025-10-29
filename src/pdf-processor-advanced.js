@@ -4,7 +4,6 @@
  */
 
 import pkg from 'pdf.js-extract';
-import fs from 'fs';
 import pdfParse from 'pdf-parse/lib/pdf-parse.js';
 
 const { PDFExtract } = pkg;
@@ -27,11 +26,12 @@ export async function processPDFAdvanced(file) {
       disableCombineTextItems: false
     };
 
-    const data = await pdfExtract.extract(file.path, options);
+    const pdfBuffer = await ensurePdfBuffer(file);
+    const data = await pdfExtract.extractBuffer(pdfBuffer, options);
     
     if (!data || !data.pages || data.pages.length === 0) {
       console.log('⚠️ PDFExtract failed, falling back to basic extraction');
-      return await processPDFBasic(file);
+      return await processPDFBasic(file, pdfBuffer);
     }
 
     // Process each page with structure preservation
@@ -315,8 +315,8 @@ function formatTableAsMarkdown(table) {
 /**
  * Fallback to basic PDF processing
  */
-async function processPDFBasic(file) {
-  const dataBuffer = fs.readFileSync(file.path);
+async function processPDFBasic(file, bufferOverride = null) {
+  const dataBuffer = bufferOverride || await ensurePdfBuffer(file);
   const pdfData = await pdfParse(dataBuffer);
   
   if (!pdfData.text || pdfData.text.trim().length === 0) {
@@ -345,5 +345,17 @@ async function processPDFBasic(file) {
       extractionMethod: 'basic'
     }
   };
+}
+
+async function ensurePdfBuffer(file) {
+  if (file?.buffer && file.buffer.length) {
+    return Buffer.isBuffer(file.buffer) ? file.buffer : Buffer.from(file.buffer);
+  }
+
+  if (file?.rawBuffer && file.rawBuffer.length) {
+    return Buffer.isBuffer(file.rawBuffer) ? file.rawBuffer : Buffer.from(file.rawBuffer);
+  }
+
+  throw new Error(`PDF buffer unavailable for ${file?.originalname || 'uploaded file'}`);
 }
 

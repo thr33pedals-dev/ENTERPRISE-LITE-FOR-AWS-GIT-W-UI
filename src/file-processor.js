@@ -1,5 +1,4 @@
 import XLSX from 'xlsx';
-import fs from 'fs';
 import path from 'path';
 import crypto from 'crypto';
 import pdfParse from 'pdf-parse/lib/pdf-parse.js';
@@ -57,7 +56,6 @@ export async function processFiles(files, options = {}) {
             quality: triageResult.textQuality,
             recommendedTool: triageResult.recommendedTool || null
           },
-          originalPath: file.path,
           artifacts: triageResult.artifacts || null
         });
 
@@ -259,7 +257,7 @@ async function triagePdfFile(file, tenantId = 'default', personaId = null) {
 }
 
 async function quickPdfExtract(file) {
-  const dataBuffer = fs.readFileSync(file.path);
+  const dataBuffer = await resolveFileBuffer(file);
   const pdfData = await pdfParse(dataBuffer);
 
   const text = pdfData.text || '';
@@ -417,7 +415,9 @@ function evaluateTableConfidence(rawText, pageCount = 1) {
  * Extracts calculated VLOOKUP values
  */
 async function processExcelFile(file, options = {}) {
-  const workbook = XLSX.readFile(file.path, {
+  const fileBuffer = await resolveFileBuffer(file);
+  const workbook = XLSX.read(fileBuffer, {
+    type: 'buffer',
     cellFormula: false,  // Get calculated values, not formulas
     cellDates: true,
     cellNF: false,
@@ -485,7 +485,8 @@ async function processPDFFile(file) {
  * Extracts text content with basic formatting
  */
 async function processDOCXFile(file, options = {}) {
-  const result = await mammoth.extractRawText({ path: file.path });
+  const fileBuffer = await resolveFileBuffer(file);
+  const result = await mammoth.extractRawText({ buffer: fileBuffer });
 
   if (!result.value || result.value.trim().length === 0) {
     throw new Error('DOCX file appears to be empty');
@@ -518,7 +519,8 @@ async function processDOCXFile(file, options = {}) {
  * Process plain text files
  */
 async function processTXTFile(file, options = {}) {
-  const text = fs.readFileSync(file.path, 'utf-8');
+  const fileBuffer = await resolveFileBuffer(file);
+  const text = fileBuffer.toString('utf-8');
 
   if (!text || text.trim().length === 0) {
     throw new Error('Text file is empty');
@@ -538,6 +540,18 @@ async function processTXTFile(file, options = {}) {
       textLength: text.length
     }
   };
+}
+
+async function resolveFileBuffer(file) {
+  if (file?.buffer && file.buffer.length) {
+    return Buffer.isBuffer(file.buffer) ? file.buffer : Buffer.from(file.buffer);
+  }
+
+  if (file?.rawBuffer && file.rawBuffer.length) {
+    return Buffer.isBuffer(file.rawBuffer) ? file.rawBuffer : Buffer.from(file.rawBuffer);
+  }
+
+  throw new Error(`File buffer unavailable for ${file?.originalname || 'uploaded file'}`);
 }
 
 /**

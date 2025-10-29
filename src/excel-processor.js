@@ -1,5 +1,4 @@
 import XLSX from 'xlsx';
-import fs from 'fs';
 
 /**
  * Process multiple Excel files and extract data
@@ -16,7 +15,9 @@ export async function processExcelFiles(files) {
       console.log(`📄 Processing: ${file.originalname}`);
 
       // Read Excel file
-      const workbook = XLSX.readFile(file.path, {
+      const fileBuffer = await ensureBuffer(file);
+      const workbook = XLSX.read(fileBuffer, {
+        type: 'buffer',
         cellFormula: false,  // Get calculated values, not formulas
         cellDates: true,     // Convert Excel dates to JS dates
         cellNF: false,       // Don't include number formats
@@ -204,6 +205,18 @@ export function validateExcelFile(file) {
     errors: errors,
     warnings: warnings
   };
+}
+
+async function ensureBuffer(file) {
+  if (file?.buffer && file.buffer.length) {
+    return Buffer.isBuffer(file.buffer) ? file.buffer : Buffer.from(file.buffer);
+  }
+
+  if (file?.rawBuffer && file.rawBuffer.length) {
+    return Buffer.isBuffer(file.rawBuffer) ? file.rawBuffer : Buffer.from(file.rawBuffer);
+  }
+
+  throw new Error(`Excel buffer unavailable for ${file?.originalname || 'uploaded file'}`);
 }
 
 

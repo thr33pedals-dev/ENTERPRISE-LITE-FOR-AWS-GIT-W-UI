@@ -170,7 +170,7 @@ function buildVisionPayload({ quickExtract, advancedData }) {
 
 export async function runVisionPipeline({ file, tenantId, personaId = null, quickExtract = null, reason = 'manual_trigger' }) {
   const visionEnabled = process.env.VISION_ENABLED === 'true';
-  if (!visionEnabled || !file?.path) {
+  if (!visionEnabled || !file) {
     return null;
   }
 
@@ -203,7 +203,7 @@ export async function runVisionPipeline({ file, tenantId, personaId = null, quic
     let combinedText = '';
 
     try {
-      const pdfBuffer = fs.readFileSync(file.path);
+      const pdfBuffer = await ensureVisionBuffer(file);
       const pdfBase64 = pdfBuffer.toString('base64');
 
       const client = getAnthropicClient();
@@ -359,4 +359,16 @@ export async function runVisionPipeline({ file, tenantId, personaId = null, quic
     console.error('Vision pipeline failed:', error);
     return null;
   }
+}
+
+async function ensureVisionBuffer(file) {
+  if (file?.buffer && file.buffer.length) {
+    return Buffer.isBuffer(file.buffer) ? file.buffer : Buffer.from(file.buffer);
+  }
+
+  if (file?.rawBuffer && file.rawBuffer.length) {
+    return Buffer.isBuffer(file.rawBuffer) ? file.rawBuffer : Buffer.from(file.rawBuffer);
+  }
+
+  throw new Error(`Vision pipeline requires a buffer for ${file?.originalname || 'uploaded file'}`);
 }

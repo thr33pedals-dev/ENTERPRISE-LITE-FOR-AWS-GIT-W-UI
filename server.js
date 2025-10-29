@@ -219,25 +219,8 @@ function serializeTranscriptToText(transcript) {
 }
 
 // Configure multer for file uploads
-const uploadStorage = multer.diskStorage({
-  destination: (req, file, cb) => {
-    if (req.uploadTempDir) {
-      return cb(null, req.uploadTempDir);
-    }
-    fs.mkdtemp(path.join(os.tmpdir(), 'enterprise-lite-'), (err, folder) => {
-      if (err) return cb(err);
-      req.uploadTempDir = folder;
-      cb(null, folder);
-    });
-  },
-  filename: (req, file, cb) => {
-    const uniqueSuffix = Date.now() + '-' + Math.round(Math.random() * 1E9);
-    cb(null, uniqueSuffix + '-' + file.originalname);
-  }
-});
-
 const upload = multer({
-  storage: uploadStorage,
+  storage: multer.memoryStorage(),
   limits: {
     fileSize: parseInt(process.env.MAX_FILE_SIZE) || 10 * 1024 * 1024,
     files: parseInt(process.env.MAX_FILES) || 10
@@ -299,7 +282,10 @@ app.post('/api/upload', upload.array('files', 10), async (req, res) => {
       const safeBase = safeSegment(originalBase || `upload-${index}`, `upload-${index}`);
       const rawFilename = `${timestampSeed}-${index}-${safeBase}${originalExt}`;
       const rawKey = buildRawKey(tenantId, personaId, rawFilename);
-      const fileBuffer = await fs.promises.readFile(file.path);
+      const fileBuffer = file.buffer ? Buffer.from(file.buffer) : null;
+      if (!fileBuffer) {
+        throw new Error(`Upload for ${file.originalname || `file-${index}`} did not include a buffer`);
+      }
       await storage.save(rawKey, fileBuffer, { contentType: file.mimetype || 'application/octet-stream', raw: true });
       const artifact = { rawKey, mimetype: file.mimetype, size: file.size, originalName: file.originalname };
       uploadedRawKeys.push(rawKey);
@@ -307,6 +293,11 @@ app.post('/api/upload', upload.array('files', 10), async (req, res) => {
       if (file.originalname) {
         rawArtifactByName.set(file.originalname, artifact);
       }
+
+      file.rawKey = rawKey;
+      file.tenantId = tenantId;
+      file.personaId = personaId;
+      file.storageBackend = storage.backend;
     }
 
     // Process all files (Excel, PDF, DOCX, TXT, CSV)
@@ -435,13 +426,6 @@ app.post('/api/upload', upload.array('files', 10), async (req, res) => {
 
     const saveKey = await saveTenantManifest(tenantId, manifest, personaId);
 
-    await Promise.all((req.files || []).map(file => (
-      file?.path ? fs.promises.unlink(file.path).catch(() => {}) : Promise.resolve()
-    )));
-    if (req.uploadTempDir) {
-      await fs.promises.rm(req.uploadTempDir, { recursive: true, force: true }).catch(() => {});
-    }
-
     console.log('✅ Files processed successfully');
     console.log(`📊 Total files: ${processedFiles.length}`);
     console.log(`📋 Tracking: ${categories.tracking.length}, Knowledge: ${categories.knowledge.length}`);
@@ -480,14 +464,6 @@ app.post('/api/upload', upload.array('files', 10), async (req, res) => {
   } catch (error) {
     console.error('❌ Upload error:', error);
     
-    if (req.files) {
-      await Promise.all(req.files.map(file => (
-        file?.path ? fs.promises.unlink(file.path).catch(() => {}) : Promise.resolve()
-      )));
-    }
-    if (req.uploadTempDir) {
-      await fs.promises.rm(req.uploadTempDir, { recursive: true, force: true }).catch(() => {});
-    }
     if (uploadedRawKeys?.length) {
       const storage = getStorage();
       await Promise.all(uploadedRawKeys.map(key => storage.remove(key, { raw: true }).catch(() => {})));

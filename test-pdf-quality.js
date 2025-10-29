@@ -41,11 +41,13 @@ async function testPDFQuality() {
   try {
     // Create mock multer file object
     const stats = fs.statSync(pdfPath);
+    const fileBuffer = await fs.promises.readFile(pdfPath);
     const mockFile = {
       originalname: path.basename(pdfPath),
       mimetype: 'application/pdf',
       path: pdfPath,
-      size: stats.size
+      size: stats.size,
+      buffer: fileBuffer
     };
 
     console.log('⏳ Extracting text from PDF...');
