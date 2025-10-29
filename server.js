@@ -129,6 +129,7 @@ const SUPPORT_AI_COLLECTION = 'support_ai';
 const INTERVIEW_AI_COLLECTION = 'interview_ai';
 const ANALYTICS_COLLECTION = 'usage_analytics';
 const TRANSCRIPTS_COLLECTION = 'transcripts';
+const PERSONAS_COLLECTION = 'personas';
 
 function getTenantId(req) {
   const headerTenant = req.headers['x-tenant-id'] || req.headers['x-tenant'];
@@ -144,6 +145,11 @@ function getPersonaId(req) {
   const queryPersona = req.query?.persona || req.query?.personaId;
   const candidate = headerPersona || bodyPersona || queryPersona;
   return candidate ? sanitizeTenantId(candidate) : null;
+}
+
+function sanitizePersonaKey(value) {
+  if (!value) return null;
+  return sanitizeTenantId(value) || null;
 }
 
 function getArtifactFilenames(entry) {
@@ -596,40 +602,325 @@ app.get('/api/quality-report', async (req, res) => {
  * GET /api/status
  */
 app.get('/api/status', async (req, res) => {
-  const tenantId = getTenantId(req);
-  const personaId = getPersonaId(req);
-  const manifest = await loadTenantManifest(tenantId, personaId);
-  const hasData = Boolean(manifest);
+  try {
+    const tenantId = getTenantId(req);
+    const personaId = getPersonaId(req);
+    const manifest = await loadTenantManifest(tenantId, personaId);
+    const hasData = Boolean(manifest);
 
-  const transcripts = await transcriptService.listByTenant(tenantId);
-  const totalTranscripts = transcripts.length;
-  const lastTranscriptAt = transcripts.reduce((latest, item) => {
-    if (!item?.lastMessageAt) return latest;
-    const ts = new Date(item.lastMessageAt).getTime();
-    return Math.max(latest, Number.isFinite(ts) ? ts : 0);
-  }, 0);
+    const transcripts = await transcriptService.listByTenant(tenantId);
+    const totalTranscripts = transcripts.length;
+    const lastTranscriptAt = transcripts.reduce((latest, item) => {
+      if (!item?.lastMessageAt) return latest;
+      const ts = new Date(item.lastMessageAt).getTime();
+      return Math.max(latest, Number.isFinite(ts) ? ts : 0);
+    }, 0);
 
-  res.json({
-    success: true,
-    status: {
-      serverRunning: true,
-      dataUploaded: hasData,
-      uploadTime: manifest?.uploadTime || null,
-      totalRecords: manifest?.mainFile?.rows || 0,
-      qualityScore: manifest?.qualityReport?.qualityScore || null,
-      totalFiles: manifest?.files?.length || 0,
-      fileTypes: manifest?.fileTypes || { tracking: 0, knowledge: 0, other: 0 },
-      claudeModel: process.env.CLAUDE_MODEL || 'claude-sonnet-4-20250514',
+    res.json({
+      success: true,
+      status: {
+        serverRunning: true,
+        dataUploaded: hasData,
+        uploadTime: manifest?.uploadTime || null,
+        totalRecords: manifest?.mainFile?.rows || 0,
+        qualityScore: manifest?.qualityReport?.qualityScore || null,
+        totalFiles: manifest?.files?.length || 0,
+        fileTypes: manifest?.fileTypes || { tracking: 0, knowledge: 0, other: 0 },
+        claudeModel: process.env.CLAUDE_MODEL || 'claude-sonnet-4-20250514',
+        tenantId,
+        persona: personaId || null,
+        manifestPath: manifest ? manifestRelativePath(tenantId, personaId) : null,
+        transcripts: {
+          total: totalTranscripts,
+          lastMessageAt: lastTranscriptAt ? new Date(lastTranscriptAt).toISOString() : null
+        }
+      },
+      manifest: manifest
+    });
+  } catch (error) {
+    console.error('❌ Status error:', error);
+    res.status(500).json({
+      success: false,
+      error: error.message || 'Failed to load status'
+    });
+  }
+});
+
+app.get('/api/companies', async (req, res) => {
+  try {
+    const tenantId = getTenantId(req);
+    const personaId = getPersonaId(req);
+    const companies = await dataStore.list(
+      COMPANIES_COLLECTION,
+      null,
+      { tenantId, personaId }
+    );
+
+    res.json(companies);
+  } catch (error) {
+    console.error('Failed to list companies:', error);
+    res.status(500).json({ error: 'Unable to load companies' });
+  }
+});
+
+app.post('/api/companies', async (req, res) => {
+  try {
+    const tenantId = getTenantId(req);
+    const personaId = getPersonaId(req);
+    const payload = {
+      ...(req.body || {}),
       tenantId,
-      persona: personaId || null,
-      manifestPath: manifest ? manifestRelativePath(tenantId, personaId) : null,
-      transcripts: {
-        total: totalTranscripts,
-        lastMessageAt: lastTranscriptAt ? new Date(lastTranscriptAt).toISOString() : null
+      persona: personaId || null
+    };
+
+    const record = await dataStore.create(
+      COMPANIES_COLLECTION,
+      payload,
+      { tenantId, personaId }
+    );
+
+    res.status(201).json(record);
+  } catch (error) {
+    console.error('Failed to create company:', error);
+    res.status(500).json({ error: 'Unable to create company record' });
+  }
+});
+
+app.get('/api/companies/:id', async (req, res) => {
+  try {
+    const tenantId = getTenantId(req);
+    const personaId = getPersonaId(req);
+    const record = await dataStore.get(
+      COMPANIES_COLLECTION,
+      req.params.id,
+      { tenantId, personaId }
+    );
+
+    if (!record) {
+      return res.status(404).json({ error: 'Company not found' });
+    }
+
+    res.json(record);
+  } catch (error) {
+    console.error('Failed to load company:', error);
+    res.status(500).json({ error: 'Unable to load company' });
+  }
+});
+
+app.patch('/api/companies/:id', async (req, res) => {
+  try {
+    const tenantId = getTenantId(req);
+    const personaId = getPersonaId(req);
+    const companyId = req.params.id;
+    const existing = await dataStore.get(
+      COMPANIES_COLLECTION,
+      companyId,
+      { tenantId, personaId }
+    );
+
+    if (!existing) {
+      return res.status(404).json({ error: 'Company not found' });
+    }
+
+    const updates = { ...(req.body || {}) };
+    delete updates.id;
+    delete updates.tenantId;
+    delete updates.persona;
+
+    const record = await dataStore.update(
+      COMPANIES_COLLECTION,
+      companyId,
+      {
+        ...updates,
+        tenantId,
+        persona: personaId || existing.persona || null
+      },
+      { tenantId, personaId }
+    );
+
+    res.json(record);
+  } catch (error) {
+    console.error('Failed to update company:', error);
+    res.status(500).json({ error: 'Unable to update company' });
+  }
+});
+
+app.delete('/api/companies/:id', async (req, res) => {
+  try {
+    const tenantId = getTenantId(req);
+    const personaId = getPersonaId(req);
+    const deleted = await dataStore.delete(
+      COMPANIES_COLLECTION,
+      req.params.id,
+      { tenantId, personaId }
+    );
+
+    if (!deleted) {
+      return res.status(404).json({ error: 'Company not found' });
+    }
+
+    res.json({ deleted: true });
+  } catch (error) {
+    console.error('Failed to delete company:', error);
+    res.status(500).json({ error: 'Unable to delete company' });
+  }
+});
+
+app.get('/api/personas', async (req, res) => {
+  try {
+    const tenantId = getTenantId(req);
+    const personas = await dataStore.list(
+      PERSONAS_COLLECTION,
+      null,
+      { tenantId }
+    );
+
+    res.json({
+      success: true,
+      tenantId,
+      count: personas.length,
+      data: personas
+    });
+  } catch (error) {
+    console.error('Failed to list personas:', error);
+    res.status(500).json({ success: false, error: 'Unable to load personas' });
+  }
+});
+
+app.post('/api/personas', async (req, res) => {
+  try {
+    const tenantId = getTenantId(req);
+    const { name, description, personaId: rawPersonaId, type, config, metadata } = req.body || {};
+
+    if (!name || typeof name !== 'string') {
+      return res.status(400).json({ success: false, error: 'Persona name is required' });
+    }
+
+    const personaKey = sanitizePersonaKey(rawPersonaId || name);
+    if (!personaKey) {
+      return res.status(400).json({ success: false, error: 'Invalid persona identifier' });
+    }
+
+    const existing = await dataStore.list(
+      PERSONAS_COLLECTION,
+      record => record?.personaId === personaKey,
+      { tenantId }
+    );
+    if (existing.length > 0) {
+      return res.status(409).json({ success: false, error: 'Persona already exists' });
+    }
+
+    const payload = {
+      name,
+      description: description || '',
+      personaId: personaKey,
+      tenantId,
+      type: type || 'custom',
+      config: config ?? null,
+      metadata: metadata ?? null
+    };
+
+    const record = await dataStore.create(
+      PERSONAS_COLLECTION,
+      payload,
+      { tenantId }
+    );
+
+    res.status(201).json({ success: true, record });
+  } catch (error) {
+    console.error('Failed to create persona:', error);
+    res.status(500).json({ success: false, error: 'Unable to create persona' });
+  }
+});
+
+app.get('/api/personas/:id', async (req, res) => {
+  try {
+    const tenantId = getTenantId(req);
+    const record = await dataStore.get(
+      PERSONAS_COLLECTION,
+      req.params.id,
+      { tenantId }
+    );
+
+    if (!record) {
+      return res.status(404).json({ success: false, error: 'Persona not found' });
+    }
+
+    res.json({ success: true, record });
+  } catch (error) {
+    console.error('Failed to load persona:', error);
+    res.status(500).json({ success: false, error: 'Unable to load persona' });
+  }
+});
+
+app.patch('/api/personas/:id', async (req, res) => {
+  try {
+    const tenantId = getTenantId(req);
+    const personaId = req.params.id;
+    const existing = await dataStore.get(
+      PERSONAS_COLLECTION,
+      personaId,
+      { tenantId }
+    );
+
+    if (!existing) {
+      return res.status(404).json({ success: false, error: 'Persona not found' });
+    }
+
+    const updates = { ...(req.body || {}) };
+    if (updates.personaId) {
+      const newKey = sanitizePersonaKey(updates.personaId);
+      if (!newKey) {
+        return res.status(400).json({ success: false, error: 'Invalid persona identifier' });
       }
-    },
-    manifest: manifest
-  });
+
+      const conflict = await dataStore.list(
+        PERSONAS_COLLECTION,
+        record => record?.personaId === newKey && record?.id !== personaId,
+        { tenantId }
+      );
+      if (conflict.length > 0) {
+        return res.status(409).json({ success: false, error: 'Persona identifier already in use' });
+      }
+
+      updates.personaId = newKey;
+    }
+
+    delete updates.id;
+    delete updates.tenantId;
+
+    const record = await dataStore.update(
+      PERSONAS_COLLECTION,
+      personaId,
+      updates,
+      { tenantId }
+    );
+
+    res.json({ success: true, record });
+  } catch (error) {
+    console.error('Failed to update persona:', error);
+    res.status(500).json({ success: false, error: 'Unable to update persona' });
+  }
+});
+
+app.delete('/api/personas/:id', async (req, res) => {
+  try {
+    const tenantId = getTenantId(req);
+    const deleted = await dataStore.delete(
+      PERSONAS_COLLECTION,
+      req.params.id,
+      { tenantId }
+    );
+
+    if (!deleted) {
+      return res.status(404).json({ success: false, error: 'Persona not found' });
+    }
+
+    res.json({ success: true, deleted: true });
+  } catch (error) {
+    console.error('Failed to delete persona:', error);
+    res.status(500).json({ success: false, error: 'Unable to delete persona' });
+  }
 });
 
 /**

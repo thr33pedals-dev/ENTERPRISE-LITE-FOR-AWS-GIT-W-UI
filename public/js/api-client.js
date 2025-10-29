@@ -226,6 +226,56 @@
         return handleResponse(response);
     };
 
+    const listPersonas = async (options = {}) => {
+        const tenantId = resolveTenantId(options);
+        const response = await fetch(buildUrl('/api/personas', tenantId, null), {
+            headers: buildHeaders(tenantId)
+        });
+        return handleResponse(response);
+    };
+
+    const createPersona = async (payload = {}, options = {}) => {
+        const tenantId = resolveTenantId(options);
+        const body = {
+            name: payload.name,
+            description: payload.description || '',
+            personaId: payload.personaId || payload.key || undefined,
+            type: payload.type || 'custom',
+            config: payload.config ?? {},
+            metadata: payload.metadata ?? {}
+        };
+        const response = await fetch('/api/personas', {
+            method: 'POST',
+            headers: buildHeaders(tenantId, null, { 'Content-Type': 'application/json' }),
+            body: JSON.stringify(body)
+        });
+        return handleResponse(response);
+    };
+
+    const updatePersona = async (id, updates = {}, options = {}) => {
+        if (!id) throw new Error('persona id is required');
+        const tenantId = resolveTenantId(options);
+        const body = {
+            ...updates
+        };
+        const response = await fetch(`/api/personas/${encodeURIComponent(id)}`, {
+            method: 'PATCH',
+            headers: buildHeaders(tenantId, null, { 'Content-Type': 'application/json' }),
+            body: JSON.stringify(body)
+        });
+        return handleResponse(response);
+    };
+
+    const deletePersona = async (id, options = {}) => {
+        if (!id) throw new Error('persona id is required');
+        const tenantId = resolveTenantId(options);
+        const response = await fetch(`/api/personas/${encodeURIComponent(id)}`, {
+            method: 'DELETE',
+            headers: buildHeaders(tenantId)
+        });
+        return handleResponse(response);
+    };
+
     global.SMEAIClient = {
         uploadFiles,
         getStatus,
@@ -241,6 +291,10 @@
         upsertConfig,
         deleteConfig,
         exportTranscript,
-        sendTranscript
+        sendTranscript,
+        listPersonas,
+        createPersona,
+        updatePersona,
+        deletePersona
     };
 })(window);

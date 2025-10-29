@@ -394,6 +394,9 @@
                             <button class="account-tab active py-4 px-1 border-b-2 border-red-500 font-medium text-sm primary-text" data-tab="profile">
                                 Profile
                             </button>
+                            <button class="account-tab py-4 px-1 border-b-2 border-transparent font-medium text-sm text-gray-500 hover:text-gray-700" data-tab="personas">
+                                Personas
+                            </button>
                             <button class="account-tab py-4 px-1 border-b-2 border-transparent font-medium text-sm text-gray-500 hover:text-gray-700" data-tab="subscription">
                                 Subscription
                             </button>
@@ -439,6 +442,55 @@
                                 <button class="primary-bg hover:bg-red-700 text-white px-4 py-2 rounded-lg transition">
                                     <i class="fas fa-edit mr-2"></i>Edit Information
                                 </button>
+                            </div>
+                        </div>
+
+                        <div id="personas-tab" class="tab-content hidden">
+                            <div class="grid lg:grid-cols-2 gap-6">
+                                <div class="bg-white border border-gray-200 rounded-xl shadow-sm p-6">
+                                    <div class="flex items-center justify-between mb-4">
+                                        <div>
+                                            <h3 class="text-lg font-semibold text-gray-800">Persona Catalog</h3>
+                                            <p class="text-sm text-gray-500">Manage the AI personas available to your team</p>
+                                        </div>
+                                        <button id="refreshPersonas" class="text-sm text-blue-600 hover:underline">Refresh</button>
+                                    </div>
+                                    <div id="personaList" class="space-y-3">
+                                        <div class="text-gray-500 text-sm">Loading personas...</div>
+                                    </div>
+                                </div>
+
+                                <div class="bg-white border border-gray-200 rounded-xl shadow-sm p-6">
+                                    <h3 class="text-lg font-semibold text-gray-800 mb-4">Create Persona</h3>
+                                    <form id="createPersonaForm" class="space-y-4">
+                                        <div>
+                                            <label class="block text-sm font-medium text-gray-700 mb-1" for="personaName">Display Name</label>
+                                            <input id="personaName" name="personaName" type="text" class="w-full border border-gray-300 rounded-lg px-3 py-2 focus:outline-none focus:ring-2 focus:ring-red-400" placeholder="e.g. Compliance Advisor" required>
+                                        </div>
+                                        <div>
+                                            <label class="block text-sm font-medium text-gray-700 mb-1" for="personaKey">Persona ID (optional)</label>
+                                            <input id="personaKey" name="personaKey" type="text" class="w-full border border-gray-300 rounded-lg px-3 py-2 focus:outline-none focus:ring-2 focus:ring-red-400" placeholder="Used in API calls (letters, numbers, '-')">
+                                            <p class="text-xs text-gray-500 mt-1">Leave blank to auto-generate from the name.</p>
+                                        </div>
+                                        <div>
+                                            <label class="block text-sm font-medium text-gray-700 mb-1" for="personaDescription">Description</label>
+                                            <textarea id="personaDescription" name="personaDescription" rows="3" class="w-full border border-gray-300 rounded-lg px-3 py-2 focus:outline-none focus:ring-2 focus:ring-red-400" placeholder="What is this persona responsible for?"></textarea>
+                                        </div>
+                                        <div>
+                                            <label class="block text-sm font-medium text-gray-700 mb-1" for="personaType">Persona Type</label>
+                                            <select id="personaType" name="personaType" class="w-full border border-gray-300 rounded-lg px-3 py-2 focus:outline-none focus:ring-2 focus:ring-red-400">
+                                                <option value="custom">Custom</option>
+                                                <option value="sales">Sales</option>
+                                                <option value="support">Support</option>
+                                                <option value="interview">Interview</option>
+                                                <option value="core">Core</option>
+                                            </select>
+                                        </div>
+                                        <button type="submit" class="primary-bg hover:bg-red-700 text-white px-4 py-2 rounded-lg transition w-full">
+                                            <i class="fas fa-plus mr-2"></i>Create Persona
+                                        </button>
+                                    </form>
+                                </div>
                             </div>
                         </div>
 

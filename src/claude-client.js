@@ -514,7 +514,7 @@ For GENERAL questions:
 4. If information is uncertain or incomplete, say so
 
 Answer in a friendly, professional tone. Don't mention file formats or JSON - just provide the information naturally as if you're a knowledgeable assistant.
-Always cite the document name and reference the relevant section or quotation, even if the same question is asked repeatedly.";
+**Finally, and most importantly: After providing your full answer, you MUST conclude with a '## References' section that lists the document name and page/section you used.**";
 `;
 
     } catch (error) {

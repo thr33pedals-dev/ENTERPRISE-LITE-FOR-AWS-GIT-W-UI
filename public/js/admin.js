@@ -30,6 +30,9 @@ class AdminDashboard {
             support: { ...PLACEHOLDER_METRICS.support },
             interview: { ...PLACEHOLDER_METRICS.interview }
         };
+        this.personas = [];
+        this.personaListEl = null;
+        this.personaFormEl = null;
         this.updateAgentDashboards();
         this.init();
     }
@@ -37,6 +40,7 @@ class AdminDashboard {
     init() {
         this.checkAuthentication();
         this.setupEventListeners();
+        this.initializePersonaManager();
         this.loadAllData();
         this.initializeCharts();
         this.loadTranscripts();
@@ -69,6 +73,16 @@ class AdminDashboard {
             this.currentUser = previewUser;
             localStorage.setItem('currentUser', JSON.stringify(previewUser));
         }
+    }
+
+    getTenantIdForRequests() {
+        if (this.currentUser?.tenantId) {
+            return this.currentUser.tenantId;
+        }
+        if (window.platform && typeof window.platform.getTenantId === 'function') {
+            return window.platform.getTenantId();
+        }
+        return 'default';
     }
 
     setupEventListeners() {
@@ -946,6 +960,196 @@ ${this.generateRecommendations()}
         } catch (error) {
             console.error('Transcript send error:', error);
             this.showNotification('Unable to send transcript', 'error');
+        }
+    }
+
+    initializePersonaManager() {
+        this.personaListEl = document.getElementById('personaList');
+        this.personaFormEl = document.getElementById('createPersonaForm');
+
+        if (this.personaFormEl) {
+            this.personaFormEl.addEventListener('submit', (event) => this.handleCreatePersona(event));
+        }
+
+        if (this.personaListEl) {
+            this.personaListEl.addEventListener('click', (event) => this.handlePersonaListClick(event));
+        }
+
+        const refreshBtn = document.getElementById('refreshPersonas');
+        if (refreshBtn) {
+            refreshBtn.addEventListener('click', () => this.loadPersonas());
+        }
+
+        if (this.personaListEl) {
+            this.renderPersonaList();
+            this.loadPersonas();
+        }
+    }
+
+    async loadPersonas() {
+        if (!this.personaListEl) return;
+        this.personaListEl.innerHTML = '<div class="text-gray-500 text-sm">Loading personas...</div>';
+        try {
+            const tenantId = this.getTenantIdForRequests();
+            const response = await SMEAIClient.listPersonas({ tenantId });
+            const records = Array.isArray(response?.data) ? response.data : (Array.isArray(response) ? response : []);
+            this.personas = records;
+            this.renderPersonaList();
+        } catch (error) {
+            console.error('Failed to load personas:', error);
+            this.personas = [];
+            this.renderPersonaList(true);
+            this.showNotification('Unable to load personas right now.', 'error');
+        }
+    }
+
+    renderPersonaList(showError = false) {
+        if (!this.personaListEl) return;
+        if (showError) {
+            this.personaListEl.innerHTML = '<div class="text-red-500 text-sm">Unable to load personas. Please try again later.</div>';
+            return;
+        }
+        if (!this.personas || this.personas.length === 0) {
+            this.personaListEl.innerHTML = '<div class="text-gray-500 text-sm">No personas created yet. Use the form to add one.</div>';
+            return;
+        }
+
+        const fragments = this.personas.map((persona) => {
+            const recordId = persona.id || '';
+            const personaKey = persona.personaId || recordId;
+            const typeLabel = (persona.type || 'custom').toUpperCase();
+            const description = persona.description && persona.description.trim().length
+                ? persona.description
+                : 'No description provided.';
+            const actionsDisabled = recordId ? '' : 'disabled';
+            const actionClasses = recordId ? 'text-sm text-blue-600 hover:underline'
+                : 'text-sm text-blue-300 cursor-not-allowed';
+            const deleteClasses = recordId ? 'text-sm text-red-600 hover:underline'
+                : 'text-sm text-red-300 cursor-not-allowed';
+
+            return `
+                <div class="border border-gray-200 rounded-lg p-4">
+                    <div class="flex items-start justify-between">
+                        <div>
+                            <div class="text-sm text-gray-500">${personaKey || 'unknown-key'}</div>
+                            <div class="text-lg font-semibold text-gray-800">${persona.name || personaKey || 'Unnamed Persona'}</div>
+                            <div class="text-xs inline-flex px-2 py-1 mt-1 rounded bg-gray-100 text-gray-600">${typeLabel}</div>
+                        </div>
+                        <div class="space-x-2">
+                            <button class="${actionClasses}" data-action="edit" data-id="${recordId}" ${actionsDisabled}>Edit</button>
+                            <button class="${deleteClasses}" data-action="delete" data-id="${recordId}" ${actionsDisabled}>Delete</button>
+                        </div>
+                    </div>
+                    <p class="text-sm text-gray-600 mt-3">${description}</p>
+                </div>
+            `;
+        });
+
+        this.personaListEl.innerHTML = fragments.join('');
+    }
+
+    async handleCreatePersona(event) {
+        event.preventDefault();
+        if (!this.personaFormEl) return;
+
+        const formData = new FormData(this.personaFormEl);
+        const name = (formData.get('personaName') || '').toString().trim();
+        const personaKey = (formData.get('personaKey') || '').toString().trim();
+        const description = (formData.get('personaDescription') || '').toString().trim();
+        const type = (formData.get('personaType') || 'custom').toString().trim();
+
+        if (!name) {
+            this.showNotification('Persona name is required.', 'error');
+            return;
+        }
+
+        const submitBtn = this.personaFormEl.querySelector('button[type="submit"]');
+        if (submitBtn) submitBtn.disabled = true;
+
+        try {
+            const tenantId = this.getTenantIdForRequests();
+            await SMEAIClient.createPersona({
+                name,
+                personaId: personaKey || undefined,
+                description,
+                type,
+                config: {}
+            }, { tenantId });
+            this.showNotification('Persona created successfully.', 'success');
+            this.personaFormEl.reset();
+            await this.loadPersonas();
+        } catch (error) {
+            console.error('Failed to create persona:', error);
+            this.showNotification(error?.message || 'Failed to create persona.', 'error');
+        } finally {
+            if (submitBtn) submitBtn.disabled = false;
+        }
+    }
+
+    async handlePersonaListClick(event) {
+        const actionBtn = event.target.closest('[data-action]');
+        if (!actionBtn || actionBtn.disabled) {
+            return;
+        }
+
+        const action = actionBtn.dataset.action;
+        const recordId = actionBtn.dataset.id;
+        const persona = this.personas.find(item => item.id === recordId);
+
+        if (!recordId || !persona) {
+            this.showNotification('This persona cannot be modified from the dashboard.', 'error');
+            return;
+        }
+
+        const tenantId = this.getTenantIdForRequests();
+
+        if (action === 'edit') {
+            const newName = prompt('Persona name', persona.name || persona.personaId || '');
+            if (newName === null) return;
+            const trimmedName = newName.trim();
+
+            const newDescription = prompt('Persona description', persona.description || '');
+            if (newDescription === null) return;
+            const trimmedDescription = newDescription.trim();
+
+            const updates = {};
+            if (trimmedName && trimmedName !== persona.name) {
+                updates.name = trimmedName;
+            }
+            if (trimmedDescription !== (persona.description || '')) {
+                updates.description = trimmedDescription;
+            }
+
+            if (Object.keys(updates).length === 0) {
+                this.showNotification('No changes made to the persona.', 'info');
+                return;
+            }
+
+            try {
+                await SMEAIClient.updatePersona(recordId, updates, { tenantId });
+                this.showNotification('Persona updated successfully.', 'success');
+                await this.loadPersonas();
+            } catch (error) {
+                console.error('Failed to update persona:', error);
+                this.showNotification(error?.message || 'Failed to update persona.', 'error');
+            }
+            return;
+        }
+
+        if (action === 'delete') {
+            const confirmDelete = confirm(`Delete persona "${persona.name || persona.personaId}"? This cannot be undone.`);
+            if (!confirmDelete) {
+                return;
+            }
+
+            try {
+                await SMEAIClient.deletePersona(recordId, { tenantId });
+                this.showNotification('Persona deleted successfully.', 'success');
+                await this.loadPersonas();
+            } catch (error) {
+                console.error('Failed to delete persona:', error);
+                this.showNotification(error?.message || 'Failed to delete persona.', 'error');
+            }
         }
     }
 }
