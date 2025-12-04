@@ -525,8 +525,34 @@ Answer in a friendly, professional tone. Don't mention file formats or JSON - ju
     return prompt;
   }
 
+  /**
+   * Raw chat without knowledge base context - for generating content
+   * @param {Array} messages - Array of {role, content} message objects
+   * @param {Object} options - Optional settings
+   * @returns {string} - AI response text
+   */
+  async function rawChat(messages, options = {}) {
+    try {
+      const systemPrompt = options.system || 'You are a helpful AI assistant. Respond in JSON format when requested.';
+      const maxTokens = options.maxTokens || 4096;
+      
+      const response = await anthropic.messages.create({
+        model: options.model || model,
+        max_tokens: maxTokens,
+        system: systemPrompt,
+        messages: messages
+      });
+
+      return extractTextFromResponse(response);
+    } catch (error) {
+      console.error('Raw chat error:', error);
+      throw error;
+    }
+  }
+
   return {
     chat,
+    rawChat,
     model
   };
 }

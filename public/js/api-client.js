@@ -8,7 +8,17 @@
         return 'default';
     };
 
-    const resolvePersona = (options = {}) => options.persona || options.personaId || null;
+    const resolvePersona = (options = {}) => {
+        if (options.persona) return options.persona;
+        if (options.personaId) return options.personaId;
+        if (global.PersonaStore?.getSelectedPersona) {
+            const selected = global.PersonaStore.getSelectedPersona();
+            if (selected) {
+                return selected.personaId || selected.id || null;
+            }
+        }
+        return null;
+    };
 
     const buildHeaders = (tenantId, personaId, base = {}) => ({
         ...base,

@@ -3,7 +3,69 @@ class SalesAIManager {
     constructor() {
         this.currentConfig = null;
         this.uploadedFiles = [];
+        this.defaultPersonaId = 'sales';
+        this.personaId = this.defaultPersonaId;
+        this.personaSubscription = null;
+        this.isInitialized = false;
+        this.bootstrap();
+    }
+
+    bootstrap() {
+        if (window.PersonaStore) {
+            this.personaSubscription = window.PersonaStore.subscribe((snapshot) => {
+                if (!snapshot) return;
+                if (snapshot.event === 'init' || snapshot.event === 'loaded' || snapshot.event === 'selection') {
+                    const nextId = this.extractPersonaId(snapshot.selectedPersona);
+                    if (nextId && nextId !== this.personaId) {
+                        this.personaId = nextId;
+                        if (this.isInitialized) {
+                            this.handlePersonaChange();
+                        }
+                    }
+                }
+            });
+
+            window.PersonaStore.loadPersonas({ preferredPersonaId: this.defaultPersonaId })
+                .then(({ selectedPersona }) => {
+                    const initialId = this.extractPersonaId(selectedPersona);
+                    if (initialId) {
+                        this.personaId = initialId;
+                    }
+                })
+                .catch((error) => {
+                    console.warn('SalesAI: unable to load personas, using defaults', error);
+                })
+                .finally(() => {
+                    this.init();
+                    this.isInitialized = true;
+                });
+            return;
+        }
+
         this.init();
+        this.isInitialized = true;
+    }
+
+    extractPersonaId(persona) {
+        if (!persona) return null;
+        return persona.personaId || persona.id || null;
+    }
+
+    getPersonaId() {
+        if (window.PersonaStore?.getSelectedPersona) {
+            const selected = window.PersonaStore.getSelectedPersona();
+            if (selected) {
+                return this.extractPersonaId(selected) || this.personaId;
+            }
+        }
+        return this.personaId || this.defaultPersonaId;
+    }
+
+    handlePersonaChange() {
+        if (!this.isInitialized) return;
+        this.currentConfig = null;
+        this.loadExistingConfiguration();
+        this.loadExistingManifest();
     }
 
     init() {
@@ -15,11 +77,18 @@ class SalesAIManager {
         this.loadExistingManifest();
     }
 
-    buildHeaders() {
-        const headers = new Headers({ 'Content-Type': 'application/json' });
-        if (window.platform?.getTenantId) {
-            headers.set('x-tenant-id', window.platform.getTenantId());
-        }
+    buildHeaders(extra = {}) {
+        const tenantId = window.platform?.getTenantId ? window.platform.getTenantId() : null;
+        const personaId = this.getPersonaId();
+        const base = window.SMEAIClient?.buildHeaders
+            ? window.SMEAIClient.buildHeaders(tenantId, personaId, extra)
+            : {
+                ...(extra || {}),
+                ...(tenantId ? { 'x-tenant-id': tenantId } : {}),
+                ...(personaId ? { 'x-persona-id': personaId } : {})
+            };
+
+        const headers = new Headers(base);
         if (this.currentUser?.id) {
             headers.set('x-company-id', this.currentUser.id);
         }
@@ -41,8 +110,8 @@ class SalesAIManager {
 
     setupSharedClients() {
         this.uploader = new SMEAIUploader({
-            tenantId: platform.getTenantId(),
-            persona: 'sales',
+            tenantIdResolver: () => platform.getTenantId(),
+            getPersonaId: () => this.getPersonaId(),
             onStatus: (type, message) => this.showNotification(message, type),
             onManifest: (manifest) => this.displayUploadedFiles(manifest),
             onQualityReport: (report) => this.updateQualitySummary(report),
@@ -138,6 +207,7 @@ class SalesAIManager {
                 this.uploadedFiles = [];
                 this.renderFilesList();
                 this.updateStatuses();
+                this.updateQualitySummary(null);
                 return;
             }
 
@@ -157,6 +227,8 @@ class SalesAIManager {
 
             this.renderFilesList();
             this.updateStatuses();
+            // Update quality summary with manifest's quality report if available
+            this.updateQualitySummary(manifest.qualityReport || null);
         };
     }
 
@@ -190,7 +262,7 @@ class SalesAIManager {
         for (let i = 0; i < files.length; i++) {
             const file = files[i];
             try {
-                const result = await SMEAIClient.uploadFiles([file], { tenantId: platform.getTenantId(), persona: 'sales' });
+                const result = await SMEAIClient.uploadFiles([file], { tenantId: platform.getTenantId(), persona: this.getPersonaId() });
                 if (result.success) {
                     this.updateUploadProgress(file.name, 100, 'completed');
                     await this.loadExistingManifest();
@@ -399,11 +471,7 @@ class SalesAIManager {
             response_tone: formData.responseTone
         };
 
-        const tenantId = platform.getTenantId();
-        const personaId = 'sales';
-        const headers = global.SMEAIClient
-            ? global.SMEAIClient.buildHeaders(tenantId, personaId, { 'Content-Type': 'application/json' })
-            : { 'Content-Type': 'application/json', 'x-tenant-id': tenantId, 'x-persona-id': personaId };
+        const headers = this.buildHeaders({ 'Content-Type': 'application/json' });
         const response = await fetch('/api/sales-ai', {
             method: 'POST',
             headers,
@@ -427,11 +495,7 @@ class SalesAIManager {
             response_tone: formData.responseTone
         };
 
-        const tenantId = platform.getTenantId();
-        const personaId = 'sales';
-        const headers = global.SMEAIClient
-            ? global.SMEAIClient.buildHeaders(tenantId, personaId, { 'Content-Type': 'application/json' })
-            : { 'Content-Type': 'application/json', 'x-tenant-id': tenantId, 'x-persona-id': personaId };
+        const headers = this.buildHeaders({ 'Content-Type': 'application/json' });
         const response = await fetch(`/api/sales-ai/${encodeURIComponent(this.currentConfig.id)}`, {
             method: 'PATCH',
             headers,
@@ -452,7 +516,11 @@ class SalesAIManager {
             return;
         }
         const tenantId = platform.getTenantId();
+        const personaId = this.getPersonaId();
         const params = new URLSearchParams({ tenant: tenantId, type: 'sales', config: 'preview' });
+        if (personaId) {
+            params.set('persona', personaId);
+        }
         const link = `${window.location.origin}/component-preview.html?${params.toString()}`;
         document.getElementById('aiLinkDisplay').value = link;
         this.showNotification('Sales AI link generated!', 'success');
@@ -463,11 +531,7 @@ class SalesAIManager {
     async updateAILinkRecord(link) {
         if (!this.currentConfig) return;
         try {
-            const tenantId = platform.getTenantId();
-            const personaId = 'sales';
-            const headers = global.SMEAIClient
-                ? global.SMEAIClient.buildHeaders(tenantId, personaId, { 'Content-Type': 'application/json' })
-                : { 'Content-Type': 'application/json', 'x-tenant-id': tenantId, 'x-persona-id': personaId };
+            const headers = this.buildHeaders({ 'Content-Type': 'application/json' });
             await fetch(`/api/sales-ai/${encodeURIComponent(this.currentConfig.id)}`, {
                 method: 'PATCH',
                 headers,
@@ -581,14 +645,8 @@ Would you mind sharing a bit about your specific needs and budget range so I can
 
     async loadExistingConfiguration() {
         try {
-            const tenantId = platform.getTenantId();
-            const personaId = 'sales';
-            const headers = global.SMEAIClient
-                ? global.SMEAIClient.buildHeaders(tenantId, personaId, { 'Content-Type': 'application/json' })
-                : { 'Content-Type': 'application/json', 'x-tenant-id': tenantId, 'x-persona-id': personaId };
-            const response = await fetch('/api/sales-ai', {
-                headers
-            });
+            const headers = this.buildHeaders();
+            const response = await fetch('/api/sales-ai', { headers });
             if (!response.ok) {
                 throw new Error('Failed to load Sales AI configuration');
             }
@@ -631,7 +689,7 @@ Would you mind sharing a bit about your specific needs and budget range so I can
 
     async loadExistingManifest() {
         try {
-            const status = await SMEAIClient.getStatus({ tenantId: platform.getTenantId(), persona: 'sales' });
+            const status = await SMEAIClient.getStatus({ tenantId: platform.getTenantId(), persona: this.getPersonaId() });
             this.displayUploadedFiles(status.manifest || null);
             if (status?.status?.qualityReport) {
                 this.updateQualitySummary(status.status.qualityReport);
@@ -683,23 +741,46 @@ Would you mind sharing a bit about your specific needs and budget range so I can
         const countDisplay = document.getElementById('documentCountDisplay');
         const recommendationsList = document.getElementById('qualityRecommendations');
 
+        if (!scoreDisplay || !countDisplay) return;
+
+        const fileCount = this.uploadedFiles.length;
+        countDisplay.textContent = fileCount;
+
+        // Calculate knowledge base coverage score based on documents
         if (!report) {
-            scoreDisplay.textContent = '-';
-            countDisplay.textContent = this.uploadedFiles.length;
-            recommendationsList.innerHTML = `
-                <li class="flex items-start"><i class="fas fa-circle text-xs primary-text mr-2 mt-1"></i><span>Upload product catalogs, pricing sheets, and comparison charts.</span></li>
-                <li class="flex items-start"><i class="fas fa-circle text-xs primary-text mr-2 mt-1"></i><span>Include brochures or FAQs highlighting USPs or offers.</span></li>
-                <li class="flex items-start"><i class="fas fa-circle text-xs primary-text mr-2 mt-1"></i><span>Refresh documents whenever new features or SKUs launch.</span></li>
-            `;
+            if (fileCount === 0) {
+                scoreDisplay.textContent = '—';
+                scoreDisplay.className = 'font-semibold text-neutral-400';
+            } else if (fileCount >= 5) {
+                scoreDisplay.textContent = 'Excellent';
+                scoreDisplay.className = 'font-semibold text-green-600';
+            } else if (fileCount >= 3) {
+                scoreDisplay.textContent = 'Good';
+                scoreDisplay.className = 'font-semibold text-primary-500';
+            } else {
+                scoreDisplay.textContent = 'Basic';
+                scoreDisplay.className = 'font-semibold text-amber-600';
+            }
+            
+            if (recommendationsList) {
+                recommendationsList.innerHTML = `
+                    <li class="flex items-start"><span class="status-dot bg-primary-500 mt-1.5 mr-2 flex-shrink-0"></span><span>Upload product catalogs, pricing sheets, and comparison charts.</span></li>
+                    <li class="flex items-start"><span class="status-dot bg-primary-500 mt-1.5 mr-2 flex-shrink-0"></span><span>Include brochures or FAQs highlighting USPs or offers.</span></li>
+                    <li class="flex items-start"><span class="status-dot bg-primary-500 mt-1.5 mr-2 flex-shrink-0"></span><span>Refresh documents whenever new features or SKUs launch.</span></li>
+                `;
+            }
             return;
         }
 
+        // Show actual quality score for Excel/CSV files
         scoreDisplay.textContent = `${report.qualityScore}%`;
-        countDisplay.textContent = this.uploadedFiles.length;
+        scoreDisplay.className = report.qualityScore >= 80 ? 'font-semibold text-green-600' : 
+                                 report.qualityScore >= 60 ? 'font-semibold text-amber-600' : 
+                                 'font-semibold text-red-600';
 
-        if (report.recommendations?.length) {
+        if (recommendationsList && report.recommendations?.length) {
             recommendationsList.innerHTML = report.recommendations.slice(0, 3).map(rec => `
-                <li class="flex items-start"><i class="fas fa-circle text-xs primary-text mr-2 mt-1"></i><span>${rec.message}</span></li>
+                <li class="flex items-start"><span class="status-dot bg-primary-500 mt-1.5 mr-2 flex-shrink-0"></span><span>${rec.message}</span></li>
             `).join('');
         }
     }

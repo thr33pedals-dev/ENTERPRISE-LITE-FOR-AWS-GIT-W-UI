@@ -1,0 +1,248 @@
+AWSTemplateFormatVersion: '2010-09-09'
+Description: |
+  Enterprise Lite - Customer Account Baseline
+  Deployed to each customer's AWS account via StackSets or Account Factory customizations.
+  Creates the cross-account IAM role and S3 bucket for the customer.
+
+Parameters:
+  TenantId:
+    Type: String
+    Description: Unique identifier for the customer tenant
+    AllowedPattern: "[a-z0-9-]+"
+    ConstraintDescription: Must be lowercase alphanumeric with hyphens
+
+  CompanyName:
+    Type: String
+    Description: Customer company name for tagging
+
+  PlatformAccountId:
+    Type: String
+    Description: AWS Account ID where the Enterprise Lite platform runs
+    AllowedPattern: "[0-9]{12}"
+
+  Environment:
+    Type: String
+    Default: production
+    AllowedValues: [development, staging, production]
+
+  BucketPrefix:
+    Type: String
+    Default: enterprise-lite
+    Description: Prefix for S3 bucket names
+
+Resources:
+  # ============================================
+  # Cross-Account IAM Role
+  # Allows the platform to access resources in this account
+  # ============================================
+  PlatformAccessRole:
+    Type: AWS::IAM::Role
+    Properties:
+      RoleName: EnterpriseLitePlatformRole
+      Description: Allows Enterprise Lite platform to access this customer account
+      AssumeRolePolicyDocument:
+        Version: '2012-10-17'
+        Statement:
+          - Effect: Allow
+            Principal:
+              AWS: !Sub "arn:aws:iam::${PlatformAccountId}:root"
+            Action: sts:AssumeRole
+            Condition:
+              StringEquals:
+                sts:ExternalId: !Ref TenantId
+      MaxSessionDuration: 3600
+      Tags:
+        - Key: tenant-id
+          Value: !Ref TenantId
+        - Key: managed-by
+          Value: enterprise-lite-platform
+        - Key: environment
+          Value: !Ref Environment
+
+  # ============================================
+  # IAM Policy for Platform Role
+  # ============================================
+  PlatformAccessPolicy:
+    Type: AWS::IAM::Policy
+    Properties:
+      PolicyName: EnterpriseLitePlatformPolicy
+      Roles:
+        - !Ref PlatformAccessRole
+      PolicyDocument:
+        Version: '2012-10-17'
+        Statement:
+          # S3 Access - Full access to customer bucket
+          - Sid: S3BucketAccess
+            Effect: Allow
+            Action:
+              - s3:GetObject
+              - s3:PutObject
+              - s3:DeleteObject
+              - s3:ListBucket
+              - s3:GetBucketLocation
+              - s3:PutObjectTagging
+              - s3:GetObjectTagging
+            Resource:
+              - !GetAtt CustomerDocumentsBucket.Arn
+              - !Sub "${CustomerDocumentsBucket.Arn}/*"
+          
+          # S3 Access - Raw uploads bucket
+          - Sid: S3RawBucketAccess
+            Effect: Allow
+            Action:
+              - s3:GetObject
+              - s3:PutObject
+              - s3:DeleteObject
+              - s3:ListBucket
+            Resource:
+              - !GetAtt CustomerRawBucket.Arn
+              - !Sub "${CustomerRawBucket.Arn}/*"
+
+          # CloudWatch Logs - Write logs
+          - Sid: CloudWatchLogsAccess
+            Effect: Allow
+            Action:
+              - logs:CreateLogGroup
+              - logs:CreateLogStream
+              - logs:PutLogEvents
+            Resource: !Sub "arn:aws:logs:${AWS::Region}:${AWS::AccountId}:log-group:/enterprise-lite/${TenantId}/*"
+
+  # ============================================
+  # Customer Documents Bucket (Processed files)
+  # ============================================
+  CustomerDocumentsBucket:
+    Type: AWS::S3::Bucket
+    DeletionPolicy: Retain
+    UpdateReplacePolicy: Retain
+    Properties:
+      BucketName: !Sub "${BucketPrefix}-${TenantId}-documents"
+      VersioningConfiguration:
+        Status: Enabled
+      BucketEncryption:
+        ServerSideEncryptionConfiguration:
+          - ServerSideEncryptionByDefault:
+              SSEAlgorithm: AES256
+      PublicAccessBlockConfiguration:
+        BlockPublicAcls: true
+        BlockPublicPolicy: true
+        IgnorePublicAcls: true
+        RestrictPublicBuckets: true
+      LifecycleConfiguration:
+        Rules:
+          - Id: TransitionToIA
+            Status: Enabled
+            Transitions:
+              - StorageClass: STANDARD_IA
+                TransitionInDays: 90
+          - Id: DeleteOldVersions
+            Status: Enabled
+            NoncurrentVersionExpiration:
+              NoncurrentDays: 30
+      Tags:
+        - Key: tenant-id
+          Value: !Ref TenantId
+        - Key: company-name
+          Value: !Ref CompanyName
+        - Key: managed-by
+          Value: enterprise-lite-platform
+        - Key: environment
+          Value: !Ref Environment
+        - Key: bucket-type
+          Value: processed
+
+  # ============================================
+  # Customer Raw Bucket (Original uploads)
+  # ============================================
+  CustomerRawBucket:
+    Type: AWS::S3::Bucket
+    DeletionPolicy: Retain
+    UpdateReplacePolicy: Retain
+    Properties:
+      BucketName: !Sub "${BucketPrefix}-${TenantId}-raw"
+      VersioningConfiguration:
+        Status: Enabled
+      BucketEncryption:
+        ServerSideEncryptionConfiguration:
+          - ServerSideEncryptionByDefault:
+              SSEAlgorithm: AES256
+      PublicAccessBlockConfiguration:
+        BlockPublicAcls: true
+        BlockPublicPolicy: true
+        IgnorePublicAcls: true
+        RestrictPublicBuckets: true
+      LifecycleConfiguration:
+        Rules:
+          - Id: DeleteAfter1Year
+            Status: Enabled
+            ExpirationInDays: 365
+      Tags:
+        - Key: tenant-id
+          Value: !Ref TenantId
+        - Key: company-name
+          Value: !Ref CompanyName
+        - Key: managed-by
+          Value: enterprise-lite-platform
+        - Key: environment
+          Value: !Ref Environment
+        - Key: bucket-type
+          Value: raw
+
+  # ============================================
+  # CloudWatch Log Group for this tenant
+  # ============================================
+  CustomerLogGroup:
+    Type: AWS::Logs::LogGroup
+    Properties:
+      LogGroupName: !Sub "/enterprise-lite/${TenantId}"
+      RetentionInDays: 90
+      Tags:
+        - Key: tenant-id
+          Value: !Ref TenantId
+        - Key: managed-by
+          Value: enterprise-lite-platform
+
+Outputs:
+  PlatformRoleArn:
+    Description: ARN of the IAM role for platform access
+    Value: !GetAtt PlatformAccessRole.Arn
+    Export:
+      Name: !Sub "${AWS::StackName}-PlatformRoleArn"
+
+  DocumentsBucketName:
+    Description: Name of the processed documents bucket
+    Value: !Ref CustomerDocumentsBucket
+    Export:
+      Name: !Sub "${AWS::StackName}-DocumentsBucket"
+
+  DocumentsBucketArn:
+    Description: ARN of the processed documents bucket
+    Value: !GetAtt CustomerDocumentsBucket.Arn
+    Export:
+      Name: !Sub "${AWS::StackName}-DocumentsBucketArn"
+
+  RawBucketName:
+    Description: Name of the raw uploads bucket
+    Value: !Ref CustomerRawBucket
+    Export:
+      Name: !Sub "${AWS::StackName}-RawBucket"
+
+  RawBucketArn:
+    Description: ARN of the raw uploads bucket
+    Value: !GetAtt CustomerRawBucket.Arn
+    Export:
+      Name: !Sub "${AWS::StackName}-RawBucketArn"
+
+  TenantConfiguration:
+    Description: JSON configuration for the platform to connect to this account
+    Value: !Sub |
+      {
+        "tenantId": "${TenantId}",
+        "accountId": "${AWS::AccountId}",
+        "region": "${AWS::Region}",
+        "roleArn": "${PlatformAccessRole.Arn}",
+        "documentsBucket": "${CustomerDocumentsBucket}",
+        "rawBucket": "${CustomerRawBucket}"
+      }
+
+
+

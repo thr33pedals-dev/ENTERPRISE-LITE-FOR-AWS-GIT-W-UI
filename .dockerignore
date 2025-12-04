@@ -1,0 +1,57 @@
+# Dependencies
+node_modules
+npm-debug.log
+
+# Git
+.git
+.gitignore
+
+# IDE
+.vscode
+.idea
+*.swp
+*.swo
+
+# Environment files (will be set in App Runner)
+.env
+.env.*
+!.env.example
+
+# Build artifacts
+dist
+build
+coverage
+
+# Documentation
+docs
+*.md
+!README.md
+
+# Test files
+__tests__
+*.test.js
+*.spec.js
+
+# Local development
+uploads/
+generated_videos/
+*.log
+
+# Docker
+Dockerfile
+docker-compose*.yml
+.docker
+
+# Infrastructure (not needed in container)
+infrastructure/
+
+# Scripts (not needed in production)
+scripts/
+
+# Temporary files
+tmp/
+temp/
+*.tmp
+
+
+

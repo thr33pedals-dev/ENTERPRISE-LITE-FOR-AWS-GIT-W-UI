@@ -23,7 +23,13 @@
   "license": "MIT",
   "dependencies": {
     "@anthropic-ai/sdk": "^0.30.0",
+    "@aws-sdk/client-cognito-identity-provider": "^3.940.0",
+    "@aws-sdk/client-dynamodb": "^3.940.0",
+    "@aws-sdk/client-organizations": "^3.940.0",
     "@aws-sdk/client-s3": "^3.669.0",
+    "@aws-sdk/client-service-catalog": "^3.940.0",
+    "@aws-sdk/client-sts": "^3.940.0",
+    "@aws-sdk/lib-dynamodb": "^3.940.0",
     "@aws-sdk/s3-request-presigner": "^3.669.0",
     "@modelcontextprotocol/sdk": "^0.5.0",
     "cors": "^2.8.5",
@@ -36,6 +42,8 @@
     "pdf-parse": "1.1.1",
     "pdf.js-extract": "^0.2.1",
     "pdfkit": "^0.17.2",
+    "stripe": "^20.0.0",
+    "winston": "^3.18.3",
     "xlsx": "^0.18.5"
   },
   "devDependencies": {

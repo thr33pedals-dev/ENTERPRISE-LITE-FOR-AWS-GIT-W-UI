@@ -4,7 +4,69 @@ class SupportAIManager {
         this.currentConfig = null;
         this.uploadedFiles = [];
         this.supportCategories = [];
+        this.defaultPersonaId = 'support';
+        this.personaId = this.defaultPersonaId;
+        this.personaSubscription = null;
+        this.isInitialized = false;
+        this.bootstrap();
+    }
+
+    bootstrap() {
+        if (window.PersonaStore) {
+            this.personaSubscription = window.PersonaStore.subscribe((snapshot) => {
+                if (!snapshot) return;
+                if (snapshot.event === 'init' || snapshot.event === 'loaded' || snapshot.event === 'selection') {
+                    const nextId = this.extractPersonaId(snapshot.selectedPersona);
+                    if (nextId && nextId !== this.personaId) {
+                        this.personaId = nextId;
+                        if (this.isInitialized) {
+                            this.handlePersonaChange();
+                        }
+                    }
+                }
+            });
+
+            window.PersonaStore.loadPersonas({ preferredPersonaId: this.defaultPersonaId })
+                .then(({ selectedPersona }) => {
+                    const initialId = this.extractPersonaId(selectedPersona);
+                    if (initialId) {
+                        this.personaId = initialId;
+                    }
+                })
+                .catch((error) => {
+                    console.warn('SupportAI: unable to load personas, using defaults', error);
+                })
+                .finally(() => {
+                    this.init();
+                    this.isInitialized = true;
+                });
+            return;
+        }
+
         this.init();
+        this.isInitialized = true;
+    }
+
+    extractPersonaId(persona) {
+        if (!persona) return null;
+        return persona.personaId || persona.id || null;
+    }
+
+    getPersonaId() {
+        if (window.PersonaStore?.getSelectedPersona) {
+            const selected = window.PersonaStore.getSelectedPersona();
+            if (selected) {
+                return this.extractPersonaId(selected) || this.personaId;
+            }
+        }
+        return this.personaId || this.defaultPersonaId;
+    }
+
+    handlePersonaChange() {
+        if (!this.isInitialized) return;
+        this.currentConfig = null;
+        this.loadExistingConfiguration();
+        this.loadExistingManifest();
     }
 
     init() {
@@ -17,11 +79,18 @@ class SupportAIManager {
         this.initializeDefaultCategories();
     }
 
-    buildHeaders() {
-        const headers = new Headers({ 'Content-Type': 'application/json' });
-        if (window.platform?.getTenantId) {
-            headers.set('x-tenant-id', window.platform.getTenantId());
-        }
+    buildHeaders(extra = {}) {
+        const tenantId = window.platform?.getTenantId ? window.platform.getTenantId() : null;
+        const personaId = this.getPersonaId();
+        const base = window.SMEAIClient?.buildHeaders
+            ? window.SMEAIClient.buildHeaders(tenantId, personaId, extra)
+            : {
+                ...(extra || {}),
+                ...(tenantId ? { 'x-tenant-id': tenantId } : {}),
+                ...(personaId ? { 'x-persona-id': personaId } : {})
+            };
+
+        const headers = new Headers(base);
         if (this.currentUser?.id) {
             headers.set('x-company-id', this.currentUser.id);
         }
@@ -43,8 +112,8 @@ class SupportAIManager {
 
     setupSharedClients() {
         this.uploader = new SMEAIUploader({
-            tenantId: platform.getTenantId(),
-            persona: 'support',
+            tenantIdResolver: () => platform.getTenantId(),
+            getPersonaId: () => this.getPersonaId(),
             onStatus: (type, message) => this.showNotification(message, type),
             onManifest: (manifest) => this.handleManifest(manifest),
             onQualityReport: (report) => this.updateQualitySummary(report),
@@ -190,6 +259,7 @@ class SupportAIManager {
 
         if (!manifest || !manifest.files) {
             this.updateStatuses();
+            this.updateQualitySummary(null);
             return;
         }
 
@@ -207,7 +277,7 @@ class SupportAIManager {
             item.className = 'bg-white rounded-lg p-3 flex items-center justify-between text-gray-800 shadow-sm';
             item.innerHTML = `
                 <div class="flex items-center space-x-3">
-                    <i class="fas fa-file-alt text-green-500"></i>
+                    <i class="fas fa-file-alt text-primary-500"></i>
                     <div>
                         <div class="font-semibold text-sm text-gray-900">${displayName}</div>
                         <div class="text-gray-500 text-xs">${(file.type || '').toUpperCase()} • ${this.formatFileSize(rawSize)} • ${new Date(hydrated.uploadedAt).toLocaleDateString()}</div>
@@ -221,15 +291,18 @@ class SupportAIManager {
                 if (!confirm(`Remove ${file.name}?`)) return;
                 await this.uploader.deleteFile(file.name);
                 this.updateStatuses();
+                this.updateQualitySummary(null);
             });
             list.appendChild(item);
         });
         this.updateStatuses();
+        // Update quality summary with manifest's quality report if available
+        this.updateQualitySummary(manifest.qualityReport || null);
     }
 
     async loadExistingManifest() {
         try {
-            const status = await SMEAIClient.getStatus({ tenantId: platform.getTenantId(), persona: 'support' });
+        const status = await SMEAIClient.getStatus({ tenantId: platform.getTenantId(), persona: this.getPersonaId() });
             this.handleManifest(status.manifest || null);
             if (status?.status?.qualityReport) {
                 this.updateQualitySummary(status.status.qualityReport);
@@ -244,25 +317,46 @@ class SupportAIManager {
         const countDisplay = document.getElementById('documentCountDisplay');
         const recommendationsList = document.getElementById('qualityRecommendations');
 
-        if (!scoreDisplay || !countDisplay || !recommendationsList) return;
+        if (!scoreDisplay || !countDisplay) return;
 
+        const fileCount = this.uploadedFiles.length;
+        countDisplay.textContent = fileCount;
+
+        // Calculate knowledge base coverage score based on documents
         if (!report) {
-            scoreDisplay.textContent = '-';
-            countDisplay.textContent = this.uploadedFiles.length;
-            recommendationsList.innerHTML = `
-                <li class="flex items-start"><i class="fas fa-circle text-xs primary-text mr-2 mt-1"></i><span>Add quick-start guides and common troubleshooting steps.</span></li>
-                <li class="flex items-start"><i class="fas fa-circle text-xs primary-text mr-2 mt-1"></i><span>Include escalation policies and contact info for human support.</span></li>
-                <li class="flex items-start"><i class="fas fa-circle text-xs primary-text mr-2 mt-1"></i><span>Review knowledge articles regularly to stay accurate.</span></li>
-            `;
+            if (fileCount === 0) {
+                scoreDisplay.textContent = '—';
+                scoreDisplay.className = 'font-semibold text-neutral-400';
+            } else if (fileCount >= 5) {
+                scoreDisplay.textContent = 'Excellent';
+                scoreDisplay.className = 'font-semibold text-green-600';
+            } else if (fileCount >= 3) {
+                scoreDisplay.textContent = 'Good';
+                scoreDisplay.className = 'font-semibold text-primary-500';
+            } else {
+                scoreDisplay.textContent = 'Basic';
+                scoreDisplay.className = 'font-semibold text-amber-600';
+            }
+            
+            if (recommendationsList) {
+                recommendationsList.innerHTML = `
+                    <li class="flex items-start"><span class="status-dot bg-primary-500 mt-1.5 mr-2 flex-shrink-0"></span><span>Add quick-start guides and common troubleshooting steps.</span></li>
+                    <li class="flex items-start"><span class="status-dot bg-primary-500 mt-1.5 mr-2 flex-shrink-0"></span><span>Include escalation policies and contact info for human support.</span></li>
+                    <li class="flex items-start"><span class="status-dot bg-primary-500 mt-1.5 mr-2 flex-shrink-0"></span><span>Review knowledge articles regularly to stay accurate.</span></li>
+                `;
+            }
             return;
         }
 
+        // Show actual quality score for Excel/CSV files
         scoreDisplay.textContent = `${report.qualityScore}%`;
-        countDisplay.textContent = this.uploadedFiles.length;
+        scoreDisplay.className = report.qualityScore >= 80 ? 'font-semibold text-green-600' : 
+                                 report.qualityScore >= 60 ? 'font-semibold text-amber-600' : 
+                                 'font-semibold text-red-600';
 
-        if (report.recommendations?.length) {
+        if (recommendationsList && report.recommendations?.length) {
             recommendationsList.innerHTML = report.recommendations.slice(0, 3).map(rec => `
-                <li class="flex items-start"><i class="fas fa-circle text-xs primary-text mr-2 mt-1"></i><span>${rec.message}</span></li>
+                <li class="flex items-start"><span class="status-dot bg-primary-500 mt-1.5 mr-2 flex-shrink-0"></span><span>${rec.message}</span></li>
             `).join('');
         }
     }
@@ -305,7 +399,7 @@ class SupportAIManager {
         for (let i = 0; i < files.length; i++) {
             const file = files[i];
             try {
-                const result = await SMEAIClient.uploadFiles([file], { tenantId: platform.getTenantId(), persona: 'support' });
+                const result = await SMEAIClient.uploadFiles([file], { tenantId: platform.getTenantId(), persona: this.getPersonaId() });
                 if (result.success) {
                     this.updateUploadProgress(file.name, 100, 'completed');
                     await this.loadExistingManifest();
@@ -509,11 +603,7 @@ class SupportAIManager {
             multi_language: formData.multiLanguage
         };
 
-        const tenantId = platform.getTenantId();
-        const personaId = 'support';
-        const headers = global.SMEAIClient
-            ? global.SMEAIClient.buildHeaders(tenantId, personaId, { 'Content-Type': 'application/json' })
-            : { 'Content-Type': 'application/json', 'x-tenant-id': tenantId, 'x-persona-id': personaId };
+        const headers = this.buildHeaders({ 'Content-Type': 'application/json' });
         const response = await fetch('/api/support-ai', {
             method: 'POST',
             headers,
@@ -541,11 +631,7 @@ class SupportAIManager {
             multi_language: formData.multiLanguage
         };
 
-        const tenantId = platform.getTenantId();
-        const personaId = 'support';
-        const headers = global.SMEAIClient
-            ? global.SMEAIClient.buildHeaders(tenantId, personaId, { 'Content-Type': 'application/json' })
-            : { 'Content-Type': 'application/json', 'x-tenant-id': tenantId, 'x-persona-id': personaId };
+        const headers = this.buildHeaders({ 'Content-Type': 'application/json' });
         const response = await fetch(`/api/support-ai/${encodeURIComponent(this.currentConfig.id)}`, {
             method: 'PATCH',
             headers,
@@ -566,7 +652,11 @@ class SupportAIManager {
             return;
         }
         const tenantId = platform.getTenantId();
+        const personaId = this.getPersonaId();
         const params = new URLSearchParams({ tenant: tenantId, type: 'support', config: 'preview' });
+        if (personaId) {
+            params.set('persona', personaId);
+        }
         const link = `${window.location.origin}/component-preview.html?${params.toString()}`;
         document.getElementById('supportAILink').value = link;
         this.showNotification('Support AI link generated!', 'success');
@@ -575,11 +665,7 @@ class SupportAIManager {
 
     async updateAILink(link) {
         try {
-            const tenantId = platform.getTenantId();
-            const personaId = 'support';
-            const headers = global.SMEAIClient
-                ? global.SMEAIClient.buildHeaders(tenantId, personaId, { 'Content-Type': 'application/json' })
-                : { 'Content-Type': 'application/json', 'x-tenant-id': tenantId, 'x-persona-id': personaId };
+            const headers = this.buildHeaders({ 'Content-Type': 'application/json' });
             await fetch(`/api/support-ai/${encodeURIComponent(this.currentConfig.id)}`, {
                 method: 'PATCH',
                 headers,
@@ -722,14 +808,8 @@ class SupportAIManager {
 
     async loadExistingConfiguration() {
         try {
-            const tenantId = platform.getTenantId();
-            const personaId = 'support';
-            const headers = global.SMEAIClient
-                ? global.SMEAIClient.buildHeaders(tenantId, personaId, { 'Content-Type': 'application/json' })
-                : { 'Content-Type': 'application/json', 'x-tenant-id': tenantId, 'x-persona-id': personaId };
-            const response = await fetch('/api/support-ai', {
-                headers
-            });
+            const headers = this.buildHeaders();
+            const response = await fetch('/api/support-ai', { headers });
             if (!response.ok) {
                 throw new Error('Failed to load Support AI configuration');
             }

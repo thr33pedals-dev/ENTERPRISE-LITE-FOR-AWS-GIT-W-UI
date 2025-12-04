@@ -48,14 +48,25 @@ class SMEAIPlatform {
     };
 
     updateNavigationForLoggedInUser = function () {
-        const navRight = document.querySelector('nav .hidden.md\:flex');
+        // Don't overwrite navigation on pages that already have proper nav (admin, sales-ai, support-ai, interview-ai)
+        const isAppPage = window.location.pathname.includes('admin') || 
+                          window.location.pathname.includes('sales-ai') || 
+                          window.location.pathname.includes('support-ai') || 
+                          window.location.pathname.includes('interview-ai') ||
+                          window.location.pathname.includes('chat');
+        if (isAppPage) return; // These pages have their own navigation
+        
+        // Only update nav on homepage/landing pages
+        const navRight = document.querySelector('nav [class*="md\\:flex"]');
         if (navRight) {
             navRight.innerHTML = `
-                <a href="admin.html" class="hover:text-blue-400 transition">Admin</a>
-                <a href="sales-ai.html" class="hover:text-blue-400 transition">Sales AI</a>
-                <a href="support-ai.html" class="hover:text-blue-400 transition">Support AI</a>
-                <a href="interview-ai.html" class="hover:text-blue-400 transition">Interview AI</a>
-                <button onclick="platform.logout()" class="bg-red-500 hover:bg-red-600 px-4 py-2 rounded transition">Logout</button>
+                <a href="admin.html" class="px-4 py-2 text-neutral-600 hover:text-neutral-900 hover:bg-neutral-100 rounded text-sm font-medium transition">Dashboard</a>
+                <a href="sales-ai.html" class="px-4 py-2 text-neutral-600 hover:text-neutral-900 hover:bg-neutral-100 rounded text-sm font-medium transition">Sales AI</a>
+                <a href="support-ai.html" class="px-4 py-2 text-neutral-600 hover:text-neutral-900 hover:bg-neutral-100 rounded text-sm font-medium transition">Support AI</a>
+                <a href="interview-ai.html" class="px-4 py-2 text-neutral-600 hover:text-neutral-900 hover:bg-neutral-100 rounded text-sm font-medium transition">Interview AI</a>
+                <button onclick="platform.logout()" class="ml-4 px-4 py-2 border border-neutral-300 rounded text-sm font-medium hover:bg-neutral-100 transition">
+                    <i class="fas fa-sign-out-alt mr-1"></i>Sign Out
+                </button>
             `;
         }
     };

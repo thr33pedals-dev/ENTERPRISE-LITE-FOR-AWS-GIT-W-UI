@@ -1,0 +1,92 @@
+version: 1.0
+runtime: nodejs18
+
+build:
+  commands:
+    build:
+      - npm ci --production=false
+      - npm run build --if-present
+    
+run:
+  runtime-version: 18
+  command: node server.js
+  network:
+    port: 3000
+    env: PORT
+  env:
+    - name: NODE_ENV
+      value: "production"
+    
+    # ===== Storage Configuration =====
+    - name: STORAGE_BACKEND
+      value: "s3"
+    - name: S3_BUCKET
+      value: "enterprise-lite-documents"
+    - name: S3_RAW_BUCKET
+      value: "enterprise-lite-raw"
+    - name: S3_REGION
+      value: "ap-southeast-1"
+    
+    # ===== Per-Tenant Buckets (if enabled) =====
+    - name: PER_TENANT_BUCKETS
+      value: "true"
+    - name: BUCKET_PREFIX
+      value: "enterprise-lite"
+    
+    # ===== Cognito Authentication =====
+    # Set these from AWS Console or use secrets
+    - name: COGNITO_REGION
+      value: "ap-southeast-1"
+    # - name: COGNITO_USER_POOL_ID
+    #   value: "ap-southeast-1_XXXXXXX"  # Set in console
+    # - name: COGNITO_CLIENT_ID
+    #   value: "xxxxxxxxxxxxx"  # Set in console
+    
+    # ===== AI Configuration =====
+    - name: CLAUDE_MODEL
+      value: "claude-sonnet-4-20250514"
+    - name: CLAUDE_MAX_TOKENS
+      value: "4096"
+    - name: CLAUDE_TEMPERATURE
+      value: "0.3"
+    
+    # ===== Vision Processing =====
+    - name: VISION_ENABLED
+      value: "true"
+    - name: VISION_PDF_ENABLED
+      value: "true"
+    - name: VISION_PDF_TOOL
+      value: "process_pdf_with_vlm"
+    - name: CLAUDE_VISION_MODEL
+      value: "claude-sonnet-4-20250514"
+    - name: CLAUDE_VISION_MAX_TOKENS
+      value: "16000"
+    - name: CLAUDE_VISION_TEMPERATURE
+      value: "0"
+    
+    # ===== Feature Flags =====
+    - name: MULTI_LANGUAGE_ENABLED
+      value: "true"
+    - name: FEEDBACK_ENABLED
+      value: "true"
+    - name: TRANSCRIPTS_ENABLED
+      value: "true"
+    
+    # ===== Logging =====
+    - name: LOG_LEVEL
+      value: "info"
+    - name: LOG_FORMAT
+      value: "json"
+
+# ===== Secrets (set via AWS Console or CLI) =====
+# These should NOT be in the yaml file - set via:
+# aws apprunner update-service --service-arn <arn> \
+#   --source-configuration '{"AuthenticationConfiguration":{"AccessRoleArn":"..."}}'
+#
+# Required secrets to configure in App Runner Console:
+# - ANTHROPIC_API_KEY
+# - STRIPE_SECRET_KEY
+# - STRIPE_WEBHOOK_SECRET
+# - COGNITO_USER_POOL_ID
+# - COGNITO_CLIENT_ID
+

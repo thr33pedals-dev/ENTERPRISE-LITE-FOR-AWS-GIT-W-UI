@@ -4,7 +4,68 @@ class InterviewAIManager {
         this.currentConfig = null;
         this.selectedRole = null;
         this.generatedQuestions = [];
+        this.defaultPersonaId = 'interview';
+        this.personaId = this.defaultPersonaId;
+        this.personaSubscription = null;
+        this.isInitialized = false;
+        this.bootstrap();
+    }
+
+    bootstrap() {
+        if (window.PersonaStore) {
+            this.personaSubscription = window.PersonaStore.subscribe((snapshot) => {
+                if (!snapshot) return;
+                if (snapshot.event === 'init' || snapshot.event === 'loaded' || snapshot.event === 'selection') {
+                    const nextId = this.extractPersonaId(snapshot.selectedPersona);
+                    if (nextId && nextId !== this.personaId) {
+                        this.personaId = nextId;
+                        if (this.isInitialized) {
+                            this.handlePersonaChange();
+                        }
+                    }
+                }
+            });
+
+            window.PersonaStore.loadPersonas({ preferredPersonaId: this.defaultPersonaId })
+                .then(({ selectedPersona }) => {
+                    const initialId = this.extractPersonaId(selectedPersona);
+                    if (initialId) {
+                        this.personaId = initialId;
+                    }
+                })
+                .catch((error) => {
+                    console.warn('InterviewAI: unable to load personas, using defaults', error);
+                })
+                .finally(() => {
+                    this.init();
+                    this.isInitialized = true;
+                });
+            return;
+        }
+
         this.init();
+        this.isInitialized = true;
+    }
+
+    extractPersonaId(persona) {
+        if (!persona) return null;
+        return persona.personaId || persona.id || null;
+    }
+
+    getPersonaId() {
+        if (window.PersonaStore?.getSelectedPersona) {
+            const selected = window.PersonaStore.getSelectedPersona();
+            if (selected) {
+                return this.extractPersonaId(selected) || this.personaId;
+            }
+        }
+        return this.personaId || this.defaultPersonaId;
+    }
+
+    handlePersonaChange() {
+        if (!this.isInitialized) return;
+        this.currentConfig = null;
+        this.loadExistingConfiguration();
     }
 
     init() {
@@ -14,7 +75,6 @@ class InterviewAIManager {
         this.initializePreview();
         this.loadRoleTemplates();
         this.loadExistingConfiguration();
-        this.loadExistingManifest();
     }
 
     checkAuthentication() {
@@ -33,8 +93,8 @@ class InterviewAIManager {
     setupSharedClients() {
         if (!this.uploader) {
             this.uploader = new SMEAIUploader({
-                tenantId: window.platform?.getTenantId?.() || 'default',
-                persona: 'interview',
+                tenantIdResolver: () => window.platform?.getTenantId?.() || 'default',
+                getPersonaId: () => this.getPersonaId(),
                 onStatus: (type, message) => this.showNotification(message, type),
                 onManifest: () => {},
                 onQualityReport: () => {},
@@ -53,12 +113,18 @@ class InterviewAIManager {
         // For now, it's a placeholder.
     }
 
-    buildHeaders() {
-        const headers = new Headers({ 'Content-Type': 'application/json' });
-        if (window.platform?.getTenantId) {
-            headers.set('x-tenant-id', window.platform.getTenantId());
-        }
-        headers.set('x-persona-id', 'interview');
+    buildHeaders(extra = {}) {
+        const tenantId = window.platform?.getTenantId ? window.platform.getTenantId() : null;
+        const personaId = this.getPersonaId();
+        const base = window.SMEAIClient?.buildHeaders
+            ? window.SMEAIClient.buildHeaders(tenantId, personaId, extra)
+            : {
+                ...(extra || {}),
+                ...(tenantId ? { 'x-tenant-id': tenantId } : {}),
+                ...(personaId ? { 'x-persona-id': personaId } : {})
+            };
+
+        const headers = new Headers(base);
         if (this.currentUser?.id) {
             headers.set('x-company-id', this.currentUser.id);
         }
@@ -93,7 +159,39 @@ class InterviewAIManager {
                 const jobRoleInput = document.getElementById('jobRoleInput');
                 if (jobRoleInput) {
                     jobRoleInput.value = '';
+                    this.toggleGenerateButton(false);
                 }
+                // Clear generated content
+                const jobDescContainer = document.getElementById('jobDescriptionContainer');
+                if (jobDescContainer) {
+                    jobDescContainer.innerHTML = `
+                        <div class="text-center py-8" id="jobDescriptionPlaceholder">
+                            <div class="w-12 h-12 bg-neutral-100 rounded mx-auto mb-3 flex items-center justify-center">
+                                <i class="fas fa-clipboard-list text-xl text-neutral-400"></i>
+                            </div>
+                            <p class="text-neutral-500 text-sm">Job description will appear here after generation</p>
+                            <p class="text-neutral-400 text-xs mt-1">Describe your role requirements and click generate</p>
+                        </div>
+                    `;
+                }
+                const questionsContainer = document.getElementById('questionsContainer');
+                if (questionsContainer) {
+                    questionsContainer.innerHTML = `
+                        <div class="text-center py-8" id="questionsPlaceholder">
+                            <div class="w-12 h-12 bg-neutral-100 rounded mx-auto mb-3 flex items-center justify-center">
+                                <i class="fas fa-lightbulb text-xl text-neutral-400"></i>
+                            </div>
+                            <p class="text-neutral-500 text-sm">5 interview questions will appear here</p>
+                            <p class="text-neutral-400 text-xs mt-1">You can modify or add questions after generation</p>
+                        </div>
+                    `;
+                }
+                const questionsActions = document.getElementById('questionsActions');
+                if (questionsActions) questionsActions.classList.add('hidden');
+                this.generatedQuestions = [];
+                this.selectedRole = null;
+                // Remove selection from templates
+                document.querySelectorAll('.role-template').forEach(t => t.classList.remove('selected'));
             });
         }
 
@@ -122,7 +220,7 @@ class InterviewAIManager {
         // AI Link generation
         const generateLinkBtn = document.getElementById('generateLinkBtn');
         if (generateLinkBtn) {
-            generateLinkBtn.addEventListener('click', () => this.generateAILink());
+            generateLinkBtn.addEventListener('click', () => this.generateInterviewLink());
         }
 
         const copyLinkBtn = document.getElementById('copyInterviewLinkBtn');
@@ -217,15 +315,55 @@ class InterviewAIManager {
         this.showGeneratingModal();
 
         try {
-            // Simulate AI generation delay
-            await new Promise(resolve => setTimeout(resolve, 3000));
-            
-            // Generate job description
-            const generatedJobDesc = this.generateJobDescription(jobDescription, this.selectedRole);
-            this.displayJobDescription(generatedJobDesc);
-            
-            // Generate interview questions
-            this.generatedQuestions = this.generateInterviewQuestions(jobDescription, this.selectedRole);
+            // Generate job description using AI
+            const jobDescResponse = await fetch('/api/interview-ai/generate-job-description', {
+                method: 'POST',
+                headers: this.buildHeaders({ 'Content-Type': 'application/json' }),
+                body: JSON.stringify({
+                    roleInput: jobDescription,
+                    roleType: this.selectedRole
+                })
+            });
+
+            if (jobDescResponse.ok) {
+                const jobDescData = await jobDescResponse.json();
+                if (jobDescData.success && jobDescData.jobDescription) {
+                    this.displayJobDescription(jobDescData.jobDescription);
+                } else {
+                    // Fallback to template
+                    const generatedJobDesc = this.generateJobDescription(jobDescription, this.selectedRole);
+                    this.displayJobDescription(generatedJobDesc);
+                }
+            } else {
+                // Fallback to template
+                const generatedJobDesc = this.generateJobDescription(jobDescription, this.selectedRole);
+                this.displayJobDescription(generatedJobDesc);
+            }
+
+            // Generate interview questions using AI
+            const questionsResponse = await fetch('/api/interview-ai/generate-questions', {
+                method: 'POST',
+                headers: this.buildHeaders({ 'Content-Type': 'application/json' }),
+                body: JSON.stringify({
+                    jobDescription: jobDescription,
+                    roleType: this.selectedRole,
+                    questionCount: 5
+                })
+            });
+
+            if (questionsResponse.ok) {
+                const questionsData = await questionsResponse.json();
+                if (questionsData.success && questionsData.questions) {
+                    this.generatedQuestions = questionsData.questions;
+                } else {
+                    // Fallback to template
+                    this.generatedQuestions = this.generateInterviewQuestions(jobDescription, this.selectedRole);
+                }
+            } else {
+                // Fallback to template
+                this.generatedQuestions = this.generateInterviewQuestions(jobDescription, this.selectedRole);
+            }
+
             this.displayQuestions();
             
             // Enable action buttons
@@ -236,7 +374,14 @@ class InterviewAIManager {
             
         } catch (error) {
             console.error('Generation error:', error);
-            this.showNotification('Error generating content', 'error');
+            // Fallback to template generation
+            const generatedJobDesc = this.generateJobDescription(jobDescription, this.selectedRole);
+            this.displayJobDescription(generatedJobDesc);
+            this.generatedQuestions = this.generateInterviewQuestions(jobDescription, this.selectedRole);
+            this.displayQuestions();
+            this.enableActionButtons();
+            this.toggleGenerateButton(true);
+            this.showNotification('Content generated (using templates)', 'info');
         } finally {
             this.hideGeneratingModal();
         }
@@ -501,24 +646,34 @@ class InterviewAIManager {
 
     async saveConfiguration() {
         try {
+            const tenantId = window.platform?.getTenantId?.() || 'default';
+            const personaId = this.getPersonaId();
+            const companyName = this.currentUser?.company_name || 'Unknown Company';
+
             const configData = {
                 company_id: this.currentUser.id,
+                company_name: companyName,
+                tenantId: tenantId,
+                personaId: personaId,
                 job_role: this.selectedRole || 'custom',
                 job_description: document.getElementById('jobRoleInput').value.trim(),
                 interview_questions: JSON.stringify(this.generatedQuestions),
-                product_info_file: '', // Not used in this simplified version
+                product_info_file: '',
                 custom_prompt: document.getElementById('jobRoleInput').value.trim(),
                 ai_link: '',
                 usage_count: 0,
                 last_used: null,
-                status: 'active'
+                status: 'active',
+                // Tags for filtering and billing
+                tags: {
+                    company: companyName,
+                    persona: personaId,
+                    roleType: this.selectedRole || 'custom',
+                    createdAt: new Date().toISOString()
+                }
             };
 
-            const tenantId = window.platform?.getTenantId();
-            const personaId = 'interview';
-            const headers = global.SMEAIClient
-                ? global.SMEAIClient.buildHeaders(tenantId, personaId, { 'Content-Type': 'application/json' })
-                : { 'Content-Type': 'application/json', 'x-tenant-id': tenantId, 'x-persona-id': personaId };
+            const headers = this.buildHeaders({ 'Content-Type': 'application/json' });
             let response;
             if (this.currentConfig) {
                 response = await fetch(`/api/interview-ai/${encodeURIComponent(this.currentConfig.id)}`, {
@@ -545,7 +700,6 @@ class InterviewAIManager {
             }
 
             this.showNotification('Interview AI settings saved successfully!', 'success');
-            this.toggleGenerateButton(false);
             
         } catch (error) {
             console.error('Error saving configuration:', error);
@@ -554,10 +708,7 @@ class InterviewAIManager {
     }
 
     loadExistingConfiguration() {
-        const tenantId = window.platform?.getTenantId();
-        const headers = global.SMEAIClient
-            ? global.SMEAIClient.buildHeaders(tenantId, 'interview', { 'Content-Type': 'application/json' })
-            : { 'Content-Type': 'application/json', 'x-tenant-id': tenantId, 'x-persona-id': 'interview' };
+        const headers = this.buildHeaders();
         fetch('/api/interview-ai', {
             headers
         })
@@ -587,14 +738,24 @@ class InterviewAIManager {
             jobRoleInput.dispatchEvent(new Event('input'));
         }
         this.selectedRole = config.job_role || 'custom';
-        this.selectRoleTemplate(document.querySelector(`.role-template[data-role="${this.selectedRole}"]`));
-        this.generatedQuestions = JSON.parse(config.interview_questions || '[]');
-        this.displayQuestions();
+        const templateEl = document.querySelector(`.role-template[data-role="${this.selectedRole}"]`);
+        if (templateEl) {
+            this.selectRoleTemplate(templateEl);
+        }
+        try {
+            this.generatedQuestions = JSON.parse(config.interview_questions || '[]');
+            if (this.generatedQuestions.length > 0) {
+                this.displayQuestions();
+            }
+        } catch (e) {
+            console.warn('Failed to parse interview questions', e);
+            this.generatedQuestions = [];
+        }
         this.enableActionButtons();
         this.toggleGenerateButton(true);
-        if (config.ai_link) {
-            this.updateAILinkDisplay(config.ai_link);
-        }
+        // Don't auto-populate link from saved config - user should click "Generate AI Link"
+        // This ensures the link always uses the current production URL
+        this.updateAILinkDisplay('');
     }
 
     updateAILinkDisplay(link) {
@@ -607,10 +768,7 @@ class InterviewAIManager {
     async updateAILinkOnServer(link) {
         if (!this.currentConfig?.id) return;
         try {
-            const tenantId = window.platform?.getTenantId();
-            const headers = global.SMEAIClient
-                ? global.SMEAIClient.buildHeaders(tenantId, 'interview', { 'Content-Type': 'application/json' })
-                : { 'Content-Type': 'application/json', 'x-tenant-id': tenantId, 'x-persona-id': 'interview' };
+            const headers = this.buildHeaders({ 'Content-Type': 'application/json' });
             await fetch(`/api/interview-ai/${encodeURIComponent(this.currentConfig.id)}`, {
                 method: 'PATCH',
                 headers,
@@ -622,9 +780,18 @@ class InterviewAIManager {
     }
 
     generateInterviewLink() {
-        const tenantId = window.platform?.getTenantId();
-        const params = new URLSearchParams({ tenant: tenantId, type: 'interview', config: this.currentConfig?.id || 'preview' });
-        const link = `${window.location.origin}/component-preview.html?${params.toString()}`;
+        const tenantId = window.platform?.getTenantId?.() || 'default';
+        const personaId = this.getPersonaId();
+        const configId = this.currentConfig?.id || 'preview';
+        const params = new URLSearchParams({ 
+            tenant: tenantId, 
+            config: configId
+        });
+        if (personaId) {
+            params.set('persona', personaId);
+        }
+        // Use interview-experience.html for dedicated interview UI
+        const link = `${window.location.origin}/interview-experience.html?${params.toString()}`;
         this.updateAILinkDisplay(link);
         this.updateAILinkOnServer(link);
         this.showNotification('Interview AI link generated!', 'success');
@@ -643,69 +810,23 @@ class InterviewAIManager {
     testAILink() {
         const link = document.getElementById('interviewAILink').value;
         if (!link) {
-            this.showNotification('No Interview AI link to test.', 'error');
+            this.showNotification('Please generate an Interview AI link first.', 'error');
             return;
         }
-        this.showLoadingModal('Testing Interview AI Link...');
-        const tenantId = window.platform?.getTenantId();
-        const headers = global.SMEAIClient
-            ? global.SMEAIClient.buildHeaders(tenantId, 'interview')
-            : this.buildHeaders();
-        fetch(link, {
-            method: 'GET',
-            headers
-        })
-            .then(response => {
-                if (response.ok) {
-                    return response.json();
-                } else {
-                    throw new Error(`HTTP error! status: ${response.status}`);
-                }
-            })
-            .then(data => {
-                this.showNotification(`Interview AI Link is working! Response: ${JSON.stringify(data)}`, 'success');
-            })
-            .catch(error => {
-                console.error('Error testing Interview AI Link:', error);
-                this.showNotification(`Interview AI Link is not working. Error: ${error.message}`, 'error');
-            })
-            .finally(() => {
-                this.hideLoadingModal();
-            });
+        // Open the interview experience in a new tab
+        window.open(link, '_blank');
+        this.showNotification('Interview link opened in new tab!', 'success');
     }
 
     showPreview() {
         const link = document.getElementById('interviewAILink').value;
         if (!link) {
-            this.showNotification('No Interview AI link to preview.', 'error');
+            this.showNotification('Please generate an Interview AI link first.', 'error');
             return;
         }
-        this.showLoadingModal('Previewing Interview AI...');
-        const tenantId = window.platform?.getTenantId();
-        const headers = global.SMEAIClient
-            ? global.SMEAIClient.buildHeaders(tenantId, 'interview')
-            : this.buildHeaders();
-        fetch(link, {
-            method: 'GET',
-            headers
-        })
-            .then(response => {
-                if (response.ok) {
-                    return response.json();
-                } else {
-                    throw new Error(`HTTP error! status: ${response.status}`);
-                }
-            })
-            .then(data => {
-                this.showNotification(`Interview AI Preview successful! Response: ${JSON.stringify(data)}`, 'success');
-            })
-            .catch(error => {
-                console.error('Error previewing Interview AI:', error);
-                this.showNotification(`Interview AI Preview failed. Error: ${error.message}`, 'error');
-            })
-            .finally(() => {
-                this.hideLoadingModal();
-            });
+        // Open preview in a new tab
+        window.open(link, '_blank');
+        this.showNotification('Interview preview opened in new tab!', 'success');
     }
 
     toggleGenerateButton(enabled) {
@@ -777,7 +898,5 @@ class InterviewAIManager {
     }
 }
 
-// Assuming InterviewAIManager is instantiated globally or passed to other functions
-// For example:
-// const interviewAI = new InterviewAIManager();
-// interviewAI.init();
+// Initialize Interview AI Manager
+const interviewAI = new InterviewAIManager();

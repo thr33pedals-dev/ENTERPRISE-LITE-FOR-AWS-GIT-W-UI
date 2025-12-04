@@ -1,6 +1,10 @@
+import { DataStore } from './data-store.js';
+
 const DEFAULT_STREAM_NAME = process.env.FIREHOSE_STREAM_NAME || '';
+const ANALYTICS_COLLECTION = 'usage_analytics';
 
 let firehoseClient = null;
+const dataStore = new DataStore();
 
 async function getFirehoseClient() {
   if (!DEFAULT_STREAM_NAME) {
@@ -30,6 +34,20 @@ async function getFirehoseClient() {
   } catch (error) {
     console.warn('UsageEvents: unable to load Firehose client:', error.message);
     return null;
+  }
+}
+
+// S3-based analytics storage (no Firehose needed)
+async function emitToS3(event) {
+  try {
+    await dataStore.create(ANALYTICS_COLLECTION, event, {
+      tenantId: event.tenantId || 'default',
+      personaId: event.persona || null
+    });
+    return true;
+  } catch (error) {
+    console.warn('UsageEvents: failed to write to S3:', error.message);
+    return false;
   }
 }
 
@@ -98,8 +116,9 @@ export async function emitUsageEvent(event = {}) {
 
   const baseEvent = buildBaseEvent(event);
   const results = await Promise.all([
-    emitFirehose(baseEvent),
-    emitLocal(baseEvent)
+    emitToS3(baseEvent),      // Always store to S3
+    emitFirehose(baseEvent),  // Optional: also to Firehose if configured
+    emitLocal(baseEvent)      // Optional: also to local if configured
   ]);
 
   return results.some(success => success);

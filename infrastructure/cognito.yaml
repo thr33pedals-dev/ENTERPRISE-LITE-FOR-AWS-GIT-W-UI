@@ -1,0 +1,218 @@
+AWSTemplateFormatVersion: '2010-09-09'
+Description: Enterprise Lite - Cognito Authentication Setup
+
+Parameters:
+  Environment:
+    Type: String
+    Default: dev
+    AllowedValues: [dev, staging, prod]
+    Description: Deployment environment
+  
+  AppDomain:
+    Type: String
+    Default: localhost:3000
+    Description: Application domain for callbacks (without https://)
+
+  AllowedCallbackUrls:
+    Type: CommaDelimitedList
+    Default: "http://localhost:3000/auth/callback,http://localhost:3000/admin.html"
+    Description: Allowed callback URLs (comma-separated)
+
+  AllowedLogoutUrls:
+    Type: CommaDelimitedList
+    Default: "http://localhost:3000,http://localhost:3000/index.html"
+    Description: Allowed logout URLs (comma-separated)
+
+Resources:
+  # ============================================
+  # Cognito User Pool
+  # ============================================
+  UserPool:
+    Type: AWS::Cognito::UserPool
+    Properties:
+      UserPoolName: !Sub "EnterpriseLite-${Environment}"
+      
+      # Sign-in options
+      UsernameAttributes:
+        - email
+      AutoVerifiedAttributes:
+        - email
+      
+      # Password policy
+      Policies:
+        PasswordPolicy:
+          MinimumLength: 8
+          RequireLowercase: true
+          RequireNumbers: true
+          RequireSymbols: false
+          RequireUppercase: true
+          TemporaryPasswordValidityDays: 7
+      
+      # MFA (optional - OFF for dev, can enable for prod)
+      MfaConfiguration: "OFF"
+      
+      # Account recovery
+      AccountRecoverySetting:
+        RecoveryMechanisms:
+          - Name: verified_email
+            Priority: 1
+      
+      # User attributes
+      Schema:
+        - Name: email
+          AttributeDataType: String
+          Mutable: true
+          Required: true
+        - Name: name
+          AttributeDataType: String
+          Mutable: true
+          Required: false
+        - Name: company_id
+          AttributeDataType: String
+          Mutable: true
+          Required: false
+        - Name: tenant_id
+          AttributeDataType: String
+          Mutable: true
+          Required: false
+      
+      # Email configuration (using Cognito default for dev)
+      EmailConfiguration:
+        EmailSendingAccount: COGNITO_DEFAULT
+      
+      # Verification message
+      VerificationMessageTemplate:
+        DefaultEmailOption: CONFIRM_WITH_CODE
+        EmailSubject: "Your Enterprise Lite verification code"
+        EmailMessage: "Your verification code is {####}"
+      
+      # Admin create user config
+      AdminCreateUserConfig:
+        AllowAdminCreateUserOnly: false
+        InviteMessageTemplate:
+          EmailSubject: "Welcome to Enterprise Lite"
+          EmailMessage: "Your username is {username} and temporary password is {####}"
+      
+      UserPoolTags:
+        Environment: !Ref Environment
+        Project: EnterpriseLite
+
+  # ============================================
+  # User Pool Client (for web app)
+  # ============================================
+  UserPoolClient:
+    Type: AWS::Cognito::UserPoolClient
+    Properties:
+      ClientName: !Sub "EnterpriseLite-WebApp-${Environment}"
+      UserPoolId: !Ref UserPool
+      
+      # No client secret for browser-based apps
+      GenerateSecret: false
+      
+      # Auth flows
+      ExplicitAuthFlows:
+        - ALLOW_USER_SRP_AUTH
+        - ALLOW_REFRESH_TOKEN_AUTH
+        - ALLOW_USER_PASSWORD_AUTH
+      
+      # OAuth settings
+      AllowedOAuthFlows:
+        - code
+        - implicit
+      AllowedOAuthFlowsUserPoolClient: true
+      AllowedOAuthScopes:
+        - email
+        - openid
+        - profile
+      
+      # Callback URLs
+      CallbackURLs: !Ref AllowedCallbackUrls
+      LogoutURLs: !Ref AllowedLogoutUrls
+      
+      # Token validity
+      AccessTokenValidity: 1  # hours
+      IdTokenValidity: 1      # hours
+      RefreshTokenValidity: 30 # days
+      TokenValidityUnits:
+        AccessToken: hours
+        IdToken: hours
+        RefreshToken: days
+      
+      # Security
+      PreventUserExistenceErrors: ENABLED
+      
+      SupportedIdentityProviders:
+        - COGNITO
+
+  # ============================================
+  # User Pool Domain (for hosted UI)
+  # ============================================
+  UserPoolDomain:
+    Type: AWS::Cognito::UserPoolDomain
+    Properties:
+      Domain: !Sub "enterprise-lite-${Environment}-${AWS::AccountId}"
+      UserPoolId: !Ref UserPool
+
+  # ============================================
+  # Admin User Group
+  # ============================================
+  AdminGroup:
+    Type: AWS::Cognito::UserPoolGroup
+    Properties:
+      GroupName: Admins
+      Description: Platform administrators
+      UserPoolId: !Ref UserPool
+      Precedence: 0
+
+  # ============================================
+  # Regular User Group
+  # ============================================
+  UsersGroup:
+    Type: AWS::Cognito::UserPoolGroup
+    Properties:
+      GroupName: Users
+      Description: Regular platform users
+      UserPoolId: !Ref UserPool
+      Precedence: 10
+
+Outputs:
+  UserPoolId:
+    Description: Cognito User Pool ID
+    Value: !Ref UserPool
+    Export:
+      Name: !Sub "${AWS::StackName}-UserPoolId"
+
+  UserPoolArn:
+    Description: Cognito User Pool ARN
+    Value: !GetAtt UserPool.Arn
+    Export:
+      Name: !Sub "${AWS::StackName}-UserPoolArn"
+
+  UserPoolClientId:
+    Description: Cognito User Pool Client ID
+    Value: !Ref UserPoolClient
+    Export:
+      Name: !Sub "${AWS::StackName}-UserPoolClientId"
+
+  UserPoolDomain:
+    Description: Cognito User Pool Domain
+    Value: !Sub "enterprise-lite-${Environment}-${AWS::AccountId}"
+    Export:
+      Name: !Sub "${AWS::StackName}-UserPoolDomain"
+
+  HostedUIUrl:
+    Description: Cognito Hosted UI URL
+    Value: !Sub "https://enterprise-lite-${Environment}-${AWS::AccountId}.auth.${AWS::Region}.amazoncognito.com"
+
+  # Environment variables to add to your .env file
+  EnvConfig:
+    Description: Add these to your .env file
+    Value: !Sub |
+      # Cognito Configuration
+      COGNITO_USER_POOL_ID=${UserPool}
+      COGNITO_CLIENT_ID=${UserPoolClient}
+      COGNITO_REGION=${AWS::Region}
+      COGNITO_DOMAIN=enterprise-lite-${Environment}-${AWS::AccountId}
+
+
+

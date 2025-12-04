@@ -1,17 +1,18 @@
 // Admin Dashboard JavaScript
+// NOTE: These are shown only when there's NO real data - displays "No data yet" message instead
 const PLACEHOLDER_METRICS = {
     sales: {
-        totalInteractions: 248,
-        leadsGenerated: 37
+        totalInteractions: 0,
+        leadsGenerated: 0
     },
     support: {
-        totalInteractions: 186,
-        resolved: 153,
-        escalations: 14
+        totalInteractions: 0,
+        resolved: 0,
+        escalations: 0
     },
     interview: {
-        completed: 62,
-        qualified: 27
+        completed: 0,
+        qualified: 0
     }
 };
 
@@ -25,6 +26,9 @@ class AdminDashboard {
             support: [],
             interview: []
         };
+        this.analyticsSummary = null;  // Server-side aggregated summary
+        this.allTranscripts = [];  // Store all transcripts for filtering
+        this.transcriptFilter = 'all';  // Current filter: 'all', 'sales', 'support'
         this.agentSummary = {
             sales: { ...PLACEHOLDER_METRICS.sales },
             support: { ...PLACEHOLDER_METRICS.support },
@@ -33,7 +37,8 @@ class AdminDashboard {
         this.personas = [];
         this.personaListEl = null;
         this.personaFormEl = null;
-        this.updateAgentDashboards();
+        // Don't call updateAgentDashboards here - DOM not ready yet
+        // It will be called in loadAllData() after DOM is ready
         this.init();
     }
 
@@ -44,6 +49,41 @@ class AdminDashboard {
         this.loadAllData();
         this.initializeCharts();
         this.loadTranscripts();
+        this.loadInterviewSessions();
+        
+        // Refresh buttons
+        const refreshTranscriptsBtn = document.getElementById('refreshTranscripts');
+        if (refreshTranscriptsBtn) {
+            refreshTranscriptsBtn.addEventListener('click', () => this.loadTranscripts());
+        }
+        
+        const refreshInterviewSessionsBtn = document.getElementById('refreshInterviewSessions');
+        if (refreshInterviewSessionsBtn) {
+            refreshInterviewSessionsBtn.addEventListener('click', () => this.loadInterviewSessions());
+        }
+        
+        // Transcript filter tabs
+        document.querySelectorAll('.transcript-filter-tab').forEach(tab => {
+            tab.addEventListener('click', (e) => this.filterTranscripts(e.target.dataset.filter));
+        });
+    }
+    
+    filterTranscripts(filter) {
+        this.transcriptFilter = filter;
+        
+        // Update tab styles
+        document.querySelectorAll('.transcript-filter-tab').forEach(tab => {
+            if (tab.dataset.filter === filter) {
+                tab.classList.add('text-primary-500', 'border-primary-500');
+                tab.classList.remove('text-neutral-500', 'border-transparent');
+            } else {
+                tab.classList.remove('text-primary-500', 'border-primary-500');
+                tab.classList.add('text-neutral-500', 'border-transparent');
+            }
+        });
+        
+        // Re-render with filter
+        this.renderTranscripts(this.allTranscripts);
     }
 
     checkAuthentication() {
@@ -51,9 +91,9 @@ class AdminDashboard {
         if (!storedUser) {
             const previewUser = {
                 id: 'preview_user',
-                company_name: 'Preview Company',
-                email: 'preview@example.com',
-                tenantId: 'preview-company'
+                company_name: 'Demo Company',
+                email: 'demo@example.com',
+                tenantId: 'default'  // Use 'default' to match demo data
             };
             this.currentUser = previewUser;
             localStorage.setItem('currentUser', JSON.stringify(previewUser));
@@ -66,9 +106,9 @@ class AdminDashboard {
             localStorage.removeItem('currentUser');
             const previewUser = {
                 id: 'preview_user',
-                company_name: 'Preview Company',
-                email: 'preview@example.com',
-                tenantId: 'preview-company'
+                company_name: 'Demo Company',
+                email: 'demo@example.com',
+                tenantId: 'default'  // Use 'default' to match demo data
             };
             this.currentUser = previewUser;
             localStorage.setItem('currentUser', JSON.stringify(previewUser));
@@ -107,20 +147,33 @@ class AdminDashboard {
 
         // Timeframe selection
         const trendsTimeframe = document.getElementById('trendsTimeframe');
-        trendsTimeframe.addEventListener('change', () => this.updateUsageTrendsChart());
+        if (trendsTimeframe) {
+            trendsTimeframe.addEventListener('change', () => this.updateUsageTrendsChart());
+        }
 
-        // Refresh buttons
-        document.getElementById('refreshPerformance').addEventListener('click', () => this.refreshPerformanceData());
-        document.getElementById('refreshAllData').addEventListener('click', () => this.loadAllData());
+        // Refresh buttons (with null checks)
+        const refreshPerformance = document.getElementById('refreshPerformance');
+        if (refreshPerformance) refreshPerformance.addEventListener('click', () => this.refreshPerformanceData());
+        
+        const refreshAllData = document.getElementById('refreshAllData');
+        if (refreshAllData) refreshAllData.addEventListener('click', () => this.loadAllData());
 
-        // Export buttons
-        document.getElementById('exportSales').addEventListener('click', () => this.exportData('sales'));
-        document.getElementById('exportSupport').addEventListener('click', () => this.exportData('support'));
-        document.getElementById('exportInterview').addEventListener('click', () => this.exportData('interview'));
+        // Export buttons (with null checks)
+        const exportSales = document.getElementById('exportSales');
+        if (exportSales) exportSales.addEventListener('click', () => this.exportData('sales'));
+        
+        const exportSupport = document.getElementById('exportSupport');
+        if (exportSupport) exportSupport.addEventListener('click', () => this.exportData('support'));
+        
+        const exportInterview = document.getElementById('exportInterview');
+        if (exportInterview) exportInterview.addEventListener('click', () => this.exportData('interview'));
 
-        // Action buttons
-        document.getElementById('clearOldData').addEventListener('click', () => this.clearOldData());
-        document.getElementById('generateReport').addEventListener('click', () => this.generateExecutiveReport());
+        // Action buttons (with null checks)
+        const clearOldDataBtn = document.getElementById('clearOldData');
+        if (clearOldDataBtn) clearOldDataBtn.addEventListener('click', () => this.clearOldData());
+        
+        const generateReportBtn = document.getElementById('generateReport');
+        if (generateReportBtn) generateReportBtn.addEventListener('click', () => this.generateExecutiveReport());
     }
 
     switchSection(sectionId) {
@@ -191,7 +244,8 @@ class AdminDashboard {
             await Promise.all([
                 this.loadSalesAnalytics(),
                 this.loadSupportAnalytics(),
-                this.loadInterviewAnalytics()
+                this.loadInterviewAnalytics(),
+                this.loadAnalyticsSummary()
             ]);
 
             this.updateOverviewStats();
@@ -207,6 +261,22 @@ class AdminDashboard {
             this.updateAgentDashboards();
         } finally {
             this.showLoading(false);
+        }
+    }
+    
+    async loadAnalyticsSummary() {
+        try {
+            const response = await fetch('/api/analytics/summary', {
+                headers: this.buildTenantHeaders()
+            });
+            if (!response.ok) {
+                throw new Error(`Failed to load analytics summary (status ${response.status})`);
+            }
+            const data = await response.json();
+            this.analyticsSummary = data?.summary || null;
+        } catch (error) {
+            console.error('Error loading analytics summary:', error);
+            this.analyticsSummary = null;
         }
     }
 
@@ -259,16 +329,29 @@ class AdminDashboard {
     }
 
     updateOverviewStats() {
-        // Sales AI stats
+        // Use server-side summary if available
+        if (this.analyticsSummary) {
+            const summary = this.analyticsSummary;
+            this.agentSummary.sales.totalInteractions = summary.sales?.totalInteractions || 0;
+            this.agentSummary.sales.leadsGenerated = summary.sales?.leadsGenerated || 0;
+            
+            this.agentSummary.support.totalInteractions = summary.support?.totalInteractions || 0;
+            this.agentSummary.support.resolved = summary.support?.resolved || 0;
+            this.agentSummary.support.escalations = summary.support?.escalations || 0;
+            
+            this.agentSummary.interview.completed = summary.interview?.completed || 0;
+            this.agentSummary.interview.qualified = Math.round((summary.interview?.completed || 0) * 0.6);
+            return;
+        }
+
+        // Fallback to client-side calculation from raw events
         const salesData = this.analyticsData.sales;
         const totalSalesInteractions = salesData.length;
         const salesConversions = salesData.filter(item => item.success).length;
 
-        // Support AI stats
         const supportData = this.analyticsData.support;
         const totalSupportTickets = supportData.length;
 
-        // Interview AI stats
         const interviewData = this.analyticsData.interview;
         const totalInterviews = interviewData.length;
 
@@ -295,8 +378,13 @@ class AdminDashboard {
     }
 
     initializeCharts() {
-        // Initialize Usage Trends Chart
-        const usageCtx = document.getElementById('usageTrendsChart').getContext('2d');
+        // Charts removed from UI - skip initialization silently
+        const usageCanvas = document.getElementById('usageTrendsChart');
+        if (!usageCanvas) {
+            // Charts not present in current UI - this is expected
+            return;
+        }
+        const usageCtx = usageCanvas.getContext('2d');
         this.usageTrendsChart = new Chart(usageCtx, {
             type: 'line',
             data: {
@@ -357,7 +445,12 @@ class AdminDashboard {
         });
 
         // Initialize Performance Chart
-        const performanceCtx = document.getElementById('performanceChart').getContext('2d');
+        const performanceCanvas = document.getElementById('performanceChart');
+        if (!performanceCanvas) {
+            console.warn('performanceChart canvas not found, skipping chart initialization');
+            return;
+        }
+        const performanceCtx = performanceCanvas.getContext('2d');
         this.performanceChart = new Chart(performanceCtx, {
             type: 'doughnut',
             data: {
@@ -394,7 +487,10 @@ class AdminDashboard {
     }
 
     updateUsageTrendsChart() {
-        const timeframe = parseInt(document.getElementById('trendsTimeframe').value);
+        if (!this.usageTrendsChart) return; // Chart not initialized
+        
+        const timeframeEl = document.getElementById('trendsTimeframe');
+        const timeframe = timeframeEl ? parseInt(timeframeEl.value) : 7;
         const endDate = new Date();
         const startDate = new Date(endDate.getTime() - (timeframe * 24 * 60 * 60 * 1000));
 
@@ -436,6 +532,8 @@ class AdminDashboard {
     }
 
     updatePerformanceChart() {
+        if (!this.performanceChart) return; // Chart not initialized
+        
         const salesSuccess = this.analyticsData.sales.filter(item => item.success).length;
         const supportSuccess = this.analyticsData.support.filter(item => item.success).length;
         const interviewSuccess = this.analyticsData.interview.filter(item => item.success).length;
@@ -467,9 +565,13 @@ class AdminDashboard {
         const avgDuration = salesData.length > 0 ? Math.round(totalDuration / salesData.length) : 0;
         const leads = Math.round(conversions * 0.8); // Assume 80% of conversions are qualified leads
 
-        document.getElementById('salesConversions').textContent = conversions;
-        document.getElementById('salesAvgDuration').textContent = `${avgDuration}m`;
-        document.getElementById('salesLeads').textContent = leads;
+        const salesConversionsEl = document.getElementById('salesConversions');
+        const salesAvgDurationEl = document.getElementById('salesAvgDuration');
+        const salesLeadsEl = document.getElementById('salesLeads');
+        
+        if (salesConversionsEl) salesConversionsEl.textContent = conversions;
+        if (salesAvgDurationEl) salesAvgDurationEl.textContent = `${avgDuration}m`;
+        if (salesLeadsEl) salesLeadsEl.textContent = leads;
 
         // Update table
         this.populateReportTable('salesReportTable', this.generateDailyStats(salesData, 'sales'));
@@ -503,9 +605,13 @@ class AdminDashboard {
         const qualified = Math.round(completed * 0.6); // Assume 60% pass rate
         const avgScore = qualified > 0 ? Math.round(Math.random() * 20 + 70) : 0; // Mock average score
 
-        document.getElementById('interviewsCompleted').textContent = completed;
-        document.getElementById('candidatesQualified').textContent = qualified;
-        document.getElementById('interviewAvgScore').textContent = avgScore;
+        const interviewsCompletedEl = document.getElementById('interviewsCompleted');
+        const candidatesQualifiedEl = document.getElementById('candidatesQualified');
+        const interviewAvgScoreEl = document.getElementById('interviewAvgScore');
+        
+        if (interviewsCompletedEl) interviewsCompletedEl.textContent = completed;
+        if (candidatesQualifiedEl) candidatesQualifiedEl.textContent = qualified;
+        if (interviewAvgScoreEl) interviewAvgScoreEl.textContent = avgScore;
 
         // Update table
         this.populateReportTable('interviewReportTable', this.generateDailyStats(interviewData, 'interview'));
@@ -516,17 +622,83 @@ class AdminDashboard {
         const support = this.agentSummary.support;
         const interview = this.agentSummary.interview;
 
+        // Check if there's any real data
+        const hasRealData = this.analyticsData.sales.length > 0 || 
+                           this.analyticsData.support.length > 0 || 
+                           this.analyticsData.interview.length > 0;
+
+        // Show appropriate values - "—" for no data, actual numbers for real data
+        const formatValue = (value, hasData) => {
+            if (!hasData && value === 0) return '—';
+            return value.toLocaleString();
+        };
+
+        const hasSalesData = this.analyticsData.sales.length > 0;
+        const hasSupportData = this.analyticsData.support.length > 0;
+        const hasInterviewData = this.analyticsData.interview.length > 0;
+
         const dashboardEls = [
-            ['sales-total-interactions', sales.totalInteractions.toLocaleString()],
-            ['sales-leads-generated', sales.leadsGenerated.toLocaleString()],
-            ['support-total-interactions', support.totalInteractions.toLocaleString()],
-            ['support-total-resolved', support.resolved.toLocaleString()],
-            ['support-total-escalations', support.escalations.toLocaleString()],
-            ['interview-interviews-completed', interview.completed.toLocaleString()],
-            ['interview-candidates-qualified', interview.qualified.toLocaleString()]
+            // Analytics section elements
+            ['sales-total-interactions', formatValue(sales.totalInteractions, hasSalesData)],
+            ['sales-leads-generated', formatValue(sales.leadsGenerated, hasSalesData)],
+            ['support-total-interactions', formatValue(support.totalInteractions, hasSupportData)],
+            ['support-total-resolved', formatValue(support.resolved, hasSupportData)],
+            ['support-total-escalations', formatValue(support.escalations, hasSupportData)],
+            ['interview-interviews-completed', formatValue(interview.completed, hasInterviewData)],
+            ['interview-candidates-qualified', formatValue(interview.qualified, hasInterviewData)],
+            // AI Agents cards (Dashboard section)
+            ['sales-interactions', formatValue(sales.totalInteractions, hasSalesData)],
+            ['support-interactions', formatValue(support.totalInteractions, hasSupportData)],
+            ['interview-interactions', formatValue(interview.completed, hasInterviewData)]
         ];
 
         dashboardEls.forEach(([id, value]) => {
+            const el = document.getElementById(id);
+            if (el) {
+                el.textContent = value;
+            }
+        });
+
+        // Update "Last" timestamps
+        this.updateLastUsedTimestamps();
+    }
+
+    updateLastUsedTimestamps() {
+        // Get most recent activity for each AI type
+        const getLatestDate = (data) => {
+            if (!data || data.length === 0) return null;
+            const sorted = data
+                .filter(item => item.usage_date || item.occurredAt)
+                .sort((a, b) => new Date(b.usage_date || b.occurredAt) - new Date(a.usage_date || a.occurredAt));
+            return sorted.length > 0 ? new Date(sorted[0].usage_date || sorted[0].occurredAt) : null;
+        };
+
+        const formatLastUsed = (date) => {
+            if (!date) return 'Never';
+            const now = new Date();
+            const diffMs = now - date;
+            const diffMins = Math.floor(diffMs / (1000 * 60));
+            const diffHours = Math.floor(diffMs / (1000 * 60 * 60));
+            const diffDays = Math.floor(diffMs / (1000 * 60 * 60 * 24));
+            
+            if (diffMins < 1) return 'Just now';
+            if (diffMins < 60) return `${diffMins}m ago`;
+            if (diffHours < 24) return `${diffHours}h ago`;
+            if (diffDays < 7) return `${diffDays}d ago`;
+            return date.toLocaleDateString('en-SG', { month: 'short', day: 'numeric' });
+        };
+
+        const salesLast = getLatestDate(this.analyticsData.sales);
+        const supportLast = getLatestDate(this.analyticsData.support);
+        const interviewLast = getLatestDate(this.analyticsData.interview);
+
+        const lastUsedEls = [
+            ['sales-last-used', formatLastUsed(salesLast)],
+            ['support-last-used', formatLastUsed(supportLast)],
+            ['interview-last-used', formatLastUsed(interviewLast)]
+        ];
+
+        lastUsedEls.forEach(([id, value]) => {
             const el = document.getElementById(id);
             if (el) {
                 el.textContent = value;
@@ -580,6 +752,7 @@ class AdminDashboard {
 
     populateReportTable(tableId, stats) {
         const tbody = document.getElementById(tableId);
+        if (!tbody) return; // Table not found, skip
         tbody.innerHTML = '';
 
         stats.forEach(stat => {
@@ -805,8 +978,10 @@ ${this.generateRecommendations()}
         if (titleEl) titleEl.textContent = title;
         if (subtitleEl) subtitleEl.textContent = subtitle;
         
-        modal.classList.toggle('hidden', !show);
-        modal.classList.toggle('flex', show);
+        if (modal) {
+            modal.classList.toggle('hidden', !show);
+            modal.classList.toggle('flex', show);
+        }
     }
 
     showNotification(message, type = 'info') {
@@ -840,6 +1015,28 @@ ${this.generateRecommendations()}
         `;
 
         try {
+            // Load transcripts from both sales and support personas
+            const headers = this.buildTenantHeaders();
+            const [salesResponse, supportResponse] = await Promise.all([
+                fetch('/api/transcripts?persona=sales', { headers }),
+                fetch('/api/transcripts?persona=support', { headers })
+            ]);
+            
+            const salesData = salesResponse.ok ? await salesResponse.json() : { data: [] };
+            const supportData = supportResponse.ok ? await supportResponse.json() : { data: [] };
+            
+            this.allTranscripts = [
+                ...(Array.isArray(salesData?.data) ? salesData.data : []),
+                ...(Array.isArray(supportData?.data) ? supportData.data : [])
+            ];
+            
+            this.renderTranscripts(this.allTranscripts);
+            return;
+        } catch (outerError) {
+            // Fallback to original behavior
+        }
+
+        try {
             const response = await fetch('/api/transcripts', {
                 headers: this.buildTenantHeaders()
             });
@@ -865,11 +1062,18 @@ ${this.generateRecommendations()}
         const container = document.getElementById('transcriptsList');
         if (!container) return;
 
-        if (!transcripts.length) {
+        // Apply filter
+        let filteredTranscripts = transcripts;
+        if (this.transcriptFilter && this.transcriptFilter !== 'all') {
+            filteredTranscripts = transcripts.filter(t => t.persona === this.transcriptFilter);
+        }
+
+        if (!filteredTranscripts.length) {
+            const filterLabel = this.transcriptFilter === 'all' ? '' : ` for ${this.transcriptFilter === 'sales' ? 'Sales AI' : 'Support AI'}`;
             container.innerHTML = `
                 <div class="text-center text-gray-500 py-8">
                     <i class="fas fa-comments text-3xl mb-3"></i>
-                    <p>No transcripts yet</p>
+                    <p>No transcripts${filterLabel}</p>
                     <p class="text-sm">Chats will appear here once customers interact with your AI.</p>
                 </div>
             `;
@@ -878,38 +1082,34 @@ ${this.generateRecommendations()}
 
         container.innerHTML = '';
 
-        transcripts
+        filteredTranscripts
             .sort((a, b) => new Date(b.lastMessageAt || 0) - new Date(a.lastMessageAt || 0))
-            .slice(0, 5)
+            .slice(0, 10)
             .forEach(transcript => {
                 const card = document.createElement('div');
                 card.className = 'border border-gray-200 rounded-lg p-4 hover:shadow transition';
 
-                const contactIntent = transcript.metadata?.contactIntent || null;
-                const hasIntent = Boolean(contactIntent);
-                const intentLabel = hasIntent
-                    ? (contactIntent.type === 'support_escalation' ? 'Support Escalation' : 'Sales Follow Up')
-                    : 'No Intent Detected';
+                const persona = transcript.persona || 'sales';
+                const personaLabel = persona === 'sales' ? 'Sales AI' : 'Support AI';
+                const personaColor = persona === 'sales' ? 'bg-blue-100 text-blue-700' : 'bg-green-100 text-green-700';
 
                 card.innerHTML = `
                     <div class="flex items-start justify-between">
-                        <div>
+                        <div class="flex items-center gap-2">
                             <h4 class="text-sm font-semibold text-gray-800">Conversation ${transcript.conversationId?.slice(-6) || ''}</h4>
-                            <p class="text-xs text-gray-500">${SMEAIUtils.formatDateTime(transcript.lastMessageAt)}</p>
+                            <span class="text-xs px-2 py-0.5 rounded ${personaColor}">${personaLabel}</span>
                         </div>
-                        <span class="text-xs px-3 py-1 rounded-full ${hasIntent ? 'bg-amber-100 text-amber-700' : 'bg-gray-100 text-gray-600'}">
-                            ${intentLabel}
-                        </span>
                     </div>
-                    <div class="mt-3 text-sm text-gray-700 line-clamp-2">
+                    <p class="text-xs text-gray-500 mt-1">${SMEAIUtils.formatDateTime(transcript.lastMessageAt)}</p>
+                    <div class="mt-2 text-sm text-gray-700 line-clamp-2">
                         ${SMEAIUtils.escapeHtml(transcript.metadata?.lastUserMessage || 'No messages yet.')}
                     </div>
-                    <div class="mt-4 flex items-center space-x-2">
-                        <button class="text-xs bg-blue-500 hover:bg-blue-600 text-white px-3 py-1 rounded" data-transcript-id="${transcript.id}" data-action="download">
-                            <i class="fas fa-download mr-1"></i>Download
+                    <div class="mt-3 flex items-center space-x-2">
+                        <button class="text-xs bg-primary-500 hover:bg-primary-600 text-white px-3 py-1 rounded" data-transcript-id="${transcript.id}" data-persona="${persona}" data-action="download">
+                            <i class="fas fa-file-pdf mr-1"></i>View / Print
                         </button>
-                        <button class="text-xs bg-gray-100 hover:bg-gray-200 text-gray-700 px-3 py-1 rounded" data-transcript-id="${transcript.id}" data-action="send">
-                            <i class="fas fa-paper-plane mr-1"></i>Email Transcript
+                        <button class="text-xs bg-gray-100 hover:bg-gray-200 text-gray-700 px-3 py-1 rounded" data-transcript-id="${transcript.id}" data-persona="${persona}" data-action="send">
+                            <i class="fas fa-paper-plane mr-1"></i>Email
                         </button>
                     </div>
                 `;
@@ -918,37 +1118,31 @@ ${this.generateRecommendations()}
             });
 
         container.querySelectorAll('[data-action="download"]').forEach(btn => {
-            btn.addEventListener('click', () => this.handleTranscriptDownload(btn.dataset.transcriptId));
+            btn.addEventListener('click', () => this.handleTranscriptDownload(btn.dataset.transcriptId, btn.dataset.persona));
         });
 
         container.querySelectorAll('[data-action="send"]').forEach(btn => {
-            btn.addEventListener('click', () => this.handleTranscriptSend(btn.dataset.transcriptId));
+            btn.addEventListener('click', () => this.handleTranscriptSend(btn.dataset.transcriptId, btn.dataset.persona));
         });
     }
 
-    async handleTranscriptDownload(transcriptId) {
+    async handleTranscriptDownload(transcriptId, persona = 'sales') {
         try {
-            const response = await fetch(`/api/transcripts/${encodeURIComponent(transcriptId)}/download`, {
-                headers: this.buildTenantHeaders()
-            });
-            if (!response.ok) {
-                throw new Error('Failed to get download link');
-            }
-            const data = await response.json();
-            if (data?.url) {
-                window.open(data.url, '_blank');
-            }
+            // Open formatted HTML transcript (can be printed to PDF)
+            const url = `/api/transcripts/${encodeURIComponent(transcriptId)}/download?persona=${persona}&format=html`;
+            window.open(url, '_blank');
+            this.showNotification('Opening transcript - use Print to save as PDF', 'success');
         } catch (error) {
             console.error('Transcript download error:', error);
             this.showNotification('Unable to download transcript', 'error');
         }
     }
 
-    async handleTranscriptSend(transcriptId) {
+    async handleTranscriptSend(transcriptId, persona = 'sales') {
         const email = prompt('Enter the recipient email address:');
         if (!email) return;
         try {
-            const response = await fetch(`/api/transcripts/${encodeURIComponent(transcriptId)}/send`, {
+            const response = await fetch(`/api/transcripts/${encodeURIComponent(transcriptId)}/send?persona=${persona}`, {
                 method: 'POST',
                 headers: this.buildTenantHeaders(),
                 body: JSON.stringify({ email })
@@ -960,6 +1154,260 @@ ${this.generateRecommendations()}
         } catch (error) {
             console.error('Transcript send error:', error);
             this.showNotification('Unable to send transcript', 'error');
+        }
+    }
+
+    // ===== Interview Sessions =====
+    async loadInterviewSessions() {
+        const container = document.getElementById('interviewSessionsList');
+        if (!container) return;
+
+        container.innerHTML = `
+            <div class="text-center text-gray-500 py-8">
+                <i class="fas fa-spinner fa-spin text-2xl mb-3"></i>
+                <p>Loading interview sessions...</p>
+            </div>
+        `;
+
+        try {
+            const headers = this.buildTenantHeaders();
+            headers.set('x-persona-id', 'interview');  // Interview sessions are under interview persona
+            const response = await fetch('/api/interview-ai/sessions', {
+                headers
+            });
+            if (!response.ok) {
+                throw new Error(`Failed to load sessions (status ${response.status})`);
+            }
+            const data = await response.json();
+            const sessions = Array.isArray(data?.sessions) ? data.sessions : [];
+            this.renderInterviewSessions(sessions);
+        } catch (error) {
+            console.error('Error loading interview sessions:', error);
+            container.innerHTML = `
+                <div class="text-center text-red-500 py-8">
+                    <i class="fas fa-exclamation-triangle text-2xl mb-3"></i>
+                    <p>Unable to load interview sessions.</p>
+                    <p class="text-sm">${error.message}</p>
+                </div>
+            `;
+        }
+    }
+
+    renderInterviewSessions(sessions) {
+        const container = document.getElementById('interviewSessionsList');
+        if (!container) return;
+
+        if (!sessions.length) {
+            container.innerHTML = `
+                <div class="text-center text-gray-500 py-8">
+                    <i class="fas fa-user-tie text-3xl mb-3"></i>
+                    <p>No interview sessions yet</p>
+                    <p class="text-sm">Candidate interviews will appear here once they complete the Interview AI.</p>
+                </div>
+            `;
+            return;
+        }
+
+        container.innerHTML = '';
+
+        sessions
+            .sort((a, b) => new Date(b.completedAt || b.startedAt || 0) - new Date(a.completedAt || a.startedAt || 0))
+            .slice(0, 10)
+            .forEach(session => {
+                const card = document.createElement('div');
+                card.className = 'border border-gray-200 rounded p-4 hover:shadow transition';
+
+                const isComplete = session.status === 'completed';
+                const score = session.overallScore ? `${session.overallScore}/10` : '-';
+                const statusClass = isComplete ? 'bg-green-100 text-green-700' : 'bg-amber-100 text-amber-700';
+                const statusText = isComplete ? 'Completed' : 'In Progress';
+
+                card.innerHTML = `
+                    <div class="flex items-start justify-between">
+                        <div>
+                            <h4 class="text-sm font-semibold text-gray-800">${SMEAIUtils.escapeHtml(session.candidateName || 'Unknown Candidate')}</h4>
+                            <p class="text-xs text-gray-500">${SMEAIUtils.escapeHtml(session.candidateEmail || '')}</p>
+                        </div>
+                        <span class="text-xs px-3 py-1 rounded-full ${statusClass}">
+                            ${statusText}
+                        </span>
+                    </div>
+                    <div class="mt-2 flex items-center space-x-4 text-xs text-gray-600">
+                        <span><i class="fas fa-briefcase mr-1"></i>${SMEAIUtils.escapeHtml(session.jobRole || 'Custom Role')}</span>
+                        <span><i class="fas fa-star mr-1"></i>Score: <strong class="text-primary-500">${score}</strong></span>
+                    </div>
+                    <div class="mt-1 text-xs text-gray-400">
+                        ${isComplete ? `Completed: ${SMEAIUtils.formatDateTime(session.completedAt)}` : `Started: ${SMEAIUtils.formatDateTime(session.startedAt)}`}
+                    </div>
+                    <div class="mt-3 flex items-center space-x-2">
+                        <button class="text-xs bg-primary-500 hover:bg-primary-600 text-white px-3 py-1 rounded" data-session-id="${session.sessionId}" data-action="view-results">
+                            <i class="fas fa-chart-bar mr-1"></i>View Results
+                        </button>
+                        <button class="text-xs bg-gray-100 hover:bg-gray-200 text-gray-700 px-3 py-1 rounded" data-session-id="${session.sessionId}" data-email="${SMEAIUtils.escapeHtml(session.candidateEmail || '')}" data-action="email-results">
+                            <i class="fas fa-paper-plane mr-1"></i>Email Candidate
+                        </button>
+                    </div>
+                `;
+
+                container.appendChild(card);
+            });
+
+        container.querySelectorAll('[data-action="view-results"]').forEach(btn => {
+            btn.addEventListener('click', () => this.handleViewInterviewResults(btn.dataset.sessionId));
+        });
+
+        container.querySelectorAll('[data-action="email-results"]').forEach(btn => {
+            btn.addEventListener('click', () => this.handleEmailInterviewResults(btn.dataset.sessionId, btn.dataset.email));
+        });
+    }
+
+    async handleViewInterviewResults(sessionId) {
+        try {
+            const response = await fetch(`/api/interview-ai/results/${encodeURIComponent(sessionId)}`, {
+                headers: this.buildTenantHeaders()
+            });
+            if (!response.ok) {
+                throw new Error('Failed to load results');
+            }
+            const data = await response.json();
+            
+            if (data.success && data.results) {
+                this.showInterviewResultsModal(data.results);
+            } else {
+                this.showNotification('No results found for this session', 'error');
+            }
+        } catch (error) {
+            console.error('Interview results error:', error);
+            this.showNotification('Unable to load interview results', 'error');
+        }
+    }
+
+    showInterviewResultsModal(results) {
+        // Create modal if not exists
+        let modal = document.getElementById('interviewResultsModal');
+        if (!modal) {
+            modal = document.createElement('div');
+            modal.id = 'interviewResultsModal';
+            modal.className = 'fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 hidden';
+            modal.innerHTML = `
+                <div class="bg-white rounded-lg max-w-2xl w-full mx-4 max-h-[80vh] overflow-hidden flex flex-col">
+                    <div class="p-4 border-b border-gray-200 flex justify-between items-center">
+                        <h3 class="font-semibold text-lg text-gray-900">Interview Results</h3>
+                        <button id="closeInterviewResultsModal" class="text-gray-400 hover:text-gray-600">
+                            <i class="fas fa-times text-xl"></i>
+                        </button>
+                    </div>
+                    <div class="p-4 overflow-y-auto flex-1" id="interviewResultsContent"></div>
+                    <div class="p-4 border-t border-gray-200 flex justify-end space-x-2">
+                        <button id="printInterviewResults" class="bg-primary-500 hover:bg-primary-600 text-white px-4 py-2 rounded text-sm">
+                            <i class="fas fa-file-pdf mr-2"></i>View / Print PDF
+                        </button>
+                        <button id="downloadInterviewResults" class="bg-gray-100 hover:bg-gray-200 text-gray-700 px-4 py-2 rounded text-sm">
+                            <i class="fas fa-code mr-2"></i>Download JSON
+                        </button>
+                    </div>
+                </div>
+            `;
+            document.body.appendChild(modal);
+
+            modal.querySelector('#closeInterviewResultsModal').addEventListener('click', () => {
+                modal.classList.add('hidden');
+            });
+
+            modal.addEventListener('click', (e) => {
+                if (e.target === modal) modal.classList.add('hidden');
+            });
+        }
+
+        // Populate content
+        const content = modal.querySelector('#interviewResultsContent');
+        const overallScore = results.overallScore ? `${results.overallScore}/10` : 'N/A';
+        
+        let responsesHtml = '';
+        if (results.responses && results.responses.length > 0) {
+            responsesHtml = results.responses.map((r, idx) => `
+                <div class="border border-gray-200 rounded p-3 mb-3">
+                    <div class="flex justify-between items-start mb-2">
+                        <span class="text-xs font-medium text-primary-500">Question ${idx + 1}</span>
+                        <span class="text-xs bg-primary-100 text-primary-700 px-2 py-1 rounded">${r.evaluation?.score || '-'}/10</span>
+                    </div>
+                    <p class="text-sm font-medium text-gray-800 mb-2">${SMEAIUtils.escapeHtml(r.question || '')}</p>
+                    <p class="text-sm text-gray-600 mb-2"><strong>Answer:</strong> ${SMEAIUtils.escapeHtml(r.response || '')}</p>
+                    ${r.evaluation?.strengths?.length ? `<p class="text-xs text-green-600"><strong>Strengths:</strong> ${r.evaluation.strengths.join(', ')}</p>` : ''}
+                    ${r.evaluation?.improvements?.length ? `<p class="text-xs text-orange-600"><strong>Improvements:</strong> ${r.evaluation.improvements.join(', ')}</p>` : ''}
+                </div>
+            `).join('');
+        }
+
+        content.innerHTML = `
+            <div class="mb-4 p-4 bg-gray-50 rounded">
+                <div class="grid grid-cols-2 gap-4">
+                    <div>
+                        <p class="text-xs text-gray-500">Candidate</p>
+                        <p class="font-semibold text-gray-900">${SMEAIUtils.escapeHtml(results.candidateName || 'Unknown')}</p>
+                    </div>
+                    <div>
+                        <p class="text-xs text-gray-500">Email</p>
+                        <p class="font-semibold text-gray-900">${SMEAIUtils.escapeHtml(results.candidateEmail || '-')}</p>
+                    </div>
+                    <div>
+                        <p class="text-xs text-gray-500">Job Role</p>
+                        <p class="font-semibold text-gray-900">${SMEAIUtils.escapeHtml(results.jobRole || 'Custom')}</p>
+                    </div>
+                    <div>
+                        <p class="text-xs text-gray-500">Overall Score</p>
+                        <p class="font-bold text-2xl text-primary-500">${overallScore}</p>
+                    </div>
+                </div>
+            </div>
+            <h4 class="font-semibold text-gray-900 mb-3">Responses & Evaluations</h4>
+            ${responsesHtml || '<p class="text-gray-500 text-sm">No responses recorded.</p>'}
+        `;
+
+        // Print/PDF button - opens formatted HTML in new tab
+        const printBtn = modal.querySelector('#printInterviewResults');
+        printBtn.onclick = () => {
+            const url = `/api/interview-ai/results/${encodeURIComponent(results.sessionId)}/download?format=html`;
+            window.open(url, '_blank');
+            this.showNotification('Opening formatted view - use Print to save as PDF', 'success');
+        };
+
+        // Download JSON button
+        const downloadBtn = modal.querySelector('#downloadInterviewResults');
+        downloadBtn.onclick = () => {
+            const blob = new Blob([JSON.stringify(results, null, 2)], { type: 'application/json' });
+            const url = URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = `interview_${results.sessionId || 'results'}.json`;
+            a.click();
+            URL.revokeObjectURL(url);
+        };
+
+        modal.classList.remove('hidden');
+    }
+
+    async handleEmailInterviewResults(sessionId, candidateEmail) {
+        const email = prompt('Send interview results to:', candidateEmail || '');
+        if (!email) return;
+
+        try {
+            const response = await fetch(`/api/interview-ai/results/${encodeURIComponent(sessionId)}/send`, {
+                method: 'POST',
+                headers: {
+                    ...this.buildTenantHeaders(),
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({ email })
+            });
+            
+            if (!response.ok) {
+                throw new Error('Failed to send results');
+            }
+            this.showNotification(`Interview results sent to ${email}`, 'success');
+        } catch (error) {
+            console.error('Email interview results error:', error);
+            this.showNotification('Unable to send interview results. Email service may not be configured.', 'error');
         }
     }
 
@@ -980,14 +1428,21 @@ ${this.generateRecommendations()}
             refreshBtn.addEventListener('click', () => this.loadPersonas());
         }
 
-        if (this.personaListEl) {
-            this.renderPersonaList();
-            this.loadPersonas();
-        }
+        // Personas tab is hidden - don't auto-load
+        // if (this.personaListEl) {
+        //     this.renderPersonaList();
+        //     this.loadPersonas();
+        // }
     }
 
     async loadPersonas() {
+        // Skip if personas tab is hidden or element doesn't exist
         if (!this.personaListEl) return;
+        
+        // Check if personas tab is actually visible before loading
+        const personasTab = document.getElementById('personas-tab');
+        if (personasTab && personasTab.classList.contains('hidden')) return;
+        
         this.personaListEl.innerHTML = '<div class="text-gray-500 text-sm">Loading personas...</div>';
         try {
             const tenantId = this.getTenantIdForRequests();
@@ -1156,3 +1611,208 @@ ${this.generateRecommendations()}
 
 // Initialize Admin Dashboard
 const adminDashboard = new AdminDashboard();
+
+// ===== Edit Company Information =====
+// Run immediately since script is loaded at bottom of body
+(function initEditCompanyInfo() {
+    const editBtn = document.getElementById('editCompanyInfoBtn');
+    const cancelBtn = document.getElementById('cancelEditBtn');
+    const editForm = document.getElementById('editCompanyForm');
+    const viewMode = document.getElementById('profile-view-mode');
+    const editMode = document.getElementById('profile-edit-mode');
+
+    if (editBtn) {
+        editBtn.addEventListener('click', function() {
+            // Populate edit fields with current values
+            document.getElementById('edit-company-name').value = document.getElementById('company-name').textContent;
+            document.getElementById('edit-contact-person').value = document.getElementById('contact-person').textContent;
+            document.getElementById('edit-company-email').value = document.getElementById('company-email').textContent;
+            document.getElementById('edit-company-phone').value = document.getElementById('company-phone').textContent;
+            document.getElementById('edit-company-address').value = document.getElementById('company-address').textContent;
+            
+            // Show edit mode
+            viewMode.classList.add('hidden');
+            editMode.classList.remove('hidden');
+        });
+    }
+
+    if (cancelBtn) {
+        cancelBtn.addEventListener('click', function() {
+            viewMode.classList.remove('hidden');
+            editMode.classList.add('hidden');
+        });
+    }
+
+    if (editForm) {
+        editForm.addEventListener('submit', async function(e) {
+            e.preventDefault();
+            
+            const newData = {
+                company_name: document.getElementById('edit-company-name').value,
+                contact_person: document.getElementById('edit-contact-person').value,
+                email: document.getElementById('edit-company-email').value,
+                phone: document.getElementById('edit-company-phone').value,
+                address: document.getElementById('edit-company-address').value
+            };
+
+            // Update display
+            document.getElementById('company-name').textContent = newData.company_name;
+            document.getElementById('contact-person').textContent = newData.contact_person;
+            document.getElementById('company-email').textContent = newData.email;
+            document.getElementById('company-phone').textContent = newData.phone;
+            document.getElementById('company-address').textContent = newData.address;
+
+            // Update stored user
+            const storedUser = localStorage.getItem('currentUser');
+            if (storedUser) {
+                try {
+                    const user = JSON.parse(storedUser);
+                    user.company_name = newData.company_name;
+                    user.email = newData.email;
+                    localStorage.setItem('currentUser', JSON.stringify(user));
+                } catch (e) {
+                    console.warn('Failed to update stored user:', e);
+                }
+            }
+
+            // Switch back to view mode
+            viewMode.classList.remove('hidden');
+            editMode.classList.add('hidden');
+
+            if (window.platform && window.platform.showNotification) {
+                window.platform.showNotification('Company information updated', 'success');
+            } else {
+                alert('Company information updated successfully!');
+            }
+        });
+    }
+})();
+
+// ===== Quick Start Guide Modal =====
+function showQuickStartGuide() {
+    let modal = document.getElementById('quickStartModal');
+    if (!modal) {
+        modal = document.createElement('div');
+        modal.id = 'quickStartModal';
+        modal.className = 'fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50';
+        modal.innerHTML = `
+            <div class="bg-white rounded max-w-2xl w-full mx-4 max-h-[80vh] overflow-hidden flex flex-col">
+                <div class="p-4 border-b border-gray-200 flex justify-between items-center">
+                    <h3 class="font-semibold text-lg text-gray-900">
+                        <i class="fas fa-rocket text-primary-500 mr-2"></i>Quick Start Guide
+                    </h3>
+                    <button onclick="document.getElementById('quickStartModal').classList.add('hidden')" class="text-gray-400 hover:text-gray-600">
+                        <i class="fas fa-times text-xl"></i>
+                    </button>
+                </div>
+                <div class="p-6 overflow-y-auto flex-1">
+                    <div class="space-y-6">
+                        <div class="flex items-start space-x-4">
+                            <div class="w-8 h-8 bg-primary-500 rounded flex items-center justify-center text-white font-bold flex-shrink-0">1</div>
+                            <div>
+                                <h4 class="font-semibold text-gray-900 mb-1">Configure Your AI Agent</h4>
+                                <p class="text-gray-600 text-sm">Navigate to Sales AI, Support AI, or Interview AI from the dashboard. Upload your product documents, FAQs, or job descriptions.</p>
+                            </div>
+                        </div>
+                        <div class="flex items-start space-x-4">
+                            <div class="w-8 h-8 bg-primary-500 rounded flex items-center justify-center text-white font-bold flex-shrink-0">2</div>
+                            <div>
+                                <h4 class="font-semibold text-gray-900 mb-1">Upload Your Documents</h4>
+                                <p class="text-gray-600 text-sm">Drag and drop PDF, DOCX, Excel, or CSV files. The AI will automatically process and learn from your content.</p>
+                            </div>
+                        </div>
+                        <div class="flex items-start space-x-4">
+                            <div class="w-8 h-8 bg-primary-500 rounded flex items-center justify-center text-white font-bold flex-shrink-0">3</div>
+                            <div>
+                                <h4 class="font-semibold text-gray-900 mb-1">Customize Settings</h4>
+                                <p class="text-gray-600 text-sm">Set your preferred response tone, notification emails, and any custom instructions for the AI.</p>
+                            </div>
+                        </div>
+                        <div class="flex items-start space-x-4">
+                            <div class="w-8 h-8 bg-primary-500 rounded flex items-center justify-center text-white font-bold flex-shrink-0">4</div>
+                            <div>
+                                <h4 class="font-semibold text-gray-900 mb-1">Generate & Share Your AI Link</h4>
+                                <p class="text-gray-600 text-sm">Click "Generate AI Link" to create a shareable URL. Send this to customers, embed it on your website, or share via email.</p>
+                            </div>
+                        </div>
+                        <div class="flex items-start space-x-4">
+                            <div class="w-8 h-8 bg-primary-500 rounded flex items-center justify-center text-white font-bold flex-shrink-0">5</div>
+                            <div>
+                                <h4 class="font-semibold text-gray-900 mb-1">Monitor & Improve</h4>
+                                <p class="text-gray-600 text-sm">Check the Analytics tab to see interactions, download transcripts, and refine your AI's knowledge base over time.</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="p-4 border-t border-gray-200 bg-gray-50">
+                    <p class="text-gray-500 text-sm text-center">Need more help? Email <a href="mailto:elite@sunway-intgen.com" class="text-primary-500 hover:underline">elite@sunway-intgen.com</a></p>
+                </div>
+            </div>
+        `;
+        document.body.appendChild(modal);
+    }
+    modal.classList.remove('hidden');
+}
+
+// ===== Video Tutorials Modal =====
+function showVideoTutorials() {
+    let modal = document.getElementById('videoTutorialsModal');
+    if (!modal) {
+        modal = document.createElement('div');
+        modal.id = 'videoTutorialsModal';
+        modal.className = 'fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50';
+        modal.innerHTML = `
+            <div class="bg-white rounded max-w-3xl w-full mx-4 max-h-[80vh] overflow-hidden flex flex-col">
+                <div class="p-4 border-b border-gray-200 flex justify-between items-center">
+                    <h3 class="font-semibold text-lg text-gray-900">
+                        <i class="fas fa-play-circle text-primary-500 mr-2"></i>Video Tutorials
+                    </h3>
+                    <button onclick="document.getElementById('videoTutorialsModal').classList.add('hidden')" class="text-gray-400 hover:text-gray-600">
+                        <i class="fas fa-times text-xl"></i>
+                    </button>
+                </div>
+                <div class="p-6 overflow-y-auto flex-1">
+                    <div class="grid md:grid-cols-2 gap-4">
+                        <div class="border border-gray-200 rounded p-4 hover:shadow transition cursor-pointer" onclick="window.location.href='sales-ai.html'">
+                            <div class="bg-gray-100 rounded h-32 flex items-center justify-center mb-3">
+                                <i class="fas fa-chart-line text-4xl text-primary-500"></i>
+                            </div>
+                            <h4 class="font-semibold text-gray-900 mb-1">Sales AI Setup</h4>
+                            <p class="text-gray-500 text-sm">Learn how to configure your Sales AI agent</p>
+                            <p class="text-primary-500 text-xs mt-2"><i class="fas fa-play mr-1"></i>Watch on setup page</p>
+                        </div>
+                        <div class="border border-gray-200 rounded p-4 hover:shadow transition cursor-pointer" onclick="window.location.href='support-ai.html'">
+                            <div class="bg-gray-100 rounded h-32 flex items-center justify-center mb-3">
+                                <i class="fas fa-headset text-4xl text-primary-500"></i>
+                            </div>
+                            <h4 class="font-semibold text-gray-900 mb-1">Support AI Setup</h4>
+                            <p class="text-gray-500 text-sm">Configure your intelligent FAQ system</p>
+                            <p class="text-primary-500 text-xs mt-2"><i class="fas fa-play mr-1"></i>Watch on setup page</p>
+                        </div>
+                        <div class="border border-gray-200 rounded p-4 hover:shadow transition cursor-pointer" onclick="window.location.href='interview-ai.html'">
+                            <div class="bg-gray-100 rounded h-32 flex items-center justify-center mb-3">
+                                <i class="fas fa-users text-4xl text-primary-500"></i>
+                            </div>
+                            <h4 class="font-semibold text-gray-900 mb-1">Interview AI Setup</h4>
+                            <p class="text-gray-500 text-sm">Create AI-powered interviews</p>
+                            <p class="text-primary-500 text-xs mt-2"><i class="fas fa-play mr-1"></i>Watch on setup page</p>
+                        </div>
+                        <div class="border border-gray-200 rounded p-4 hover:shadow transition cursor-pointer" onclick="window.location.href='index.html'">
+                            <div class="bg-gray-100 rounded h-32 flex items-center justify-center mb-3">
+                                <i class="fas fa-credit-card text-4xl text-primary-500"></i>
+                            </div>
+                            <h4 class="font-semibold text-gray-900 mb-1">Subscription Guide</h4>
+                            <p class="text-gray-500 text-sm">How to subscribe and get started</p>
+                            <p class="text-primary-500 text-xs mt-2"><i class="fas fa-play mr-1"></i>Watch on homepage</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="p-4 border-t border-gray-200 bg-gray-50">
+                    <p class="text-gray-500 text-sm text-center">Each AI setup page has a video tutorial. Click "Watch Video" at the top of each page.</p>
+                </div>
+            </div>
+        `;
+        document.body.appendChild(modal);
+    }
+    modal.classList.remove('hidden');
+}

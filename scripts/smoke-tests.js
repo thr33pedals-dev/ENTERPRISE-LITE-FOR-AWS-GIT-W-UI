@@ -9,6 +9,7 @@ const TENANT_ID = process.env.SMOKE_TENANT_ID || 'preview-company';
 const SALES_PERSONA = process.env.SMOKE_SALES_PERSONA || 'sales';
 const SUPPORT_PERSONA = process.env.SMOKE_SUPPORT_PERSONA || 'support';
 const TEST_EMAIL = process.env.SMOKE_TEST_EMAIL || 'smoke@example.com';
+const DEFAULT_PERSONA_IDS = ['sales', 'support', 'interview'];
 const SALES_UPLOAD_FILES = [
   { path: 'examples/3_Pricing_Rates.xlsx', filename: '3_Pricing_Rates.xlsx', contentType: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet' },
   { path: 'examples/pdf/Employee_Brochure_MultiColumn.pdf', filename: 'Employee_Brochure_MultiColumn.pdf', contentType: 'application/pdf' }
@@ -137,6 +138,25 @@ async function upload(files, persona) {
   });
 }
 
+async function verifyDefaultPersonas() {
+  const randomTenant = `smoke-${Date.now()}-${Math.random().toString(36).slice(2, 8)}`;
+  const response = await request({
+    method: 'GET',
+    route: '/api/personas',
+    headers: { 'x-tenant-id': randomTenant }
+  });
+
+  assert.equal(response?.success, true, 'Persona list should succeed for new tenant');
+  const personas = Array.isArray(response?.data) ? response.data : [];
+  assert.ok(personas.length >= DEFAULT_PERSONA_IDS.length, 'New tenant should receive default personas');
+  const personaKeys = personas.map(persona => persona.personaId || persona.id);
+  DEFAULT_PERSONA_IDS.forEach(expected => {
+    assert.ok(personaKeys.includes(expected), `Default persona '${expected}' should be present`);
+  });
+
+  log('personas-defaults', `Default personas seeded for tenant ${randomTenant}`);
+}
+
 async function verifyManifest(persona) {
   const manifest = await request({ method: 'GET', route: '/api/status', headers: { 'x-persona-id': persona } });
   assert.equal(manifest?.success, true, `${persona} manifest should load`);
@@ -149,6 +169,8 @@ async function verifyManifest(persona) {
 
 async function runSmokeTests() {
   console.log('🚬 Starting persona smoke tests...');
+
+  await verifyDefaultPersonas();
 
   // Status check (tenant baseline)
   await verifyManifest(SALES_PERSONA);

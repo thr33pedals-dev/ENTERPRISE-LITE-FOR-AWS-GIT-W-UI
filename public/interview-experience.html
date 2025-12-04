@@ -1,0 +1,314 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AI Interview - Enterprise Lite</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@6.4.0/css/all.min.css">
+    <style>
+        body { font-family: 'Inter', system-ui, sans-serif; }
+        .primary-bg { background-color: #E31837; }
+        .primary-text { color: #E31837; }
+        .primary-border { border-color: #E31837; }
+    </style>
+</head>
+<body class="bg-gray-50 min-h-screen">
+    
+    <!-- Header -->
+    <nav class="bg-white border-b border-gray-200 shadow-sm">
+        <div class="max-w-4xl mx-auto px-6 h-16 flex items-center">
+            <img src="images/sunway-logo.png" alt="Logo" class="h-8 w-auto mr-3">
+            <span class="text-gray-900 font-semibold">AI Interview</span>
+        </div>
+    </nav>
+
+    <div class="max-w-2xl mx-auto px-4 py-8">
+        
+        <!-- Welcome Screen (Step 1) -->
+        <div id="welcomeScreen" class="bg-white rounded-lg border border-gray-200 p-8 shadow-sm">
+            <div class="text-center mb-8">
+                <div class="w-16 h-16 primary-bg rounded-lg flex items-center justify-center mx-auto mb-4">
+                    <i class="fas fa-user-tie text-white text-2xl"></i>
+                </div>
+                <h1 class="text-2xl font-bold text-gray-900 mb-2" id="jobTitle">AI Interview</h1>
+                <p class="text-gray-600" id="jobDescription">Welcome to your AI-powered interview session.</p>
+            </div>
+
+            <form id="candidateForm" class="space-y-4">
+                <div>
+                    <label class="block text-gray-700 font-medium mb-2">Your Name *</label>
+                    <input type="text" id="candidateName" required 
+                        class="w-full border border-gray-300 rounded px-4 py-3 focus:border-red-500 focus:outline-none">
+                </div>
+                <div>
+                    <label class="block text-gray-700 font-medium mb-2">Email Address *</label>
+                    <input type="email" id="candidateEmail" required 
+                        class="w-full border border-gray-300 rounded px-4 py-3 focus:border-red-500 focus:outline-none">
+                </div>
+                <button type="submit" class="w-full primary-bg text-white font-semibold py-3 rounded hover:bg-red-700 transition">
+                    <i class="fas fa-play mr-2"></i>Start Interview
+                </button>
+            </form>
+
+            <p class="text-gray-500 text-sm text-center mt-6">
+                <i class="fas fa-clock mr-1"></i> Estimated time: 10-15 minutes
+            </p>
+        </div>
+
+        <!-- Interview Screen (Step 2) -->
+        <div id="interviewScreen" class="hidden">
+            <!-- Progress -->
+            <div class="bg-white rounded-lg border border-gray-200 p-4 mb-6 shadow-sm">
+                <div class="flex justify-between items-center mb-2">
+                    <span class="text-gray-600 text-sm">Question <span id="currentQ">1</span> of <span id="totalQ">5</span></span>
+                    <span class="text-gray-600 text-sm" id="progressPercent">0%</span>
+                </div>
+                <div class="w-full bg-gray-200 rounded-full h-2">
+                    <div id="progressBar" class="primary-bg h-2 rounded-full transition-all duration-300" style="width: 0%"></div>
+                </div>
+            </div>
+
+            <!-- Question Card -->
+            <div class="bg-white rounded-lg border border-gray-200 p-6 shadow-sm">
+                <div class="mb-4">
+                    <span id="questionCategory" class="text-xs font-medium primary-text bg-red-50 px-2 py-1 rounded">Category</span>
+                </div>
+                
+                <h2 id="questionText" class="text-xl font-semibold text-gray-900 mb-6">
+                    Loading question...
+                </h2>
+
+                <div class="space-y-4">
+                    <textarea id="answerInput" rows="6" 
+                        class="w-full border border-gray-300 rounded px-4 py-3 focus:border-red-500 focus:outline-none resize-none"
+                        placeholder="Type your answer here..."></textarea>
+                    
+                    <div class="flex justify-between items-center">
+                        <span id="charCount" class="text-gray-400 text-sm">0 characters</span>
+                        <button id="submitAnswer" class="primary-bg text-white font-semibold px-6 py-3 rounded hover:bg-red-700 transition">
+                            <span id="submitBtnText">Submit Answer</span>
+                            <i class="fas fa-arrow-right ml-2"></i>
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- AI Feedback is processed server-side and only shown to company in dashboard -->
+        </div>
+
+        <!-- Completion Screen (Step 3) - No score shown to candidate -->
+        <div id="completionScreen" class="hidden">
+            <div class="bg-white rounded-lg border border-gray-200 p-8 shadow-sm text-center">
+                <div class="w-20 h-20 bg-green-100 rounded-full flex items-center justify-center mx-auto mb-6">
+                    <i class="fas fa-check-circle text-green-500 text-4xl"></i>
+                </div>
+                <h1 class="text-2xl font-bold text-gray-900 mb-3">Interview Complete!</h1>
+                <p class="text-gray-600 mb-6">Thank you for completing your AI interview. Our team will review your responses and get back to you soon.</p>
+                
+                <div class="bg-gray-50 rounded-lg p-4 mb-6">
+                    <div class="text-center">
+                        <span class="text-gray-500">Questions Answered</span>
+                        <p class="text-xl font-bold text-gray-900" id="finalQuestionsAnswered">5</p>
+                    </div>
+                </div>
+
+                <p class="text-gray-500 text-sm">
+                    <i class="fas fa-envelope mr-1"></i>
+                    A confirmation will be sent to <span id="confirmEmail" class="font-medium"></span>
+                </p>
+            </div>
+        </div>
+
+    </div>
+
+    <!-- Footer -->
+    <footer class="mt-auto py-6 text-center text-gray-400 text-sm">
+        Powered by Enterprise Lite AI Platform
+    </footer>
+
+    <script src="js/api-client.js"></script>
+    <script>
+        // Get URL parameters
+        const urlParams = new URLSearchParams(window.location.search);
+        const tenantId = urlParams.get('tenant') || 'default';
+        const configId = urlParams.get('config');
+        const personaId = urlParams.get('persona') || 'interview';
+
+        // State
+        let sessionId = null;
+        let questions = [];
+        let currentQuestionIndex = 0;
+        let candidateInfo = {};
+
+        // Elements
+        const welcomeScreen = document.getElementById('welcomeScreen');
+        const interviewScreen = document.getElementById('interviewScreen');
+        const completionScreen = document.getElementById('completionScreen');
+        const candidateForm = document.getElementById('candidateForm');
+        const answerInput = document.getElementById('answerInput');
+        const submitAnswer = document.getElementById('submitAnswer');
+        // Note: feedbackCard and nextQuestion removed - AI feedback only shown to company in dashboard
+
+        // Load config on page load
+        async function loadInterviewConfig() {
+            if (!configId) return;
+            
+            try {
+                const response = await fetch(`/api/interview-ai?config=${configId}`, {
+                    headers: {
+                        'x-tenant-id': tenantId,
+                        'x-persona-id': personaId
+                    }
+                });
+                const data = await response.json();
+                
+                if (data.success && data.data && data.data.length > 0) {
+                    const config = data.data[0];
+                    document.getElementById('jobTitle').textContent = config.job_role || 'AI Interview';
+                    document.getElementById('jobDescription').textContent = config.custom_prompt || 'Welcome to your AI-powered interview.';
+                }
+            } catch (error) {
+                console.error('Failed to load config:', error);
+            }
+        }
+
+        // Start interview session
+        candidateForm.addEventListener('submit', async (e) => {
+            e.preventDefault();
+            
+            candidateInfo = {
+                name: document.getElementById('candidateName').value.trim(),
+                email: document.getElementById('candidateEmail').value.trim()
+            };
+
+            try {
+                const response = await fetch('/api/interview-ai/start-session', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'x-tenant-id': tenantId,
+                        'x-persona-id': personaId
+                    },
+                    body: JSON.stringify({
+                        configId,
+                        candidateName: candidateInfo.name,
+                        candidateEmail: candidateInfo.email
+                    })
+                });
+
+                const data = await response.json();
+                
+                if (data.success) {
+                    sessionId = data.sessionId;
+                    questions = [];
+                    
+                    // Reconstruct questions from the session
+                    document.getElementById('totalQ').textContent = data.totalQuestions;
+                    
+                    if (data.currentQuestion) {
+                        showQuestion(data.currentQuestion);
+                    }
+                    
+                    welcomeScreen.classList.add('hidden');
+                    interviewScreen.classList.remove('hidden');
+                } else {
+                    alert('Failed to start interview: ' + data.error);
+                }
+            } catch (error) {
+                console.error('Failed to start session:', error);
+                alert('Failed to start interview. Please try again.');
+            }
+        });
+
+        // Show current question
+        function showQuestion(question) {
+            document.getElementById('currentQ').textContent = currentQuestionIndex + 1;
+            document.getElementById('questionCategory').textContent = question.category || 'General';
+            document.getElementById('questionText').textContent = question.question;
+            
+            const totalQ = parseInt(document.getElementById('totalQ').textContent);
+            const progress = ((currentQuestionIndex) / totalQ) * 100;
+            document.getElementById('progressBar').style.width = progress + '%';
+            document.getElementById('progressPercent').textContent = Math.round(progress) + '%';
+            
+            answerInput.value = '';
+            document.getElementById('charCount').textContent = '0 characters';
+            submitAnswer.disabled = false;
+            document.getElementById('submitBtnText').textContent = 'Submit Answer';
+        }
+
+        // Character count
+        answerInput.addEventListener('input', () => {
+            document.getElementById('charCount').textContent = answerInput.value.length + ' characters';
+        });
+
+        // Submit answer
+        submitAnswer.addEventListener('click', async () => {
+            const answer = answerInput.value.trim();
+            if (!answer) {
+                alert('Please provide an answer before submitting.');
+                return;
+            }
+
+            submitAnswer.disabled = true;
+            document.getElementById('submitBtnText').textContent = 'Submitting...';
+
+            try {
+                const response = await fetch('/api/interview-ai/submit-response', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'x-tenant-id': tenantId,
+                        'x-persona-id': personaId
+                    },
+                    body: JSON.stringify({
+                        sessionId,
+                        questionId: `q${currentQuestionIndex + 1}`,
+                        response: answer
+                    })
+                });
+
+                const data = await response.json();
+
+                if (data.success) {
+                    // Show "Response recorded" briefly, then auto-advance
+                    document.getElementById('submitBtnText').textContent = 'Response Recorded ✓';
+                    
+                    // Brief delay to show confirmation, then move to next question
+                    setTimeout(() => {
+                        if (data.isComplete) {
+                            showCompletion();
+                        } else {
+                            currentQuestionIndex++;
+                            showQuestion(data.nextQuestion);
+                        }
+                    }, 1000);
+                } else {
+                    alert('Failed to submit answer: ' + data.error);
+                    submitAnswer.disabled = false;
+                    document.getElementById('submitBtnText').textContent = 'Submit Answer';
+                }
+            } catch (error) {
+                console.error('Failed to submit:', error);
+                alert('Failed to submit answer. Please try again.');
+                submitAnswer.disabled = false;
+                document.getElementById('submitBtnText').textContent = 'Submit Answer';
+            }
+        });
+
+        // Show completion (no score shown to candidate - only company sees evaluation)
+        function showCompletion() {
+            interviewScreen.classList.add('hidden');
+            completionScreen.classList.remove('hidden');
+            
+            document.getElementById('finalQuestionsAnswered').textContent = currentQuestionIndex + 1;
+            document.getElementById('confirmEmail').textContent = candidateInfo.email;
+        }
+
+        // Initialize
+        loadInterviewConfig();
+    </script>
+</body>
+</html>
+

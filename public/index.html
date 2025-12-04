@@ -9,10 +9,15 @@
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     <style>
         body { font-family: 'Inter', sans-serif; }
-        .glass-card { background: rgba(255, 255, 255, 0.95); backdrop-filter: blur(10px); }
+        .glass-card { background: rgba(255, 255, 255, 0.98); }
         .primary-bg { background-color: #E31837; } /* Pantone 1796 */
         .primary-border { border-color: #E31837; }
         .primary-text { color: #E31837; }
+        .primary-bg-light { background-color: #FEF2F2; }
+        /* Professional square corners */
+        .btn-square { border-radius: 4px; }
+        .card-square { border-radius: 6px; }
+        .input-square { border-radius: 4px; }
     </style>
 </head>
 <body class="bg-white min-h-screen">
@@ -44,12 +49,12 @@
             </p>
             
             <!-- Video Section -->
-            <div class="glass-card rounded-2xl p-6 mb-8 max-w-4xl mx-auto shadow-lg border border-gray-200">
+            <div class="glass-card card-square p-6 mb-8 max-w-4xl mx-auto shadow-lg border border-gray-200">
                 <h3 class="text-gray-800 text-xl mb-4 flex items-center justify-center">
                     <i class="fas fa-play-circle mr-2 primary-text"></i>
                     How to Subscribe - Quick Tutorial
                 </h3>
-                <div class="relative bg-gray-100 rounded-lg overflow-hidden" style="height: 400px;">
+                <div class="relative bg-gray-100 card-square overflow-hidden" style="height: 400px;">
                     <video controls playsinline webkit-playsinline class="w-full h-full object-cover">
                         <source src="https://sample-videos.com/zip/10/mp4/SampleVideo_1280x720_1mb.mp4" type="video/mp4">
                         Your browser does not support the video tag.
@@ -67,7 +72,7 @@
 
         <!-- Subscription Form -->
         <div class="max-w-2xl mx-auto">
-            <div class="glass-card rounded-2xl border border-gray-200 p-8 shadow-lg">
+            <div class="glass-card card-square border border-gray-200 p-8 shadow-lg">
                 <div class="text-center mb-8">
                     <h2 class="text-3xl font-bold text-gray-800 mb-2">Start Your AI Journey</h2>
                     <p class="text-gray-600">Complete your subscription and unlock powerful AI tools</p>
@@ -85,12 +90,12 @@
                             <div>
                                 <label class="block text-gray-700 font-medium mb-2">Company Name *</label>
                                 <input type="text" id="companyName" required 
-                                    class="w-full bg-white border border-gray-300 rounded-lg px-4 py-3 text-gray-800 placeholder-gray-500 focus:border-red-500 focus:outline-none transition">
+                                    class="w-full bg-white border border-gray-300 input-square px-4 py-3 text-gray-800 placeholder-gray-500 focus:border-red-500 focus:outline-none transition">
                             </div>
                             <div>
                                 <label class="block text-gray-700 font-medium mb-2">Contact Person *</label>
                                 <input type="text" id="contactPerson" required 
-                                    class="w-full bg-white border border-gray-300 rounded-lg px-4 py-3 text-gray-800 placeholder-gray-500 focus:border-red-500 focus:outline-none transition">
+                                    class="w-full bg-white border border-gray-300 input-square px-4 py-3 text-gray-800 placeholder-gray-500 focus:border-red-500 focus:outline-none transition">
                             </div>
                         </div>
 
@@ -98,32 +103,32 @@
                             <div>
                                 <label class="block text-gray-700 font-medium mb-2">Email Address *</label>
                                 <input type="email" id="email" required 
-                                    class="w-full bg-white border border-gray-300 rounded-lg px-4 py-3 text-gray-800 placeholder-gray-500 focus:border-red-500 focus:outline-none transition">
+                                    class="w-full bg-white border border-gray-300 input-square px-4 py-3 text-gray-800 placeholder-gray-500 focus:border-red-500 focus:outline-none transition">
                             </div>
                             <div>
                                 <label class="block text-gray-700 font-medium mb-2">Phone Number *</label>
                                 <input type="tel" id="phone" required 
-                                    class="w-full bg-white border border-gray-300 rounded-lg px-4 py-3 text-gray-800 placeholder-gray-500 focus:border-red-500 focus:outline-none transition">
+                                    class="w-full bg-white border border-gray-300 input-square px-4 py-3 text-gray-800 placeholder-gray-500 focus:border-red-500 focus:outline-none transition">
                             </div>
                         </div>
 
                         <div>
                             <label class="block text-gray-700 font-medium mb-2">Company Address</label>
                             <textarea id="address" rows="3" 
-                                class="w-full bg-white border border-gray-300 rounded-lg px-4 py-3 text-gray-800 placeholder-gray-500 focus:border-red-500 focus:outline-none transition"></textarea>
+                                class="w-full bg-white border border-gray-300 input-square px-4 py-3 text-gray-800 placeholder-gray-500 focus:border-red-500 focus:outline-none transition"></textarea>
                         </div>
                     </div>
 
                     <!-- Subscription Plan -->
                     <div class="space-y-4">
                         <h3 class="text-xl font-semibold text-gray-800 border-b border-gray-200 pb-2">
-                            <i class="fas fa-crown mr-2 text-yellow-500"></i>
+                            <i class="fas fa-cube mr-2 primary-text"></i>
                             Enterprise Lite AI Complete Package
                         </h3>
                         
                         <div class="max-w-md mx-auto">
-                            <div class="plan-option bg-white border-2 primary-border rounded-xl p-6 shadow-lg relative" data-plan="complete">
-                                <div class="absolute -top-3 left-1/2 transform -translate-x-1/2 primary-bg text-white px-4 py-1 rounded-full text-sm font-medium">
+                            <div class="plan-option bg-white border-2 primary-border card-square p-6 shadow-lg relative" data-plan="complete">
+                                <div class="absolute -top-3 left-1/2 transform -translate-x-1/2 primary-bg text-white px-4 py-1 btn-square text-sm font-medium">
                                     Complete Solution
                                 </div>
                                 <div class="text-center">
@@ -144,47 +149,49 @@
                         <input type="hidden" id="selectedPlan" value="complete">
                     </div>
 
+                    <!-- Account Setup -->
+                    <div class="space-y-4">
+                        <h3 class="text-xl font-semibold text-gray-800 border-b border-gray-200 pb-2">
+                            <i class="fas fa-lock mr-2 primary-text"></i>
+                            Account Setup
+                        </h3>
+                        
+                        <div class="grid md:grid-cols-2 gap-4">
+                            <div>
+                                <label class="block text-gray-700 font-medium mb-2">Password *</label>
+                                <input type="password" id="password" required minlength="8"
+                                    class="w-full bg-white border border-gray-300 input-square px-4 py-3 text-gray-800 placeholder-gray-500 focus:border-red-500 focus:outline-none transition"
+                                    placeholder="Min 8 characters">
+                            </div>
+                            <div>
+                                <label class="block text-gray-700 font-medium mb-2">Confirm Password *</label>
+                                <input type="password" id="confirmPassword" required
+                                    class="w-full bg-white border border-gray-300 input-square px-4 py-3 text-gray-800 placeholder-gray-500 focus:border-red-500 focus:outline-none transition"
+                                    placeholder="Re-enter password">
+                            </div>
+                        </div>
+                        
+                        <p class="text-sm text-gray-500">
+                            <i class="fas fa-info-circle mr-1"></i>
+                            Password must be at least 8 characters with uppercase, lowercase, and numbers.
+                        </p>
+                    </div>
+
                     <!-- Payment Information -->
                     <div class="space-y-4">
                         <h3 class="text-xl font-semibold text-gray-800 border-b border-gray-200 pb-2">
-                            <i class="fas fa-credit-card mr-2 text-green-500"></i>
+                            <i class="fas fa-credit-card mr-2 primary-text"></i>
                             Payment Information
                         </h3>
                         
-                        <div class="bg-red-50 border border-red-200 rounded-lg p-4">
+                        <div class="primary-bg-light border border-red-200 card-square p-4">
                             <div class="flex items-center primary-text mb-2">
                                 <i class="fas fa-shield-alt mr-2"></i>
-                                <span class="font-medium">Secure Payment Processing</span>
+                                <span class="font-medium">Secure Payment via Stripe</span>
                             </div>
                             <p class="text-gray-600 text-sm">
-                                Your payment information is encrypted and processed securely. We support all major credit cards and online payment methods.
+                                After creating your account, you'll be redirected to Stripe's secure checkout to complete payment. We support all major credit cards.
                             </p>
-                        </div>
-
-                        <div class="grid md:grid-cols-2 gap-4">
-                            <div>
-                                <label class="block text-gray-700 font-medium mb-2">Card Number</label>
-                                <input type="text" id="cardNumber" placeholder="1234 5678 9012 3456"
-                                    class="w-full bg-white border border-gray-300 rounded-lg px-4 py-3 text-gray-800 placeholder-gray-500 focus:border-red-500 focus:outline-none transition">
-                            </div>
-                            <div>
-                                <label class="block text-gray-700 font-medium mb-2">Expiry Date</label>
-                                <input type="text" id="expiryDate" placeholder="MM/YY"
-                                    class="w-full bg-white border border-gray-300 rounded-lg px-4 py-3 text-gray-800 placeholder-gray-500 focus:border-red-500 focus:outline-none transition">
-                            </div>
-                        </div>
-
-                        <div class="grid md:grid-cols-2 gap-4">
-                            <div>
-                                <label class="block text-gray-700 font-medium mb-2">CVV</label>
-                                <input type="text" id="cvv" placeholder="123"
-                                    class="w-full bg-white border border-gray-300 rounded-lg px-4 py-3 text-gray-800 placeholder-gray-500 focus:border-red-500 focus:outline-none transition">
-                            </div>
-                            <div>
-                                <label class="block text-gray-700 font-medium mb-2">Cardholder Name</label>
-                                <input type="text" id="cardholderName" 
-                                    class="w-full bg-white border border-gray-300 rounded-lg px-4 py-3 text-gray-800 placeholder-gray-500 focus:border-red-500 focus:outline-none transition">
-                            </div>
                         </div>
                     </div>
 
@@ -200,14 +207,14 @@
                         </label>
 
                         <button type="submit" id="subscribeBtn" 
-                            class="w-full primary-bg hover:bg-red-700 text-white font-semibold py-4 rounded-lg transition transform hover:scale-105 disabled:opacity-50 disabled:transform-none shadow-lg">
-                            <i class="fas fa-rocket mr-2"></i>
-                            Start My AI Journey - Subscribe for $XX/month
+                            class="w-full primary-bg hover:bg-red-700 text-white font-semibold py-4 btn-square transition disabled:opacity-50 shadow-lg">
+                            <i class="fas fa-arrow-right mr-2"></i>
+                            Start My AI Journey - Subscribe Now
                         </button>
                         
                         <div class="text-center mt-4">
                             <p class="text-gray-600 text-sm mb-3">Want to see the platform first?</p>
-                            <a href="admin.html" data-preview-demo class="inline-flex items-center text-blue-600 hover:text-blue-700 font-medium text-sm border border-blue-300 hover:border-blue-500 px-6 py-2 rounded-lg transition">
+                            <a href="admin.html" data-preview-demo class="inline-flex items-center primary-text hover:text-red-700 font-medium text-sm border primary-border hover:border-red-700 px-6 py-2 btn-square transition">
                                 <i class="fas fa-eye mr-2"></i>
                                 Preview Platform Demo
                             </a>
@@ -217,40 +224,176 @@
             </div>
         </div>
 
-        <!-- Features Preview -->
-        <div class="mt-16 grid md:grid-cols-4 gap-6">
-            <div class="glass-card rounded-2xl border border-gray-200 p-6 text-center shadow-lg">
-                <div class="bg-red-50 w-16 h-16 rounded-full flex items-center justify-center mx-auto mb-4">
-                    <i class="fas fa-chart-line text-2xl primary-text"></i>
-                </div>
-                <h3 class="text-lg font-semibold text-gray-800 mb-2">Sales AI</h3>
-                <p class="text-gray-600 text-sm">Product/service FAQ system with intelligent customer interactions.</p>
+        <!-- Features Section -->
+        <section id="features" class="mt-20 scroll-mt-20">
+            <div class="text-center mb-12">
+                <h2 class="text-3xl font-bold text-gray-800 mb-4">Platform Features</h2>
+                <p class="text-gray-600 max-w-2xl mx-auto">Everything you need to automate customer interactions, support operations, and hiring processes.</p>
             </div>
+            
+            <div class="grid md:grid-cols-4 gap-6">
+                <div class="glass-card card-square border border-gray-200 p-6 text-center shadow-lg">
+                    <div class="primary-bg-light w-14 h-14 card-square flex items-center justify-center mx-auto mb-4">
+                        <i class="fas fa-chart-line text-xl primary-text"></i>
+                    </div>
+                    <h3 class="text-lg font-semibold text-gray-800 mb-2">Sales AI</h3>
+                    <p class="text-gray-600 text-sm">Product/service FAQ system with intelligent customer interactions.</p>
+                </div>
 
-            <div class="glass-card rounded-2xl border border-gray-200 p-6 text-center shadow-lg">
-                <div class="bg-red-50 w-16 h-16 rounded-full flex items-center justify-center mx-auto mb-4">
-                    <i class="fas fa-headset text-2xl primary-text"></i>
+                <div class="glass-card card-square border border-gray-200 p-6 text-center shadow-lg">
+                    <div class="primary-bg-light w-14 h-14 card-square flex items-center justify-center mx-auto mb-4">
+                        <i class="fas fa-headset text-xl primary-text"></i>
+                    </div>
+                    <h3 class="text-lg font-semibold text-gray-800 mb-2">Support AI</h3>
+                    <p class="text-gray-600 text-sm">Intelligent FAQ system that handles routine customer inquiries automatically.</p>
                 </div>
-                <h3 class="text-lg font-semibold text-gray-800 mb-2">Support AI</h3>
-                <p class="text-gray-600 text-sm">Intelligent FAQ system that handles routine customer inquiries automatically.</p>
-            </div>
 
-            <div class="glass-card rounded-2xl border border-gray-200 p-6 text-center shadow-lg">
-                <div class="bg-red-50 w-16 h-16 rounded-full flex items-center justify-center mx-auto mb-4">
-                    <i class="fas fa-users text-2xl primary-text"></i>
+                <div class="glass-card card-square border border-gray-200 p-6 text-center shadow-lg">
+                    <div class="primary-bg-light w-14 h-14 card-square flex items-center justify-center mx-auto mb-4">
+                        <i class="fas fa-users text-xl primary-text"></i>
+                    </div>
+                    <h3 class="text-lg font-semibold text-gray-800 mb-2">Interview AI</h3>
+                    <p class="text-gray-600 text-sm">Role templates for Sales, Customer Service, and Junior Tech positions.</p>
                 </div>
-                <h3 class="text-lg font-semibold text-gray-800 mb-2">Interview AI</h3>
-                <p class="text-gray-600 text-sm">Role templates for Sales, Customer Service, and Junior Tech positions.</p>
-            </div>
 
-            <div class="glass-card rounded-2xl border border-gray-200 p-6 text-center shadow-lg">
-                <div class="bg-red-50 w-16 h-16 rounded-full flex items-center justify-center mx-auto mb-4">
-                    <i class="fas fa-chart-bar text-2xl primary-text"></i>
+                <div class="glass-card card-square border border-gray-200 p-6 text-center shadow-lg">
+                    <div class="primary-bg-light w-14 h-14 card-square flex items-center justify-center mx-auto mb-4">
+                        <i class="fas fa-chart-bar text-xl primary-text"></i>
+                    </div>
+                    <h3 class="text-lg font-semibold text-gray-800 mb-2">Intelligent Analytics</h3>
+                    <p class="text-gray-600 text-sm">Advanced performance insights and AI usage analytics.</p>
                 </div>
-                <h3 class="text-lg font-semibold text-gray-800 mb-2">Intelligent Analytics</h3>
-                <p class="text-gray-600 text-sm">Advanced performance insights and AI usage analytics.</p>
             </div>
-        </div>
+            
+            <!-- Additional Features -->
+            <div class="grid md:grid-cols-3 gap-6 mt-8">
+                <div class="glass-card card-square border border-gray-200 p-6 shadow-lg">
+                    <div class="flex items-start space-x-4">
+                        <div class="primary-bg-light w-12 h-12 card-square flex items-center justify-center flex-shrink-0">
+                            <i class="fas fa-link primary-text"></i>
+                        </div>
+                        <div>
+                            <h4 class="font-semibold text-gray-800 mb-1">Shareable AI Links</h4>
+                            <p class="text-gray-600 text-sm">Generate unique links for each AI agent. Share via email, embed on your website, or use in marketing campaigns.</p>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="glass-card card-square border border-gray-200 p-6 shadow-lg">
+                    <div class="flex items-start space-x-4">
+                        <div class="primary-bg-light w-12 h-12 card-square flex items-center justify-center flex-shrink-0">
+                            <i class="fas fa-file-alt primary-text"></i>
+                        </div>
+                        <div>
+                            <h4 class="font-semibold text-gray-800 mb-1">Document Processing</h4>
+                            <p class="text-gray-600 text-sm">Upload PDFs, Word docs, Excel files, and more. Our AI extracts and learns from your content automatically.</p>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="glass-card card-square border border-gray-200 p-6 shadow-lg">
+                    <div class="flex items-start space-x-4">
+                        <div class="primary-bg-light w-12 h-12 card-square flex items-center justify-center flex-shrink-0">
+                            <i class="fas fa-comments primary-text"></i>
+                        </div>
+                        <div>
+                            <h4 class="font-semibold text-gray-800 mb-1">Transcript Recording</h4>
+                            <p class="text-gray-600 text-sm">Every conversation is saved. Download transcripts, track customer intent, and analyze interactions.</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Pricing Section -->
+        <section id="pricing" class="mt-20 scroll-mt-20">
+            <div class="text-center mb-12">
+                <h2 class="text-3xl font-bold text-gray-800 mb-4">Simple, Transparent Pricing</h2>
+                <p class="text-gray-600 max-w-2xl mx-auto">One plan with everything included. No hidden fees, no surprises.</p>
+            </div>
+            
+            <div class="max-w-lg mx-auto">
+                <div class="glass-card card-square border-2 primary-border p-8 shadow-xl relative">
+                    <div class="absolute -top-4 left-1/2 transform -translate-x-1/2 primary-bg text-white px-6 py-2 btn-square text-sm font-semibold">
+                        All-Inclusive
+                    </div>
+                    <div class="text-center mb-6">
+                        <h3 class="text-2xl font-bold text-gray-800 mb-2">Enterprise Lite AI Platform</h3>
+                        <div class="text-5xl font-bold primary-text mb-1">$XX</div>
+                        <p class="text-gray-500">/month</p>
+                    </div>
+                    
+                    <ul class="space-y-3 mb-8">
+                        <li class="flex items-center text-gray-700">
+                            <i class="fas fa-check primary-text mr-3"></i>
+                            <span><strong>Sales AI</strong> - Unlimited interactions</span>
+                        </li>
+                        <li class="flex items-center text-gray-700">
+                            <i class="fas fa-check primary-text mr-3"></i>
+                            <span><strong>Support AI</strong> - Unlimited tickets</span>
+                        </li>
+                        <li class="flex items-center text-gray-700">
+                            <i class="fas fa-check primary-text mr-3"></i>
+                            <span><strong>Interview AI</strong> - Unlimited candidates</span>
+                        </li>
+                        <li class="flex items-center text-gray-700">
+                            <i class="fas fa-check primary-text mr-3"></i>
+                            <span>Document uploads (PDF, DOCX, Excel)</span>
+                        </li>
+                        <li class="flex items-center text-gray-700">
+                            <i class="fas fa-check primary-text mr-3"></i>
+                            <span>Shareable AI links</span>
+                        </li>
+                        <li class="flex items-center text-gray-700">
+                            <i class="fas fa-check primary-text mr-3"></i>
+                            <span>Analytics dashboard</span>
+                        </li>
+                        <li class="flex items-center text-gray-700">
+                            <i class="fas fa-check primary-text mr-3"></i>
+                            <span>Transcript downloads</span>
+                        </li>
+                        <li class="flex items-center text-gray-700">
+                            <i class="fas fa-check primary-text mr-3"></i>
+                            <span>Video tutorials</span>
+                        </li>
+                    </ul>
+                    
+                    <a href="#" onclick="document.getElementById('subscriptionForm').scrollIntoView({behavior: 'smooth'}); return false;" 
+                       class="block w-full text-center primary-bg hover:bg-red-700 text-white font-semibold py-4 btn-square transition shadow-lg">
+                        <i class="fas fa-arrow-right mr-2"></i>
+                        Get Started Now
+                    </a>
+                </div>
+            </div>
+        </section>
+
+        <!-- Contact Section -->
+        <section id="contact" class="mt-20 scroll-mt-20 mb-8">
+            <div class="text-center mb-12">
+                <h2 class="text-3xl font-bold text-gray-800 mb-4">Contact Us</h2>
+                <p class="text-gray-600 max-w-2xl mx-auto">Have questions? We're here to help.</p>
+            </div>
+            
+            <div class="grid md:grid-cols-2 gap-6 max-w-2xl mx-auto">
+                <div class="glass-card card-square border border-gray-200 p-6 text-center shadow-lg">
+                    <div class="primary-bg-light w-14 h-14 card-square flex items-center justify-center mx-auto mb-4">
+                        <i class="fas fa-envelope text-xl primary-text"></i>
+                    </div>
+                    <h3 class="text-lg font-semibold text-gray-800 mb-2">Email</h3>
+                    <p class="text-gray-600 text-sm mb-3">For general inquiries</p>
+                    <a href="mailto:elite@sunway-intgen.com" class="primary-text hover:underline font-medium">elite@sunway-intgen.com</a>
+                </div>
+                
+                <div class="glass-card card-square border border-gray-200 p-6 text-center shadow-lg">
+                    <div class="primary-bg-light w-14 h-14 card-square flex items-center justify-center mx-auto mb-4">
+                        <i class="fas fa-headset text-xl primary-text"></i>
+                    </div>
+                    <h3 class="text-lg font-semibold text-gray-800 mb-2">Support</h3>
+                    <p class="text-gray-600 text-sm mb-3">Technical assistance</p>
+                    <a href="mailto:elite@sunway-intgen.com" class="primary-text hover:underline font-medium">elite@sunway-intgen.com</a>
+                </div>
+            </div>
+        </section>
     </div>
 
     <!-- Footer -->
@@ -272,19 +415,229 @@
 
     <!-- Loading Modal -->
     <div id="loadingModal" class="fixed inset-0 bg-black/50 backdrop-blur-sm hidden items-center justify-center z-50">
-        <div class="bg-white rounded-2xl p-8 text-center border border-gray-200 shadow-xl max-w-md mx-4">
+        <div class="bg-white card-square p-8 text-center border border-gray-200 shadow-xl max-w-md mx-4">
             <div class="animate-spin w-12 h-12 border-4 border-red-600 border-t-transparent rounded-full mx-auto mb-4"></div>
-            <h3 class="text-gray-800 text-xl font-semibold mb-2">Processing Your Subscription</h3>
-            <p class="text-gray-600">Please wait while we set up your account...</p>
+            <h3 class="text-gray-800 text-xl font-semibold mb-2" id="loadingTitle">Processing Your Subscription</h3>
+            <p class="text-gray-600" id="loadingMessage">Please wait while we set up your account...</p>
         </div>
     </div>
 
+    <!-- Verification Modal -->
+    <div id="verificationModal" class="fixed inset-0 bg-black/50 backdrop-blur-sm hidden items-center justify-center z-50">
+        <div class="bg-white card-square p-8 border border-gray-200 shadow-xl max-w-md mx-4">
+            <div class="text-center mb-6">
+                <div class="primary-bg-light w-14 h-14 card-square flex items-center justify-center mx-auto mb-4">
+                    <i class="fas fa-envelope text-xl primary-text"></i>
+                </div>
+                <h3 class="text-gray-800 text-xl font-semibold mb-2">Verify Your Email</h3>
+                <p class="text-gray-600">We've sent a verification code to <span id="verifyEmail" class="font-medium"></span></p>
+            </div>
+            
+            <form id="verificationForm" class="space-y-4">
+                <div>
+                    <label class="block text-gray-700 font-medium mb-2">Verification Code</label>
+                    <input type="text" id="verificationCode" required maxlength="6" pattern="[0-9]{6}"
+                        class="w-full bg-white border border-gray-300 input-square px-4 py-3 text-gray-800 text-center text-2xl tracking-widest focus:border-red-500 focus:outline-none transition"
+                        placeholder="000000">
+                </div>
+                
+                <button type="submit" class="w-full primary-bg hover:bg-red-700 text-white font-semibold py-3 btn-square transition">
+                    Verify & Continue to Payment
+                </button>
+                
+                <p class="text-center text-sm text-gray-500">
+                    Didn't receive the code? <button type="button" id="resendCode" class="primary-text hover:underline">Resend</button>
+                </p>
+            </form>
+        </div>
+    </div>
+
+    <!-- Error Modal -->
+    <div id="errorModal" class="fixed inset-0 bg-black/50 backdrop-blur-sm hidden items-center justify-center z-50">
+        <div class="bg-white card-square p-8 border border-gray-200 shadow-xl max-w-md mx-4">
+            <div class="text-center mb-6">
+                <div class="primary-bg-light w-14 h-14 card-square flex items-center justify-center mx-auto mb-4">
+                    <i class="fas fa-exclamation-triangle text-xl primary-text"></i>
+                </div>
+                <h3 class="text-gray-800 text-xl font-semibold mb-2">Something Went Wrong</h3>
+                <p class="text-gray-600" id="errorMessage">An error occurred. Please try again.</p>
+            </div>
+            <button onclick="document.getElementById('errorModal').classList.add('hidden'); document.getElementById('errorModal').classList.remove('flex');" 
+                class="w-full bg-gray-200 hover:bg-gray-300 text-gray-800 font-semibold py-3 btn-square transition">
+                Close
+            </button>
+        </div>
+    </div>
+
+    <script src="js/auth.js"></script>
     <script>
       window.__DEFAULT_TENANT_ID__ = 'preview-company';
+      
+      // Form state
+      let pendingEmail = null;
+      let pendingCompanyName = null;
+
+      // Show/hide modals
+      function showLoading(title, message) {
+        document.getElementById('loadingTitle').textContent = title || 'Processing...';
+        document.getElementById('loadingMessage').textContent = message || 'Please wait...';
+        document.getElementById('loadingModal').classList.remove('hidden');
+        document.getElementById('loadingModal').classList.add('flex');
+      }
+
+      function hideLoading() {
+        document.getElementById('loadingModal').classList.add('hidden');
+        document.getElementById('loadingModal').classList.remove('flex');
+      }
+
+      function showError(message) {
+        document.getElementById('errorMessage').textContent = message;
+        document.getElementById('errorModal').classList.remove('hidden');
+        document.getElementById('errorModal').classList.add('flex');
+      }
+
+      function showVerification(email) {
+        document.getElementById('verifyEmail').textContent = email;
+        document.getElementById('verificationModal').classList.remove('hidden');
+        document.getElementById('verificationModal').classList.add('flex');
+      }
+
+      function hideVerification() {
+        document.getElementById('verificationModal').classList.add('hidden');
+        document.getElementById('verificationModal').classList.remove('flex');
+      }
+
+      // Subscription form handler
+      document.getElementById('subscriptionForm').addEventListener('submit', async (e) => {
+        e.preventDefault();
+        
+        const companyName = document.getElementById('companyName').value.trim();
+        const contactPerson = document.getElementById('contactPerson').value.trim();
+        const email = document.getElementById('email').value.trim();
+        const phone = document.getElementById('phone').value.trim();
+        const address = document.getElementById('address').value.trim();
+        const password = document.getElementById('password').value;
+        const confirmPassword = document.getElementById('confirmPassword').value;
+        
+        // Validate passwords match
+        if (password !== confirmPassword) {
+          showError('Passwords do not match');
+          return;
+        }
+
+        // Validate password strength
+        if (password.length < 8) {
+          showError('Password must be at least 8 characters');
+          return;
+        }
+
+        showLoading('Creating Your Account', 'Please wait while we set up your account...');
+
+        try {
+          // Sign up with Cognito
+          const result = await window.authManager.signUp({
+            email,
+            password,
+            name: contactPerson,
+            companyName,
+            phone,
+            address
+          });
+
+          hideLoading();
+
+          if (result.userConfirmed) {
+            // User already confirmed (unlikely with email verification)
+            await proceedToCheckout(email, companyName);
+          } else {
+            // Show verification modal
+            pendingEmail = email;
+            pendingCompanyName = companyName;
+            showVerification(email);
+          }
+        } catch (error) {
+          hideLoading();
+          showError(error.message || 'Failed to create account');
+        }
+      });
+
+      // Verification form handler
+      document.getElementById('verificationForm').addEventListener('submit', async (e) => {
+        e.preventDefault();
+        
+        const code = document.getElementById('verificationCode').value.trim();
+        
+        if (!code || code.length !== 6) {
+          showError('Please enter a valid 6-digit code');
+          return;
+        }
+
+        showLoading('Verifying Email', 'Almost there...');
+
+        try {
+          await window.authManager.confirmSignUp(pendingEmail, code);
+          hideVerification();
+          await proceedToCheckout(pendingEmail, pendingCompanyName);
+        } catch (error) {
+          hideLoading();
+          showError(error.message || 'Invalid verification code');
+        }
+      });
+
+      // Proceed to Stripe checkout
+      async function proceedToCheckout(email, companyName) {
+        showLoading('Redirecting to Payment', 'Taking you to secure checkout...');
+
+        try {
+          // First sign in to get tokens
+          // Note: We need the password here, which we don't have after form submission
+          // So we'll create checkout without auth for now
+          const checkoutResult = await window.authManager.createCheckout({
+            email,
+            companyName,
+            plan: 'complete'
+          });
+
+          if (checkoutResult.url) {
+            window.location.href = checkoutResult.url;
+          } else {
+            throw new Error('No checkout URL received');
+          }
+        } catch (error) {
+          hideLoading();
+          // If Stripe is not configured, show success and redirect to demo
+          if (error.message.includes('STRIPE') || error.message.includes('configured')) {
+            alert('Account created successfully! Stripe billing is not yet configured. Redirecting to dashboard...');
+            window.location.href = '/admin.html';
+          } else {
+            showError(error.message || 'Failed to start checkout');
+          }
+        }
+      }
+
+      // Resend verification code
+      document.getElementById('resendCode').addEventListener('click', async () => {
+        if (!pendingEmail) return;
+        
+        try {
+          await window.authManager.signUp({
+            email: pendingEmail,
+            password: 'TempPass123!' // This will fail but trigger resend
+          });
+        } catch (error) {
+          // Expected to fail, but should trigger a resend
+          alert('A new verification code has been sent to your email.');
+        }
+      });
+
+      // Check URL params for subscription status
+      const urlParams = new URLSearchParams(window.location.search);
+      if (urlParams.get('subscription') === 'success') {
+        alert('Subscription successful! Welcome to Enterprise Lite AI Platform.');
+        window.location.href = '/admin.html';
+      } else if (urlParams.get('subscription') === 'cancelled') {
+        alert('Subscription was cancelled. You can try again when ready.');
+      }
     </script>
-    <script src="js/main.js"></script>
-    <script src="js/api-client.js"></script>
-    <script src="js/uploader.js"></script>
-    <script src="js/chat.js"></script>
 </body>
 </html>

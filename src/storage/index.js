@@ -2,12 +2,25 @@ import path from 'path';
 import { fileURLToPath } from 'url';
 import { createLocalStorage } from './local.js';
 import { createS3Storage } from './s3.js';
+import { 
+  hasDedicatedAccount, 
+  createCrossAccountStorage, 
+  registerTenantAccount,
+  getTenantAccount 
+} from './cross-account-s3.js';
+import {
+  getTenantBuckets,
+  tenantHasDedicatedBuckets,
+  createTenantBuckets
+} from '../services/tenant-buckets.js';
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 const PROJECT_ROOT = path.resolve(__dirname, '..', '..');
 
 const storageCache = new Map();
+const crossAccountStorageCache = new Map();
+const tenantStorageCache = new Map();
 
 function resolveOptions(rawOptions = {}) {
   const backend = (rawOptions.backend || process.env.STORAGE_BACKEND || 'local').toLowerCase();
@@ -90,5 +103,92 @@ export function getStorage(options = {}) {
 
 export function resetStorage() {
   storageCache.clear();
+  crossAccountStorageCache.clear();
 }
+
+/**
+ * Get storage for a specific tenant
+ * Priority: 1) Cross-account storage, 2) Per-tenant buckets, 3) Shared storage
+ * @param {string} tenantId - Tenant identifier
+ * @param {Object} options - Storage options
+ */
+export function getStorageForTenant(tenantId, options = {}) {
+  // Priority 1: Check if tenant has a dedicated AWS account
+  if (hasDedicatedAccount(tenantId)) {
+    const cacheKey = `cross-account:${tenantId}:${options.prefix || ''}`;
+    
+    if (!options.forceNew && crossAccountStorageCache.has(cacheKey)) {
+      return crossAccountStorageCache.get(cacheKey);
+    }
+    
+    const instance = createCrossAccountStorage(tenantId, options);
+    crossAccountStorageCache.set(cacheKey, instance);
+    return instance;
+  }
+  
+  // Priority 2: Check if per-tenant buckets are enabled
+  const perTenantBuckets = process.env.PER_TENANT_BUCKETS === 'true';
+  
+  if (perTenantBuckets && tenantId && tenantId !== 'default') {
+    const cacheKey = `tenant-bucket:${tenantId}:${options.prefix || ''}`;
+    
+    if (!options.forceNew && tenantStorageCache.has(cacheKey)) {
+      return tenantStorageCache.get(cacheKey);
+    }
+    
+    // Get tenant-specific bucket names
+    const tenantBuckets = getTenantBuckets(tenantId);
+    
+    // Create storage instance for this tenant's buckets
+    const instance = createS3Storage({
+      bucket: tenantBuckets.documents,
+      rawBucket: tenantBuckets.raw,
+      prefix: options.prefix || '',
+      region: process.env.S3_REGION || process.env.AWS_REGION,
+      signingTTLSeconds: parseInt(process.env.S3_SIGNED_URL_TTL || '3600', 10)
+    });
+    
+    tenantStorageCache.set(cacheKey, instance);
+    return instance;
+  }
+  
+  // Priority 3: Use shared storage (default behavior)
+  return getStorage(options);
+}
+
+/**
+ * Register a tenant's dedicated AWS account
+ * Call this after provisioning a new account via Account Factory
+ */
+export function registerTenantAWSAccount(tenantId, config) {
+  registerTenantAccount(tenantId, config);
+}
+
+/**
+ * Check if a tenant has a dedicated AWS account
+ */
+export function tenantHasDedicatedAccount(tenantId) {
+  return hasDedicatedAccount(tenantId);
+}
+
+/**
+ * Get tenant's AWS account configuration
+ */
+export function getTenantAWSAccount(tenantId) {
+  return getTenantAccount(tenantId);
+}
+
+// Re-export cross-account utilities
+export { 
+  hasDedicatedAccount, 
+  createCrossAccountStorage, 
+  registerTenantAccount 
+} from './cross-account-s3.js';
+
+// Re-export tenant bucket utilities
+export {
+  getTenantBuckets,
+  createTenantBuckets,
+  tenantHasDedicatedBuckets
+} from '../services/tenant-buckets.js';
 
