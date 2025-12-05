@@ -1,0 +1,89 @@
+Enterprise Lite Platform - Cost Projections (SGD)
+Exchange Rate: 1 USD = 1.2935 SGD
+Generated: December 2024
+
+===== PER-QUESTION COST BY QUERY TYPE =====
+Query Type,Tokens (Input),Tokens (Output),Cost (SGD)
+Simple FAQ,2000,500,0.02
+Standard chat,5000,1000,0.04
+Multi-step reasoning,30000,2000,0.16
+Complex with tools,80000,3000,0.38
+Heavy chained tools,150000,4000,0.66
+
+===== CLAUDE API VIA BEDROCK (SINGAPORE) =====
+Model,Input per 1K (SGD),Output per 1K (SGD),Input per MTok (SGD),Output per MTok (SGD)
+Claude Sonnet 4.5,0.0039,0.0194,3.88,19.40
+Claude Sonnet 4,0.0039,0.0194,3.88,19.40
+Claude Haiku 4.5,0.0013,0.0065,1.29,6.47
+
+===== MONTHLY COST - 3000 QUESTIONS =====
+Mix Profile,Composition,Claude Bedrock (SGD),AWS Infra (SGD),Total (SGD)
+Realistic,60% simple / 30% standard / 10% complex,180,90,270
+75% Heavy,25% standard / 75% heavy chained,1530,90,1620
+100% Heavy,100% heavy chained tools,1980,90,2070
+
+===== MONTHLY COST BY VOLUME (REALISTIC MIX) =====
+Usage Level,Questions per Month,Claude Bedrock (SGD),AWS Infra (SGD),Total (SGD)
+Light,500,30,52,82
+Medium,2000,120,78,198
+High,3000,180,90,270
+Heavy,10000,600,129,729
+
+===== MONTHLY COST BY VOLUME (75% HEAVY) =====
+Usage Level,Questions per Month,Claude Bedrock (SGD),AWS Infra (SGD),Total (SGD)
+Light,500,255,52,307
+Medium,2000,1020,78,1098
+High,3000,1530,90,1620
+Heavy,10000,5100,129,5229
+
+===== MONTHLY COST BY VOLUME (100% HEAVY) =====
+Usage Level,Questions per Month,Claude Bedrock (SGD),AWS Infra (SGD),Total (SGD)
+Light,500,330,52,382
+Medium,2000,1320,78,1398
+High,3000,1980,90,2070
+Heavy,10000,6600,129,6729
+
+===== AWS INFRASTRUCTURE (SINGAPORE REGION) =====
+Component,Usage,Cost SGD per Month
+App Runner,1 vCPU / 2GB,45-84
+S3 Storage,per GB,0.032
+Cognito,< 50K MAU,Free
+CloudWatch,Logs,6-19
+Estimated Infra Total,Low traffic,52-100
+
+===== COST OPTIMIZATION STRATEGIES =====
+Strategy,Savings,Description
+Route to Haiku 4.5,67%,Use cheaper model for simple FAQ queries
+Batch API,50%,Async processing for interview evaluations
+Limit chain depth,40%,Cap reasoning iterations at 3
+Prompt caching,Up to 90%,Cache repeated system prompts and context
+Shorter system prompts,10-20%,Optimize prompt engineering
+
+===== TOKEN CAP BY NUMBER OF CUSTOMERS (SGD 400 BUDGET) =====
+Customers,AWS Infra per Customer (SGD),Stripe (SGD),Claude Budget (SGD),Token Cap (M)
+1,90,20,290,50
+2,45,20,335,60
+3,30,20,350,62
+5,18,20,362,65
+10,10,20,370,65
+
+===== RECOMMENDED TOKEN CAP BY STAGE =====
+Stage,Customers,Token Cap (M),Heavy PDF Questions,Simple Questions
+Launch,1,50,165,31000
+Early,2-4,60,200,37500
+Growth,5+,65,215,40000
+
+===== PER-CUSTOMER ALL-IN COST (10 CUSTOMERS) =====
+Component,Cost (SGD)
+AWS Infra (shared),10
+Stripe fees,20
+Claude (65M tokens),353
+Total per customer,383
+Buffer,17
+
+===== STRIPE FEES (SINGAPORE) =====
+Fee Type,Rate
+Card payments (local),3.4% + SGD 0.50
+Card payments (international),3.9% + SGD 0.50
+Subscription billing,+0.5% per invoice
+

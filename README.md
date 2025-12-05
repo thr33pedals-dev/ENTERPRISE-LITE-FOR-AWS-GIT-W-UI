@@ -80,11 +80,86 @@ A multi-tenant AI-powered business platform featuring Sales AI, Support AI, and 
 |-------|------------|
 | Frontend | HTML5, Tailwind CSS, Vanilla JavaScript |
 | Backend | Node.js 18+, Express.js |
-| AI | Claude 3.5 Sonnet (Anthropic) |
+| AI | Claude Sonnet 4/4.5 (Anthropic via AWS Bedrock) |
 | Storage | AWS S3 (multi-tenant buckets) |
+| Database | AWS DynamoDB (on-demand) |
 | File Processing | xlsx, pdf-parse, mammoth |
 | Deployment | AWS App Runner, Docker |
-| Authentication | AWS SSO (production), Preview mode (demo) |
+| Authentication | AWS Cognito (production), Preview mode (demo) |
+| Payments | Stripe (subscriptions & billing) |
+
+---
+
+## Cost Analysis
+
+See **[docs/COST-ANALYSIS.md](docs/COST-ANALYSIS.md)** for detailed pricing breakdown.
+
+### Quick Reference (SGD, Dec 2024)
+
+| Metric | Value |
+|--------|-------|
+| **Token cap per customer** | 50-65M/month |
+| **Cost per customer** | ~SGD 400/month |
+| **Simple questions** | ~40,000/month |
+| **Heavy PDF processing** | ~215/month |
+
+### Per-Question Cost
+
+| Query Type | Cost (SGD) |
+|------------|------------|
+| Simple chat | SGD 0.02 |
+| Standard reasoning | SGD 0.10 |
+| PDF processing | SGD 0.35-1.60 |
+
+### AWS Services Used
+
+| Service | Purpose |
+|---------|---------|
+| App Runner | Compute/hosting |
+| S3 | File storage (2 buckets) |
+| DynamoDB | Database (6 tables) |
+| Cognito | User authentication |
+| CloudWatch | Logs & monitoring |
+| Bedrock | Claude AI API |
+
+---
+
+## AI Engine — Intelligent Inference
+
+The platform uses a **reasoning-augmented approach** that goes beyond simple RAG (Retrieval Augmented Generation):
+
+### Think Tool (Chain-of-Thought Reasoning)
+
+```
+User Question
+├── Iteration 0: Initial analysis
+├── Iteration 1: Think tool - policy check, cross-reference
+├── Iteration 2: Think tool - compliance verification
+└── Iteration 3: Final synthesized response
+```
+
+**MAX_THINK_ITERATIONS = 3** (configurable in `claude-client.js`)
+
+### Key Differentiators
+
+| Traditional RAG | Enterprise Lite IIE |
+|-----------------|---------------------|
+| Keyword/semantic search | Intent understanding |
+| Single document lookup | Multi-document reasoning |
+| Returns matching text | Synthesizes actionable answers |
+| No compliance awareness | Policy & compliance checking |
+
+### Example Use Case
+
+**Employee asks:** "Can I sign up as a Grab driver?"
+
+**Traditional RAG:** Searches for "Grab driver" in policy docs → No exact match → Vague answer
+
+**Enterprise Lite IIE:**
+1. Understands intent: "Can I do part-time work?"
+2. Cross-references: Employment contract, Conflict of Interest Policy, Code of Conduct
+3. Checks: Disclosure requirements, approval process
+4. Returns: Clear, compliant answer with required actions
 
 ---
 
@@ -221,10 +296,42 @@ s3://bucket/
 
 ## Preview Mode
 
-For demos, use preview mode (no AWS SSO required):
+For demos, use preview mode (no AWS Cognito required):
 - Tenant ID defaults to `default`
 - All features functional
 - Data persists in S3 under `tenants/default/`
+
+---
+
+## Usage Throttling & Plans
+
+Token limits are enforced per tenant (see `billing.js`):
+
+| Plan | Tokens/Month | Max/Query | Price |
+|------|--------------|-----------|-------|
+| Starter | 20M | 50K | SGD 149 |
+| Professional | 65M | 200K | SGD 299 |
+| Enterprise | 200M | 500K | SGD 499 |
+
+### Scaling Token Caps
+
+| Customers | Recommended Cap |
+|-----------|-----------------|
+| 1 (launch) | 50M tokens |
+| 2-4 (early) | 60M tokens |
+| 5+ (growth) | 65M tokens |
+
+---
+
+## Documentation
+
+| Document | Description |
+|----------|-------------|
+| [README.md](README.md) | This file - project overview |
+| [docs/COST-ANALYSIS.md](docs/COST-ANALYSIS.md) | Detailed cost breakdown (SGD) |
+| [docs/cost-projections.csv](docs/cost-projections.csv) | Excel-compatible cost data |
+| [infrastructure/README.md](infrastructure/README.md) | AWS infrastructure setup |
+| [env.example.txt](env.example.txt) | Environment variables template |
 
 ---
 
